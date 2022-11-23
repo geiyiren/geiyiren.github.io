@@ -4,8 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, geiyiren">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="Ubuntu16-04手动安装英伟达显卡驱动, geiyiren">
+    <meta name="description" content="1.屏蔽开源驱动屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：
+1sudo gedit /etc/modprobe.d/blacklist.conf
+
+然后添加内容到最底段，要回车另起一行。添">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Hello World | geiyiren</title>
+    <title>Ubuntu16-04手动安装英伟达显卡驱动 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -367,7 +370,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Hello World</h1>
+                    <h1 class="description center-align post-title">Ubuntu16-04手动安装英伟达显卡驱动</h1>
                 </div>
             </div>
         </div>
@@ -389,12 +392,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/ubuntu/">
+                                <span class="chip bg-color">ubuntu</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
+                                <span class="chip bg-color">显卡驱动安装</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Ubuntu/" class="post-category">
+                                Ubuntu
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -403,7 +423,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-21
+                    2022-11-23
                 </div>
                 
 
@@ -424,19 +444,54 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit /etc/modprobe.d/blacklist.conf</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">blacklist nouveau </span><br><span class="line">options nouveau modeset=0</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>保存再终端更新内核命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo update-initramfs -u</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>可能会出现如下警告，忽略即可：</p>
+<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
 
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
+<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
+<p>所以手动搜索驱动程序时，应该这样选择：</p>
+<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
+<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
+<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
+<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
+<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
+
+<p>然后按”回车”：</p>
+<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
+
+<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/用户名</span><br></pre></td></tr></table></figure>
+
+<p>关闭当前图形环境</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service lightdm stop</span><br></pre></td></tr></table></figure>
+
+<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo <span class="built_in">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run </span><br><span class="line">sudo sh NVIDIA-Linux-x86_64-xxx.run -no-opengl-files</span><br></pre></td></tr></table></figure>
+
+<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
+<ul>
+<li>提示”dkms”安装时，需要安装。</li>
+<li>会提示有”32”字样，选择”OK”继续即可。</li>
+</ul>
+<p>最后重新启动图形环境：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service lightdm start</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
+<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
+<p>进一步检查，打开终端输入如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvidia-smi</span><br></pre></td></tr></table></figure>
+
+<p>出现如下所示信息，即为安装成功:</p>
+<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
 
                 
             </div>
@@ -463,7 +518,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/21/hello-world/">http://example.com/2022/11/21/hello-world/</a>
+                    <a href="http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -500,7 +555,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/ubuntu/">
+                                    <span class="chip bg-color">ubuntu</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
+                                    <span class="chip bg-color">显卡驱动安装</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -581,13 +644,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/11/23/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/">
+                <a href="/2022/11/23/Ubuntu16-04-LTS%EF%BC%9Aanaconda3%E5%AE%89%E8%A3%85/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Pycharm使用ssh连接服务器中的docker容器">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Ubuntu16-04-LTS：anaconda3安装">
                         
-                        <span class="card-title">Pycharm使用ssh连接服务器中的docker容器</span>
+                        <span class="card-title">Ubuntu16-04-LTS：anaconda3安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -604,7 +667,11 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                            <a href="/categories/Ubuntu/" class="post-category">
+                                    Ubuntu
+                                </a>
+                            
+                            <a href="/categories/Ubuntu/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
                                     深度学习
                                 </a>
                             
@@ -635,16 +702,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/21/hello-world/">
+                <a href="/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="win10与ubuntu16-04-LTS双系统安装教程">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">win10与ubuntu16-04-LTS双系统安装教程</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -655,17 +722,28 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-21
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            geiyiren
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Ubuntu/" class="post-category">
+                                    Ubuntu
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/ubuntu/">
+                        <span class="chip bg-color">ubuntu</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>

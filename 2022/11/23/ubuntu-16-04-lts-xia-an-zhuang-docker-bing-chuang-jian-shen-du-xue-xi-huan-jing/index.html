@@ -7,7 +7,7 @@
     <meta name="keywords" content="ubuntu 16.04 LTS下安装docker并创建深度学习环境, geiyiren">
     <meta name="description" content="1.安装dockerubuntu下安装docker的官方教程：点我查看
 ubuntu下安装参考教程：点我查看
-1.1卸载旧版本1sudo apt-get remove docker docker-engine docker.io conta">
+1.1卸载旧版本sudo apt-get remove docker docker-engine docker.io contai">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -409,10 +409,20 @@ ubuntu下安装参考教程：点我查看
                 
 
                 
-
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.4k
+                </div>
                 
 
                 
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
             </div>
         </div>
         <hr class="clearfix">
@@ -425,49 +435,98 @@ ubuntu下安装参考教程：点我查看
             <div id="articleContent">
                 <h2 id="1-安装docker"><a href="#1-安装docker" class="headerlink" title="1.安装docker"></a>1.安装docker</h2><p>ubuntu下安装docker的官方教程：<a target="_blank" rel="noopener" href="https://docs.docker.com/engine/install/ubuntu/">点我查看</a></p>
 <p>ubuntu下安装参考教程：<a target="_blank" rel="noopener" href="https://yeasy.gitbook.io/docker_practice/install/ubuntu">点我查看</a></p>
-<h3 id="1-1卸载旧版本"><a href="#1-1卸载旧版本" class="headerlink" title="1.1卸载旧版本"></a>1.1卸载旧版本</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get remove docker docker-engine docker.io containerd runc</span><br></pre></td></tr></table></figure>
-
+<h3 id="1-1卸载旧版本"><a href="#1-1卸载旧版本" class="headerlink" title="1.1卸载旧版本"></a>1.1卸载旧版本</h3><pre><code>sudo apt-get remove docker docker-engine docker.io containerd runc
+</code></pre>
 <h3 id="1-2使用apt安装"><a href="#1-2使用apt安装" class="headerlink" title="1.2使用apt安装"></a>1.2使用apt安装</h3><p>官网提供多种安装方式，这里使用apt安装</p>
 <p>由于 <code>apt</code> 源使用 HTTPS 以确保软件下载过程中不被篡改。因此，我们首先需要添加使用 HTTPS 传输的软件包以及 CA 证书。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line">sudo apt-get install \</span><br><span class="line">    apt-transport-https \</span><br><span class="line">    ca-certificates \</span><br><span class="line">    curl \</span><br><span class="line">    gnupg \</span><br><span class="line">    lsb-release</span><br></pre></td></tr></table></figure>
+<pre><code>sudo apt-get update
 
+sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+</code></pre>
 <p>添加docker密匙：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 官方密匙</span><br><span class="line">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg</span><br></pre></td></tr></table></figure>
+<pre><code>curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
+
+# 官方密匙
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+</code></pre>
 <p>然后，我们需要向 <code>sources.list</code> 中添加 Docker 软件源：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">echo \</span><br><span class="line">  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu \</span><br><span class="line">  $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 官方源</span><br><span class="line">echo \</span><br><span class="line">   &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \</span><br><span class="line">   $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null</span><br></pre></td></tr></table></figure>
+<pre><code>echo \
+  &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu \
+  $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
 
+
+# 官方源
+echo \
+   &quot;deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable&quot; | sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+</code></pre>
 <p>以上命令会添加稳定版本的 Docker APT 镜像源，如果需要测试版本的 Docker 请将 stable 改为 test。</p>
 <p>安装docker:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
-
+<pre><code>sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+</code></pre>
 <h3 id="1-3配置阿里云镜像加速器"><a href="#1-3配置阿里云镜像加速器" class="headerlink" title="1.3配置阿里云镜像加速器"></a>1.3配置阿里云镜像加速器</h3><p>参考网址：<a target="_blank" rel="noopener" href="https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors">点我查看</a></p>
 <p>需要个人注册阿里云账号并开启容器镜像服务，该服务免费。</p>
 <p>然后查看镜像加速地址，例如我的镜像加速地址为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://znrurdgu.mirror.aliyuncs.com</span><br></pre></td></tr></table></figure>
-
+<pre><code>https://znrurdgu.mirror.aliyuncs.com
+</code></pre>
 <p>注意：这里需要是自己的镜像加速器，否则没有权限访问。</p>
 <p>执行如下命令配置docker：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 生成配置文件</span><br><span class="line">docker-machine ssh default</span><br><span class="line"># 设置加速器地址：</span><br><span class="line"># sed -i &quot;s|EXTRA_ARGS=&#x27;|EXTRA_ARGS=&#x27;--registry-mirror=自己的镜像加速地址|g&quot; /var/lib/boot2docker/profile</span><br><span class="line">sed -i &quot;s|EXTRA_ARGS=&#x27;|EXTRA_ARGS=&#x27;--registry-mirror=https://znrurdgu.mirror.aliyuncs.com|g&quot; /var/lib/boot2docker/profile</span><br><span class="line"># 退出docker</span><br><span class="line">exit</span><br><span class="line"># 重启</span><br><span class="line">docker-machine restart default</span><br><span class="line"># 查看</span><br><span class="line">docker info</span><br></pre></td></tr></table></figure>
-
+<pre><code># 生成配置文件
+docker-machine ssh default
+# 设置加速器地址：
+# sed -i &quot;s|EXTRA_ARGS=&#39;|EXTRA_ARGS=&#39;--registry-mirror=自己的镜像加速地址|g&quot; /var/lib/boot2docker/profile
+sed -i &quot;s|EXTRA_ARGS=&#39;|EXTRA_ARGS=&#39;--registry-mirror=https://znrurdgu.mirror.aliyuncs.com|g&quot; /var/lib/boot2docker/profile
+# 退出docker
+exit
+# 重启
+docker-machine restart default
+# 查看
+docker info
+</code></pre>
 <p>查看docker信息后，可以发现 Registory mirrors 项的内容为刚刚设置的阿里云镜像地址。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p /etc/docker</span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-&#x27;EOF&#x27;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https://znrurdgu.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
-
-
-
+<pre><code>sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json &lt;&lt;-&#39;EOF&#39;
+&#123;
+  &quot;registry-mirrors&quot;: [&quot;https://znrurdgu.mirror.aliyuncs.com&quot;]
+&#125;
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+</code></pre>
 <h2 id="2-安装-nvidia-docker"><a href="#2-安装-nvidia-docker" class="headerlink" title="2.安装 nvidia-docker"></a>2.安装 nvidia-docker</h2><p>docker 默认是不支持在容器内 GPU 加速的，NVIDIA 官方做了个工具箱来支持容器内 GPU 加速运算，这大大方便了深度学习开发者。</p>
 <p>官方教程：<a target="_blank" rel="noopener" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#installing-on-ubuntu-and-debian">点我查看</a></p>
 <p>参考教程：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zhouchen1998/article/details/110679750">点我查看</a></p>
 <p>依次执行如下命令即可：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \</span><br><span class="line">   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \</span><br><span class="line">   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -s -L https://nvidia.github.io/nvidia-container-runtime/experimental/$distribution/nvidia-container-runtime.list | sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo apt-get update</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo apt-get install -y nvidia-docker2</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<pre><code>distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - \
+   &amp;&amp; curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
+
+curl -s -L https://nvidia.github.io/nvidia-container-runtime/experimental/$distribution/nvidia-container-runtime.list | sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+
+
+sudo apt-get update
+
+
+sudo apt-get install -y nvidia-docker2
+
+
+sudo systemctl restart docker
+</code></pre>
 <h2 id="3-拉取cuda、cudnn的镜像"><a href="#3-拉取cuda、cudnn的镜像" class="headerlink" title="3.拉取cuda、cudnn的镜像"></a>3.拉取cuda、cudnn的镜像</h2><p>docker hub地址：<a target="_blank" rel="noopener" href="https://hub.docker.com/r/nvidia/cuda">点我查看</a></p>
 <p>官网给出多个版本可供拉取，这里使用cuda:10.0-cudnn7-devel-ubuntu16.04</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+</code></pre>
 <h2 id="4-新建容器"><a href="#4-新建容器" class="headerlink" title="4.新建容器"></a>4.新建容器</h2><p>容器与镜像的关系好比：镜像为C++中的类，而容器为镜像的实例话，这里基于拉去的cuda:10.0-cudnn7-devel-ubuntu16.04镜像创建一个新的容器并进入容器中：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container run --name pytorch1.1-gpu -it --gpus all  nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container run --name pytorch1.1-gpu -it --gpus all  nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash
+</code></pre>
 <p>解释：</p>
 <ul>
 <li>docker container run：容器启动命令，同时会新建一个容器，因此该命令是在新建容器时使用</li>
@@ -482,107 +541,215 @@ ubuntu下安装参考教程：点我查看
 <ul>
 <li>查看正在运行的容器：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container ls
+</code></pre>
 <ul>
 <li>查看容器运行历史：</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls -a</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container ls -a
+</code></pre>
 <p>这里可以看到刚才运行的容器pytorch1.1-gpu的信息。</p>
 <h3 id="4-1-重启容器"><a href="#4-1-重启容器" class="headerlink" title="4.1.重启容器"></a>4.1.重启容器</h3><p>docker container start + 容器名或容器ID，启动一个已经完成创建并停止运行的容器：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container start pytorch1.1-gpu</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container start pytorch1.1-gpu
+</code></pre>
 <p>查看正在运行的容器：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container ls
+</code></pre>
 <p>docker container exec   命令用于进入正在运行的容器：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container exec -it pytorch1.1-gpu /bin/bash</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container exec -it pytorch1.1-gpu /bin/bash
+</code></pre>
 <h3 id="4-2停止容器"><a href="#4-2停止容器" class="headerlink" title="4.2停止容器"></a>4.2停止容器</h3><p>docker container stop   用于停止正在运行的容器：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container stop pytorch1.1-gpu</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-3删除容器"><a href="#4-3删除容器" class="headerlink" title="4.3删除容器"></a>4.3删除容器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container rm  待删除的容器命令或ID</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker container stop pytorch1.1-gpu
+</code></pre>
+<h3 id="4-3删除容器"><a href="#4-3删除容器" class="headerlink" title="4.3删除容器"></a>4.3删除容器</h3><pre><code>docker container rm  待删除的容器命令或ID
+</code></pre>
 <p>注意：删除容器之前需要停止容器，避免报错。</p>
-<h2 id="5-安装常用工具"><a href="#5-安装常用工具" class="headerlink" title="5.安装常用工具"></a>5.安装常用工具</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 安装git</span><br><span class="line">apt-get install git -y</span><br><span class="line"></span><br><span class="line"># 安装vim</span><br><span class="line">apt install vim</span><br><span class="line"></span><br><span class="line"># 安装cmake</span><br><span class="line">apt install cmake</span><br><span class="line"></span><br><span class="line"># 安装updatedb</span><br><span class="line">apt-get install mlocate</span><br><span class="line"></span><br><span class="line"># 安装wget</span><br><span class="line">apt-get install wget</span><br><span class="line"># 安装curl</span><br><span class="line">apt-get install curl</span><br></pre></td></tr></table></figure>
+<h2 id="5-安装常用工具"><a href="#5-安装常用工具" class="headerlink" title="5.安装常用工具"></a>5.安装常用工具</h2><pre><code># 安装git
+apt-get install git -y
 
+# 安装vim
+apt install vim
+
+# 安装cmake
+apt install cmake
+
+# 安装updatedb
+apt-get install mlocate
+
+# 安装wget
+apt-get install wget
+# 安装curl
+apt-get install curl
+</code></pre>
 <h2 id="6-在容器中安装python"><a href="#6-在容器中安装python" class="headerlink" title="6.在容器中安装python"></a>6.在容器中安装python</h2><p>新建的容器默认没有python或pip、vim等工具，除非新建容器时将这些包一并装入，因此需要手动安装一些需要的包。新的容器中 apt-get 或 apt 命令是可以使用的：</p>
 <p>参考网站：<a target="_blank" rel="noopener" href="https://www.digitalocean.com/community/questions/unable-to-install-pyhton-3-7-version-on-ubuntu-16-04-error-couldn-t-find-any-package-by-regex-python3-7">点我查看</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#更新源</span><br><span class="line">apt update</span><br><span class="line"></span><br><span class="line">#安装python依赖</span><br><span class="line">apt install software-properties-common</span><br><span class="line"></span><br><span class="line">#添加源</span><br><span class="line">add-apt-repository ppa:deadsnakes/ppa</span><br><span class="line"></span><br><span class="line">#更新源</span><br><span class="line">apt update</span><br><span class="line"></span><br><span class="line">#安装python</span><br><span class="line">apt install python3.7</span><br><span class="line"></span><br><span class="line">#查看python版本</span><br><span class="line">python --version 或 python -V</span><br><span class="line">python3 --version 或 python3 -V</span><br></pre></td></tr></table></figure>
+<pre><code>#更新源
+apt update
 
+#安装python依赖
+apt install software-properties-common
+
+#添加源
+add-apt-repository ppa:deadsnakes/ppa
+
+#更新源
+apt update
+
+#安装python
+apt install python3.7
+
+#查看python版本
+python --version 或 python -V
+python3 --version 或 python3 -V
+</code></pre>
 <p>安装完python3.7可能需要修改默认python指向才能正常使用python3.7：</p>
 <p>参考网站：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33188180/article/details/109723636">点我查看</a></p>
 <p>查看默认python指向：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls -l /usr/bin | grep python </span><br></pre></td></tr></table></figure>
-
+<pre><code>ls -l /usr/bin | grep python 
+</code></pre>
 <p>删除原有python软连接：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm /usr/bin/python</span><br></pre></td></tr></table></figure>
-
+<pre><code>rm /usr/bin/python
+</code></pre>
 <p>建立python到新的软链接python3.7：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/bin/python3.7  /usr/bin/python</span><br></pre></td></tr></table></figure>
-
+<pre><code>ln -s /usr/bin/python3.7  /usr/bin/python
+</code></pre>
 <h2 id="7-在容器中安装pip"><a href="#7-在容器中安装pip" class="headerlink" title="7.在容器中安装pip"></a>7.在容器中安装pip</h2><p>这里也有个小坑！如果你写的是python3-pip 执行安装后，如果系统自带了python3.5，其实pip这时是装在了python3.5环境下了！！正确的指定方式，应该把小版本号也加上！</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt-get install python3.7-pip</span><br></pre></td></tr></table></figure>
-
+<pre><code>apt-get install python3.7-pip
+</code></pre>
 <p>但是执行上述命令可能会报错，如果报错需要安装下面的方法添加pip安装源：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py</span><br></pre></td></tr></table></figure>
-
+<pre><code>curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+</code></pre>
 <p>由于上面已经将python指向了python3，因此下面直接使用python安装即可，否者要使用python3安装：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python get-pip.py --force-reinstall</span><br></pre></td></tr></table></figure>
-
+<pre><code>python get-pip.py --force-reinstall
+</code></pre>
 <p>查看pip位置：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">which pip</span><br></pre></td></tr></table></figure>
-
+<pre><code>which pip
+</code></pre>
 <p>我在安装后显示安装在：&#x2F;usr&#x2F;local&#x2F;bin&#x2F;pip</p>
 <p>建立pip软链接：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln -s /usr/local/bin/pip /usr/bin/pip</span><br></pre></td></tr></table></figure>
-
+<pre><code>ln -s /usr/local/bin/pip /usr/bin/pip
+</code></pre>
 <p>注意：第一个地址  &#x2F;usr&#x2F;local&#x2F;bin&#x2F;pip  为  which pip  的显示地址</p>
 <p>查看pip版本：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip -V 或 pip --version</span><br></pre></td></tr></table></figure>
-
+<pre><code>pip -V 或 pip --version
+</code></pre>
 <p>我的显示位置为：pip 20.3.4 from &#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.7&#x2F;dist-packages&#x2F;pip (python 3.7)</p>
 <p>至此，python将指向python3.7，pip将指向python 3.7的pip 20.3.4，实现python和pip的版本对应，且目标容器内二者都是唯一存在，不需要再使用python3和pip3调用python3的对应版本，这样使用pip安装的包将默认存放在  &#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.7&#x2F;dist-packages  中。</p>
 <h2 id="8-安装PyTorch"><a href="#8-安装PyTorch" class="headerlink" title="8.安装PyTorch"></a>8.安装PyTorch</h2><p>最新版本安装方法：<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/locally/">点我查看</a></p>
 <p>历史版本安装方法：<a target="_blank" rel="noopener" href="https://pytorch.org/get-started/previous-versions/">点我查看</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install torch==1.1.0 torchvision==0.3.0</span><br></pre></td></tr></table></figure>
-
+<pre><code>pip install torch==1.1.0 torchvision==0.3.0
+</code></pre>
 <h2 id="9-安装eigen3"><a href="#9-安装eigen3" class="headerlink" title="9.安装eigen3"></a>9.安装eigen3</h2><p>参考网址：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiangxianghehe/article/details/81236299?utm_medium=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~BlogCommendFromMachineLearnPai2~default-4.control">点我查看</a></p>
-<h3 id="9-1安装依赖"><a href="#9-1安装依赖" class="headerlink" title="9.1安装依赖"></a>9.1安装依赖</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apt-get install libopenblas-dev</span><br><span class="line">apt-get install --no-install-recommends libboost1.58-all-dev</span><br><span class="line">apt-get install libx11-dev</span><br><span class="line">apt-get install libgl1-mesa-dev </span><br><span class="line">apt-get install libglu1-mesa-dev </span><br><span class="line">apt-get install freeglut3-dev</span><br><span class="line">apt-get install doxygen</span><br><span class="line">wget https://nchc.dl.sourceforge.net/project/glew/glew/2.1.0/glew-2.1.0.tgz --no-check-certificate</span><br><span class="line">tar -xzvf glew-2.1.0.tgz</span><br><span class="line">cd glew-2.1.0/</span><br><span class="line">make </span><br><span class="line">make install</span><br><span class="line">ldconfig -v</span><br></pre></td></tr></table></figure>
-
-<h3 id="9-2安装Eigen3-3-5"><a href="#9-2安装Eigen3-3-5" class="headerlink" title="9.2安装Eigen3.3.5"></a>9.2安装Eigen3.3.5</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wget https://github.com/eigenteam/eigen-git-mirror/archive/3.3.5.tar.gz</span><br><span class="line">tar -xzvf 3.3.5.tar.gz </span><br><span class="line">mv eigen-git-mirror-3.3.5/ eigen-3.3.5/</span><br><span class="line">cd eigen-3.3.5/</span><br><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br><span class="line">make install </span><br><span class="line">ldconfig -v</span><br></pre></td></tr></table></figure>
-
+<h3 id="9-1安装依赖"><a href="#9-1安装依赖" class="headerlink" title="9.1安装依赖"></a>9.1安装依赖</h3><pre><code>apt-get install libopenblas-dev
+apt-get install --no-install-recommends libboost1.58-all-dev
+apt-get install libx11-dev
+apt-get install libgl1-mesa-dev 
+apt-get install libglu1-mesa-dev 
+apt-get install freeglut3-dev
+apt-get install doxygen
+wget https://nchc.dl.sourceforge.net/project/glew/glew/2.1.0/glew-2.1.0.tgz --no-check-certificate
+tar -xzvf glew-2.1.0.tgz
+cd glew-2.1.0/
+make 
+make install
+ldconfig -v
+</code></pre>
+<h3 id="9-2安装Eigen3-3-5"><a href="#9-2安装Eigen3-3-5" class="headerlink" title="9.2安装Eigen3.3.5"></a>9.2安装Eigen3.3.5</h3><pre><code>wget https://github.com/eigenteam/eigen-git-mirror/archive/3.3.5.tar.gz
+tar -xzvf 3.3.5.tar.gz 
+mv eigen-git-mirror-3.3.5/ eigen-3.3.5/
+cd eigen-3.3.5/
+mkdir build
+cd build
+cmake ..
+make
+make install 
+ldconfig -v
+</code></pre>
 <h3 id="9-3测试"><a href="#9-3测试" class="headerlink" title="9.3测试"></a>9.3测试</h3><p>在容器中创建测试文件夹：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir install_test</span><br></pre></td></tr></table></figure>
-
+<pre><code>mkdir install_test
+</code></pre>
 <p>在宿主机上创建如下文件：</p>
 <ul>
 <li>CMakeLists.txt</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required( VERSION 2.8 )</span><br><span class="line">project(useEigen)</span><br><span class="line"></span><br><span class="line">set( CMAKE_BUILD_TYPE &quot;Release&quot; )</span><br><span class="line">set( CMAKE_CXX_FLAGS &quot;-O3&quot; )</span><br><span class="line">set( CMAKE_CXX_FLAGS &quot;-std=c++11&quot;)</span><br><span class="line"></span><br><span class="line"># 添加Eigen头文件</span><br><span class="line">include_directories( &quot;/usr/local/include/eigen3&quot; )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">add_executable(useEigen  main.cpp)</span><br><span class="line">find_package(Eigen3 REQUIRED)</span><br><span class="line">target_link_libraries($&#123;PROJECT_NAME&#125;  $&#123;EIGEN3_LIBS&#125;)</span><br></pre></td></tr></table></figure>
+<pre><code>cmake_minimum_required( VERSION 2.8 )
+project(useEigen)
 
+set( CMAKE_BUILD_TYPE &quot;Release&quot; )
+set( CMAKE_CXX_FLAGS &quot;-O3&quot; )
+set( CMAKE_CXX_FLAGS &quot;-std=c++11&quot;)
+
+# 添加Eigen头文件
+include_directories( &quot;/usr/local/include/eigen3&quot; )
+
+
+add_executable(useEigen  main.cpp)
+find_package(Eigen3 REQUIRED)
+target_link_libraries($&#123;PROJECT_NAME&#125;  $&#123;EIGEN3_LIBS&#125;)
+</code></pre>
 <ul>
 <li>main.cpp</li>
 </ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;fstream&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;Eigen/Core&gt;</span><br><span class="line">#include &lt;Eigen/Dense&gt;</span><br><span class="line">#include &lt;Eigen/Geometry&gt;</span><br><span class="line">#include &lt;Eigen/StdVector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    //1.rotation vector to  rotation matrix</span><br><span class="line">    Eigen::AngleAxisd rotationVector(M_PI/4,Eigen::Vector3d(0,0,1));</span><br><span class="line">    Eigen::Matrix3d rotationMatrix=Eigen::Matrix3d::Identity();</span><br><span class="line">    rotationMatrix=rotationVector.toRotationMatrix();</span><br><span class="line">    cout&lt;&lt;&quot;rotationMatrix \n&quot;&lt;&lt;rotationMatrix&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    //2.rotation vector to quaterniond</span><br><span class="line">    Eigen::Quaterniond q=Eigen::Quaterniond( rotationVector );</span><br><span class="line">    cout&lt;&lt;&quot;rotation quaternion \n&quot;&lt;&lt;q.coeffs()&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">    //3.rotaion vector to eulerAngles</span><br><span class="line">    Eigen::Vector3d eulerAngle=rotationVector.matrix().eulerAngles(0,1,2);</span><br><span class="line">    cout&lt;&lt;&quot;eulerAngle roll pitch yaw\n&quot;&lt;&lt;180*eulerAngle/M_PI&lt;&lt;endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;vector&gt;
 
+#include &lt;Eigen/Core&gt;
+#include &lt;Eigen/Dense&gt;
+#include &lt;Eigen/Geometry&gt;
+#include &lt;Eigen/StdVector&gt;
+
+using namespace std;
+int main()
+&#123;
+    //1.rotation vector to  rotation matrix
+    Eigen::AngleAxisd rotationVector(M_PI/4,Eigen::Vector3d(0,0,1));
+    Eigen::Matrix3d rotationMatrix=Eigen::Matrix3d::Identity();
+    rotationMatrix=rotationVector.toRotationMatrix();
+    cout&lt;&lt;&quot;rotationMatrix \n&quot;&lt;&lt;rotationMatrix&lt;&lt;endl;
+
+    //2.rotation vector to quaterniond
+    Eigen::Quaterniond q=Eigen::Quaterniond( rotationVector );
+    cout&lt;&lt;&quot;rotation quaternion \n&quot;&lt;&lt;q.coeffs()&lt;&lt;endl;
+
+    //3.rotaion vector to eulerAngles
+    Eigen::Vector3d eulerAngle=rotationVector.matrix().eulerAngles(0,1,2);
+    cout&lt;&lt;&quot;eulerAngle roll pitch yaw\n&quot;&lt;&lt;180*eulerAngle/M_PI&lt;&lt;endl;
+    return 0;
+&#125;
+</code></pre>
 <p>将宿主机上的两个文件拷贝至容器中的install_test里进行测试：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker cp CMakeLists.txt pytorch1.1-gpu:/home/eigen-3.3.5/install_test</span><br><span class="line">docker cp main.cpp  pytorch1.1-gpu:/home/eigen-3.3.5/install_test</span><br></pre></td></tr></table></figure>
-
+<pre><code>docker cp CMakeLists.txt pytorch1.1-gpu:/home/eigen-3.3.5/install_test
+docker cp main.cpp  pytorch1.1-gpu:/home/eigen-3.3.5/install_test
+</code></pre>
 <p>测试：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd install_test</span><br><span class="line">cmake  .</span><br><span class="line">make</span><br><span class="line">./useEigen</span><br></pre></td></tr></table></figure>
-
+<pre><code>cd install_test
+cmake  .
+make
+./useEigen
+</code></pre>
 <p>若显示结果如下，则说明测试成功。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">rotationMatrix </span><br><span class="line"> 0.707107 -0.707107         0</span><br><span class="line"> 0.707107  0.707107         0</span><br><span class="line">        0         0         1</span><br><span class="line">rotation quaternion </span><br><span class="line">       0</span><br><span class="line">       0</span><br><span class="line">0.382683</span><br><span class="line"> 0.92388</span><br><span class="line">eulerAngle roll pitch yaw</span><br><span class="line">-0</span><br><span class="line"> 0</span><br><span class="line">45</span><br></pre></td></tr></table></figure>
-
+<pre><code>rotationMatrix 
+ 0.707107 -0.707107         0
+ 0.707107  0.707107         0
+        0         0         1
+rotation quaternion 
+       0
+       0
+0.382683
+ 0.92388
+eulerAngle roll pitch yaw
+-0
+ 0
+45
+</code></pre>
 <h2 id="10-安装tensorflow"><a href="#10-安装tensorflow" class="headerlink" title="10.安装tensorflow"></a>10.安装tensorflow</h2><ul>
 <li>tensorflow与cuda的版本对应关系</li>
 </ul>
 <p><img src="https://i.loli.net/2021/05/21/PEoKmlhbcXisCWt.png"></p>
 <p>安装命令：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install tensorflow-gpu==2.0 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com</span><br></pre></td></tr></table></figure>
-
+<pre><code>pip install tensorflow-gpu==2.0 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+</code></pre>
 
                 
             </div>

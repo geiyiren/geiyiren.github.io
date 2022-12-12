@@ -565,7 +565,7 @@ int main()
      cout&lt;&lt;&quot;address:&quot;&lt;&lt;p&lt;&lt;&quot;value:&quot;&lt;&lt;*p&lt;&lt;endl;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：我们这里虽然使用的是传指针，但是却不是直接改变指针变量指向的地址的值，却是想通过改变指针变量指向的地址来修改它的值，显然这样失败了。</p>
-<p><img src="https://github.com/geiyiren/MyBlog/edit/main/source/_posts/img/1_no.png" alt="错误使用"></p>
+<p><img src="/./img/1_no.png" alt="错误使用"></p>
 <p>如果我们希望在函数里面修改指针变量存储的地址而不是它的值，这个时候就需要指针引用了。类似于普通变量传入变量引用，我们也传入一个指针引用，在函数里面，你可以将pp认为和p都是这个指针变量（&amp;p&#x3D;&#x3D;&amp;pp），不似传入指针参数的时候形参和实参的变量（&amp;p！&#x3D;&amp;pp）地址不一样。此时我们操作pp的值就是更改了p的值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int *&amp;pp)
 &#123;

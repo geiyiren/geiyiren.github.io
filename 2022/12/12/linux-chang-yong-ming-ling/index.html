@@ -482,27 +482,18 @@ do
   ffmpeg -i $file -s 1280*720 -pix_fmt nv12 $str
 done
 </code></pre>
-<h1 id="abd-常用命令"><a href="#abd-常用命令" class="headerlink" title="abd 常用命令"></a>abd 常用命令</h1><h2 id="打开调试端口"><a href="#打开调试端口" class="headerlink" title="打开调试端口"></a>打开调试端口</h2><pre><code>adb tcpip 5555
-</code></pre>
-<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><pre><code>adb connect 10.10.200.140
-</code></pre>
-<h2 id="进入远程终端"><a href="#进入远程终端" class="headerlink" title="进入远程终端"></a>进入远程终端</h2><pre><code>adb shell
-</code></pre>
-<h2 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h2><pre><code>adb kill-server
-</code></pre>
-<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre><code>adb start-server
-</code></pre>
-<h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre><code>adb remount
-</code></pre>
-<h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre><code>adb root
-</code></pre>
-<h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre><code>setprop persist.otg.mode device
-</code></pre>
+<h1 id="abd-常用命令"><a href="#abd-常用命令" class="headerlink" title="abd 常用命令"></a>abd 常用命令</h1><h2 id="打开调试端口"><a href="#打开调试端口" class="headerlink" title="打开调试端口"></a>打开调试端口</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb tcpip <span class="token number">5555</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb connect <span class="token number">10.10</span>.200.140<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="进入远程终端"><a href="#进入远程终端" class="headerlink" title="进入远程终端"></a>进入远程终端</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb kill-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb start-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb remount<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">setprop persist.otg.mode device<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>远程登录后使用上述命令</li>
 </ul>
-<h1 id="远程为安卓设备安装软件"><a href="#远程为安卓设备安装软件" class="headerlink" title="远程为安卓设备安装软件"></a>远程为安卓设备安装软件</h1><pre><code>adb install Launcher3.apk
-</code></pre>
+<h1 id="远程为安卓设备安装软件"><a href="#远程为安卓设备安装软件" class="headerlink" title="远程为安卓设备安装软件"></a>远程为安卓设备安装软件</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb <span class="token function">install</span> Launcher3.apk<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>在本地执行上述命令</li>
 </ul>
@@ -541,9 +532,19 @@ adb shell logcat <span class="token parameter variable">-s</span> NATIVE_LOG <sp
 <span class="token comment">#保存程序运行严重错误日志(一般程序异常退出时打印该log)</span>
 adb shell logcat *:F <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><blockquote>
-<p>data<br>└── gpu0————<br>    ├── calibrate<br>    │   ├── <strong>CALMAT.BIN</strong><br>    │   └── <strong>LENS.BIN</strong><br>    └── shader<br>        ├── <strong>avm_3d_blend_lut.bin</strong><br>        ├── <strong>avm_3d_indices.bin</strong><br>        ├── <strong>avm_3d_lut.bin</strong><br>        ├── car_model_line.fs<br>        ├── car_model_line.vs<br>        ├── car_model_test.fs<br>        ├── car_model_test.vs</p>
-</blockquote>
+<h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">data
+└── gpu0------------
+    ├── calibrate
+    │   ├── **CALMAT.BIN**
+    │   └── **LENS.BIN**
+    └── shader
+        ├── **avm_3d_blend_lut.bin**
+        ├── **avm_3d_indices.bin**
+        ├── **avm_3d_lut.bin**
+        ├── car_model_line.fs
+        ├── car_model_line.vs
+        ├── car_model_test.fs
+        ├── car_model_test.vs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="鸿鹄Bug查询关键字"><a href="#鸿鹄Bug查询关键字" class="headerlink" title="鸿鹄Bug查询关键字"></a>鸿鹄Bug查询关键字</h2><table>
 <thead>
 <tr>

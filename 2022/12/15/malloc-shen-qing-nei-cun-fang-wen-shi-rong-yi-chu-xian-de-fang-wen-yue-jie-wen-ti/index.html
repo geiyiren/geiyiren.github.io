@@ -473,7 +473,7 @@ void dist2undist()
 那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
 <hr>
-<p><font color="Red"><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
+<p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
 
                 
             </div>

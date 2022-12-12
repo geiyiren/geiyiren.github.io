@@ -565,15 +565,15 @@ int main()
      cout&lt;&lt;&quot;address:&quot;&lt;&lt;p&lt;&lt;&quot;value:&quot;&lt;&lt;*p&lt;&lt;endl;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：我们这里虽然使用的是传指针，但是却不是直接改变指针变量指向的地址的值，却是想通过改变指针变量指向的地址来修改它的值，显然这样失败了。</p>
-<p><img src="/.com//no.png" alt="错误使用"></p>
+<p><img src="/no.png" alt="错误使用"></p>
 <p>如果我们希望在函数里面修改指针变量存储的地址而不是它的值，这个时候就需要指针引用了。类似于普通变量传入变量引用，我们也传入一个指针引用，在函数里面，你可以将pp认为和p都是这个指针变量（&amp;p&#x3D;&#x3D;&amp;pp），不似传入指针参数的时候形参和实参的变量（&amp;p！&#x3D;&amp;pp）地址不一样。此时我们操作pp的值就是更改了p的值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int *&amp;pp)
 &#123;
     pp&#x3D;new int(66); &#x2F;&#x2F;改变p指向的地址
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：当我们修改传入参数为指针的引用的时候就可以修改指针变量所指向的地址了，可以看见，传入指针引用可以修改指针变量的值（p）和指向的值（*p）。</p>
-<p><img src="/.com//yes.png" alt="正确使用"></p>
-<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><h2 id="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）"><a href="#指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）" class="headerlink" title="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：- 二级指针的地址（&amp;pp）- 二级指针的地址保存的地址（pp）- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）"></a>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：<br>- 二级指针的地址（&amp;pp）<br>- 二级指针的地址保存的地址（pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</h2><p><img src="/.com//kuangtu.png" alt="框图"></p>
+<p><img src="/yes.png" alt="正确使用"></p>
+<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><h2 id="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）"><a href="#指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）" class="headerlink" title="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：- 二级指针的地址（&amp;pp）- 二级指针的地址保存的地址（pp）- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）"></a>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：<br>- 二级指针的地址（&amp;pp）<br>- 二级指针的地址保存的地址（pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</h2><p><img src="/kuangtu.png" alt="框图"></p>
 <p>除了上面传入指针引用改变一级指针指向的地址以外，我们还可以通过传入一个二级指针去修改它对应的一级指针指向的地址，同样达到了修改指针变量的效果。二级指针的指向的地址存储的值就是一级指针指向的地址。对一级指针变量解引用得到的是指针指向的地址存储的数据，二级指针变量解引用得到的也是该二级指针指向的地址存储的地址值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int **pp)
 &#123;
@@ -591,7 +591,7 @@ int main()
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>运行结果如下：通过对二级指针的解引用赋值成功修改了一级指针指向的地址。如果仅仅在make函数里面对**pp&#x3D;66;操作，那么所有的地址不会改变，仅仅会改变值为66。</p>
-<p><img src="/.com//yes2.png" alt="二级指针"></p>
+<p><img src="/yes2.png" alt="二级指针"></p>
 <h1 id="各种类型的函数参数传递"><a href="#各种类型的函数参数传递" class="headerlink" title="各种类型的函数参数传递"></a>各种类型的函数参数传递</h1><h2 id="声明-h"><a href="#声明-h" class="headerlink" title="声明.h"></a>声明.h</h2><pre class="line-numbers language-C" data-language="C"><div class="caption"><span>++</span></div><code class="language-C">&#x2F;&#x2F; 结构体数组   (in_ldc)
 void getLdc(TLensDistortionCorrection (&amp;in_ldc)[NUM_CAMERAS]);
 &#x2F;&#x2F; cv::Mat  (in_MatK)

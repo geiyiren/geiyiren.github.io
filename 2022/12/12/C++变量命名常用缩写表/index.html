@@ -4,10 +4,41 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="malloc申请内存访问时容易出现的访问越界问题, geiyiren">
-    <meta name="description" content="malloc相关malloc申请内存访问bug
-在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。
-例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输">
+    <meta name="keywords" content="C++变量命名常用缩写表, geiyiren">
+    <meta name="description" content="
+
+
+全 称
+缩 写
+
+
+
+Address
+addr
+
+
+Administrator
+adm
+
+
+average
+avg
+
+
+Application
+app
+
+
+Argument
+arg
+
+
+Database
+DB
+
+
+assemble
+a">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -19,7 +50,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>malloc申请内存访问时容易出现的访问越界问题 | geiyiren</title>
+    <title>C++变量命名常用缩写表 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -327,12 +358,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">malloc申请内存访问时容易出现的访问越界问题</h1>
+                    <h1 class="description center-align post-title">C++变量命名常用缩写表</h1>
                 </div>
             </div>
         </div>
@@ -360,12 +391,8 @@
                                 <span class="chip bg-color">C++</span>
                             </a>
                         
-                            <a href="/tags/malloc/">
-                                <span class="chip bg-color">malloc</span>
-                            </a>
-                        
-                            <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
-                                <span class="chip bg-color">内存访问</span>
+                            <a href="/tags/%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D/">
+                                <span class="chip bg-color">变量命名</span>
                             </a>
                         
                     </div>
@@ -389,7 +416,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-12-15
+                    2022-12-12
                 </div>
                 
 
@@ -403,7 +430,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    521
+                    286
                 </div>
                 
 
@@ -428,52 +455,506 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
-<li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
-<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;构建4路YUV鱼眼图像去畸变映射关系
-void dist2undist()
-&#123;
-    float point_u_tmp[2], point_d_tmp[2];
-    float sf &#x3D; 1.5;
-    int img_out_height &#x3D; 720 * img_out_h_scale;
-    int img_out_width &#x3D; 1280 * img_out_w_scale;
-    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
-
-    for (int index &#x3D; 0; index &lt; NUM_CAMERAS; index++)
-    &#123;
-        &#x2F;&#x2F; 这里就是bug所在
-        undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * 2 * sizeof(float));
-
-        if (undist_map[index] &#x3D;&#x3D; NULL)
-        &#123;
-            LOGI(1, &quot;undist_map malloc failed!&quot;);
-        &#125;
-        for (int i &#x3D; 0; i &lt; img_out_height; i +&#x3D; 1)
-        &#123;
-            for (int j &#x3D; 0; j &lt; img_out_width; j +&#x3D; 1)
-            &#123;
-                point_u_tmp[0] &#x3D; j &#x2F; img_out_w_scale;
-                point_u_tmp[1] &#x3D; i &#x2F; img_out_h_scale;
-                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
-
-                undist_map[index][(i * img_out_width + j) * 2] &#x3D; point_d_tmp[0] * img_in_w_scale;
-                undist_map[index][(i * img_out_width + j) * 2 + 1] &#x3D; point_d_tmp[1] * img_in_h_scale;
-                if (!int(j % 2))
-                &#123;
-                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2;
-                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
-                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2 + 1;
-                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
-                &#125;
-            &#125;
-        &#125;
-    &#125;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
-</ul>
-<hr>
-<p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
+                <table>
+<thead>
+<tr>
+<th align="center">全 称</th>
+<th align="center">缩 写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Address</td>
+<td align="center">addr</td>
+</tr>
+<tr>
+<td align="center">Administrator</td>
+<td align="center">adm</td>
+</tr>
+<tr>
+<td align="center">average</td>
+<td align="center">avg</td>
+</tr>
+<tr>
+<td align="center">Application</td>
+<td align="center">app</td>
+</tr>
+<tr>
+<td align="center">Argument</td>
+<td align="center">arg</td>
+</tr>
+<tr>
+<td align="center">Database</td>
+<td align="center">DB</td>
+</tr>
+<tr>
+<td align="center">assemble</td>
+<td align="center">asm</td>
+</tr>
+<tr>
+<td align="center">Bitmap</td>
+<td align="center">bmp</td>
+</tr>
+<tr>
+<td align="center">back</td>
+<td align="center">bk</td>
+</tr>
+<tr>
+<td align="center">asynchronization</td>
+<td align="center">asyn</td>
+</tr>
+<tr>
+<td align="center">Button</td>
+<td align="center">btn</td>
+</tr>
+<tr>
+<td align="center">Buffer</td>
+<td align="center">buf</td>
+</tr>
+<tr>
+<td align="center">Calculate</td>
+<td align="center">calc</td>
+</tr>
+<tr>
+<td align="center">Character</td>
+<td align="center">char</td>
+</tr>
+<tr>
+<td align="center">Change</td>
+<td align="center">chg</td>
+</tr>
+<tr>
+<td align="center">Click</td>
+<td align="center">clk</td>
+</tr>
+<tr>
+<td align="center">color</td>
+<td align="center">clr</td>
+</tr>
+<tr>
+<td align="center">Command</td>
+<td align="center">cmd</td>
+</tr>
+<tr>
+<td align="center">Compare</td>
+<td align="center">cmp</td>
+</tr>
+<tr>
+<td align="center">Column</td>
+<td align="center">col</td>
+</tr>
+<tr>
+<td align="center">coordinates</td>
+<td align="center">coord</td>
+</tr>
+<tr>
+<td align="center">copy</td>
+<td align="center">cpy</td>
+</tr>
+<tr>
+<td align="center">Control</td>
+<td align="center">ctl &#x2F; ctrl</td>
+</tr>
+<tr>
+<td align="center">Current</td>
+<td align="center">cur</td>
+</tr>
+<tr>
+<td align="center">Cylinder</td>
+<td align="center">cyl</td>
+</tr>
+<tr>
+<td align="center">Debug</td>
+<td align="center">dbg</td>
+</tr>
+<tr>
+<td align="center">Double</td>
+<td align="center">dbl</td>
+</tr>
+<tr>
+<td align="center">Decrease</td>
+<td align="center">dec</td>
+</tr>
+<tr>
+<td align="center">default</td>
+<td align="center">def</td>
+</tr>
+<tr>
+<td align="center">Delete</td>
+<td align="center">del</td>
+</tr>
+<tr>
+<td align="center">Destination</td>
+<td align="center">dest &#x2F; dst</td>
+</tr>
+<tr>
+<td align="center">Device</td>
+<td align="center">dev</td>
+</tr>
+<tr>
+<td align="center">dictionary</td>
+<td align="center">dict</td>
+</tr>
+<tr>
+<td align="center">different</td>
+<td align="center">diff</td>
+</tr>
+<tr>
+<td align="center">directory</td>
+<td align="center">dir</td>
+</tr>
+<tr>
+<td align="center">Display</td>
+<td align="center">disp</td>
+</tr>
+<tr>
+<td align="center">Divide</td>
+<td align="center">div</td>
+</tr>
+<tr>
+<td align="center">Dialog</td>
+<td align="center">dlg</td>
+</tr>
+<tr>
+<td align="center">Document</td>
+<td align="center">doc</td>
+</tr>
+<tr>
+<td align="center">Driver</td>
+<td align="center">drv</td>
+</tr>
+<tr>
+<td align="center">Dynamic</td>
+<td align="center">dyna</td>
+</tr>
+<tr>
+<td align="center">Environment</td>
+<td align="center">env</td>
+</tr>
+<tr>
+<td align="center">error</td>
+<td align="center">err</td>
+</tr>
+<tr>
+<td align="center">Extend</td>
+<td align="center">ex&#x2F;ext</td>
+</tr>
+<tr>
+<td align="center">execute</td>
+<td align="center">exec</td>
+</tr>
+<tr>
+<td align="center">flag</td>
+<td align="center">flg</td>
+</tr>
+<tr>
+<td align="center">Frame</td>
+<td align="center">frm</td>
+</tr>
+<tr>
+<td align="center">Function</td>
+<td align="center">func &#x2F; fn</td>
+</tr>
+<tr>
+<td align="center">group</td>
+<td align="center">grp</td>
+</tr>
+<tr>
+<td align="center">Horizontal</td>
+<td align="center">horz</td>
+</tr>
+<tr>
+<td align="center">Index</td>
+<td align="center">idx &#x2F; ndx</td>
+</tr>
+<tr>
+<td align="center">Image</td>
+<td align="center">img</td>
+</tr>
+<tr>
+<td align="center">Implement</td>
+<td align="center">Impl</td>
+</tr>
+<tr>
+<td align="center">Increase</td>
+<td align="center">inc</td>
+</tr>
+<tr>
+<td align="center">Information</td>
+<td align="center">info</td>
+</tr>
+<tr>
+<td align="center">Initial&#x2F;Initialize&#x2F;Initialization</td>
+<td align="center">init</td>
+</tr>
+<tr>
+<td align="center">Insert</td>
+<td align="center">ins</td>
+</tr>
+<tr>
+<td align="center">Instance</td>
+<td align="center">inst</td>
+</tr>
+<tr>
+<td align="center">Interrupt</td>
+<td align="center">INT &#x2F; intr</td>
+</tr>
+<tr>
+<td align="center">Length</td>
+<td align="center">len</td>
+</tr>
+<tr>
+<td align="center">Library</td>
+<td align="center">lib</td>
+</tr>
+<tr>
+<td align="center">Link</td>
+<td align="center">lnk</td>
+</tr>
+<tr>
+<td align="center">logical</td>
+<td align="center">log</td>
+</tr>
+<tr>
+<td align="center">List</td>
+<td align="center">lst</td>
+</tr>
+<tr>
+<td align="center">maximum</td>
+<td align="center">max</td>
+</tr>
+<tr>
+<td align="center">Memory</td>
+<td align="center">mem</td>
+</tr>
+<tr>
+<td align="center">Manage &#x2F; Manager</td>
+<td align="center">mgr &#x2F; man</td>
+</tr>
+<tr>
+<td align="center">middle</td>
+<td align="center">mid</td>
+</tr>
+<tr>
+<td align="center">minimum</td>
+<td align="center">min</td>
+</tr>
+<tr>
+<td align="center">Message</td>
+<td align="center">msg</td>
+</tr>
+<tr>
+<td align="center">Multiply</td>
+<td align="center">mul</td>
+</tr>
+<tr>
+<td align="center">Number</td>
+<td align="center">num</td>
+</tr>
+<tr>
+<td align="center">Object</td>
+<td align="center">obj</td>
+</tr>
+<tr>
+<td align="center">Offset</td>
+<td align="center">ofs</td>
+</tr>
+<tr>
+<td align="center">Origin &#x2F; Original</td>
+<td align="center">org</td>
+</tr>
+<tr>
+<td align="center">Parameter</td>
+<td align="center">param</td>
+</tr>
+<tr>
+<td align="center">picture</td>
+<td align="center">pic</td>
+</tr>
+<tr>
+<td align="center">package</td>
+<td align="center">pkg</td>
+</tr>
+<tr>
+<td align="center">Point</td>
+<td align="center">pnt &#x2F; pt</td>
+</tr>
+<tr>
+<td align="center">Position</td>
+<td align="center">pos</td>
+</tr>
+<tr>
+<td align="center">previous</td>
+<td align="center">pre &#x2F; prev</td>
+</tr>
+<tr>
+<td align="center">program</td>
+<td align="center">prg</td>
+</tr>
+<tr>
+<td align="center">Print</td>
+<td align="center">prn</td>
+</tr>
+<tr>
+<td align="center">Process &#x2F; Procedure</td>
+<td align="center">proc</td>
+</tr>
+<tr>
+<td align="center">Properties</td>
+<td align="center">prop</td>
+</tr>
+<tr>
+<td align="center">Password</td>
+<td align="center">psw</td>
+</tr>
+<tr>
+<td align="center">Pointer</td>
+<td align="center">ptr</td>
+</tr>
+<tr>
+<td align="center">Public</td>
+<td align="center">pub</td>
+</tr>
+<tr>
+<td align="center">rect</td>
+<td align="center">rc</td>
+</tr>
+<tr>
+<td align="center">Reference</td>
+<td align="center">ref</td>
+</tr>
+<tr>
+<td align="center">Register</td>
+<td align="center">reg</td>
+</tr>
+<tr>
+<td align="center">request</td>
+<td align="center">req</td>
+</tr>
+<tr>
+<td align="center">Resource</td>
+<td align="center">res</td>
+</tr>
+<tr>
+<td align="center">return</td>
+<td align="center">ret</td>
+</tr>
+<tr>
+<td align="center">region</td>
+<td align="center">rgn</td>
+</tr>
+<tr>
+<td align="center">screen</td>
+<td align="center">scr</td>
+</tr>
+<tr>
+<td align="center">Second</td>
+<td align="center">sec</td>
+</tr>
+<tr>
+<td align="center">Segment</td>
+<td align="center">seg</td>
+</tr>
+<tr>
+<td align="center">Select</td>
+<td align="center">sel</td>
+</tr>
+<tr>
+<td align="center">Source</td>
+<td align="center">src</td>
+</tr>
+<tr>
+<td align="center">Standard</td>
+<td align="center">std</td>
+</tr>
+<tr>
+<td align="center">Storage</td>
+<td align="center">stg</td>
+</tr>
+<tr>
+<td align="center">Stream</td>
+<td align="center">stm</td>
+</tr>
+<tr>
+<td align="center">String</td>
+<td align="center">str</td>
+</tr>
+<tr>
+<td align="center">Subtract</td>
+<td align="center">sub</td>
+</tr>
+<tr>
+<td align="center">summation</td>
+<td align="center">sum</td>
+</tr>
+<tr>
+<td align="center">Server</td>
+<td align="center">svr</td>
+</tr>
+<tr>
+<td align="center">Synchronization</td>
+<td align="center">sync</td>
+</tr>
+<tr>
+<td align="center">System</td>
+<td align="center">sys</td>
+</tr>
+<tr>
+<td align="center">Table</td>
+<td align="center">tbl</td>
+</tr>
+<tr>
+<td align="center">Temporary</td>
+<td align="center">temp &#x2F; tmp</td>
+</tr>
+<tr>
+<td align="center">translate&#x2F;transation&#x2F;transparent</td>
+<td align="center">tran &#x2F; trans</td>
+</tr>
+<tr>
+<td align="center">Test</td>
+<td align="center">tst</td>
+</tr>
+<tr>
+<td align="center">text</td>
+<td align="center">txt</td>
+</tr>
+<tr>
+<td align="center">Unknown</td>
+<td align="center">unk</td>
+</tr>
+<tr>
+<td align="center">Update</td>
+<td align="center">upd</td>
+</tr>
+<tr>
+<td align="center">Upgrade</td>
+<td align="center">upg</td>
+</tr>
+<tr>
+<td align="center">Utility</td>
+<td align="center">util</td>
+</tr>
+<tr>
+<td align="center">Variable</td>
+<td align="center">var</td>
+</tr>
+<tr>
+<td align="center">Version</td>
+<td align="center">ver</td>
+</tr>
+<tr>
+<td align="center">Vertical</td>
+<td align="center">vert</td>
+</tr>
+<tr>
+<td align="center">Virus</td>
+<td align="center">vir</td>
+</tr>
+<tr>
+<td align="center">Window</td>
+<td align="center">wnd</td>
+</tr>
+</tbody></table>
 
                 
             </div>
@@ -500,7 +981,7 @@ void dist2undist()
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/">http://example.com/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/</a>
+                    <a href="http://example.com/2022/12/12/C++%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D%E5%B8%B8%E7%94%A8%E7%BC%A9%E5%86%99%E8%A1%A8/">http://example.com/2022/12/12/C++%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D%E5%B8%B8%E7%94%A8%E7%BC%A9%E5%86%99%E8%A1%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -542,12 +1023,8 @@ void dist2undist()
                                     <span class="chip bg-color">C++</span>
                                 </a>
                             
-                                <a href="/tags/malloc/">
-                                    <span class="chip bg-color">malloc</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
-                                    <span class="chip bg-color">内存访问</span>
+                                <a href="/tags/%E5%8F%98%E9%87%8F%E5%91%BD%E5%90%8D/">
+                                    <span class="chip bg-color">变量命名</span>
                                 </a>
                             
                         </div>
@@ -626,70 +1103,11 @@ void dist2undist()
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
-            <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
-            <div class="card">
-                <a href="/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="malloc申请内存访问时容易出现的访问越界问题">
-                        
-                        <span class="card-title">malloc申请内存访问时容易出现的访问越界问题</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-15
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/C/" class="post-category">
-                                    C++
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/C/">
-                        <span class="chip bg-color">C++</span>
-                    </a>
-                    
-                    <a href="/tags/malloc/">
-                        <span class="chip bg-color">malloc</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
-                        <span class="chip bg-color">内存访问</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
         <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/12/12/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+                <a href="/2022/12/12/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
                     <div class="card-image">
                         
                         
@@ -705,9 +1123,9 @@ void dist2undist()
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-12
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-12-12
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -729,6 +1147,67 @@ void dist2undist()
                     
                     <a href="/tags/%E7%BB%88%E7%AB%AF/">
                         <span class="chip bg-color">终端</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2022/11/23/ubuntu-16-04-LTS%E4%B8%8B%E5%AE%89%E8%A3%85docker%E5%B9%B6%E5%88%9B%E5%BB%BA%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%8E%AF%E5%A2%83/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="ubuntu 16.04 LTS下安装docker并创建深度学习环境">
+                        
+                        <span class="card-title">ubuntu 16.04 LTS下安装docker并创建深度学习环境</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
+                                </a>
+                            
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/Ubuntu/" class="post-category">
+                                    Ubuntu
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
+                    </a>
+                    
+                    <a href="/tags/anaconda/">
+                        <span class="chip bg-color">anaconda</span>
+                    </a>
+                    
+                    <a href="/tags/Ubuntu/">
+                        <span class="chip bg-color">Ubuntu</span>
                     </a>
                     
                 </div>
@@ -854,7 +1333,7 @@ void dist2undist()
 
 
 <article id="post">
-  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/malloc申请内存访问时容易出现的访问越界问题malloc申请内存访问时容易出现的访问越界问题/malloc申请内存访问时容易出现的访问越界问题malloc申请内存访问时容易出现的访问越界问题.md">Edit Post</a>
+  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/C++变量命名常用缩写表/C++变量命名常用缩写表.md">Edit Post</a>
 </article>
 
 

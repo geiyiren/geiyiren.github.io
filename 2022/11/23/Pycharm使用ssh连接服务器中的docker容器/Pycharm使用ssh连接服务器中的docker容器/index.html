@@ -4,11 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Ubuntu16-04手动安装英伟达显卡驱动, geiyiren">
-    <meta name="description" content="1.屏蔽开源驱动屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：
-sudo gedit /etc/modprobe.d/blacklist.conf
+    <meta name="keywords" content="Pycharm使用ssh连接服务器中的docker容器, geiyiren">
+    <meta name="description" content="1.拉取cuda、cudnn的docker镜像docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
 
-然后添加内容到最底段，要回车另起一行。添加">
+2.新建并启动交互式容器docker run -it --name tensorfl">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +19,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Ubuntu16-04手动安装英伟达显卡驱动 | geiyiren</title>
+    <title>Pycharm使用ssh连接服务器中的docker容器 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -328,12 +327,12 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Ubuntu16-04手动安装英伟达显卡驱动</h1>
+                    <h1 class="description center-align post-title">Pycharm使用ssh连接服务器中的docker容器</h1>
                 </div>
             </div>
         </div>
@@ -361,8 +360,12 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                                 <span class="chip bg-color">ubuntu</span>
                             </a>
                         
-                            <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                <span class="chip bg-color">显卡驱动安装</span>
+                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">深度学习</span>
+                            </a>
+                        
+                            <a href="/tags/anaconda/">
+                                <span class="chip bg-color">anaconda</span>
                             </a>
                         
                     </div>
@@ -373,8 +376,8 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                Ubuntu
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                深度学习
                             </a>
                         
                     </div>
@@ -400,7 +403,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    585
+                    1.2k
                 </div>
                 
 
@@ -425,56 +428,133 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h2 id="1-拉取cuda、cudnn的docker镜像"><a href="#1-拉取cuda、cudnn的docker镜像" class="headerlink" title="1.拉取cuda、cudnn的docker镜像"></a>1.拉取cuda、cudnn的docker镜像</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h2 id="2-新建并启动交互式容器"><a href="#2-新建并启动交互式容器" class="headerlink" title="2.新建并启动交互式容器"></a>2.新建并启动交互式容器</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> run <span class="token parameter variable">-it</span> <span class="token parameter variable">--name</span> tensorflow1.2.1-gpu <span class="token parameter variable">-v</span> /home/docker_share/:/home/ <span class="token parameter variable">-p</span> <span class="token number">2201</span>:22 <span class="token parameter variable">--gpus</span> all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>解释：</p>
+<p>–name ：设置新容器的名称为tensorflow1.2.1-gpu</p>
+<p>-v ：设置文件映射，将宿主机的文件&#x2F;home&#x2F;docker_share&#x2F;映射到该容器的&#x2F;home&#x2F;目录下</p>
+<p>-p ：设置容器的端口与宿主机的端口映射，格式为：<strong>主机(宿主)端口:容器端口</strong></p>
+<p>–gpus all 许容器使用所有GPU</p>
+<p>nvidia&#x2F;cuda:10.0-cudnn7-devel-ubuntu16.04：容器的依赖镜像</p>
+<p>&#x2F;bin&#x2F;bash：指定在容器内部运行的进程，该进程是通过docker container run命令来通知容器运行的</p>
+<p>注释：</p>
+<p>为了构建有序且规范的端口映射关系，这里设置一个默认规则用于设置容器的端口与宿主机的端口映射：主机端口固定，容器端口以主机端口为起始位依次排开</p>
+<pre class="line-numbers language-none"><code class="language-none">容器端口	主机端口
+2201		22
+2202		22<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
 
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
 
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
+<h2 id="3-进入容器后修改容器的root密码"><a href="#3-进入容器后修改容器的root密码" class="headerlink" title="3.进入容器后修改容器的root密码"></a>3.进入容器后修改容器的root密码</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 设置用户名为root,密码为passwd(将其该为自己想要的密码)</span>
+<span class="token builtin class-name">echo</span> <span class="token string">'root:passwd'</span> <span class="token operator">|</span> chpasswd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="4-安装openssh-server并启动"><a href="#4-安装openssh-server并启动" class="headerlink" title="4.安装openssh-server并启动"></a>4.安装openssh-server并启动</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#更新源</span>
+<span class="token function">apt-get</span> update
+<span class="token comment">#或</span>
+<span class="token function">apt-get</span> <span class="token parameter variable">-y</span> update
+<span class="token comment"># 安装openssh-server</span>
+<span class="token function">apt-get</span> <span class="token function">install</span> openssh-server
+<span class="token comment"># 启动之前需手动创建/var/run/sshd，不然启动sshd的时候会报错</span>
+<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /var/run/sshd
+<span class="token comment"># sshd以守护进程运行</span>
+/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span>
+<span class="token comment"># 安装netstat，查看sshd是否监听22端口</span>
+<span class="token function">apt-get</span> <span class="token function">install</span> net-tools
+<span class="token function">netstat</span> <span class="token parameter variable">-apn</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span>
+<span class="token comment"># 显示如下</span>
+<span class="token comment"># root@a78aa2e72670:/# netstat -apn | grep ssh</span>
+<span class="token comment"># tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1266/sshd</span>
+<span class="token comment"># tcp6       0      0 :::22                   :::*                    LISTEN      1266/sshd</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="5-ssh登录设置"><a href="#5-ssh登录设置" class="headerlink" title="5.ssh登录设置"></a>5.ssh登录设置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 生成ssh key</span>
+ssh-keygen <span class="token parameter variable">-t</span> rsa 
+<span class="token comment"># 然后提示的设置用默认设置，一直回车即可</span>
+<span class="token comment"># 修改sshd-config允许root登陆</span>
+<span class="token function">vim</span> /etc/ssh/sshd_config<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<p>检查下面的命令是否被注释，会后面的参数是否为yes，若没有该命令需要在文件尾部新增该命令以允许root用户使用ssh登录：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">PermitRootLogin <span class="token function">yes</span> <span class="token comment"># 约在28行：将PermitRootLogin prohibit-password改为PermitRootLogin yes</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
+<p>修改完sshd-config之后需要重启sshd服务:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 找到sshd的进程pid</span>
+<span class="token function">ps</span> <span class="token parameter variable">-aux</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span>
+<span class="token comment"># 杀掉sshd的进程pid</span>
+<span class="token function">kill</span> <span class="token parameter variable">-9</span> sshd的进程pid号
+<span class="token comment"># 重启</span>
+/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span>
+<span class="token comment"># 再次查看</span>
+<span class="token function">ps</span> <span class="token parameter variable">-aux</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>示例:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@a78aa2e72670:/<span class="token comment"># ps -aux | grep ssh</span>
+root      <span class="token number">1266</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5468</span> pts/0    S    01:14   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
+root      <span class="token number">1301</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">932</span> pts/0    S+   01:18   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span>
+root@a78aa2e72670:/<span class="token comment"># kill -9 1266</span>
+root@a78aa2e72670:/<span class="token comment"># /usr/sbin/sshd -D &amp;</span>
+<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token number">1302</span>
+<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>   Killed                  /usr/sbin/sshd <span class="token parameter variable">-D</span>
+root@a78aa2e72670:/<span class="token comment"># ps -aux | grep ssh</span>
+root      <span class="token number">1302</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5756</span> pts/0    S    01:19   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
+root      <span class="token number">1304</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">944</span> pts/0    S+   01:19   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="6-退出容器，但不要停止容器，并进行连接测试"><a href="#6-退出容器，但不要停止容器，并进行连接测试" class="headerlink" title="6.退出容器，但不要停止容器，并进行连接测试"></a>6.退出容器，但不要停止容器，并进行连接测试</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 在主机登录，需要输入的root密码为前面设置的root密码</span>
+<span class="token function">ssh</span> root@localhost <span class="token parameter variable">-p</span> <span class="token number">8080</span> <span class="token comment"># 8080为刚开始创建容器时候设置的主机端口映射，与容器的22端口形成映射</span>
+<span class="token comment"># 在其他机器上可以使用以下命令登陆，假设宿主机ip为10.12.11.xx</span>
+<span class="token function">ssh</span> root@10.12.11.xx <span class="token parameter variable">-p</span> <span class="token number">8080</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里如果提示：ssh_exchange_identification: read: Connection reset by peer</p>
+<p>则：可能是容器的 sshd服务未开启，再次进入容器重启sshd服务即可：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>示例：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@dc627a3adc4d:/<span class="token comment"># ps -aux | grep ssh</span>
+root        <span class="token number">32</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">932</span> pts/1    S+   03:43   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span>
+root@dc627a3adc4d:/<span class="token comment"># /usr/sbin/sshd -D &amp;</span>
+<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token number">33</span>
+root@dc627a3adc4d:/<span class="token comment"># ps -aux | grep ssh</span>
+root        <span class="token number">33</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5420</span> pts/1    S    03:43   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
+root        <span class="token number">35</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">936</span> pts/1    S+   03:43   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>注释：配置完成后可以将容器保存为镜像</p>
+<p>docker commit -a “提交的镜像作者名称” -m “提交时的说明文字” 容器ID或容器名称  保存镜像名称:标签</p>
+<p>示例:</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@dc627a3adc4d:/<span class="token comment"># docker commit -a "runoob.com" -m "my apache" a404c6c174a2  mymysql:v1</span>
+root@dc627a3adc4d:/<span class="token comment"># docker images mymysql:v1</span>
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mymysql             v1                  37af1236adef        <span class="token number">15</span> seconds ago      <span class="token number">329</span> MB<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="7-配置pycharm并连接docker容器"><a href="#7-配置pycharm并连接docker容器" class="headerlink" title="7.配置pycharm并连接docker容器"></a>7.配置pycharm并连接docker容器</h2><p>参考网址：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Thanours/article/details/109265315">点我查看</a></p>
+<p>在 Tools &gt;&gt;&gt; Deployment &gt;&gt;&gt; Configuration选项中新建 SFTP 连接：</p>
+<p><img src="https://i.loli.net/2021/05/21/YMm8PE6Hd9ySQ2h.png"></p>
+<img src="https://i.loli.net/2021/05/21/z4dMrhtOH8xvZCR.png"/>
+
+<p><img src="https://i.loli.net/2021/06/10/TYq9sIE2aRfdyGC.png"></p>
 <ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
+<li>路径映射(本地程序文件目录与docker文件目录的映射)：</li>
 </ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
+<p><img src="https://i.loli.net/2021/05/21/yigpdXIMG5QTaLw.png"></p>
+<ul>
+<li>同步本地代码数据到docker容器中：</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/mQJGDp1xaB6EjO9.png"></p>
+<ul>
+<li>上传完代码数据后， 需要选择设置python编译器：</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/htdvCb2qlnOas1Y.png"></p>
+<p><img src="https://i.loli.net/2021/05/21/O3yU6kINc9AT8ea.png"></p>
+<p><img src="https://i.loli.net/2021/05/21/bH5aVPAMXDIz42j.png"></p>
+<p><img src="https://i.loli.net/2021/06/10/BH7mE9diJMrcWCp.png"></p>
+<ul>
+<li>设置好python解释器就可以run代码了：</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/21/jDGmP8npQtaFCY7.png"></p>
+<p>这里要注意一下，代码所要的运行环境还需要在docker容器安装配置好，比如我这里需要pytorch环境以及python代码运行所需的依赖库都已经在docker容器中通过pip安装好了。</p>
 
                 
             </div>
@@ -501,7 +581,7 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</a>
+                    <a href="http://example.com/2022/11/23/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/">http://example.com/2022/11/23/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -543,8 +623,12 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                                     <span class="chip bg-color">ubuntu</span>
                                 </a>
                             
-                                <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                    <span class="chip bg-color">显卡驱动安装</span>
+                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">深度学习</span>
+                                </a>
+                            
+                                <a href="/tags/anaconda/">
+                                    <span class="chip bg-color">anaconda</span>
                                 </a>
                             
                         </div>
@@ -627,13 +711,13 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/11/23/Ubuntu16-04-LTS%EF%BC%9Aanaconda3%E5%AE%89%E8%A3%85/">
+                <a href="/2022/11/23/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Ubuntu16-04-LTS：anaconda3安装">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="手眼标定-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04">
                         
-                        <span class="card-title">Ubuntu16-04-LTS：anaconda3安装</span>
+                        <span class="card-title">手眼标定-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -650,12 +734,12 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                    Ubuntu
+                            <a href="/categories/Ros/" class="post-category">
+                                    Ros
                                 </a>
                             
-                            <a href="/categories/Ubuntu/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
-                                    深度学习
+                            <a href="/categories/Ros/Ubuntu/" class="post-category">
+                                    Ubuntu
                                 </a>
                             
                             
@@ -665,16 +749,12 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A/">
+                        <span class="chip bg-color">手眼标定</span>
                     </a>
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
-                    </a>
-                    
-                    <a href="/tags/anaconda/">
-                        <span class="chip bg-color">anaconda</span>
+                    <a href="/tags/AUBOi5-Realsense-D435/">
+                        <span class="chip bg-color">AUBOi5+Realsense D435</span>
                     </a>
                     
                 </div>
@@ -688,13 +768,13 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
+                <a href="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="win10与ubuntu16-04-LTS双系统安装教程">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="函数参数传递之引用与指针">
                         
-                        <span class="card-title">win10与ubuntu16-04-LTS双系统安装教程</span>
+                        <span class="card-title">函数参数传递之引用与指针</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -705,14 +785,14 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-12
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                    Ubuntu
+                            <a href="/categories/C/" class="post-category">
+                                    C++
                                 </a>
                             
                             
@@ -722,8 +802,16 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/C/">
+                        <span class="chip bg-color">C++</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/">
+                        <span class="chip bg-color">函数参数传递</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/">
+                        <span class="chip bg-color">引用与指针</span>
                     </a>
                     
                 </div>
@@ -849,59 +937,7 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
 
 
 <article id="post">
-  <h1>Ubuntu16-04手动安装英伟达显卡驱动</h1>
-  <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
-</ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
-
-  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/Ubuntu-手动安装英伟达显卡驱动.md">Edit Post</a>
+  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/Pycharm使用ssh连接服务器中的docker容器Pycharm使用ssh连接服务器中的docker容器/Pycharm使用ssh连接服务器中的docker容器Pycharm使用ssh连接服务器中的docker容器.md">Edit Post</a>
 </article>
 
 

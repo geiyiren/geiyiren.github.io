@@ -4,11 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Ubuntu16-04手动安装英伟达显卡驱动, geiyiren">
-    <meta name="description" content="1.屏蔽开源驱动屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：
-sudo gedit /etc/modprobe.d/blacklist.conf
-
-然后添加内容到最底段，要回车另起一行。添加">
+    <meta name="keywords" content="malloc申请内存访问时容易出现的访问越界问题, geiyiren">
+    <meta name="description" content="malloc相关malloc申请内存访问bug
+在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。
+例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +19,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Ubuntu16-04手动安装英伟达显卡驱动 | geiyiren</title>
+    <title>malloc申请内存访问时容易出现的访问越界问题 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -328,12 +327,12 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Ubuntu16-04手动安装英伟达显卡驱动</h1>
+                    <h1 class="description center-align post-title">malloc申请内存访问时容易出现的访问越界问题</h1>
                 </div>
             </div>
         </div>
@@ -357,12 +356,16 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ubuntu/">
-                                <span class="chip bg-color">ubuntu</span>
+                            <a href="/tags/C/">
+                                <span class="chip bg-color">C++</span>
                             </a>
                         
-                            <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                <span class="chip bg-color">显卡驱动安装</span>
+                            <a href="/tags/malloc/">
+                                <span class="chip bg-color">malloc</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
+                                <span class="chip bg-color">内存访问</span>
                             </a>
                         
                     </div>
@@ -373,8 +376,8 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                Ubuntu
+                            <a href="/categories/C/" class="post-category">
+                                C++
                             </a>
                         
                     </div>
@@ -386,7 +389,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-23
+                    2022-12-15
                 </div>
                 
 
@@ -400,7 +403,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    585
+                    521
                 </div>
                 
 
@@ -425,56 +428,52 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
+<li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
+<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;构建4路YUV鱼眼图像去畸变映射关系
+void dist2undist()
+&#123;
+    float point_u_tmp[2], point_d_tmp[2];
+    float sf &#x3D; 1.5;
+    int img_out_height &#x3D; 720 * img_out_h_scale;
+    int img_out_width &#x3D; 1280 * img_out_w_scale;
+    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
 
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+    for (int index &#x3D; 0; index &lt; NUM_CAMERAS; index++)
+    &#123;
+        &#x2F;&#x2F; 这里就是bug所在
+        undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * 2 * sizeof(float));
 
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+        if (undist_map[index] &#x3D;&#x3D; NULL)
+        &#123;
+            LOGI(1, &quot;undist_map malloc failed!&quot;);
+        &#125;
+        for (int i &#x3D; 0; i &lt; img_out_height; i +&#x3D; 1)
+        &#123;
+            for (int j &#x3D; 0; j &lt; img_out_width; j +&#x3D; 1)
+            &#123;
+                point_u_tmp[0] &#x3D; j &#x2F; img_out_w_scale;
+                point_u_tmp[1] &#x3D; i &#x2F; img_out_h_scale;
+                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
 
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
+                undist_map[index][(i * img_out_width + j) * 2] &#x3D; point_d_tmp[0] * img_in_w_scale;
+                undist_map[index][(i * img_out_width + j) * 2 + 1] &#x3D; point_d_tmp[1] * img_in_h_scale;
+                if (!int(j % 2))
+                &#123;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2 + 1;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
+<hr>
+<p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
 
                 
             </div>
@@ -501,7 +500,7 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/23/ubuntu16-04-shou-dong-an-zhuang-ying-wei-da-xian-qia-qu-dong/">http://example.com/2022/11/23/ubuntu16-04-shou-dong-an-zhuang-ying-wei-da-xian-qia-qu-dong/</a>
+                    <a href="http://example.com/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/">http://example.com/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -539,12 +538,16 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/ubuntu/">
-                                    <span class="chip bg-color">ubuntu</span>
+                                <a href="/tags/C/">
+                                    <span class="chip bg-color">C++</span>
                                 </a>
                             
-                                <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                    <span class="chip bg-color">显卡驱动安装</span>
+                                <a href="/tags/malloc/">
+                                    <span class="chip bg-color">malloc</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
+                                    <span class="chip bg-color">内存访问</span>
                                 </a>
                             
                         </div>
@@ -623,17 +626,18 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/11/23/ubuntu16-04-lts-anaconda3-an-zhuang/">
+                <a href="/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Ubuntu16-04-LTS：anaconda3安装">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="malloc申请内存访问时容易出现的访问越界问题">
                         
-                        <span class="card-title">Ubuntu16-04-LTS：anaconda3安装</span>
+                        <span class="card-title">malloc申请内存访问时容易出现的访问越界问题</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -643,38 +647,35 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-15
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                    Ubuntu
-                                </a>
-                            
-                            <a href="/categories/Ubuntu/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
-                                    深度学习
+                            <a href="/categories/C/" class="post-category">
+                                    C++
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/C/">
+                        <span class="chip bg-color">C++</span>
                     </a>
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
+                    <a href="/tags/malloc/">
+                        <span class="chip bg-color">malloc</span>
                     </a>
                     
-                    <a href="/tags/anaconda/">
-                        <span class="chip bg-color">anaconda</span>
+                    <a href="/tags/%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE/">
+                        <span class="chip bg-color">内存访问</span>
                     </a>
                     
                 </div>
@@ -688,13 +689,13 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/23/win10-yu-ubuntu16-04-lts-shuang-xi-tong-an-zhuang-jiao-cheng/">
+                <a href="/2022/12/12/linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="win10与ubuntu16-04-LTS双系统安装教程">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="linux常用命令">
                         
-                        <span class="card-title">win10与ubuntu16-04-LTS双系统安装教程</span>
+                        <span class="card-title">linux常用命令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -705,14 +706,14 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2022-12-12
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                    Ubuntu
+                            <a href="/categories/linux/" class="post-category">
+                                    linux
                                 </a>
                             
                             
@@ -722,8 +723,12 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/linux/">
+                        <span class="chip bg-color">linux</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%BB%88%E7%AB%AF/">
+                        <span class="chip bg-color">终端</span>
                     </a>
                     
                 </div>
@@ -849,59 +854,55 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
 
 
 <article id="post">
-  <h1>Ubuntu16-04手动安装英伟达显卡驱动</h1>
-  <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+  <h1>malloc申请内存访问时容易出现的访问越界问题</h1>
+  <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
+<li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
+<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;构建4路YUV鱼眼图像去畸变映射关系
+void dist2undist()
+&#123;
+    float point_u_tmp[2], point_d_tmp[2];
+    float sf &#x3D; 1.5;
+    int img_out_height &#x3D; 720 * img_out_h_scale;
+    int img_out_width &#x3D; 1280 * img_out_w_scale;
+    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
 
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+    for (int index &#x3D; 0; index &lt; NUM_CAMERAS; index++)
+    &#123;
+        &#x2F;&#x2F; 这里就是bug所在
+        undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * 2 * sizeof(float));
 
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+        if (undist_map[index] &#x3D;&#x3D; NULL)
+        &#123;
+            LOGI(1, &quot;undist_map malloc failed!&quot;);
+        &#125;
+        for (int i &#x3D; 0; i &lt; img_out_height; i +&#x3D; 1)
+        &#123;
+            for (int j &#x3D; 0; j &lt; img_out_width; j +&#x3D; 1)
+            &#123;
+                point_u_tmp[0] &#x3D; j &#x2F; img_out_w_scale;
+                point_u_tmp[1] &#x3D; i &#x2F; img_out_h_scale;
+                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
 
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
+                undist_map[index][(i * img_out_width + j) * 2] &#x3D; point_d_tmp[0] * img_in_w_scale;
+                undist_map[index][(i * img_out_width + j) * 2 + 1] &#x3D; point_d_tmp[1] * img_in_h_scale;
+                if (!int(j % 2))
+                &#123;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2 + 1;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<hr>
+<p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
 
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
-
-  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/ubuntu--shou-dong-an-zhuang-ying-wei-da-xian-qia-qu-dong.md">Edit Post</a>
+  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/malloc申请内存访问时容易出现的访问越界问题.md">Edit Post</a>
 </article>
 
 

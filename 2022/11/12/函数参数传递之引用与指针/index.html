@@ -565,22 +565,15 @@ int main()
      cout&lt;&lt;&quot;address:&quot;&lt;&lt;p&lt;&lt;&quot;value:&quot;&lt;&lt;*p&lt;&lt;endl;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：我们这里虽然使用的是传指针，但是却不是直接改变指针变量指向的地址的值，却是想通过改变指针变量指向的地址来修改它的值，显然这样失败了。</p>
-<p><img src="/no.png" alt="错误使用"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/no.png" alt="错误使用"></p>
 <p>如果我们希望在函数里面修改指针变量存储的地址而不是它的值，这个时候就需要指针引用了。类似于普通变量传入变量引用，我们也传入一个指针引用，在函数里面，你可以将pp认为和p都是这个指针变量（&amp;p&#x3D;&#x3D;&amp;pp），不似传入指针参数的时候形参和实参的变量（&amp;p！&#x3D;&amp;pp）地址不一样。此时我们操作pp的值就是更改了p的值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int *&amp;pp)
 &#123;
     pp&#x3D;new int(66); &#x2F;&#x2F;改变p指向的地址
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：当我们修改传入参数为指针的引用的时候就可以修改指针变量所指向的地址了，可以看见，传入指针引用可以修改指针变量的值（p）和指向的值（*p）。</p>
-<p><img src="/yes.png"></p>
-<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><p>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：</p>
-<ul>
-<li>二级指针的地址（&amp;pp）</li>
-<li>二级指针的地址保存的地址（pp）</li>
-<li>二级指针的地址保存的地址，该地址里面保存的地址（*pp）</li>
-<li>二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</li>
-</ul>
-<p><img src="/kuangtu.png"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/yes.png" alt="正确使用"></p>
+<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><h2 id="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）"><a href="#指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）" class="headerlink" title="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：- 二级指针的地址（&amp;pp）- 二级指针的地址保存的地址（pp）- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）"></a>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：<br>- 二级指针的地址（&amp;pp）<br>- 二级指针的地址保存的地址（pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</h2><p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/kuangtu.png" alt="框图"></p>
 <p>除了上面传入指针引用改变一级指针指向的地址以外，我们还可以通过传入一个二级指针去修改它对应的一级指针指向的地址，同样达到了修改指针变量的效果。二级指针的指向的地址存储的值就是一级指针指向的地址。对一级指针变量解引用得到的是指针指向的地址存储的数据，二级指针变量解引用得到的也是该二级指针指向的地址存储的地址值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int **pp)
 &#123;
@@ -598,7 +591,7 @@ int main()
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>运行结果如下：通过对二级指针的解引用赋值成功修改了一级指针指向的地址。如果仅仅在make函数里面对**pp&#x3D;66;操作，那么所有的地址不会改变，仅仅会改变值为66。</p>
-<p><img src="/yes2.png"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/yes2.png" alt="二级指针"></p>
 <h1 id="各种类型的函数参数传递"><a href="#各种类型的函数参数传递" class="headerlink" title="各种类型的函数参数传递"></a>各种类型的函数参数传递</h1><h2 id="声明-h"><a href="#声明-h" class="headerlink" title="声明.h"></a>声明.h</h2><pre class="line-numbers language-C" data-language="C"><div class="caption"><span>++</span></div><code class="language-C">&#x2F;&#x2F; 结构体数组   (in_ldc)
 void getLdc(TLensDistortionCorrection (&amp;in_ldc)[NUM_CAMERAS]);
 &#x2F;&#x2F; cv::Mat  (in_MatK)
@@ -741,7 +734,7 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/12/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/">http://example.com/2022/11/12/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/</a>
+                    <a href="http://example.com/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/">http://example.com/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -871,13 +864,13 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/11/12/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/">
+                <a href="/2022/11/23/Pycharm%E4%BD%BF%E7%94%A8ssh%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E7%9A%84docker%E5%AE%B9%E5%99%A8/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="函数参数传递之引用与指针">
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Pycharm使用ssh连接服务器中的docker容器">
                         
-                        <span class="card-title">函数参数传递之引用与指针</span>
+                        <span class="card-title">Pycharm使用ssh连接服务器中的docker容器</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -888,14 +881,14 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-12
+                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/C/" class="post-category">
-                                    C++
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
                                 </a>
                             
                             
@@ -905,16 +898,16 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/C/">
-                        <span class="chip bg-color">C++</span>
+                    <a href="/tags/ubuntu/">
+                        <span class="chip bg-color">ubuntu</span>
                     </a>
                     
-                    <a href="/tags/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/">
-                        <span class="chip bg-color">函数参数传递</span>
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
                     </a>
                     
-                    <a href="/tags/%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/">
-                        <span class="chip bg-color">引用与指针</span>
+                    <a href="/tags/anaconda/">
+                        <span class="chip bg-color">anaconda</span>
                     </a>
                     
                 </div>
@@ -925,10 +918,10 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/12/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen/">
+                <a href="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/">
                     <div class="card-image">
                         
                         
@@ -959,7 +952,6 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
@@ -1237,22 +1229,15 @@ int main()
      cout&lt;&lt;&quot;address:&quot;&lt;&lt;p&lt;&lt;&quot;value:&quot;&lt;&lt;*p&lt;&lt;endl;
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：我们这里虽然使用的是传指针，但是却不是直接改变指针变量指向的地址的值，却是想通过改变指针变量指向的地址来修改它的值，显然这样失败了。</p>
-<p><img src="/no.png" alt="错误使用"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/no.png" alt="错误使用"></p>
 <p>如果我们希望在函数里面修改指针变量存储的地址而不是它的值，这个时候就需要指针引用了。类似于普通变量传入变量引用，我们也传入一个指针引用，在函数里面，你可以将pp认为和p都是这个指针变量（&amp;p&#x3D;&#x3D;&amp;pp），不似传入指针参数的时候形参和实参的变量（&amp;p！&#x3D;&amp;pp）地址不一样。此时我们操作pp的值就是更改了p的值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int *&amp;pp)
 &#123;
     pp&#x3D;new int(66); &#x2F;&#x2F;改变p指向的地址
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>运行结果如下：当我们修改传入参数为指针的引用的时候就可以修改指针变量所指向的地址了，可以看见，传入指针引用可以修改指针变量的值（p）和指向的值（*p）。</p>
-<p><img src="/yes.png"></p>
-<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><p>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：</p>
-<ul>
-<li>二级指针的地址（&amp;pp）</li>
-<li>二级指针的地址保存的地址（pp）</li>
-<li>二级指针的地址保存的地址，该地址里面保存的地址（*pp）</li>
-<li>二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</li>
-</ul>
-<p><img src="/kuangtu.png"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/yes.png" alt="正确使用"></p>
+<h2 id="二级指针-1"><a href="#二级指针-1" class="headerlink" title="二级指针"></a>二级指针</h2><h2 id="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）"><a href="#指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：-二级指针的地址（-amp-pp）-二级指针的地址保存的地址（pp）-二级指针的地址保存的地址，该地址里面保存的地址（-pp）-二级指针的地址保存的地址，该地址里面保存的地址里面的数据（-pp）" class="headerlink" title="指向指针的指针变量称为二级指针。如果pp是一个二级指针，那么有如下属性：- 二级指针的地址（&amp;pp）- 二级指针的地址保存的地址（pp）- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）"></a>指向指针的指针变量称为二级指针。<br>如果pp是一个二级指针，那么有如下属性：<br>- 二级指针的地址（&amp;pp）<br>- 二级指针的地址保存的地址（pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址（*pp）<br>- 二级指针的地址保存的地址，该地址里面保存的地址里面的数据（**pp）</h2><p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/kuangtu.png" alt="框图"></p>
 <p>除了上面传入指针引用改变一级指针指向的地址以外，我们还可以通过传入一个二级指针去修改它对应的一级指针指向的地址，同样达到了修改指针变量的效果。二级指针的指向的地址存储的值就是一级指针指向的地址。对一级指针变量解引用得到的是指针指向的地址存储的数据，二级指针变量解引用得到的也是该二级指针指向的地址存储的地址值。</p>
 <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">void make(int **pp)
 &#123;
@@ -1270,7 +1255,7 @@ int main()
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>运行结果如下：通过对二级指针的解引用赋值成功修改了一级指针指向的地址。如果仅仅在make函数里面对**pp&#x3D;66;操作，那么所有的地址不会改变，仅仅会改变值为66。</p>
-<p><img src="/yes2.png"></p>
+<p><img src="/2022/11/12/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E4%B9%8B%E5%BC%95%E7%94%A8%E4%B8%8E%E6%8C%87%E9%92%88/yes2.png" alt="二级指针"></p>
 <h1 id="各种类型的函数参数传递"><a href="#各种类型的函数参数传递" class="headerlink" title="各种类型的函数参数传递"></a>各种类型的函数参数传递</h1><h2 id="声明-h"><a href="#声明-h" class="headerlink" title="声明.h"></a>声明.h</h2><pre class="line-numbers language-C" data-language="C"><div class="caption"><span>++</span></div><code class="language-C">&#x2F;&#x2F; 结构体数组   (in_ldc)
 void getLdc(TLensDistortionCorrection (&amp;in_ldc)[NUM_CAMERAS]);
 &#x2F;&#x2F; cv::Mat  (in_MatK)
@@ -1388,7 +1373,7 @@ getWideAngleSize(g_avm_set-&gt;m_wideAngle_width, g_avm_set-&gt;m_wideAngle_heig
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32483145/article/details/52901230">二级指针和指针引用函数传参（C++）</a></li>
 </ul>
 
-  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/han-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhenhan-shu-can-shu-chuan-di-zhi-yin-yong-yu-zhi-zhen.md">Edit Post</a>
+  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/函数参数传递之引用与指针.md">Edit Post</a>
 </article>
 
 

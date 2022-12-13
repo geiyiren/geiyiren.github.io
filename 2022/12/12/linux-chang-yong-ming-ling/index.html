@@ -517,21 +517,16 @@ done
 <span class="token builtin class-name">cd</span> /exapp/app
 ./bsd_proc_test <span class="token parameter variable">-d</span> /dev/video0 <span class="token parameter variable">-w</span> <span class="token number">1280</span> <span class="token parameter variable">-h</span> <span class="token number">720</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="鸿鹄"><a href="#鸿鹄" class="headerlink" title="鸿鹄"></a>鸿鹄</h1><h2 id="鸿鹄设备常用命令"><a href="#鸿鹄设备常用命令" class="headerlink" title="鸿鹄设备常用命令"></a>鸿鹄设备常用命令</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#以root身份挂载</span>
-adb root <span class="token operator">&amp;&amp;</span> adb remount
-<span class="token comment">#推送apk</span>
-<span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/MultiCameraDemo/avm_gpu_algo/app/build/outputs/apk/debug
-adb push MultiCameraDemo.apk /system/priv-app/MultiCameraDemo/
-<span class="token comment">#推送库文件</span>
-<span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/AVM_BSD_honghu/avm_gpu_algo/libs/arm64-v8a
-adb push libavmjni.so /system/priv-app/MultiCameraDemo/lib/arm64/
-<span class="token comment">#查看log日志</span>
-adb shell logcat <span class="token operator">></span> log.txt
-<span class="token comment">#保存NATIVE_LOG日志(cpp端打印信息)</span>
-adb shell logcat <span class="token parameter variable">-s</span> NATIVE_LOG <span class="token operator">></span> log.txt
-<span class="token comment">#保存程序运行严重错误日志(一般程序异常退出时打印该log)</span>
-adb shell logcat *:F <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<h1 id="鸿鹄"><a href="#鸿鹄" class="headerlink" title="鸿鹄"></a>鸿鹄</h1><h2 id="鸿鹄设备常用命令"><a href="#鸿鹄设备常用命令" class="headerlink" title="鸿鹄设备常用命令"></a>鸿鹄设备常用命令</h2><ul>
+<li>以root身份挂载<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root <span class="token operator">&amp;&amp;</span> adb remount<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>推送apk<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/MultiCameraDemo/avm_gpu_algo/app/build/outputs/apk/debug<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">adb push MultiCameraDemo.apk &#x2F;system&#x2F;priv-app&#x2F;MultiCameraDemo&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>推送库文件<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/AVM_BSD_honghu/avm_gpu_algo/libs/arm64-v8a<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb push libavmjni.so /system/priv-app/MultiCameraDemo/lib/arm64/<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>查看log日志<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>保存NATIVE_LOG日志(cpp端打印信息)<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat <span class="token parameter variable">-s</span> NATIVE_LOG <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>保存程序运行严重错误日志(一般程序异常退出时打印该log)<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat *:F <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
 <h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">data
 └── gpu0------------
     ├── calibrate

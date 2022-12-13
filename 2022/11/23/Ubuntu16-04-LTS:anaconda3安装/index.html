@@ -862,6 +862,56 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 
 
 <article id="post">
+  <h1>Ubuntu16-04-LTS：anaconda3安装</h1>
+  <h1 id="1-下载清华源镜像文件"><a href="#1-下载清华源镜像文件" class="headerlink" title="1. 下载清华源镜像文件"></a>1. 下载清华源镜像文件</h1><p>网址：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/">https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/</a></p>
+<p>版本：建议安装Anaconda3-5.2.0-Linux-x86_64.sh</p>
+<h1 id="2-进入下载目录执行以下命令进行安装"><a href="#2-进入下载目录执行以下命令进行安装" class="headerlink" title="2. 进入下载目录执行以下命令进行安装"></a>2. 进入下载目录执行以下命令进行安装</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">bash Anaconda3-5.2.0-Linux-x86_64.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p><img src="https://i.loli.net/2021/05/16/9curYTMUWmveogb.png"></p>
+<ul>
+<li>一路按回车至底部，出现提示：是否接受安装协议时：回复yes:</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/16/JU2iRojd3vH4fsY.png"></p>
+<ul>
+<li>默认的路径为&#x2F;home&#x2F;username&#x2F;anaconda3，默认的话直接按ENTER即可，等待安装过程完成即可。</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/16/iVDa14zUNREPYKs.png"></p>
+<ul>
+<li>询问是否将Anaconda3加入到环境变量中，选：yes</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/16/DBj5P8VMTzgYu2s.png"></p>
+<ul>
+<li>默认的话直接按ENTER即可，等待安装过程完成即可。</li>
+</ul>
+<h1 id="3-检查是否安装成功"><a href="#3-检查是否安装成功" class="headerlink" title="3.检查是否安装成功"></a>3.检查是否安装成功</h1><p>  使用以下命令可以查看已经存在的conda虚拟环境</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">conda env list<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  使用以下命令可以查看conda的路径是否添加成功</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo gedit ~&#x2F;.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  使其立即生效，在终端执行：</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">source ~&#x2F;.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  <strong>4.进入任意一个创建的虚拟环境里面检查python</strong></p>
+<p>  在虚拟环境中输入以下命令：</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">python<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  会出现类似以下含有anaconda的字样：</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">Python 3.6.5 |Anaconda, Inc.| (default, Apr 29 2018, 16:14:56) 
+[GCC 7.2.0] on linux
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>  如果没有出现以下字样，说明系统的python版本需要指定，使用以下命令：</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo gedit ~&#x2F;.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  在bashrc中添加一行：</p>
+  <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">alias python&#x3D;python3<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  (注意这里的python3是和安装的anaconda3对应的默认pyrhon对应的，可以在conda虚拟环境中的base环境中查看对应的python版本)</p>
+<p>  然后激活bashrc</p>
+  <pre class="line-numbers language-none"><code class="language-none">source ~&#x2F;.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>  这样就可以使用conda创建的虚拟环境对应的python。</p>
+
   <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/Ubuntu--LTS:anaconda安装/Ubuntu--LTS:anaconda安装.md">Edit Post</a>
 </article>
 

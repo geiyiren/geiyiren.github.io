@@ -849,6 +849,58 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
 
 
 <article id="post">
+  <h1>Ubuntu16-04手动安装英伟达显卡驱动</h1>
+  <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
+options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>保存再终端更新内核命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>可能会出现如下警告，忽略即可：</p>
+<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
+
+<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
+<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
+<p>所以手动搜索驱动程序时，应该这样选择：</p>
+<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
+<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
+<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
+<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
+<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
+
+<p>然后按”回车”：</p>
+<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
+
+<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>关闭当前图形环境</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
+<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
+<ul>
+<li>提示”dkms”安装时，需要安装。</li>
+<li>会提示有”32”字样，选择”OK”继续即可。</li>
+</ul>
+<p>最后重新启动图形环境：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
+<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
+<p>进一步检查，打开终端输入如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>出现如下所示信息，即为安装成功:</p>
+<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
+
   <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/Ubuntu-手动安装英伟达显卡驱动/Ubuntu-手动安装英伟达显卡驱动.md">Edit Post</a>
 </article>
 

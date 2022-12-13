@@ -4,9 +4,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="win10与ubuntu16-04-LTS双系统安装教程, geiyiren">
-    <meta name="description" content="1.创建空闲分区在win系统下，在”此电脑”→右键”管理“→“磁盘管理”→右键一个不用的磁盘并”格式化“→”删除卷“，分出一个状态为“未分配”的磁盘用于安装ubuntu16.04 LTS
-2.开始安装插入具有ubuntu16.04 LTS系">
+    <meta name="keywords" content="Ubuntu16-04手动安装英伟达显卡驱动, geiyiren">
+    <meta name="description" content="1.屏蔽开源驱动屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：
+sudo gedit /etc/modprobe.d/blacklist.conf
+
+然后添加内容到最底段，要回车另起一行。添加">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +20,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>win10与ubuntu16-04-LTS双系统安装教程 | geiyiren</title>
+    <title>Ubuntu16-04手动安装英伟达显卡驱动 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -326,12 +328,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">win10与ubuntu16-04-LTS双系统安装教程</h1>
+                    <h1 class="description center-align post-title">Ubuntu16-04手动安装英伟达显卡驱动</h1>
                 </div>
             </div>
         </div>
@@ -357,6 +359,10 @@
                         
                             <a href="/tags/ubuntu/">
                                 <span class="chip bg-color">ubuntu</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
+                                <span class="chip bg-color">显卡驱动安装</span>
                             </a>
                         
                     </div>
@@ -394,7 +400,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    547
+                    585
                 </div>
                 
 
@@ -419,31 +425,56 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-创建空闲分区"><a href="#1-创建空闲分区" class="headerlink" title="1.创建空闲分区"></a>1.创建空闲分区</h2><p>在win系统下，在”此电脑”→右键”管理“→“磁盘管理”→右键一个不用的磁盘并”格式化“→”删除卷“，分出一个状态为“未分配”的磁盘用于安装ubuntu16.04 LTS</p>
-<h2 id="2-开始安装"><a href="#2-开始安装" class="headerlink" title="2.开始安装"></a>2.开始安装</h2><p>插入具有ubuntu16.04 LTS系统的U盘开始安装系统</p>
+                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
+options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>保存再终端更新内核命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>可能会出现如下警告，忽略即可：</p>
+<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
+
+<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
+<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
+<p>所以手动搜索驱动程序时，应该这样选择：</p>
+<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
+<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
+<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
+<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
+<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
+
+<p>然后按”回车”：</p>
+<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
+
+<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>关闭当前图形环境</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
+<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
 <ul>
-<li>选择系统语言，可以是中文或英文。如需要安装tensflow的话建议安装英文版本</li>
-<li>选择安装类型为其它选项</li>
+<li>提示”dkms”安装时，需要安装。</li>
+<li>会提示有”32”字样，选择”OK”继续即可。</li>
 </ul>
-<img src="https://i.loli.net/2021/06/22/9FEvKkQmATYq7Ip.jpg" style="zoom: 67%;" />
+<p>最后重新启动图形环境：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h2 id="3-双击空闲盘进行分区"><a href="#3-双击空闲盘进行分区" class="headerlink" title="3.双击空闲盘进行分区"></a>3.双击空闲盘进行分区</h2><h3 id="3-1-x2F-boot分区"><a href="#3-1-x2F-boot分区" class="headerlink" title="3.1   &#x2F;boot分区"></a>3.1   &#x2F;boot分区</h3><p>&#x2F;boot：这个就是实现你双系统的原因了，这个就是用于启动 ubuntu 的目录，里面会有系统的引导，这个文件其实只有几十兆，但是我们建议将其划分为 200M 文件格式为 ext4，这个分区必不可少，否则后果你懂得！</p>
-<h3 id="3-2-swap分区"><a href="#3-2-swap分区" class="headerlink" title="3.2   swap分区"></a>3.2   swap分区</h3><p>swap:这个是 Linux 也就是 ubuntu 的交换区目录，这个一般的大小为内存的 2 倍左右， 主要是用来在电脑内存不足的情况下，系统会调用这片区域，来运行程序，我们可以将其分为 4G， 这个把ext4换成交换空间，英文swap</p>
-<h3 id="3-3-x2F-分区"><a href="#3-3-x2F-分区" class="headerlink" title="3.3    &#x2F;分区"></a>3.3    &#x2F;分区</h3><p>&#x2F;:这是 linux 也就是 ubuntu 的根目录就一个反斜杠表示，相当于windows的C盘， 我们将其分为 10G，文件格式为 ext4，条件允许可以大一点，可以20G，毕竟ubuntu装软件默认是装在这里的，大一点可能会省去后面隐藏的麻烦。</p>
-<h3 id="3-4-x2F-home分区"><a href="#3-4-x2F-home分区" class="headerlink" title="3.4   &#x2F;home分区"></a>3.4   &#x2F;home分区</h3><p>&#x2F;home:这是 ubuntu 的“其他盘”， 这个也可以说是我们的个人目录，相当于windows的其他盘，所以为了让我们自己的目录大一点，剩下的全分给它，文件格式为 ext4</p>
-<img src="https://i.loli.net/2021/06/22/IZixlEy6FC8vRKn.png" style="zoom: 67%;" />
+<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
+<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
+<p>进一步检查，打开终端输入如下命令：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>以上两步新建分区后的类似效果：</p>
-<img src="https://i.loli.net/2021/06/22/KxGUtJWhYPMRS3p.png" style="zoom:67%;" />
-
-<h2 id="4-选择安装启动引导的设备"><a href="#4-选择安装启动引导的设备" class="headerlink" title="4.选择安装启动引导的设备"></a>4.选择安装启动引导的设备</h2><p>安装启动引导的设备：windows boot manager</p>
-<img src="https://i.loli.net/2021/06/22/v2JbClS7IwjU46a.png" style="zoom:50%;" />
-
-<h2 id="5-自动安装"><a href="#5-自动安装" class="headerlink" title="5.自动安装"></a>5.自动安装</h2><img src="https://i.loli.net/2021/06/22/oMECN25eyXsIAKS.jpg" style="zoom: 50%;" />
-
-<img src="https://i.loli.net/2021/06/22/T7CP1BcVWb9wxIR.jpg" style="zoom:50%;" />
-
-<p>安装完成后可能显示画面模糊，这是因为没有安装显卡驱动，可以按照教程”Ubuntu16.04手动安装英伟达显卡驱动”安装即可</p>
+<p>出现如下所示信息，即为安装成功:</p>
+<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
 
                 
             </div>
@@ -470,7 +501,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">http://example.com/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/</a>
+                    <a href="http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -510,6 +541,10 @@
                             
                                 <a href="/tags/ubuntu/">
                                     <span class="chip bg-color">ubuntu</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
+                                    <span class="chip bg-color">显卡驱动安装</span>
                                 </a>
                             
                         </div>
@@ -592,13 +627,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">
+                <a href="/2022/11/23/Ubuntu16-04-LTS:anaconda3%E5%AE%89%E8%A3%85/Ubuntu16-04-LTS:anaconda3%E5%AE%89%E8%A3%85/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Ubuntu16-04手动安装英伟达显卡驱动">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Ubuntu16-04-LTS：anaconda3安装">
                         
-                        <span class="card-title">Ubuntu16-04手动安装英伟达显卡驱动</span>
+                        <span class="card-title">Ubuntu16-04-LTS：anaconda3安装</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -619,6 +654,10 @@
                                     Ubuntu
                                 </a>
                             
+                            <a href="/categories/Ubuntu/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
+                                </a>
+                            
                             
                         </span>
                     </div>
@@ -630,8 +669,12 @@
                         <span class="chip bg-color">ubuntu</span>
                     </a>
                     
-                    <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                        <span class="chip bg-color">显卡驱动安装</span>
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
+                    </a>
+                    
+                    <a href="/tags/anaconda/">
+                        <span class="chip bg-color">anaconda</span>
                     </a>
                     
                 </div>
@@ -645,13 +688,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/23/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04/">
+                <a href="/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="手眼标定-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="win10与ubuntu16-04-LTS双系统安装教程">
                         
-                        <span class="card-title">手眼标定-Ros-Kinetic-Realsense-D435-AUBOi5-Ubuntu-16-04</span>
+                        <span class="card-title">win10与ubuntu16-04-LTS双系统安装教程</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -668,11 +711,7 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ros/" class="post-category">
-                                    Ros
-                                </a>
-                            
-                            <a href="/categories/Ros/Ubuntu/" class="post-category">
+                            <a href="/categories/Ubuntu/" class="post-category">
                                     Ubuntu
                                 </a>
                             
@@ -683,12 +722,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%89%8B%E7%9C%BC%E6%A0%87%E5%AE%9A/">
-                        <span class="chip bg-color">手眼标定</span>
-                    </a>
-                    
-                    <a href="/tags/AUBOi5-Realsense-D435/">
-                        <span class="chip bg-color">AUBOi5+Realsense D435</span>
+                    <a href="/tags/ubuntu/">
+                        <span class="chip bg-color">ubuntu</span>
                     </a>
                     
                 </div>
@@ -814,34 +849,7 @@
 
 
 <article id="post">
-  <h1>win10与ubuntu16-04-LTS双系统安装教程</h1>
-  <h2 id="1-创建空闲分区"><a href="#1-创建空闲分区" class="headerlink" title="1.创建空闲分区"></a>1.创建空闲分区</h2><p>在win系统下，在”此电脑”→右键”管理“→“磁盘管理”→右键一个不用的磁盘并”格式化“→”删除卷“，分出一个状态为“未分配”的磁盘用于安装ubuntu16.04 LTS</p>
-<h2 id="2-开始安装"><a href="#2-开始安装" class="headerlink" title="2.开始安装"></a>2.开始安装</h2><p>插入具有ubuntu16.04 LTS系统的U盘开始安装系统</p>
-<ul>
-<li>选择系统语言，可以是中文或英文。如需要安装tensflow的话建议安装英文版本</li>
-<li>选择安装类型为其它选项</li>
-</ul>
-<img src="https://i.loli.net/2021/06/22/9FEvKkQmATYq7Ip.jpg" style="zoom: 67%;" />
-
-<h2 id="3-双击空闲盘进行分区"><a href="#3-双击空闲盘进行分区" class="headerlink" title="3.双击空闲盘进行分区"></a>3.双击空闲盘进行分区</h2><h3 id="3-1-x2F-boot分区"><a href="#3-1-x2F-boot分区" class="headerlink" title="3.1   &#x2F;boot分区"></a>3.1   &#x2F;boot分区</h3><p>&#x2F;boot：这个就是实现你双系统的原因了，这个就是用于启动 ubuntu 的目录，里面会有系统的引导，这个文件其实只有几十兆，但是我们建议将其划分为 200M 文件格式为 ext4，这个分区必不可少，否则后果你懂得！</p>
-<h3 id="3-2-swap分区"><a href="#3-2-swap分区" class="headerlink" title="3.2   swap分区"></a>3.2   swap分区</h3><p>swap:这个是 Linux 也就是 ubuntu 的交换区目录，这个一般的大小为内存的 2 倍左右， 主要是用来在电脑内存不足的情况下，系统会调用这片区域，来运行程序，我们可以将其分为 4G， 这个把ext4换成交换空间，英文swap</p>
-<h3 id="3-3-x2F-分区"><a href="#3-3-x2F-分区" class="headerlink" title="3.3    &#x2F;分区"></a>3.3    &#x2F;分区</h3><p>&#x2F;:这是 linux 也就是 ubuntu 的根目录就一个反斜杠表示，相当于windows的C盘， 我们将其分为 10G，文件格式为 ext4，条件允许可以大一点，可以20G，毕竟ubuntu装软件默认是装在这里的，大一点可能会省去后面隐藏的麻烦。</p>
-<h3 id="3-4-x2F-home分区"><a href="#3-4-x2F-home分区" class="headerlink" title="3.4   &#x2F;home分区"></a>3.4   &#x2F;home分区</h3><p>&#x2F;home:这是 ubuntu 的“其他盘”， 这个也可以说是我们的个人目录，相当于windows的其他盘，所以为了让我们自己的目录大一点，剩下的全分给它，文件格式为 ext4</p>
-<img src="https://i.loli.net/2021/06/22/IZixlEy6FC8vRKn.png" style="zoom: 67%;" />
-
-<p>以上两步新建分区后的类似效果：</p>
-<img src="https://i.loli.net/2021/06/22/KxGUtJWhYPMRS3p.png" style="zoom:67%;" />
-
-<h2 id="4-选择安装启动引导的设备"><a href="#4-选择安装启动引导的设备" class="headerlink" title="4.选择安装启动引导的设备"></a>4.选择安装启动引导的设备</h2><p>安装启动引导的设备：windows boot manager</p>
-<img src="https://i.loli.net/2021/06/22/v2JbClS7IwjU46a.png" style="zoom:50%;" />
-
-<h2 id="5-自动安装"><a href="#5-自动安装" class="headerlink" title="5.自动安装"></a>5.自动安装</h2><img src="https://i.loli.net/2021/06/22/oMECN25eyXsIAKS.jpg" style="zoom: 50%;" />
-
-<img src="https://i.loli.net/2021/06/22/T7CP1BcVWb9wxIR.jpg" style="zoom:50%;" />
-
-<p>安装完成后可能显示画面模糊，这是因为没有安装显卡驱动，可以按照教程”Ubuntu16.04手动安装英伟达显卡驱动”安装即可</p>
-
-  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/win与ubuntu--LTS双系统安装教程.md">Edit Post</a>
+  <a  target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/Ubuntu-手动安装英伟达显卡驱动Ubuntu-手动安装英伟达显卡驱动/Ubuntu-手动安装英伟达显卡驱动Ubuntu-手动安装英伟达显卡驱动.md">Edit Post</a>
 </article>
 
 

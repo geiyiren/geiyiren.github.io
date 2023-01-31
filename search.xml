@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>思维导图测试</title>
+      <link href="/2023/01/31/%E6%B5%8B%E8%AF%95/"/>
+      <url>/2023/01/31/%E6%B5%8B%E8%AF%95/</url>
+      
+        <content type="html"><![CDATA[<blockquote class="pullquote mindmap mindmap-md"><ul><li><a href="https://hunterx.xyz/use-mindmap-in-hexo.html">在 Hexo 中使用思维导图</a><ul><li>前言</li><li>操作指南<ul><li>准备需要的文件</li><li>为主题添加 CSS&#x2F;JS 文件</li></ul></li><li>使用方法</li></ul></li></ul></blockquote><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      
+      
+      <categories>
+          
+          <category> 测试 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 测试 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>malloc申请内存访问时容易出现的访问越界问题</title>
       <link href="/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/"/>
       <url>/2022/12/15/malloc%E7%94%B3%E8%AF%B7%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE%E6%97%B6%E5%AE%B9%E6%98%93%E5%87%BA%E7%8E%B0%E7%9A%84%E8%AE%BF%E9%97%AE%E8%B6%8A%E7%95%8C%E9%97%AE%E9%A2%98/</url>

@@ -391,7 +391,7 @@ aiApp执行命令打印tail -F /mnt/data/log/ylog | grep aiApp
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-02-03
+                    2023-02-07
                 </div>
                 
 
@@ -428,11 +428,13 @@ aiApp执行命令打印tail -F /mnt/data/log/ylog | grep aiApp
 <h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.start aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.stop aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.restart aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffplay <span class="token parameter variable">-pixel_format</span> nv12 <span class="token parameter variable">-f</span> rawvideo <span class="token parameter variable">-video_size</span> 240x576 stitch_view.yuv
-ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x720 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffplay <span class="token parameter variable">-pixel_format</span> nv12 <span class="token parameter variable">-f</span> rawvideo <span class="token parameter variable">-video_size</span> 240x576 stitch_view.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x720 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="ubuntu终端查看历史命令"><a href="#ubuntu终端查看历史命令" class="headerlink" title="ubuntu终端查看历史命令"></a>ubuntu终端查看历史命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">history</span> <span class="token operator">|</span> <span class="token function">grep</span> some_command<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="查看cup限制"><a href="#查看cup限制" class="headerlink" title="查看cup限制"></a>查看cup限制</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ps</span> <span class="token operator">|</span> <span class="token function">grep</span> limit <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="1126关闭DNS验证"><a href="#1126关闭DNS验证" class="headerlink" title="1126关闭DNS验证"></a>1126关闭DNS验证</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /etc/nsswitch.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>或者直接替换对应字段</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">"s/dns/#dns/g"</span> <span class="token variable"><span class="token variable">`</span><span class="token function">grep</span> <span class="token string">"dns"</span> <span class="token parameter variable">-rl</span> /etc/nsswitch.conf<span class="token variable">`</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>注释 dns选项，如下所示：<blockquote>
 <p>hosts:          files #dns<br>networks:       files #dns</p>

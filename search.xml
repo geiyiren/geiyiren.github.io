@@ -40,14 +40,26 @@
       
       <categories>
           
-          <category> C++ - C - C# - java </category>
+          <category> C++ </category>
+          
+          <category> C </category>
+          
+          <category> C# </category>
+          
+          <category> java </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> C++ - C - C# - java </tag>
+            <tag> C++ </tag>
+            
+            <tag> java </tag>
+            
+            <tag> C </tag>
+            
+            <tag> C# </tag>
             
         </tags>
       

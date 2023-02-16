@@ -391,7 +391,7 @@ aiApp执行命令打印tail -F /mnt/data/log/ylog | grep aiApp
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-02-14
+                    2023-02-16
                 </div>
                 
 
@@ -489,7 +489,8 @@ done
 <h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb start-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb remount<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">setprop persist.otg.mode device<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="安卓录制屏幕"><a href="#安卓录制屏幕" class="headerlink" title="安卓录制屏幕"></a>安卓录制屏幕</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell screenrecord  --time-limit <span class="token number">12</span> /sdcard/name.mp4<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">setprop persist.otg.mode device<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>远程登录后使用上述命令</li>
 </ul>

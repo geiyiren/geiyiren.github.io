@@ -4,11 +4,10 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Ubuntu16-04手动安装英伟达显卡驱动, geiyiren">
-    <meta name="description" content="1.屏蔽开源驱动屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：
-sudo gedit /etc/modprobe.d/blacklist.conf
-
-然后添加内容到最底段，要回车另起一行。添加">
+    <meta name="keywords" content="git使用指南, geiyiren">
+    <meta name="description" content="常用命令git config 设置用户名称和邮件地址
+设置用户名称git config --global user.name &#34;goto456&#34;
+设置邮件地址git config --global user.email &#34;goto456@1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -20,7 +19,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Ubuntu16-04手动安装英伟达显卡驱动 | geiyiren</title>
+    <title>git使用指南 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -315,7 +314,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 <script src="/libs/cryptojs/crypto-js.min.js"></script>
 <script>
     (function() {
-        let pwd = '';
+        let pwd = '31faa2bf193e0267926799e680a8c29ce462ce35739844b4533598fbee437ea5';
         if (pwd && pwd.length > 0) {
             if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
                 alert('密码错误，将返回主页！');
@@ -328,12 +327,12 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Ubuntu16-04手动安装英伟达显卡驱动</h1>
+                    <h1 class="description center-align post-title">git使用指南</h1>
                 </div>
             </div>
         </div>
@@ -355,12 +354,12 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ubuntu/">
-                                <span class="chip bg-color">ubuntu</span>
+                            <a href="/tags/git/">
+                                <span class="chip bg-color">git</span>
                             </a>
                         
-                            <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                <span class="chip bg-color">显卡驱动安装</span>
+                            <a href="/tags/gitlab/">
+                                <span class="chip bg-color">gitlab</span>
                             </a>
                         
                     </div>
@@ -371,8 +370,8 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                Ubuntu
+                            <a href="/categories/git/" class="post-category">
+                                git
                             </a>
                         
                     </div>
@@ -384,7 +383,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2022-11-23
+                    2023-02-28
                 </div>
                 
 
@@ -398,7 +397,7 @@ sudo gedit /etc/modprobe.d/blacklist.conf
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    585
+                    303
                 </div>
                 
 
@@ -423,56 +422,28 @@ sudo gedit /etc/modprobe.d/blacklist.conf
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
+                <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="git-config-设置用户名称和邮件地址"><a href="#git-config-设置用户名称和邮件地址" class="headerlink" title="git config 设置用户名称和邮件地址"></a><code>git config</code> 设置用户名称和邮件地址</h2><ul>
+<li>设置用户名称<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">"goto456"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>设置邮件地址<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">"goto456@126.com"</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>列出当前Git所有的配置信息<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--list</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="git-init-初始化本地仓库"><a href="#git-init-初始化本地仓库" class="headerlink" title="git init 初始化本地仓库"></a><code>git init</code> 初始化本地仓库</h2><p>获取一个 Git 仓库有两种方法：<br>1.本地初始化一个仓库<br>2.从远程克隆一个仓库到本地<br>对于第1种方式，如果想对本地现有的一个项目用 Git 来管理，可以直接进入该项目的目录下执行如下命令，就可以将其初始化成一个 Git 仓库了。  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="git-clone-克隆远程仓库到本地"><a href="#git-clone-克隆远程仓库到本地" class="headerlink" title="git clone 克隆远程仓库到本地"></a><code>git clone</code> 克隆远程仓库到本地</h2><ul>
+<li>通过ssh方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone git@github.com:goto456/leetcode.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>通过https方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/goto456/leetcode.git <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<blockquote>
+<p>https方式：不管是谁，只要拿到该项目的 url 可以随便 clone，但是在 push 到远程的时候需要验证用户名和密码；<br>ssh方式：需要现将你电脑的SSH key（SSH公钥）添加到GitHub（或者其他代码托管网站）上，这样在 clone 项目和 push 项目到远程时都不需要输入用户名和密码。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1>
 
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+	<div class="row">
+    <embed src="git教程.pdf" width="100%" height="550" type="application/pdf">
+	</div>
 
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
+
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
@@ -499,7 +470,7 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/">http://example.com/2022/11/23/Ubuntu16-04%E6%89%8B%E5%8A%A8%E5%AE%89%E8%A3%85%E8%8B%B1%E4%BC%9F%E8%BE%BE%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8/</a>
+                    <a href="http://example.com/2023/02/28/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/">http://example.com/2023/02/28/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -537,12 +508,12 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/ubuntu/">
-                                    <span class="chip bg-color">ubuntu</span>
+                                <a href="/tags/git/">
+                                    <span class="chip bg-color">git</span>
                                 </a>
                             
-                                <a href="/tags/%E6%98%BE%E5%8D%A1%E9%A9%B1%E5%8A%A8%E5%AE%89%E8%A3%85/">
-                                    <span class="chip bg-color">显卡驱动安装</span>
+                                <a href="/tags/gitlab/">
+                                    <span class="chip bg-color">gitlab</span>
                                 </a>
                             
                         </div>
@@ -621,17 +592,18 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2022/11/23/Ubuntu16-04-LTS:anaconda3%E5%AE%89%E8%A3%85/">
+                <a href="/2023/02/28/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Ubuntu16-04-LTS：anaconda3安装">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="git使用指南">
                         
-                        <span class="card-title">Ubuntu16-04-LTS：anaconda3安装</span>
+                        <span class="card-title">git使用指南</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -641,34 +613,31 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-02-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
-                                    深度学习
+                            <a href="/categories/git/" class="post-category">
+                                    git
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/git/">
+                        <span class="chip bg-color">git</span>
                     </a>
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
-                    </a>
-                    
-                    <a href="/tags/anaconda/">
-                        <span class="chip bg-color">anaconda</span>
+                    <a href="/tags/gitlab/">
+                        <span class="chip bg-color">gitlab</span>
                     </a>
                     
                 </div>
@@ -682,13 +651,13 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2022/11/23/win10%E4%B8%8Eubuntu16-04-LTS%E5%8F%8C%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B/">
+                <a href="/2023/02/14/C++%E7%9A%84lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="win10与ubuntu16-04-LTS双系统安装教程">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="C++的lambda表达式使用方法">
                         
-                        <span class="card-title">win10与ubuntu16-04-LTS双系统安装教程</span>
+                        <span class="card-title">C++的lambda表达式使用方法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -699,14 +668,14 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2022-11-23
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-02-14
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Ubuntu/" class="post-category">
-                                    Ubuntu
+                            <a href="/categories/C/" class="post-category">
+                                    C++
                                 </a>
                             
                             
@@ -716,12 +685,16 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ubuntu/">
-                        <span class="chip bg-color">ubuntu</span>
+                    <a href="/tags/C/">
+                        <span class="chip bg-color">C++</span>
                     </a>
                     
-                    <a href="/tags/windows/">
-                        <span class="chip bg-color">windows</span>
+                    <a href="/tags/%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92/">
+                        <span class="chip bg-color">函数参数传递</span>
+                    </a>
+                    
+                    <a href="/tags/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+                        <span class="chip bg-color">lambda表达式</span>
                     </a>
                     
                 </div>

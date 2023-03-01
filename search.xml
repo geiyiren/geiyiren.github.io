@@ -35,7 +35,7 @@
       <link href="/2023/02/14/C++%E7%9A%84lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
       <url>/2023/02/14/C++%E7%9A%84lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
       
-        <content type="html"><![CDATA[<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+        <content type="html"><![CDATA[<hr><hr><hr><hr><hr><hr><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
       
       
       <categories>
@@ -100,18 +100,18 @@
       
       <categories>
           
-          <category> Android </category>
+          <category> android </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> Android </tag>
+            <tag> android </tag>
             
-            <tag> Activity </tag>
+            <tag> activity </tag>
             
-            <tag> SurfaceView </tag>
+            <tag> surfaceView </tag>
             
         </tags>
       

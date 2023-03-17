@@ -1,0 +1,119 @@
+<h1 id="Omnidirectional-Camera-Calibration-tutorial-omnidir-calib-main"><a href="#Omnidirectional-Camera-Calibration-tutorial-omnidir-calib-main" class="headerlink" title="Omnidirectional Camera Calibration {#tutorial_omnidir_calib_main}"></a>Omnidirectional Camera Calibration {#tutorial_omnidir_calib_main}</h1><p>This module includes calibration, rectification and stereo reconstruction of omnidirectional camearas. The camera model is described in this paper:</p>
+<p><em>C. Mei and P. Rives, Single view point omnidirectional camera calibration from planar grids, in ICRA 2007.</em></p>
+<p>The model is capable of modeling catadioptric cameras and fisheye cameras, which may both have very large field of view.</p>
+<p>The implementation of the calibration part is based on Li’s calibration toolbox:</p>
+<p><em>B. Li, L. Heng, K. Kevin and M. Pollefeys, “A Multiple-Camera System Calibration Toolbox Using A Feature Descriptor-Based Calibration Pattern”, in IROS 2013.</em></p>
+<p>This tutorial will introduce the following parts of omnidirectional camera calibartion module:</p>
+<ul>
+<li>calibrate a single camera.</li>
+<li>calibrate a stereo pair of cameras.</li>
+<li>rectify images so that large distoration is removed.</li>
+<li>reconstruct 3D from two stereo images, with large filed of view.</li>
+<li>comparison with fisheye model in opencv&#x2F;calib3d&#x2F;</li>
+</ul>
+<h2 id="Single-Camera-Calibration"><a href="#Single-Camera-Calibration" class="headerlink" title="Single Camera Calibration"></a>Single Camera Calibration</h2><p>The first step to calibrate camera is to get a calibration pattern and take some photos. Several kinds of patterns are supported by OpenCV, like checkerborad and circle grid. A new pattern named random pattern can also be used, you can refer to opencv_contrib&#x2F;modules&#x2F;ccalib for more details.</p>
+<p>Next step is to extract corners from calibration pattern. For checkerboard, use OpenCV function <code>cv::findChessboardCorners</code>; for circle grid, use <code>cv::findCirclesGrid</code>, for random pattern, use the <code>randomPatternCornerFinder</code> class in opencv_contrib&#x2F;modules&#x2F;ccalib&#x2F;src&#x2F;randomPattern.hpp. Save the positions of corners in images in a variable like <code>imagePoints</code>. The type of <code>imagePoints</code> may be <code>std::vector&lt;std::vector&lt;cv::Vec2f&gt;&gt;</code>, the first vector stores corners in each frame, the second vector stores corners in an individual frame. The type can also be <code>std::vector&lt;cv::Mat&gt;</code> where the <code>cv::Mat</code> is <code>CV_32FC2</code>.</p>
+<p>Also, the corresponding 3D points in world (pattern) coordinate are required. You can compute they for yourself if you know the physical size of your pattern. Save 3D points in <code>objectPoints</code>, similar to <code>imagePoints</code>, it can be <code>std::vector&lt;std::vector&lt;Vec3f&gt;&gt;</code> or <code>std::vector&lt;cv::Mat&gt;</code> where <code>cv::Mat</code> is of type <code>CV_32FC3</code>. Note the size of <code>objectPoints</code> and <code>imagePoints</code> must be the same because they are corresponding to each other.</p>
+<p>Another thing you should input is the size of images. The file opencv_contrib&#x2F;modules&#x2F;ccalib&#x2F;tutorial&#x2F;data&#x2F;omni_calib_data.xml stores an example of objectPoints, imagePoints and imageSize. Use the following code to load them:</p>
+<pre><code>cv::FileStorage fs(&quot;omni_calib_data.xml&quot;, cv::FileStorage::READ);
+std::vector&lt;cv::Mat&gt; objectPoints, imagePoints;
+cv::Size imgSize;
+fs[&quot;objectPoints&quot;] &gt;&gt; objectPoints;
+fs[&quot;imagePoints&quot;] &gt;&gt; imagePoints;
+fs[&quot;imageSize&quot;] &gt;&gt; imgSize;
+</code></pre>
+<p>Then define some variables to store the output parameters and run the calibration function like:</p>
+<pre><code>cv::Mat K, xi, D, idx;
+int flags = 0;
+cv::TermCriteria critia(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 200, 0.0001);
+std::vector&lt;cv::Mat&gt; rvecs, tvecs;
+double rms = cv::omnidir::calibrate(objectPoints, imagePoints, imgSize, K, xi, D, rvecs, tvecs, flags, critia, idx);
+</code></pre>
+<p><code>K</code>, <code>xi</code>, <code>D</code> are internal parameters and  <code>rvecs</code>, <code>tvecs</code> are external parameters that store the pose of patterns. All of them have  depth of <code>CV_64F</code>. The <code>xi</code> is a single value variable of Mei’s model. <code>idx</code> is a <code>CV_32S</code> Mat that stores indices of images that are really used in calibration. This is due to some images are failed in the initialization step so they are not used in the final optimization. The returned value <em>rms</em> is the root mean square of reprojection errors.</p>
+<p>The calibration supports some features, <em>flags</em> is a enumeration for some features, including:</p>
+<ul>
+<li>cv::omnidir::CALIB_FIX_SKEW</li>
+<li>cv::omnidir::CALIB_FIX_K1</li>
+<li>cv::omnidir::CALIB_FIX_K2</li>
+<li>cv::omnidir::CALIB_FIX_P1</li>
+<li>cv::omnidir::CALIB_FIX_P2</li>
+<li>cv::omnidir::CALIB_FIX_XI</li>
+<li>cv::omnidir::CALIB_FIX_GAMMA</li>
+<li>cv::omnidir::CALIB_FIX_CENTER</li>
+</ul>
+<p>Your can specify <code>flags</code> to fix parameters during calibration. Use ‘plus’ operator to set multiple features. For example, <code>CALIB_FIX_SKEW+CALIB_FIX_K1</code> means fixing skew and K1.</p>
+<p><code>criteria</code> is the stopping criteria during optimization, set it to be, for example, cv::TermCriteria(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 200, 0.0001), which means using 200 iterations and stopping when relative change is smaller than 0.0001.</p>
+<h2 id="Stereo-Calibration"><a href="#Stereo-Calibration" class="headerlink" title="Stereo Calibration"></a>Stereo Calibration</h2><p>Stereo calibration is to calibrate two cameras together. The output parameters include camera parameters of two cameras and the relative pose of them. To recover the relative pose, two cameras must observe the same pattern at the same time, so the <code>objectPoints</code> of two cameras are the same.</p>
+<p>Now detect image corners for both cameras as discussed above to get <code>imagePoints1</code> and <code>imagePoints2</code>. Then compute the shared <code>objectPoints</code>.</p>
+<p>An example of of stereo calibration data is stored in opencv_contrib&#x2F;modules&#x2F;ccalib&#x2F;tutorial&#x2F;data&#x2F;omni_stereocalib_data.xml. Load the data by</p>
+<pre><code>cv::FileStorage fs(&quot;omni_stereocalib_data.xml&quot;, cv::FileStorage::READ);
+std::vector&lt;cv::Mat&gt; objectPoints, imagePoints1, imagePoints2;
+cv::Size imgSize1, imgSize2;
+fs[&quot;objectPoints&quot;] &gt;&gt; objectPoints;
+fs[&quot;imagePoints1&quot;] &gt;&gt; imagePoints1;
+fs[&quot;imagePoints2&quot;] &gt;&gt; imagePoints2;
+fs[&quot;imageSize1&quot;] &gt;&gt; imgSize1;
+fs[&quot;imageSize2&quot;] &gt;&gt; imgSize2;
+</code></pre>
+<p>Then do stereo calibration by</p>
+<pre><code>cv::Mat K1, K2, xi1, xi2, D1, D2;
+int flags = 0;
+cv::TermCriteria critia(cv::TermCriteria::COUNT + cv::TermCriteria::EPS, 200, 0.0001);
+std::vector&lt;cv::Mat&gt; rvecsL, tvecsL;
+cv::Mat rvec, tvec;
+double rms = cv::omnidir::stereoCalibrate(objectPoints, imagePoints1, imagePoints2, imgSize1, imgSize2, K1, xi1, D1, K2, xi2, D2, rvec, tvec, rvecsL, tvecsL, flags, critia, idx);
+</code></pre>
+<p>Here <code>rvec</code> and <code>tvec</code> are the transform between the first and the second camera. <code>rvecsL</code> and <code>tvecsL</code> are the transforms between patterns and the first camera.</p>
+<h2 id="Image-Rectificaiton"><a href="#Image-Rectificaiton" class="headerlink" title="Image Rectificaiton"></a>Image Rectificaiton</h2><p>Omnidirectional images have very large distortion, so it is not compatible with human’s eye balls. For better view, rectification can be applied if camera parameters are known. Here is an example of omnidirectional image of 360 degrees of horizontal field of view.</p>
+<p><img src="/img/sample.jpg" alt="image"></p>
+<p>After rectification, a perspective like view is generated. Here is one example to run image rectification in this module:</p>
+<pre><code>cv::omnidir::undistortImage(distorted, undistorted, K, D, xi, int flags, Knew, new_size)
+</code></pre>
+<p>The variable <em>distorted</em> and <em>undistorted</em> are the origional image and rectified image perspectively. <em>K</em>, <em>D</em>, <em>xi</em> are camera parameters. <em>KNew</em> and <em>new_size</em> are the camera matrix and image size for rectified image. <em>flags</em> is the rectification type, it can be:</p>
+<ul>
+<li>RECTIFY_PERSPECTIVE: rectify to perspective images, which will lose some filed of view.</li>
+<li>RECTIFY_CYLINDRICAL: rectify to cylindrical images that preserve all view.</li>
+<li>RECTIFY_STEREOGRAPHIC: rectify to stereographic images that may lose a little view.</li>
+<li>RECTIFY_LONGLATI: rectify to longitude-latitude map like a world map of the earth. This rectification can be used to stereo reconstruction but may not be friendly for view. This map is described in paper:<br><em>Li S. Binocular spherical stereo[J]. Intelligent Transportation Systems, IEEE Transactions on, 2008, 9(4): 589-600.</em></li>
+</ul>
+<p>The following four images are four types of rectified images discribed above:</p>
+<p><img src="/img/sample_rec_per.jpg" alt="image"></p>
+<p><img src="/img/sample_rec_cyl.jpg" alt="image"></p>
+<p><img src="/img/sample_rec_ste.jpg" alt="image"></p>
+<p><img src="/img/sample_rec_log.jpg" alt="image"></p>
+<p>It can be observed that perspective rectified image perserves only a little field of view and is not goodlooking. Cylindrical rectification preserves all field of view and scene is unnatural only in the middle of bottom. The distortion of stereographic in the middle of bottom is smaller than cylindrical but the distortion of other places are larger, and it can not preserve all field of view. For images with very large distortion, the longitude-latitude rectification does not give a good result, but it is available to make epipolar constraint in a line so that stereo matching can be applied in omnidirectional images.</p>
+<p><strong>Note</strong>: To have a better result, you should carefully choose <code>Knew</code> and it is related to your camera. In general, a smaller focal length leads to a smaller field of view and vice versa. Here are recommonded settings.</p>
+<p>For RECTIFY_PERSPECTIVE</p>
+<pre><code>Knew = Matx33f(new_size.width/4, 0, new_size.width/2,
+               0, new_size.height/4, new_size.height/2,
+               0, 0, 1);
+</code></pre>
+<p>For RECTIFY_CYLINDRICAL, RECTIFY_STEREOGRAPHIC, RECTIFY_LONGLATI</p>
+<pre><code>Knew = Matx33f(new_size.width/3.1415, 0, 0,
+               0, new_size.height/3.1415, 0,
+               0, 0, 1);
+</code></pre>
+<p>Maybe you need to change <code>(u0, v0)</code> to get a better view.</p>
+<h2 id="Stereo-Reconstruction"><a href="#Stereo-Reconstruction" class="headerlink" title="Stereo Reconstruction"></a>Stereo Reconstruction</h2><p>Stereo reconstruction is to reconstruct 3D points from a calibrated stereo camera pair. It is a basic problem of computer vison. However, for omnidirectional camera, it is not very popular because of the large distortion make it a little difficult. Conventional methods rectify images to perspective ones and do stereo reconstruction in perspective images. However, the last section shows that recifying to perspective images lose too much field of view, which waste the advantage of omnidirectional camera, i.e. large field of view.</p>
+<p>The first step of stereo reconstruction is stereo rectification so that epipolar lines are horizontal lines. Here, we use longitude-latitude rectification to preserve all filed of view, or perspective rectification which is available but is not recommended. The second step is stereo matching to get a disparity map. At last, 3D points can be generated from disparity map.</p>
+<p>The API of stereo reconstruction for omnidrectional camera is <code>omnidir::stereoReconstruct</code>. Here we use an example to show how it works.</p>
+<p>First, calibrate a stereo pair of cameras as described above and get parameters like <code>K1</code>, <code>D1</code>, <code>xi1</code>, <code>K2</code>, <code>D2</code>, <code>xi2</code>, <code>rvec</code>, <code>tvec</code>. Then read two images from the first and second camera respectively, for instance, <code>image1</code> and <code>image2</code>, which are shown below.</p>
+<p><img src="/img/imgs.jpg" alt="image"></p>
+<p>Second, run <code>omnidir::stereoReconstruct</code> like:</p>
+<pre><code>cv::Size imgSize = img1.size();
+int numDisparities = 16*5;
+int SADWindowSize = 5;
+cv::Mat disMap;
+int flag = cv::omnidir::RECTIFY_LONGLATI;
+int pointType = omnidir::XYZRGB;
+// the range of theta is (0, pi) and the range of phi is (0, pi)
+cv::Matx33d KNew(imgSize.width / 3.1415, 0, 0, 0, imgSize.height / 3.1415, 0, 0, 0, 1);
+Mat imageRec1, imageRec2, pointCloud;
+
+cv::omnidir::stereoReconstruct(img1, img2, K1, D1, xi1, K2, D2, xi2, R, T, flag, numDisparities, SADWindowSize, disMap, imageRec1, imageRec2, imgSize, KNew, pointCloud);
+</code></pre>
+<p>Here variable <code>flag</code> indicates the recectify type, only <code>RECTIFY_LONGLATI</code>(recommend) and <code>RECTIFY_PERSPECTIVE</code> make sense. <code>numDisparities</code> is the max disparity value and <code>SADWindowSize</code> is the window size of <code>cv::StereoSGBM</code>. <code>pointType</code> is a flag to define the type of point cloud, <code>omnidir::XYZRGB</code> each point is a 6-dimensional vector, the first three elements are xyz coordinate, the last three elements are rgb color information. Another type <code>omnidir::XYZ</code> means each point is 3-dimensional and has only xyz coordiante.</p>
+<p>Moreover, <code>imageRec1</code> and <code>imagerec2</code> are rectified versions of the first and second images. The epipolar lines of them have the same y-coordinate so that stereo matching becomes easy. Here are an example of them:</p>
+<p><img src="/img/lines.jpg" alt="image"><br>It can be observed that they are well aligned. The variable <code>disMap</code> is the disparity map computed by <code>cv::StereoSGBM</code> from <code>imageRec1</code> and <code>imageRec2</code>. The disparity map of the above two images is:</p>
+<p><img src="/img/disparity.jpg" alt="image"></p>
+<p>After we have disparity, we can compute 3D location for each pixel. The point cloud is stored in <code>pointCloud</code>, which is a 3-channel or 6-channel <code>cv::Mat</code>. We show the point cloud in the following image.<br><img src="/img/pointCloud.jpg" alt="image"></p>

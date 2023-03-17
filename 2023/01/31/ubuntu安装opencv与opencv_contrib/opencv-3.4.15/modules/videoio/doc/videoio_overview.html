@@ -1,0 +1,40 @@
+<h1 id="Video-I-x2F-O-with-OpenCV-Overview-videoio-overview"><a href="#Video-I-x2F-O-with-OpenCV-Overview-videoio-overview" class="headerlink" title="Video I&#x2F;O with OpenCV Overview {#videoio_overview}"></a>Video I&#x2F;O with OpenCV Overview {#videoio_overview}</h1><h3 id="See-also"><a href="#See-also" class="headerlink" title="See also:"></a>See also:</h3><ul>
+<li>@ref videoio “Video I&#x2F;O Code Reference”</li>
+<li>Tutorials: @ref tutorial_table_of_content_videoio</li>
+</ul>
+<h1 id="General-Information"><a href="#General-Information" class="headerlink" title="General Information"></a>General Information</h1><p>The OpenCV @ref videoio module is a set of classes and functions to read and write video or images sequence.</p>
+<p>Basically, the module provides the cv::VideoCapture and cv::VideoWriter classes as 2-layer interface to many video<br>I&#x2F;O APIs used as backend.</p>
+<p><img src="/pics/videoio_overview.svg" alt="Video I/O with OpenCV"></p>
+<p>Some backends such as Direct Show (DSHOW), Video For Windows (VFW), Microsoft Media Foundation (MSMF),<br>Video 4 Linux (V4L), etc… are interfaces to the video I&#x2F;O library provided by the operating system.</p>
+<p>Some others backends like OpenNI2 for Kinect, Intel Perceptual Computing SDK, GStreamer,<br>XIMEA Camera API, etc…  are interfaces to proprietary drivers or to external library.</p>
+<p>See the list of supported backends here: cv::VideoCaptureAPIs</p>
+<p>@warning Some backends are experimental use them at your own risk<br>@note Each backend supports devices properties (cv::VideoCaptureProperties) in a different way or might not support any property at all.</p>
+<h2 id="Select-the-backend-at-runtime"><a href="#Select-the-backend-at-runtime" class="headerlink" title="Select the backend at runtime"></a>Select the backend at runtime</h2><p>OpenCV automatically selects and uses first available backend (<code>apiPreference=cv::CAP_ANY</code>).</p>
+<p>As advanced usage you can select the backend to use at runtime. Currently this option is<br>available only with %VideoCapture.</p>
+<p>For example to grab from default camera using Direct Show as backend</p>
+<pre><code class="cpp">//declare a capture object
+cv::VideoCapture cap(0, cv::CAP_DSHOW);
+
+//or specify the apiPreference with open
+cap.open(0, cv::CAP_DSHOW);
+</code></pre>
+<p>If you want to grab from a file using the Direct Show as backend:</p>
+<pre><code class="cpp">//declare a capture object
+cv::VideoCapture cap(filename, cv::CAP_DSHOW);
+
+//or specify the apiPreference with open
+cap.open(filename, cv::CAP_DSHOW);
+</code></pre>
+<p>@sa cv::VideoCapture::open() , cv::VideoCapture::VideoCapture()</p>
+<h4 id="Enable-backends"><a href="#Enable-backends" class="headerlink" title="Enable backends"></a>Enable backends</h4><p>Backends are available only if they have been built with your OpenCV binaries.</p>
+<p>Check in <code>opencv2/cvconfig.h</code> to know which APIs are currently available<br>(e.g. <code>HAVE_MSMF, HAVE_VFW, HAVE_LIBV4L</code>, etc…).</p>
+<p>To enable&#x2F;disable APIs, you have to:</p>
+<ol>
+<li>re-configure OpenCV using appropriates CMake switches<br>(e.g. <code>-DWITH_MSMF=ON -DWITH_VFW=ON ... </code>) or checking related switch in cmake-gui</li>
+<li>rebuild OpenCV itself</li>
+</ol>
+<h4 id="Use-3rd-party-drivers-or-cameras"><a href="#Use-3rd-party-drivers-or-cameras" class="headerlink" title="Use 3rd party drivers or cameras"></a>Use 3rd party drivers or cameras</h4><p>Many industrial cameras or some video I&#x2F;O devices don’t provide standard driver interfaces<br>for the operating system. Thus you can’t use  VideoCapture or VideoWriter with these devices.</p>
+<p>To get access to their devices, manufactures provide their own C++ API and library that you have to<br>include and link with your OpenCV application.</p>
+<p>It is a common case that these libraries read&#x2F;write images from&#x2F;to a memory buffer. If it so, it is<br>possible to make a <code>Mat</code> header for memory buffer (user-allocated data) and process it<br>in-place using OpenCV functions. See cv::Mat::Mat() for more details.</p>
+<h2 id="The-FFmpeg-library"><a href="#The-FFmpeg-library" class="headerlink" title="The FFmpeg library"></a>The FFmpeg library</h2><p>OpenCV can use the FFmpeg library (<a href="http://ffmpeg.org/">http://ffmpeg.org/</a>) as backend to record, convert and stream audio and video.<br>FFmpeg is a complete, cross-reference solution. If you enable FFmpeg while configuring OpenCV than<br>CMake will download and install the binaries in <code>OPENCV_SOURCE_CODE/3rdparty/ffmpeg/</code>. To use<br>FFmpeg at runtime, you must deploy the FFmpeg binaries with your application.</p>
+<p>@note FFmpeg is licensed under the GNU Lesser General Public License (LGPL) version 2.1 or later.<br>See <code>OPENCV_SOURCE_CODE/3rdparty/ffmpeg/readme.txt</code> and <a href="http://ffmpeg.org/legal.html">http://ffmpeg.org/legal.html</a> for details and<br>licensing information</p>

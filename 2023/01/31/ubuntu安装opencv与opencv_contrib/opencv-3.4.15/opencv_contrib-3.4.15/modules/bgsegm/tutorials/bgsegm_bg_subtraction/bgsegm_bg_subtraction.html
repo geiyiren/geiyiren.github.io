@@ -1,0 +1,45 @@
+<h1 id="Background-Subtraction-tutorial-bgsegm-bg-subtraction"><a href="#Background-Subtraction-tutorial-bgsegm-bg-subtraction" class="headerlink" title="Background Subtraction {#tutorial_bgsegm_bg_subtraction}"></a>Background Subtraction {#tutorial_bgsegm_bg_subtraction}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this chapter,</p>
+<ul>
+<li>We will familiarize with the background subtraction methods available in OpenCV.</li>
+</ul>
+<h2 id="Basics"><a href="#Basics" class="headerlink" title="Basics"></a>Basics</h2><p>Background subtraction is a major preprocessing step in many vision-based applications. For<br>example, consider the case of a visitor counter where a static camera takes the number of visitors<br>entering or leaving the room, or a traffic camera extracting information about the vehicles etc. In<br>all these cases, first you need to extract the person or vehicles alone. Technically, you need to<br>extract the moving foreground from static background.</p>
+<p>If you have an image of background alone, like an image of the room without visitors, image of the road<br>without vehicles etc, it is an easy job. Just subtract the new image from the background. You get<br>the foreground objects alone. But in most of the cases, you may not have such an image, so we need<br>to extract the background from whatever images we have. It becomes more complicated when there are<br>shadows of the vehicles. Since shadows also move, simple subtraction will mark that also as<br>foreground. It complicates things.</p>
+<p>Several algorithms were introduced for this purpose.<br>In the following, we will have a look at two algorithms from the <code>bgsegm</code> module.</p>
+<h3 id="BackgroundSubtractorMOG"><a href="#BackgroundSubtractorMOG" class="headerlink" title="BackgroundSubtractorMOG"></a>BackgroundSubtractorMOG</h3><p>It is a Gaussian Mixture-based Background&#x2F;Foreground Segmentation Algorithm. It was introduced in<br>the paper “An improved adaptive background mixture model for real-time tracking with shadow<br>detection” by P. KadewTraKuPong and R. Bowden in 2001. It uses a method to model each background<br>pixel by a mixture of K Gaussian distributions (K &#x3D; 3 to 5). The weights of the mixture represent<br>the time proportions that those colours stay in the scene. The probable background colours are the<br>ones which stay longer and more static.</p>
+<p>While coding, we need to create a background object using the function,<br><strong>cv.bgsegm.createBackgroundSubtractorMOG()</strong>. It has some optional parameters like length of history,<br>number of gaussian mixtures, threshold etc. It is all set to some default values. Then inside the<br>video loop, use backgroundsubtractor.apply() method to get the foreground mask.</p>
+<p>See a simple example below:<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>cap &#x3D; cv.VideoCapture(‘vtest.avi’)</p>
+<p>fgbg &#x3D; cv.bgsegm.createBackgroundSubtractorMOG()</p>
+<p>while(1):<br>    ret, frame &#x3D; cap.read()</p>
+<pre><code>fgmask = fgbg.apply(frame)
+
+cv.imshow(&#39;frame&#39;,fgmask)
+k = cv.waitKey(30) &amp; 0xff
+if k == 27:
+    break
+</code></pre>
+<p>cap.release()<br>cv.destroyAllWindows()<br>@endcode<br>( All the results are shown at the end for comparison).</p>
+<p>@note Documentation on the newer method <strong>cv.createBackgroundSubtractorMOG2()</strong> can be found here: @ref tutorial_background_subtraction</p>
+<h3 id="BackgroundSubtractorGMG"><a href="#BackgroundSubtractorGMG" class="headerlink" title="BackgroundSubtractorGMG"></a>BackgroundSubtractorGMG</h3><p>This algorithm combines statistical background image estimation and per-pixel Bayesian segmentation.<br>It was introduced by Andrew B. Godbehere, Akihiro Matsukawa, and Ken Goldberg in their paper “Visual<br>Tracking of Human Visitors under Variable-Lighting Conditions for a Responsive Audio Art<br>Installation” in 2012. As per the paper, the system ran a successful interactive audio art<br>installation called “Are We There Yet?” from March 31 - July 31 2011 at the Contemporary Jewish<br>Museum in San Francisco, California.</p>
+<p>It uses first few (120 by default) frames for background modelling. It employs probabilistic<br>foreground segmentation algorithm that identifies possible foreground objects using Bayesian<br>inference. The estimates are adaptive; newer observations are more heavily weighted than old<br>observations to accommodate variable illumination. Several morphological filtering operations like<br>closing and opening are done to remove unwanted noise. You will get a black window during first few<br>frames.</p>
+<p>It would be better to apply morphological opening to the result to remove the noises.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>cap &#x3D; cv.VideoCapture(‘vtest.avi’)</p>
+<p>kernel &#x3D; cv.getStructuringElement(cv.MORPH_ELLIPSE,(3,3))<br>fgbg &#x3D; cv.bgsegm.createBackgroundSubtractorGMG()</p>
+<p>while(1):<br>    ret, frame &#x3D; cap.read()</p>
+<pre><code>fgmask = fgbg.apply(frame)
+fgmask = cv.morphologyEx(fgmask, cv.MORPH_OPEN, kernel)
+
+cv.imshow(&#39;frame&#39;,fgmask)
+k = cv.waitKey(30) &amp; 0xff
+if k == 27:
+    break
+</code></pre>
+<h2 id="cap-release-cv-destroyAllWindows-endcodeResults"><a href="#cap-release-cv-destroyAllWindows-endcodeResults" class="headerlink" title="cap.release()cv.destroyAllWindows()@endcodeResults"></a>cap.release()<br>cv.destroyAllWindows()<br>@endcode<br>Results</h2><p><strong>Original Frame</strong></p>
+<p>Below image shows the 200th frame of a video</p>
+<p><img src="/images/resframe.jpg" alt="image"></p>
+<p><strong>Result of BackgroundSubtractorMOG</strong></p>
+<p><img src="/images/resmog.jpg" alt="image"></p>
+<p><strong>Result of BackgroundSubtractorGMG</strong></p>
+<p>Noise is removed with morphological opening.</p>
+<p><img src="/images/resgmg.jpg" alt="image"></p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2>

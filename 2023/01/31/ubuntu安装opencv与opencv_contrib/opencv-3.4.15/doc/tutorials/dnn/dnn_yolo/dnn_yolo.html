@@ -1,0 +1,14 @@
+<h1 id="YOLO-DNNs-tutorial-dnn-yolo"><a href="#YOLO-DNNs-tutorial-dnn-yolo" class="headerlink" title="YOLO DNNs  {#tutorial_dnn_yolo}"></a>YOLO DNNs  {#tutorial_dnn_yolo}</h1><p>@prev_tutorial{tutorial_dnn_android}<br>@next_tutorial{tutorial_dnn_javascript}</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In this text you will learn how to use opencv_dnn module using yolo_object_detection (Sample of using OpenCV dnn module in real time with device capture, video and image).</p>
+<p>We will demonstrate results of this example on the following picture.<br><img src="/images/yolo.jpg" alt="Picture example"></p>
+<h2 id="Examples"><a href="#Examples" class="headerlink" title="Examples"></a>Examples</h2><p>VIDEO DEMO:<br>@youtube{NHtRlndE2cg}</p>
+<h2 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h2><p>Use a universal sample for object detection models written<br><a href="https://github.com/opencv/opencv/blob/3.4/samples/dnn/object_detection.cpp">in C++</a> and<br><a href="https://github.com/opencv/opencv/blob/3.4/samples/dnn/object_detection.py">in Python</a> languages</p>
+<h2 id="Usage-examples"><a href="#Usage-examples" class="headerlink" title="Usage examples"></a>Usage examples</h2><p>Execute in webcam:</p>
+<p>@code{.bash}</p>
+<p>$ example_dnn_object_detection –config&#x3D;[PATH-TO-DARKNET]&#x2F;cfg&#x2F;yolo.cfg –model&#x3D;[PATH-TO-DARKNET]&#x2F;yolo.weights –classes&#x3D;object_detection_classes_pascal_voc.txt –width&#x3D;416 –height&#x3D;416 –scale&#x3D;0.00392 –rgb</p>
+<p>@endcode</p>
+<p>Execute with image or video file:</p>
+<p>@code{.bash}</p>
+<p>$ example_dnn_object_detection –config&#x3D;[PATH-TO-DARKNET]&#x2F;cfg&#x2F;yolo.cfg –model&#x3D;[PATH-TO-DARKNET]&#x2F;yolo.weights –classes&#x3D;object_detection_classes_pascal_voc.txt –width&#x3D;416 –height&#x3D;416 –scale&#x3D;0.00392 –input&#x3D;[PATH-TO-IMAGE-OR-VIDEO-FILE] –rgb</p>
+<p>@endcode</p>
+<p>Questions and suggestions email to: Alessandro de Oliveira Faria <a href="mailto:&#x63;&#97;&#98;&#x65;&#108;&#111;&#64;&#x6f;&#x70;&#101;&#x6e;&#115;&#117;&#115;&#101;&#x2e;&#111;&#x72;&#x67;">&#x63;&#97;&#98;&#x65;&#108;&#111;&#64;&#x6f;&#x70;&#101;&#x6e;&#115;&#117;&#115;&#101;&#x2e;&#111;&#x72;&#x67;</a> or OpenCV Team.</p>

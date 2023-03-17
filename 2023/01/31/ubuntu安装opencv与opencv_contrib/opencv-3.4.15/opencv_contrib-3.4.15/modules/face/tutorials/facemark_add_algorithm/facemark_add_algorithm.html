@@ -1,0 +1,179 @@
+<h1 id="Adding-a-new-algorithm-to-the-Facemark-API-tutorial-facemark-add-algorithm"><a href="#Adding-a-new-algorithm-to-the-Facemark-API-tutorial-facemark-add-algorithm" class="headerlink" title="Adding a new algorithm to the Facemark API {#tutorial_facemark_add_algorithm}"></a>Adding a new algorithm to the Facemark API {#tutorial_facemark_add_algorithm}</h1><h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>integrate a new algorithm of facial landmark detector into the Facemark API</li>
+<li>compile a specific contrib module</li>
+<li>using extra parameters in a function</li>
+</ul>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><ul>
+<li><p><strong>Add the class header</strong></p>
+<p> The class header for a new algorithm should be added to a new file in include&#x2F;opencv2&#x2F;face.<br> Here is the template that you can use to integrate a new algorithm, change the FacemarkNEW to a representative name of the new algorithm and save it using a representative filename accordingly.</p>
+<pre><code> @code{.cpp}
+ class CV_EXPORTS_W FacemarkNEW : public Facemark {
+ public:
+     struct CV_EXPORTS Config {
+         Config();
+
+         /*read only parameters - just for example*/
+         double detect_thresh;         //!&lt;  detection confidence threshold
+         double sigma;                 //!&lt;  another parameter
+
+         void read(const FileNode&amp; /*fn*/);
+         void write(FileStorage&amp; /*fs*/) const;
+     };
+
+     /*Builder and destructor*/
+     static Ptr&lt;FacemarkNEW&gt; create(const FacemarkNEW::Config &amp;conf = FacemarkNEW::Config() );
+     virtual ~FacemarkNEW(){};
+ };
+ @endcode
+</code></pre>
+</li>
+<li><p><strong>Add the implementation code</strong></p>
+<p> Create a new file in the source folder with name representing the new algorithm.<br> Here is the template that you can use.</p>
+<pre><code> @code{.cpp}
+ #include &quot;opencv2/face.hpp&quot;
+ #include &quot;precomp.hpp&quot;
+
+ namespace cv
+ {
+     FacemarkNEW::Config::Config(){
+         detect_thresh = 0.5;
+         sigma=0.2;
+     }
+
+     void FacemarkNEW::Config::read( const cv::FileNode&amp; fn ){
+         *this = FacemarkNEW::Config();
+
+         if (!fn[&quot;detect_thresh&quot;].empty())
+             fn[&quot;detect_thresh&quot;] &gt;&gt; detect_thresh;
+
+         if (!fn[&quot;sigma&quot;].empty())
+             fn[&quot;sigma&quot;] &gt;&gt; sigma;
+
+     }
+
+     void FacemarkNEW::Config::write( cv::FileStorage&amp; fs ) const{
+         fs &lt;&lt; &quot;detect_thresh&quot; &lt;&lt; detect_thresh;
+         fs &lt;&lt; &quot;sigma&quot; &lt;&lt; sigma;
+     }
+
+     /*implementation of the algorithm is in this class*/
+     class FacemarkNEWImpl : public FacemarkNEW {
+     public:
+         FacemarkNEWImpl( const FacemarkNEW::Config &amp;conf = FacemarkNEW::Config() );
+
+         void read( const FileNode&amp; /*fn*/ );
+         void write( FileStorage&amp; /*fs*/ ) const;
+
+         void loadModel(String filename);
+
+         bool setFaceDetector(bool(*f)(InputArray , OutputArray, void * extra_params));
+         bool getFaces( InputArray image , OutputArray faces, void * extra_params);
+
+         Config config;
+
+     protected:
+
+         bool addTrainingSample(InputArray image, InputArray landmarks);
+         void training();
+         bool fit(InputArray image, InputArray faces, InputOutputArray landmarks, void * runtime_params);
+
+         Config config; // configurations
+
+         /*proxy to the user defined face detector function*/
+         bool(*faceDetector)(InputArray , OutputArray, void * );
+     }; // class
+
+     Ptr&lt;FacemarkNEW&gt; FacemarkNEW::create(const FacemarkNEW::Config &amp;conf){
+         return Ptr&lt;FacemarkNEWImpl&gt;(new FacemarkNEWImpl(conf));
+     }
+
+     FacemarkNEWImpl::FacemarkNEWImpl( const FacemarkNEW::Config &amp;conf ) :
+         config( conf )
+     {
+         // other initialization
+     }
+
+     bool FacemarkNEWImpl::addTrainingSample(InputArray image, InputArray landmarks){
+         // pre-process and save the new training sample
+         return true;
+     }
+
+     void FacemarkNEWImpl::training(){
+         printf(&quot;training\n&quot;);
+     }
+
+     bool FacemarkNEWImpl::fit(
+         InputArray image,
+         InputArray faces,
+         InputOutputArray landmarks,
+         void * runtime_params)
+     {
+         if(runtime_params!=0){
+             // do something based on the extra parameters
+         }
+
+         printf(&quot;fitting\n&quot;);
+         return 0;
+     }
+
+     void FacemarkNEWImpl::read( const cv::FileNode&amp; fn ){
+         config.read( fn );
+     }
+
+     void FacemarkNEWImpl::write( cv::FileStorage&amp; fs ) const {
+         config.write( fs );
+     }
+
+     void FacemarkNEWImpl::loadModel(String filename){
+         // load the model
+     }
+
+     bool FacemarkNEWImpl::setFaceDetector(bool(*f)(InputArray , OutputArray, void * extra_params )){
+         faceDetector = f;
+         isSetDetector = true;
+         return true;
+     }
+
+     bool FacemarkNEWImpl::getFaces( InputArray image , OutputArray roi, void * extra_params){
+         if(!isSetDetector){
+             return false;
+         }
+
+         if(extra_params!=0){
+             //extract the extra parameters
+         }
+
+         std::vector&lt;Rect&gt; &amp; faces = *(std::vector&lt;Rect&gt;*)roi.getObj();
+         faces.clear();
+
+         faceDetector(image.getMat(), faces, extra_params);
+
+         return true;
+     }
+ }
+
+ @endcode
+</code></pre>
+</li>
+<li><p><strong>Compiling the code</strong></p>
+<p> Clear the build folder and then rebuild the entire library.<br> Note that you can deactivate the compilation of other contrib modules by adding “-D BUILD_opencv_<MODULE_NAME>&#x3D;OFF” flag to the cmake.<br> After that you can execute make command in “<build_folder>&#x2F;modules&#x2F;face” to speed up the compiling process.</p>
+</li>
+</ul>
+<h2 id="Best-Practice"><a href="#Best-Practice" class="headerlink" title="Best Practice"></a>Best Practice</h2><ul>
+<li><p><strong>Handling the extra parameters</strong><br>  To handle the extra parameters, a new struct should be created to holds all the required parameters.<br>  Here is an example of of a parameters container<br>  @code<br>  struct CV_EXPORTS Params<br>  {<br>  Params( Mat rot &#x3D; Mat::eye(2,2,CV_32F),<br>          Point2f trans &#x3D; Point2f(0.0,0.0),<br>          float scaling &#x3D; 1.0<br>  );<br><br>  Mat R;<br>  Point2f t;<br>  float scale;<br>  };<br>  @endcode</p>
+<p>  Here is a snippet to extract the extra parameters:<br>  @code<br>  if(runtime_params!&#x3D;0){<br>  Telo*  conf &#x3D; (Telo*)params;<br>  Params* params<br>  std::vector<Params> params &#x3D; <em>(std::vector<Params></em>)runtime_params;<br>  for(size_t i&#x3D;0; i&lt;params.size();i++){<br>      fit(img, landmarks[i], params[i].R,params[i].t, params[i].scale);<br>  }<br>  }else{<br>  &#x2F;&#x2F; do something<br>  }<br>  @endcode</p>
+<p>  And here is an example to pass the extra parameter into fit function<br>  @code<br>  FacemarkAAM::Params * params &#x3D; new FacemarkAAM::Params(R,T,scale);<br>  facemark-&gt;fit(image, faces, landmarks, params)<br>  @endcode</p>
+<p>  In order to understand this scheme, here is a simple example that you can try to compile and see how it works.<br>  @code<br>  struct Params{<br>  int x,y;<br>  Params(int _x, int _y);<br>  };<br>  Params::Params(int _x,int _y){<br>  x &#x3D; _x;<br>  y &#x3D; _y;<br>  }</p>
+<p>  void test(int a, void * params&#x3D;0){<br>  printf(“a:%i\n”, a);<br>  if(params!&#x3D;0){<br>      Params*  params &#x3D; (Params*)params;<br>      printf(“extra parameters:%i %i\n”, params-&gt;x, params-&gt;y);<br>  }<br>  }</p>
+<p>  int main(){<br>  Params* params &#x3D; new Params(7,22);<br>  test(99, params);<br>  return 0;<br>  }<br>  @endcode</p>
+</li>
+<li><p><strong>Minimize the dependency</strong><br>  It is highly recomended to keep the code as small as possible when compiled. For this purpose, the developers are ecouraged to avoid the needs of heavy dependency such as <code>imgcodecs</code> and <code>highgui</code>.</p>
+</li>
+<li><p><strong>Documentation and examples</strong><br>  Please update the documentation whenever needed and put example code for the new algorithm.</p>
+</li>
+<li><p><strong>Test codes</strong><br>  An algorithm should be accompanied with its corresponding test code to ensure that the algorithm is compatible with various types of environment (Linux, Windows64, Windows32, Android, etc). There are several basic test that should be performed as demonstrated in the test&#x2F;test_facemark_lbf.cpp file including cration of its instance, add training data, perform the training process, load a trained model, and perform the fitting to obtain facial landmarks.</p>
+</li>
+<li><p><strong>Data organization</strong><br>  It is advised to divide the data for a new algorithm into 3 parts :<br>  @code<br>  class CV_EXPORTS_W FacemarkNEW : public Facemark {<br>  public:<br>  struct CV_EXPORTS Params<br>  {<br>      &#x2F;&#x2F; variables utilized as extra parameters<br>  }<br>  struct CV_EXPORTS Config<br>  {<br>      &#x2F;&#x2F; variables used to configure the algorithm<br>  }<br>  struct CV_EXPORTS Model<br>  {<br>      &#x2F;&#x2F; variables to store the information of model<br>  }<br><br>  static Ptr<FacemarkNEW> create(const FacemarkNEW::Config &amp;conf &#x3D; FacemarkNEW::Config() );<br>  virtual ~FacemarkNEW(){};<br>  }<br>  @endcode</p>
+</li>
+</ul>

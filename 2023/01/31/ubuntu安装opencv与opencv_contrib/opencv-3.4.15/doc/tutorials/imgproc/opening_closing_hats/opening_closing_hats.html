@@ -1,0 +1,102 @@
+<h1 id="More-Morphology-Transformations-tutorial-opening-closing-hats"><a href="#More-Morphology-Transformations-tutorial-opening-closing-hats" class="headerlink" title="More Morphology Transformations {#tutorial_opening_closing_hats}"></a>More Morphology Transformations {#tutorial_opening_closing_hats}</h1><p>@prev_tutorial{tutorial_erosion_dilatation}<br>@next_tutorial{tutorial_hitOrMiss}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the OpenCV function @ref cv::morphologyEx to apply Morphological Transformation such as:<ul>
+<li>Opening</li>
+<li>Closing</li>
+<li>Morphological Gradient</li>
+<li>Top Hat</li>
+<li>Black Hat</li>
+</ul>
+</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>@note The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+<p>In the previous tutorial we covered two basic Morphology operations:</p>
+<ul>
+<li>Erosion</li>
+<li>Dilation.</li>
+</ul>
+<p>Based on these two we can effectuate more sophisticated transformations to our images. Here we<br>discuss briefly 5 operations offered by OpenCV:</p>
+<h3 id="Opening"><a href="#Opening" class="headerlink" title="Opening"></a>Opening</h3><ul>
+<li><p>It is obtained by the erosion of an image followed by a dilation.</p>
+<p>\f[dst &#x3D; open( src, element) &#x3D; dilate( erode( src, element ) )\f]</p>
+</li>
+<li><p>Useful for removing small objects (it is assumed that the objects are bright on a dark<br>foreground)</p>
+</li>
+<li><p>For instance, check out the example below. The image at the left is the original and the image<br>at the right is the result after applying the opening transformation. We can observe that the<br>small dots have disappeared.</p>
+<p><img src="/images/Morphology_2_Tutorial_Theory_Opening.png"></p>
+</li>
+</ul>
+<h3 id="Closing"><a href="#Closing" class="headerlink" title="Closing"></a>Closing</h3><ul>
+<li><p>It is obtained by the dilation of an image followed by an erosion.</p>
+<p>\f[dst &#x3D; close( src, element ) &#x3D; erode( dilate( src, element ) )\f]</p>
+</li>
+<li><p>Useful to remove small holes (dark regions).</p>
+<p><img src="/images/Morphology_2_Tutorial_Theory_Closing.png"></p>
+</li>
+</ul>
+<h3 id="Morphological-Gradient"><a href="#Morphological-Gradient" class="headerlink" title="Morphological Gradient"></a>Morphological Gradient</h3><ul>
+<li><p>It is the difference between the dilation and the erosion of an image.</p>
+<p>\f[dst &#x3D; morph_{grad}( src, element ) &#x3D; dilate( src, element ) - erode( src, element )\f]</p>
+</li>
+<li><p>It is useful for finding the outline of an object as can be seen below:</p>
+<p><img src="/images/Morphology_2_Tutorial_Theory_Gradient.png"></p>
+</li>
+</ul>
+<h3 id="Top-Hat"><a href="#Top-Hat" class="headerlink" title="Top Hat"></a>Top Hat</h3><ul>
+<li><p>It is the difference between an input image and its opening.</p>
+<p>\f[dst &#x3D; tophat( src, element ) &#x3D; src - open( src, element )\f]</p>
+<p><img src="/images/Morphology_2_Tutorial_Theory_TopHat.png"></p>
+</li>
+</ul>
+<h3 id="Black-Hat"><a href="#Black-Hat" class="headerlink" title="Black Hat"></a>Black Hat</h3><ul>
+<li><p>It is the difference between the closing and its input image</p>
+<p>\f[dst &#x3D; blackhat( src, element ) &#x3D; close( src, element ) - src\f]</p>
+<p><img src="/images/Morphology_2_Tutorial_Theory_BlackHat.png"></p>
+</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/ImgProc/Morphology_2.cpp">here</a><br>@include cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_2.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/ImgProc/opening_closing_hats/MorphologyDemo2.java">here</a><br>@include java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;opening_closing_hats&#x2F;MorphologyDemo2.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/imgProc/opening_closing_hats/morphology_2.py">here</a><br>@include python&#x2F;tutorial_code&#x2F;imgProc&#x2F;opening_closing_hats&#x2F;morphology_2.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>-#  Let’s check the general structure of the C++ program:<br>    -   Load an image<br>    -   Create a window to display results of the Morphological operations<br>    -   Create three Trackbars for the user to enter parameters:<br>        -   The first trackbar <strong>Operator</strong> returns the kind of morphology operation to use<br>            (<strong>morph_operator</strong>).<br>            @snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_2.cpp create_trackbar1</p>
+<pre><code>    -   The second trackbar **Element** returns **morph_elem**, which indicates what kind of
+        structure our kernel is:
+        @snippet cpp/tutorial_code/ImgProc/Morphology_2.cpp create_trackbar2
+
+    -   The final trackbar **Kernel Size** returns the size of the kernel to be used
+        (**morph_size**)
+        @snippet cpp/tutorial_code/ImgProc/Morphology_2.cpp create_trackbar3
+
+-   Every time we move any slider, the user&#39;s function **Morphology_Operations** will be called
+    to effectuate a new morphology operation and it will update the output image based on the
+    current trackbar values.
+    @snippet cpp/tutorial_code/ImgProc/Morphology_2.cpp morphology_operations
+
+    We can observe that the key function to perform the morphology transformations is @ref
+    cv::morphologyEx . In this example we use four arguments (leaving the rest as defaults):
+
+    -   **src** : Source (input) image
+    -   **dst**: Output image
+    -   **operation**: The kind of morphology transformation to be performed. Note that we have
+        5 alternatives:
+
+        -   *Opening*: MORPH_OPEN : 2
+        -   *Closing*: MORPH_CLOSE: 3
+        -   *Gradient*: MORPH_GRADIENT: 4
+        -   *Top Hat*: MORPH_TOPHAT: 5
+        -   *Black Hat*: MORPH_BLACKHAT: 6
+
+        As you can see the values range from \&lt;2-6\&gt;, that is why we add (+2) to the values
+        entered by the Trackbar:
+        @snippet cpp/tutorial_code/ImgProc/Morphology_2.cpp operation
+    -   **element**: The kernel to be used. We use the function @ref cv::getStructuringElement
+        to define our own structure.
+</code></pre>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><ul>
+<li><p>After compiling the code above we can execute it giving an image path as an argument. Results using<br>the image: <strong>baboon.png</strong>:</p>
+<p><img src="/images/Morphology_2_Tutorial_Original_Image.jpg"></p>
+</li>
+<li><p>And here are two snapshots of the display window. The first picture shows the output after using<br>the operator <strong>Opening</strong> with a cross kernel. The second picture (right side, shows the result<br>of using a <strong>Blackhat</strong> operator with an ellipse kernel.</p>
+<p><img src="/images/Morphology_2_Tutorial_Result.jpg"></p>
+</li>
+</ul>

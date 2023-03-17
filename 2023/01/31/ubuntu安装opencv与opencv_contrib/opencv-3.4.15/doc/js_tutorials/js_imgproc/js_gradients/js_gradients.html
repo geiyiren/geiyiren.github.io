@@ -1,0 +1,30 @@
+<h1 id="Image-Gradients-tutorial-js-gradients"><a href="#Image-Gradients-tutorial-js-gradients" class="headerlink" title="Image Gradients {#tutorial_js_gradients}"></a>Image Gradients {#tutorial_js_gradients}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Find Image gradients, edges etc</li>
+<li>We will learn following functions : <strong>cv.Sobel()</strong>, <strong>cv.Scharr()</strong>, <strong>cv.Laplacian()</strong> etc</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>OpenCV provides three types of gradient filters or High-pass filters, Sobel, Scharr and Laplacian.<br>We will see each one of them.</p>
+<h3 id="1-Sobel-and-Scharr-Derivatives"><a href="#1-Sobel-and-Scharr-Derivatives" class="headerlink" title="1. Sobel and Scharr Derivatives"></a>1. Sobel and Scharr Derivatives</h3><p>Sobel operators is a joint Gausssian smoothing plus differentiation operation, so it is more<br>resistant to noise. You can specify the direction of derivatives to be taken, vertical or horizontal<br>(by the arguments, yorder and xorder respectively). You can also specify the size of kernel by the<br>argument ksize. If ksize &#x3D; -1, a 3x3 Scharr filter is used which gives better results than 3x3 Sobel<br>filter. Please see the docs for kernels used.</p>
+<p>We use the functions: <strong>cv.Sobel (src, dst, ddepth, dx, dy, ksize &#x3D; 3, scale &#x3D; 1, delta &#x3D; 0, borderType &#x3D; cv.BORDER_DEFAULT)</strong><br>@param src         input image.<br>@param dst         output image of the same size and the same number of channels as src.<br>@param ddepth      output image depth(see cv.combinations); in the case of 8-bit input images it will result in truncated derivatives.<br>@param dx          order of the derivative x.<br>@param dy          order of the derivative y.<br>@param ksize       size of the extended Sobel kernel; it must be 1, 3, 5, or 7.<br>@param scale       optional scale factor for the computed derivative values.<br>@param delta       optional delta value that is added to the results prior to storing them in dst.<br>@param borderType  pixel extrapolation method(see cv.BorderTypes).</p>
+<p><strong>cv.Scharr (src, dst, ddepth, dx, dy, scale &#x3D; 1, delta &#x3D; 0, borderType &#x3D; cv.BORDER_DEFAULT)</strong><br>@param src         input image.<br>@param dst         output image of the same size and the same number of channels as src.<br>@param ddepth      output image depth(see cv.combinations).<br>@param dx          order of the derivative x.<br>@param dy          order of the derivative y.<br>@param scale       optional scale factor for the computed derivative values.<br>@param delta       optional delta value that is added to the results prior to storing them in dst.<br>@param borderType  pixel extrapolation method(see cv.BorderTypes).</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_gradients_Sobel.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<h3 id="2-Laplacian-Derivatives"><a href="#2-Laplacian-Derivatives" class="headerlink" title="2. Laplacian Derivatives"></a>2. Laplacian Derivatives</h3><p>It calculates the Laplacian of the image given by the relation,<br>\f$\Delta src &#x3D; \frac{\partial ^2{src}}{\partial x^2} + \frac{\partial ^2{src}}{\partial y^2}\f$ where<br>each derivative is found using Sobel derivatives. If ksize &#x3D; 1, then following kernel is used for<br>filtering:</p>
+<p>\f[kernel &#x3D; \begin{bmatrix} 0 &amp; 1 &amp; 0 \ 1 &amp; -4 &amp; 1 \ 0 &amp; 1 &amp; 0  \end{bmatrix}\f]</p>
+<p>We use the function: <strong>cv.Laplacian (src, dst, ddepth, ksize &#x3D; 1, scale &#x3D; 1, delta &#x3D; 0, borderType &#x3D; cv.BORDER_DEFAULT)</strong><br>@param src         input image.<br>@param dst         output image of the same size and the same number of channels as src.<br>@param ddepth      output image depth.<br>@param ksize       aperture size used to compute the second-derivative filters.<br>@param scale       optional scale factor for the computed Laplacian values.<br>@param delta       optional delta value that is added to the results prior to storing them in dst.<br>@param borderType  pixel extrapolation method(see cv.BorderTypes).</p>
+<h2 id="Try-it-1"><a href="#Try-it-1" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_gradients_Laplacian.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<h2 id="One-Important-Matter"><a href="#One-Important-Matter" class="headerlink" title="One Important Matter!"></a>One Important Matter!</h2><p>In our last example, output datatype is cv.CV_8U. But there is a slight problem with<br>that. Black-to-White transition is taken as Positive slope (it has a positive value) while<br>White-to-Black transition is taken as a Negative slope (It has negative value). So when you convert<br>data to cv.CV_8U, all negative slopes are made zero. In simple words, you miss that edge.</p>
+<p>If you want to detect both edges, better option is to keep the output datatype to some higher forms,<br>like cv.CV_16S, cv.CV_64F etc, take its absolute value and then convert back to cv.CV_8U.<br>Below code demonstrates this procedure for a horizontal Sobel filter and difference in results.</p>
+<h2 id="Try-it-2"><a href="#Try-it-2" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_gradients_absSobel.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

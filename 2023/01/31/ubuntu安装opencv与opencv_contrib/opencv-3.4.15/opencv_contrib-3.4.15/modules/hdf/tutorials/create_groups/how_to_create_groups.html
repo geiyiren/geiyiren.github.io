@@ -1,0 +1,28 @@
+<h1 id="Creating-Groups-tutorial-hdf-create-groups"><a href="#Creating-Groups-tutorial-hdf-create-groups" class="headerlink" title="Creating Groups {#tutorial_hdf_create_groups}"></a>Creating Groups {#tutorial_hdf_create_groups}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>This tutorial will show you:</p>
+<ul>
+<li>How to create a HDF5 file?</li>
+<li>How to create a group?</li>
+<li>How to check whether a given group exists or not?</li>
+<li>How to create a subgroup?</li>
+</ul>
+<h2 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h2><p>The following code creates two groups: <code>Group1</code> and <code>SubGroup1</code>, where<br><code>SubGroup1</code> is a child of <code>Group1</code>.</p>
+<p>You can download the code from <a href="https://github.com/opencv/opencv_contrib/tree/master/modules/hdf/samples/create_groups.cpp">here</a> or find it in the file<br><code>modules/hdf/samples/create_groups.cpp</code> of the opencv_contrib source code library.</p>
+<p>@snippet samples&#x2F;create_groups.cpp tutorial</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>First, we create a HDF5 file</p>
+<p>@snippet samples&#x2F;create_groups.cpp tutorial_create_file</p>
+<p>If the given file does not exist, it will be created. Otherwise, it is open for read and write.</p>
+<p>Next, we create the group <code>Group1</code></p>
+<p>@snippet samples&#x2F;create_groups.cpp tutorial_create_group</p>
+<p>Note that we have to check whether <code>/Group1</code> exists or not using<br>the function cv::hdf::HDF5::hlexists() before creating it. You can not create<br>a group with an existing name. Otherwise, an error will occur.</p>
+<p>Then, we create the subgroup named <code>Subgroup1</code>. In order to<br>indicate that it is a sub group of <code>Group1</code>, we have to<br>use the group name <code>/Group1/SubGroup1</code>:</p>
+<p>@snippet samples&#x2F;create_groups.cpp tutorial_create_subgroup</p>
+<p>Note that before creating a subgroup, we have to make sure<br>that its parent group exists. Otherwise, an error will occur.</p>
+<p>In the end, we have to close the file</p>
+<p>@snippet samples&#x2F;create_groups.cpp tutorial_close_file</p>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>There are many tools that can be used to inspect a given HDF file, such<br>as HDFView and h5dump. If you are using Ubuntu, you can install<br>them with the following commands:</p>
+<p>@code<br>sudo apt-get install hdf5-tools hdfview<br>@endcode</p>
+<p>There are also binaries available from the The HDF Group official website <a href="https://support.hdfgroup.org/HDF5/Tutor/tools.html">https://support.hdfgroup.org/HDF5/Tutor/tools.html</a>.</p>
+<p>The following figure shows the result visualized with the tool HDFView:</p>
+<p><img src="/pics/create_groups.png" alt="Figure 1: Results of creating groups and subgroups"></p>
+<p>The output for <code>h5dump</code> is:</p>
+<p>@code<br>$ h5dump mytest.h5<br>HDF5 “mytest.h5” {<br>GROUP “&#x2F;“ {<br>   GROUP “Group1” {<br>      GROUP “SubGroup1” {<br>      }<br>   }<br>}<br>}<br>@endcode</p>

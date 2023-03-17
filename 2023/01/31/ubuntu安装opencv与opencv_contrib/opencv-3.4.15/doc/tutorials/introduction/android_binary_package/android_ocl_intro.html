@@ -1,0 +1,281 @@
+<h1 id="Use-OpenCL-in-Android-camera-preview-based-CV-application-tutorial-android-ocl-intro"><a href="#Use-OpenCL-in-Android-camera-preview-based-CV-application-tutorial-android-ocl-intro" class="headerlink" title="Use OpenCL in Android camera preview based CV application {#tutorial_android_ocl_intro}"></a>Use OpenCL in Android camera preview based CV application {#tutorial_android_ocl_intro}</h1><p>@prev_tutorial{tutorial_dev_with_OCV_on_Android}<br>@next_tutorial{tutorial_macos_install}</p>
+<p>This guide was designed to help you in use of <a href="https://www.khronos.org/opencl/">OpenCL &amp;trade;</a> in Android camera preview based CV application.<br>It was written for <a href="http://developer.android.com/tools/help/adt.html">Eclipse-based ADT tools</a><br>(deprecated by Google now), but it easily can be reproduced with <a href="http://developer.android.com/tools/studio/index.html">Android Studio</a>.</p>
+<p>This tutorial assumes you have the following installed and configured:</p>
+<ul>
+<li>JDK</li>
+<li>Android SDK and NDK</li>
+<li>Eclipse IDE with ADT and CDT plugins</li>
+</ul>
+<p>It also assumes that you are familiar with Android Java and JNI programming basics.<br>If you need help with anything of the above, you may refer to our @ref tutorial_android_dev_intro guide.</p>
+<p>This tutorial also assumes you have an Android operated device with OpenCL enabled.</p>
+<p>The related source code is located within OpenCV samples at<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/android/tutorial-4-opencl/">opencv&#x2F;samples&#x2F;android&#x2F;tutorial-4-opencl</a> directory.</p>
+<h2 id="Preface"><a href="#Preface" class="headerlink" title="Preface"></a>Preface</h2><p>Using <a href="https://en.wikipedia.org/wiki/General-purpose_computing_on_graphics_processing_units">GPGPU</a><br>via OpenCL for applications performance enhancements is quite a modern trend now.<br>Some CV algo-s (e.g. image filtering) run much faster on a GPU than on a CPU.<br>Recently it has become possible on Android OS.</p>
+<p>The most popular CV application scenario for an Android operated device is starting camera in preview mode, applying some CV algo to every frame<br>and displaying the preview frames modified by that CV algo.</p>
+<p>Let’s consider how we can use OpenCL in this scenario. In particular let’s try two ways: direct calls to OpenCL API and recently introduced OpenCV T-API<br>(aka <a href="https://docs.google.com/presentation/d/1qoa29N_B-s297-fp0-b3rBirvpzJQp8dCtllLQ4DVCY/present">Transparent API</a>) - implicit OpenCL accelerations of some OpenCV algo-s.</p>
+<h2 id="Application-structure"><a href="#Application-structure" class="headerlink" title="Application structure"></a>Application structure</h2><p>Starting Android API level 11 (Android 3.0) <a href="http://developer.android.com/reference/android/hardware/Camera.html">Camera API</a><br>allows use of OpenGL texture as a target for preview frames.<br>Android API level 21 brings a new <a href="http://developer.android.com/reference/android/hardware/camera2/package-summary.html">Camera2 API</a><br>that provides much more control over the camera settings and usage modes,<br>it allows several targets for preview frames and OpenGL texture in particular.</p>
+<p>Having a preview frame in an OpenGL texture is a good deal for using OpenCL because there is an<br><a href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/cl_khr_gl_sharing.html">OpenGL-OpenCL Interoperability API (cl_khr_gl_sharing)</a>,<br>allowing sharing OpenGL texture data with OpenCL functions without copying (with some restrictions of course).</p>
+<p>Let’s create a base for our application that just configures Android camera to send preview frames to OpenGL texture and displays these frames<br>on display without any processing.</p>
+<p>A minimal <code>Activity</code> class for that purposes looks like following:</p>
+<p>@code{.java}<br>public class Tutorial4Activity extends Activity {</p>
+<pre><code>private MyGLSurfaceView mView;
+
+@Override
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    requestWindowFeature(Window.FEATURE_NO_TITLE);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+    mView = new MyGLSurfaceView(this);
+    setContentView(mView);
+}
+
+@Override
+protected void onPause() {
+    mView.onPause();
+    super.onPause();
+}
+
+@Override
+protected void onResume() {
+    super.onResume();
+    mView.onResume();
+}
+</code></pre>
+<p>}<br>@endcode</p>
+<p>And a minimal <code>View</code> class respectively:</p>
+<p>@code{.java}<br>public class MyGLSurfaceView extends GLSurfaceView {</p>
+<pre><code>MyGLRendererBase mRenderer;
+
+public MyGLSurfaceView(Context context) {
+    super(context);
+
+    if(android.os.Build.VERSION.SDK_INT &gt;= 21)
+        mRenderer = new Camera2Renderer(this);
+    else
+        mRenderer = new CameraRenderer(this);
+
+    setEGLContextClientVersion(2);
+    setRenderer(mRenderer);
+    setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+}
+
+@Override
+public void surfaceCreated(SurfaceHolder holder) {
+    super.surfaceCreated(holder);
+}
+
+@Override
+public void surfaceDestroyed(SurfaceHolder holder) {
+    super.surfaceDestroyed(holder);
+}
+
+@Override
+public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+    super.surfaceChanged(holder, format, w, h);
+}
+
+@Override
+public void onResume() {
+    super.onResume();
+    mRenderer.onResume();
+}
+
+@Override
+public void onPause() {
+    mRenderer.onPause();
+    super.onPause();
+}
+</code></pre>
+<p>}<br>@endcode</p>
+<p><strong>Note</strong>: we use two renderer classes: one for legacy <a href="http://developer.android.com/reference/android/hardware/Camera.html">Camera</a> API<br>and another for modern <a href="http://developer.android.com/reference/android/hardware/camera2/package-summary.html">Camera2</a>.</p>
+<p>A minimal <code>Renderer</code> class can be implemented in Java (OpenGL ES 2.0 <a href="http://developer.android.com/reference/android/opengl/GLES20.html">available</a> in Java),<br>but since we are going to modify the preview texture with OpenCL let’s move OpenGL stuff to JNI.<br>Here is a simple Java wrapper for our JNI stuff:</p>
+<p>@code{.java}<br>public class NativeGLRenderer {<br>    static<br>    {<br>        System.loadLibrary(“opencv_java3”); &#x2F;&#x2F; comment this when using OpenCV Manager<br>        System.loadLibrary(“JNIrender”);<br>    }</p>
+<pre><code>public static native int initGL();
+public static native void closeGL();
+public static native void drawFrame();
+public static native void changeSize(int width, int height);
+</code></pre>
+<p>}<br>@endcode</p>
+<p>Since <code>Camera</code> and <code>Camera2</code> APIs differ significantly in camera setup and control, let’s create a base class for the two corresponding renderers:</p>
+<p>@code{.java}<br>public abstract class MyGLRendererBase implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {<br>    protected final String LOGTAG &#x3D; “MyGLRendererBase”;</p>
+<pre><code>protected SurfaceTexture mSTex;
+protected MyGLSurfaceView mView;
+
+protected boolean mGLInit = false;
+protected boolean mTexUpdate = false;
+
+MyGLRendererBase(MyGLSurfaceView view) {
+    mView = view;
+}
+
+protected abstract void openCamera();
+protected abstract void closeCamera();
+protected abstract void setCameraPreviewSize(int width, int height);
+
+public void onResume() {
+    Log.i(LOGTAG, &quot;onResume&quot;);
+}
+
+public void onPause() {
+    Log.i(LOGTAG, &quot;onPause&quot;);
+    mGLInit = false;
+    mTexUpdate = false;
+    closeCamera();
+    if(mSTex != null) {
+        mSTex.release();
+        mSTex = null;
+        NativeGLRenderer.closeGL();
+    }
+}
+
+@Override
+public synchronized void onFrameAvailable(SurfaceTexture surfaceTexture) {
+    //Log.i(LOGTAG, &quot;onFrameAvailable&quot;);
+    mTexUpdate = true;
+    mView.requestRender();
+}
+
+@Override
+public void onDrawFrame(GL10 gl) {
+    //Log.i(LOGTAG, &quot;onDrawFrame&quot;);
+    if (!mGLInit)
+        return;
+
+    synchronized (this) {
+        if (mTexUpdate) {
+            mSTex.updateTexImage();
+            mTexUpdate = false;
+        }
+    }
+    NativeGLRenderer.drawFrame();
+}
+
+@Override
+public void onSurfaceChanged(GL10 gl, int surfaceWidth, int surfaceHeight) {
+    Log.i(LOGTAG, &quot;onSurfaceChanged(&quot;+surfaceWidth+&quot;x&quot;+surfaceHeight+&quot;)&quot;);
+    NativeGLRenderer.changeSize(surfaceWidth, surfaceHeight);
+    setCameraPreviewSize(surfaceWidth, surfaceHeight);
+}
+
+@Override
+public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    Log.i(LOGTAG, &quot;onSurfaceCreated&quot;);
+    String strGLVersion = GLES20.glGetString(GLES20.GL_VERSION);
+    if (strGLVersion != null)
+        Log.i(LOGTAG, &quot;OpenGL ES version: &quot; + strGLVersion);
+
+    int hTex = NativeGLRenderer.initGL();
+    mSTex = new SurfaceTexture(hTex);
+    mSTex.setOnFrameAvailableListener(this);
+    openCamera();
+    mGLInit = true;
+}
+</code></pre>
+<p>}<br>@endcode</p>
+<p>As you can see, inheritors for <code>Camera</code> and <code>Camera2</code> APIs should implement the following abstract methods:<br>@code{.java}<br>    protected abstract void openCamera();<br>    protected abstract void closeCamera();<br>    protected abstract void setCameraPreviewSize(int width, int height);<br>@endcode</p>
+<p>Let’s leave the details of their implementation beyond of this tutorial, please refer the<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/android/tutorial-4-opencl/">source code</a> to see them.</p>
+<h2 id="Preview-Frames-modification"><a href="#Preview-Frames-modification" class="headerlink" title="Preview Frames modification"></a>Preview Frames modification</h2><p>The details OpenGL ES 2.0 initialization are also quite straightforward and noisy to be quoted here,<br>but the important point here is that the OpeGL texture to be the target for camera preview should be of type <code>GL_TEXTURE_EXTERNAL_OES</code><br>(not <code>GL_TEXTURE_2D</code>), internally it keeps picture data in <em>YUV</em> format.<br>That makes unable sharing it via CL-GL interop (<code>cl_khr_gl_sharing</code>) and accessing its pixel data via C&#x2F;C++ code.<br>To overcome this restriction we have to perform an OpenGL rendering from this texture to another regular <code>GL_TEXTURE_2D</code> one<br>using <em>FrameBuffer Object</em> (aka FBO).</p>
+<h3 id="C-x2F-C-code"><a href="#C-x2F-C-code" class="headerlink" title="C&#x2F;C++ code"></a>C&#x2F;C++ code</h3><p>After that we can read (<em>copy</em>) pixel data from C&#x2F;C++ via <code>glReadPixels()</code> and write them back to texture after modification via <code>glTexSubImage2D()</code>.</p>
+<h3 id="Direct-OpenCL-calls"><a href="#Direct-OpenCL-calls" class="headerlink" title="Direct OpenCL calls"></a>Direct OpenCL calls</h3><p>Also that <code>GL_TEXTURE_2D</code> texture can be shared with OpenCL without copying, but we have to create OpenCL context with special way for that:</p>
+<p>@code{.cpp}<br>void initCL()<br>{<br>    EGLDisplay mEglDisplay &#x3D; eglGetCurrentDisplay();<br>    if (mEglDisplay &#x3D;&#x3D; EGL_NO_DISPLAY)<br>        LOGE(“initCL: eglGetCurrentDisplay() returned ‘EGL_NO_DISPLAY’, error &#x3D; %x”, eglGetError());</p>
+<pre><code>EGLContext mEglContext = eglGetCurrentContext();
+if (mEglContext == EGL_NO_CONTEXT)
+    LOGE(&quot;initCL: eglGetCurrentContext() returned &#39;EGL_NO_CONTEXT&#39;, error = %x&quot;, eglGetError());
+
+cl_context_properties props[] =
+{   CL_GL_CONTEXT_KHR,   (cl_context_properties) mEglContext,
+    CL_EGL_DISPLAY_KHR,  (cl_context_properties) mEglDisplay,
+    CL_CONTEXT_PLATFORM, 0,
+    0 };
+
+try
+{
+    cl::Platform p = cl::Platform::getDefault();
+    std::string ext = p.getInfo&lt;CL_PLATFORM_EXTENSIONS&gt;();
+    if(ext.find(&quot;cl_khr_gl_sharing&quot;) == std::string::npos)
+        LOGE(&quot;Warning: CL-GL sharing isn&#39;t supported by PLATFORM&quot;);
+    props[5] = (cl_context_properties) p();
+
+    theContext = cl::Context(CL_DEVICE_TYPE_GPU, props);
+    std::vector&lt;cl::Device&gt; devs = theContext.getInfo&lt;CL_CONTEXT_DEVICES&gt;();
+    LOGD(&quot;Context returned %d devices, taking the 1st one&quot;, devs.size());
+    ext = devs[0].getInfo&lt;CL_DEVICE_EXTENSIONS&gt;();
+    if(ext.find(&quot;cl_khr_gl_sharing&quot;) == std::string::npos)
+        LOGE(&quot;Warning: CL-GL sharing isn&#39;t supported by DEVICE&quot;);
+
+    theQueue = cl::CommandQueue(theContext, devs[0]);
+
+    // ...
+}
+catch(cl::Error&amp; e)
+{
+    LOGE(&quot;cl::Error: %s (%d)&quot;, e.what(), e.err());
+}
+catch(std::exception&amp; e)
+{
+    LOGE(&quot;std::exception: %s&quot;, e.what());
+}
+catch(...)
+{
+    LOGE( &quot;OpenCL info: unknown error while initializing OpenCL stuff&quot; );
+}
+LOGD(&quot;initCL completed&quot;);
+</code></pre>
+<p>}<br>@endcode</p>
+<p>@note To build this JNI code you need <strong>OpenCL 1.2</strong> headers from <a href="https://www.khronos.org/registry/cl/api/1.2/">Khronos web site</a> and<br>the <strong>libOpenCL.so</strong> downloaded from the device you’ll run the application.</p>
+<p>Then the texture can be wrapped by a <code>cl::ImageGL</code> object and processed via OpenCL calls:<br>@code{.cpp}<br>    cl::ImageGL imgIn (theContext, CL_MEM_READ_ONLY,  GL_TEXTURE_2D, 0, texIn);<br>    cl::ImageGL imgOut(theContext, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, texOut);</p>
+<pre><code>std::vector &lt; cl::Memory &gt; images;
+images.push_back(imgIn);
+images.push_back(imgOut);
+theQueue.enqueueAcquireGLObjects(&amp;images);
+theQueue.finish();
+
+cl::Kernel Laplacian = ...
+Laplacian.setArg(0, imgIn);
+Laplacian.setArg(1, imgOut);
+theQueue.finish();
+
+theQueue.enqueueNDRangeKernel(Laplacian, cl::NullRange, cl::NDRange(w, h), cl::NullRange);
+theQueue.finish();
+
+theQueue.enqueueReleaseGLObjects(&amp;images);
+theQueue.finish();
+</code></pre>
+<p>@endcode</p>
+<h3 id="OpenCV-T-API"><a href="#OpenCV-T-API" class="headerlink" title="OpenCV T-API"></a>OpenCV T-API</h3><p>But instead of writing OpenCL code by yourselves you may want to use <strong>OpenCV T-API</strong> that calls OpenCL implicitly.<br>All that you need is to pass the created OpenCL context to OpenCV (via <code>cv::ocl::attachContext()</code>) and somehow wrap OpenGL texture with <code>cv::UMat</code>.<br>Unfortunately <code>UMat</code> keeps OpenCL <em>buffer</em> internally, that can’t be wrapped over either OpenGL <em>texture</em> or OpenCL <em>image</em> - so we have to copy image data here:<br>@code{.cpp}<br>    cl::ImageGL imgIn (theContext, CL_MEM_READ_ONLY,  GL_TEXTURE_2D, 0, tex);<br>    std::vector &lt; cl::Memory &gt; images(1, imgIn);<br>    theQueue.enqueueAcquireGLObjects(&amp;images);<br>    theQueue.finish();</p>
+<pre><code>cv::UMat uIn, uOut, uTmp;
+cv::ocl::convertFromImage(imgIn(), uIn);
+theQueue.enqueueReleaseGLObjects(&amp;images);
+
+cv::Laplacian(uIn, uTmp, CV_8U);
+cv:multiply(uTmp, 10, uOut);
+cv::ocl::finish();
+
+cl::ImageGL imgOut(theContext, CL_MEM_WRITE_ONLY, GL_TEXTURE_2D, 0, tex);
+images.clear();
+images.push_back(imgOut);
+theQueue.enqueueAcquireGLObjects(&amp;images);
+cl_mem clBuffer = (cl_mem)uOut.handle(cv::ACCESS_READ);
+cl_command_queue q = (cl_command_queue)cv::ocl::Queue::getDefault().ptr();
+size_t offset = 0;
+size_t origin[3] = { 0, 0, 0 };
+size_t region[3] = { w, h, 1 };
+CV_Assert(clEnqueueCopyBufferToImage (q, clBuffer, imgOut(), offset, origin, region, 0, NULL, NULL) == CL_SUCCESS);
+theQueue.enqueueReleaseGLObjects(&amp;images);
+cv::ocl::finish();
+</code></pre>
+<p>@endcode</p>
+<ul>
+<li>@note We have to make one more image data copy when placing back the modified image to the original OpenGL texture via OpenCL image wrapper.</li>
+<li>@note By default the OpenCL support (T-API) is disabled in OpenCV builds for Android OS (so it’s absent in official packages as of version 3.0),<br>but it’s possible to rebuild locally OpenCV for Android with OpenCL&#x2F;T-API enabled: use <code>-DWITH_OPENCL=YES</code> option for CMake.<br>@code{.cmd}<br>cd opencv-build-android<br>path&#x2F;to&#x2F;cmake.exe -GNinja -DCMAKE_MAKE_PROGRAM&#x3D;”path&#x2F;to&#x2F;ninja.exe” -DCMAKE_TOOLCHAIN_FILE&#x3D;path&#x2F;to&#x2F;opencv&#x2F;platforms&#x2F;android&#x2F;android.toolchain.cmake -DANDROID_ABI&#x3D;”armeabi-v7a with NEON” -DCMAKE_BUILD_WITH_INSTALL_RPATH&#x3D;ON path&#x2F;to&#x2F;opencv<br>path&#x2F;to&#x2F;ninja.exe install&#x2F;strip<br>@endcode<br>To use your own modified <code>libopencv_java3.so</code> you have to keep inside your APK, not to use OpenCV Manager and load it manually via <code>System.loadLibrary(&quot;opencv_java3&quot;)</code>.</li>
+</ul>
+<h2 id="Performance-notes"><a href="#Performance-notes" class="headerlink" title="Performance notes"></a>Performance notes</h2><p>To compare the performance we measured FPS of the same preview frames modification (<em>Laplacian</em>) done by C&#x2F;C++ code (call to <code>cv::Laplacian</code> with <code>cv::Mat</code>),<br>by direct OpenCL calls (using OpenCL <em>images</em> for input and output), and by OpenCV <em>T-API</em> (call to <code>cv::Laplacian</code> with <code>cv::UMat</code>) on <em>Sony Xperia Z3</em> with 720p camera resolution:</p>
+<ul>
+<li><strong>C&#x2F;C++ version</strong> shows <strong>3-4 fps</strong></li>
+<li><strong>direct OpenCL calls</strong> shows <strong>25-27 fps</strong></li>
+<li><strong>OpenCV T-API</strong> shows <strong>11-13 fps</strong> (due to extra copying from <code>cl_image</code> to <code>cl_buffer</code> and back)</li>
+</ul>

@@ -1,0 +1,54 @@
+<h1 id="Using-the-Facemark-API-tutorial-facemark-usage"><a href="#Using-the-Facemark-API-tutorial-facemark-usage" class="headerlink" title="Using the Facemark API {#tutorial_facemark_usage}"></a>Using the Facemark API {#tutorial_facemark_usage}</h1><h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial will helps you to</p>
+<ul>
+<li>Create a Facemark object.</li>
+<li>Set a user defined face detector for the facemark algorithm</li>
+<li>Train the algorithm.</li>
+<li>Use the trained model to detect the facial landmarks from a given image.</li>
+</ul>
+<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><p>Before you continue with this tutorial, you should download the dataset of facial landmarks detection.<br>We suggest you to download the helen dataset which can be retrieved at <a href="http://www.ifp.illinois.edu/~vuongle2/helen/">http://www.ifp.illinois.edu/~vuongle2/helen/</a>  (Caution! The algorithm requires around 9GB of RAM to train on this dataset).</p>
+<p>Make sure that the annotation format is supported by the API, the contents in annotation file should look like the following snippet:<br>@code<br>version: 1<br>n_points:  68<br>{<br>212.716603 499.771793<br>230.232816 566.290071<br>…<br>}<br>@endcode</p>
+<p>The next thing to do is to make 2 text files containing the list of image files and annotation files respectively. Make sure that the order or image and annotation in both files are matched. Furthermore, it is advised to use absolute path instead of relative path.<br>Example to make the file list in Linux machine<br>@code<br>ls $PWD&#x2F;trainset&#x2F;<em>.jpg &gt; images_train.txt<br>ls $PWD&#x2F;trainset&#x2F;</em>.pts &gt; annotation_train.txt<br>@endcode</p>
+<p>example of content in the images_train.txt<br>@code<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100032540_1.jpg<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100040721_1.jpg<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100040721_2.jpg<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;1002681492_1.jpg<br>@endcode</p>
+<p>example of content in the annotation_train.txt<br>@code<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100032540_1.pts<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100040721_1.pts<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;100040721_2.pts<br>&#x2F;home&#x2F;user&#x2F;helen&#x2F;trainset&#x2F;1002681492_1.pts<br>@endcode</p>
+<h2 id="Creating-the-facemark-object"><a href="#Creating-the-facemark-object" class="headerlink" title="Creating the facemark object"></a>Creating the facemark object</h2><p>@code<br>&#x2F;<em>create the facemark instance</em>&#x2F;<br>FacemarkLBF::Params params;<br>params.model_filename &#x3D; “helen.model”; &#x2F;&#x2F; the trained model will be saved using this filename<br>Ptr<Facemark> facemark &#x3D; FacemarkLBF::create(params);<br>@endcode</p>
+<h2 id="Set-a-custom-face-detector-function"><a href="#Set-a-custom-face-detector-function" class="headerlink" title="Set a custom face detector function"></a>Set a custom face detector function</h2><p>Firstly, you need to create your own face detector function, you might also need to create a <code>struct</code> to save the custom parameter. Alternatively, you can just make these parameter hard coded within the <code>myDetector</code> function.<br>@code<br>struct Conf {<br>    cv::String model_path;<br>    double scaleFactor;<br>    Conf(cv::String s, double d){<br>        model_path &#x3D; s;<br>        scaleFactor &#x3D; d;<br>        face_detector.load(model_path);<br>    };</p>
+<pre><code>CascadeClassifier face_detector;
+</code></pre>
+<p>};<br>bool myDetector(InputArray image, OutputArray faces, Conf *conf){<br>    Mat gray;</p>
+<pre><code>if (image.channels() &gt; 1)
+    cvtColor(image, gray, COLOR_BGR2GRAY);
+else
+    gray = image.getMat().clone();
+
+equalizeHist(gray, gray);
+
+std::vector&lt;Rect&gt; faces_;
+conf-&gt;face_cascade.detectMultiScale(gray, faces_, conf-&gt;scaleFactor, 2, CASCADE_SCALE_IMAGE, Size(30, 30) );
+Mat(faces_).copyTo(faces);
+return true;
+</code></pre>
+<p>}<br>@endcode</p>
+<p>The following snippet demonstrates how to set the custom detector to the facemark object and use it to detect the faces. Keep in mind that some facemark object might use the face detector during the training process.</p>
+<p>@code<br>Conf config(“..&#x2F;data&#x2F;lbpcascade_frontalface.xml”, 1.4);<br>facemark-&gt;setFaceDetector(myDetector, &amp;config); &#x2F;&#x2F; we must guarantee proper lifetime of “config” object<br>@endcode</p>
+<p>Here is the snippet for detecting face using the user defined face detector function.</p>
+<p>@code<br>Mat img &#x3D; imread(“..&#x2F;data&#x2F;himym3.jpg”);<br>std::vector<a href="cv::Rect">cv::Rect</a> faces;<br>facemark-&gt;getFaces(img, faces, config);<br>for(int j&#x3D;0;j&lt;faces.size();j++){<br>    cv::rectangle(img, faces[j], cv::Scalar(255,0,255));<br>}<br>imshow(“result”, img);<br>waitKey(0);<br>@endcode</p>
+<h2 id="Training-a-facemark-object"><a href="#Training-a-facemark-object" class="headerlink" title="Training a facemark object"></a>Training a facemark object</h2><ul>
+<li><p>First of all, you need to set the training parameters<br>  @code<br>  params.n_landmarks &#x3D; 68; &#x2F;&#x2F; number of landmark points<br>  params.initShape_n &#x3D; 10; &#x2F;&#x2F; number of multiplier for make data augmentation<br>  params.stages_n&#x3D;5; &#x2F;&#x2F; amount of refinement stages<br>  params.tree_n&#x3D;6; &#x2F;&#x2F; number of tree in the model for each landmark point<br>  params.tree_depth&#x3D;5; &#x2F;&#x2F;he depth of decision tree<br>  facemark &#x3D; FacemarkLBF::create(params);<br>  @endcode</p>
+</li>
+<li><p>And then, you need to load the file list from the dataset that you have prepared.<br>  @code<br>  std::vector<String> images_train;<br>  std::vector<String> landmarks_train;<br>  loadDatasetList(“images_train.txt”,”annotation_train.txt”,images_train,landmarks_train);<br>  @endcode</p>
+</li>
+<li><p>The next step is to add training samples into the facemark object.<br>  @code<br>  Mat image;<br>  std::vector<Point2f> facial_points;<br>  for(size_t i&#x3D;0;i&lt;images_train.size();i++){<br>  image &#x3D; imread(images_train[i].c_str());<br>  loadFacePoints(landmarks_train[i],facial_points);<br>  facemark-&gt;addTrainingSample(image, facial_points);<br>  }<br>@endcode</p>
+</li>
+<li><p>execute the training process<br>@code<br>&#x2F;<em>train the Algorithm</em>&#x2F;<br>facemark-&gt;training();<br>@endcode</p>
+</li>
+</ul>
+<h2 id="Use-the-trained-model-to-detect-the-facial-landmarks-from-a-given-image"><a href="#Use-the-trained-model-to-detect-the-facial-landmarks-from-a-given-image" class="headerlink" title="Use the trained model to detect the facial landmarks from a given image."></a>Use the trained model to detect the facial landmarks from a given image.</h2><ul>
+<li><p>First of all, load the trained model. You can also download the pre-trained model in this link <a href="https://raw.githubusercontent.com/kurnianggoro/GSOC2017/master/data/lbfmodel.yaml">https://raw.githubusercontent.com/kurnianggoro/GSOC2017/master/data/lbfmodel.yaml</a><br>  @code<br>  facemark-&gt;loadModel(params.model_filename);<br>  @endcode</p>
+</li>
+<li><p>Detect the faces<br>@code<br>facemark-&gt;getFaces(img, faces, config);<br>@endcode</p>
+</li>
+<li><p>Perform the fitting process<br>@code<br>std::vector&lt;std::vector<Point2f> &gt; landmarks;<br>facemark-&gt;fit(img, faces, landmarks);<br>@endcode</p>
+</li>
+<li><p>Display the result<br>@code<br>for(int j&#x3D;0;j&lt;faces.size();j++){<br>  face::drawFacemarks(img, landmarks[j], Scalar(0,0,255));<br>}<br>imshow(“result”, img);<br>waitKey(0);<br>@endcode</p>
+</li>
+</ul>

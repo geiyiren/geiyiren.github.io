@@ -1,0 +1,49 @@
+<h1 id="Unwrap-two-dimensional-phase-maps-tutorial-unwrap"><a href="#Unwrap-two-dimensional-phase-maps-tutorial-unwrap" class="headerlink" title="Unwrap two-dimensional phase maps {#tutorial_unwrap}"></a>Unwrap two-dimensional phase maps {#tutorial_unwrap}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial, you will learn how to use the phase unwrapping module to unwrap two-dimensional phase maps. The implementation is based on @cite histogramUnwrapping.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@include phase_unwrapping&#x2F;samples&#x2F;unwrap.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>To use this example, wrapped phase map values should be stored in a yml file as CV_32FC1 Mat, under the name “phaseValues”. Path to the data and a name to save the unwrapped phase map must be set in the command line. The results are saved with floating point precision in a yml file and as an 8-bit image for visualization purpose.</p>
+<p>Some parameters can be chosen by the user:</p>
+<ul>
+<li>histThresh is a parameter used to divide the histogram in two parts. Bins before histThresh are smaller than the ones after histThresh. (Default value is 3<em>pi</em>pi).</li>
+<li>nbrOfSmallBins is the number of bins between 0 and histThresh. (Default value is 10).</li>
+<li>nbrOfLargeBins is the number of bins between histThresh and 32<em>pi</em>pi. (Default value is 5).</li>
+</ul>
+<p>@code{.cpp}<br>phase_unwrapping::HistogramPhaseUnwrapping::Params params;</p>
+<pre><code>CommandLineParser parser(argc, argv, keys);
+String inputPath = parser.get&lt;String&gt;(0);
+String outputUnwrappedName = parser.get&lt;String&gt;(1);
+String outputWrappedName = parser.get&lt;String&gt;(2);
+
+if( inputPath.empty() || outputUnwrappedName.empty() )
+{
+    help();
+    return -1;
+}
+FileStorage fsInput(inputPath, FileStorage::READ);
+FileStorage fsOutput(outputUnwrappedName + &quot;.yml&quot;, FileStorage::WRITE);
+
+Mat wPhaseMap;
+Mat uPhaseMap;
+Mat reliabilities;
+fsInput[&quot;phaseValues&quot;] &gt;&gt; wPhaseMap;
+fsInput.release();
+params.width = wPhaseMap.cols;
+params.height = wPhaseMap.rows;
+Ptr&lt;phase_unwrapping::HistogramPhaseUnwrapping&gt; phaseUnwrapping = phase_unwrapping::HistogramPhaseUnwrapping::create(params);
+</code></pre>
+<p>@endcode<br>The wrapped phase map is unwrapped and the result is saved in a yml file. We can also get the reliabilities map for visualization purpose. The unwrapped phase map and the reliabilities map are converted to 8-bit images in order to be saved as png files.</p>
+<p>@code{.cpp}<br>phaseUnwrapping-&gt;unwrapPhaseMap(wPhaseMap, uPhaseMap);<br>    fsOutput &lt;&lt; “phaseValues” &lt;&lt; uPhaseMap;<br>    fsOutput.release();</p>
+<pre><code>phaseUnwrapping-&gt;getInverseReliabilityMap(reliabilities);
+
+Mat uPhaseMap8, wPhaseMap8, reliabilities8;
+wPhaseMap.convertTo(wPhaseMap8, CV_8U, 255, 128);
+uPhaseMap.convertTo(uPhaseMap8, CV_8U, 1, 128);
+reliabilities.convertTo(reliabilities8, CV_8U, 255,128);
+
+imshow(&quot;reliabilities&quot;, reliabilities);
+imshow(&quot;wrapped phase map&quot;, wPhaseMap8);
+imshow(&quot;unwrapped phase map&quot;, uPhaseMap8);
+
+imwrite(outputUnwrappedName + &quot;.png&quot;, uPhaseMap8);
+imwrite(&quot;reliabilities.png&quot;, reliabilities8);
+</code></pre>
+<p>@endcode</p>

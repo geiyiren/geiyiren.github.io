@@ -1,0 +1,27 @@
+<h1 id="Feature-Matching-with-FLANN-tutorial-feature-flann-matcher"><a href="#Feature-Matching-with-FLANN-tutorial-feature-flann-matcher" class="headerlink" title="Feature Matching with FLANN {#tutorial_feature_flann_matcher}"></a>Feature Matching with FLANN {#tutorial_feature_flann_matcher}</h1><p>@prev_tutorial{tutorial_feature_description}<br>@next_tutorial{tutorial_feature_homography}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the @ref cv::FlannBasedMatcher interface in order to perform a quick and efficient matching<br>by using the @ref flann module</li>
+</ul>
+<p>\warning You need the <a href="https://github.com/opencv/opencv_contrib">OpenCV contrib modules</a> to be able to use the SURF features<br>(alternatives are ORB, KAZE, … features).</p>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>Classical feature descriptors (SIFT, SURF, …) are usually compared and matched using the Euclidean distance (or L2-norm).<br>Since SIFT and SURF descriptors represent the histogram of oriented gradient (of the Haar wavelet response for SURF)<br>in a neighborhood, alternatives of the Euclidean distance are histogram-based metrics (\f$ \chi^{2} \f$, Earth Mover’s Distance (EMD), …).</p>
+<p>Arandjelovic et al. proposed in @cite Arandjelovic:2012:TTE:2354409.2355123 to extend to the RootSIFT descriptor:</p>
+<blockquote>
+<p>a square root (Hellinger) kernel instead of the standard Euclidean distance to measure the similarity between SIFT descriptors<br>leads to a dramatic performance boost in all stages of the pipeline.</p>
+</blockquote>
+<p>Binary descriptors (ORB, BRISK, …) are matched using the <a href="https://en.wikipedia.org/wiki/Hamming_distance">Hamming distance</a>.<br>This distance is equivalent to count the number of different elements for binary strings (population count after applying a XOR operation):<br>\f[ d_{hamming} \left ( a,b \right ) &#x3D; \sum_{i&#x3D;0}^{n-1} \left ( a_i \oplus b_i \right ) \f]</p>
+<p>To filter the matches, Lowe proposed in @cite Lowe04 to use a distance ratio test to try to eliminate false matches.<br>The distance ratio between the two nearest matches of a considered keypoint is computed and it is a good match when this value is below<br>a threshold. Indeed, this ratio allows helping to discriminate between ambiguous matches (distance ratio between the two nearest neighbors<br>is close to one) and well discriminated matches. The figure below from the SIFT paper illustrates the probability that a match is correct<br>based on the nearest-neighbor distance ratio test.</p>
+<p><img src="/images/Feature_FlannMatcher_Lowe_ratio_test.png"></p>
+<p>Alternative or additional filterering tests are:</p>
+<ul>
+<li>cross check test (good match \f$ \left( f_a, f_b \right) \f$ if feature \f$ f_b \f$ is the best match for \f$ f_a \f$ in \f$ I_b \f$<br>and feature \f$ f_a \f$ is the best match for \f$ f_b \f$ in \f$ I_a \f$)</li>
+<li>geometric test (eliminate matches that do not fit to a geometric model, e.g. RANSAC or robust homography for planar objects)</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/features2D/feature_flann_matcher/SURF_FLANN_matching_Demo.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_flann_matcher&#x2F;SURF_FLANN_matching_Demo.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/features2D/feature_flann_matcher/SURFFLANNMatchingDemo.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_flann_matcher&#x2F;SURFFLANNMatchingDemo.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/features2D/feature_flann_matcher/SURF_FLANN_matching_Demo.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_flann_matcher&#x2F;SURF_FLANN_matching_Demo.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><ul>
+<li><p>Here is the result of the SURF feature matching using the distance ratio test:</p>
+<p><img src="/images/Feature_FlannMatcher_Result_ratio_test.jpg"></p>
+</li>
+</ul>

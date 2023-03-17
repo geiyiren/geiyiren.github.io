@@ -1,0 +1,117 @@
+<h1 id="Capture-Sinusoidal-pattern-tutorial-tutorial-capture-sinusoidal-pattern"><a href="#Capture-Sinusoidal-pattern-tutorial-tutorial-capture-sinusoidal-pattern" class="headerlink" title="Capture Sinusoidal pattern tutorial {#tutorial_capture_sinusoidal_pattern}"></a>Capture Sinusoidal pattern tutorial {#tutorial_capture_sinusoidal_pattern}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial, you will learn how to use the sinusoidal pattern class to:</p>
+<ul>
+<li>Generate sinusoidal patterns.</li>
+<li>Project the generated patterns.</li>
+<li>Capture the projected patterns.</li>
+<li>Compute a wrapped phase map from these patterns using three different algorithms (Fourier Transform Profilometry, Phase Shifting Profilometry, Fourier-assisted Phase Shifting Profilometry)</li>
+<li>Unwrap the previous phase map.</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@include structured_light&#x2F;samples&#x2F;capsinpattern.cpp</p>
+<h2 id="Expalantion"><a href="#Expalantion" class="headerlink" title="Expalantion"></a>Expalantion</h2><p>First, the sinusoidal patterns must be generated. <em>SinusoidalPattern</em> class parameters have to be set by the user:</p>
+<ul>
+<li>projector width and height</li>
+<li>number of periods in the patterns</li>
+<li>set cross markers in the patterns (used to convert relative phase map to absolute phase map)</li>
+<li>patterns direction (horizontal or vertical)</li>
+<li>phase shift value (usually set to 2pi&#x2F;3 to enable a cyclical system)</li>
+<li>number of pixels between two consecutive markers on the same row&#x2F;column</li>
+<li>id of the method used to compute the phase map (FTP &#x3D; 0, PSP &#x3D; 1, FAPS &#x3D; 2)</li>
+</ul>
+<p>The user can also choose to save the patterns and the phase map.</p>
+<p>@code{.cpp}<br>    structured_light::SinusoidalPattern::Params params;<br>    params.width &#x3D; parser.get<int>(0);<br>    params.height &#x3D; parser.get<int>(1);<br>    params.nbrOfPeriods &#x3D; parser.get<int>(2);<br>    params.setMarkers &#x3D; parser.get<bool>(3);<br>    params.horizontal &#x3D; parser.get<bool>(4);<br>    params.methodId &#x3D; parser.get<int>(5);<br>    params.shiftValue &#x3D; static_cast<float>(2 * CV_PI &#x2F; 3);<br>    params.nbrOfPixelsBetweenMarkers &#x3D; 70;<br>    String outputPatternPath &#x3D; parser.get<String>(6);<br>    String outputWrappedPhasePath &#x3D; parser.get<String>(7);<br>    String outputUnwrappedPhasePath &#x3D; parser.get<String>(8);</p>
+<pre><code>Ptr&lt;structured_light::SinusoidalPattern&gt; sinus = structured_light::SinusoidalPattern::create(params);
+// Storage for patterns
+vector&lt;Mat&gt; patterns;
+//Generate sinusoidal patterns
+sinus-&gt;generate(patterns);
+</code></pre>
+<p>@endcode<br>The number of patterns is always equal to three, no matter the method used to compute the phase map. Those three patterns are projected in a loop which is fine since the system is cyclical.</p>
+<p>Once the patterns have been generated, the camera is opened and the patterns are projected, using fullscreen resolution. In this tutorial, a prosilica camera is used to capture gray images. When the first pattern is displayed by the projector, the user can press any key to start the projection sequence.</p>
+<p>@code{.cpp}<br>VideoCapture cap(CAP_PVAPI);<br>    if( !cap.isOpened() )<br>    {<br>        cout &lt;&lt; “Camera could not be opened” &lt;&lt; endl;<br>        return -1;<br>    }<br>    cap.set(CAP_PROP_PVAPI_PIXELFORMAT, CAP_PVAPI_PIXELFORMAT_MONO8);</p>
+<pre><code>namedWindow(&quot;pattern&quot;, WINDOW_NORMAL);
+setWindowProperty(&quot;pattern&quot;, WND_PROP_FULLSCREEN, WINDOW_FULLSCREEN);
+imshow(&quot;pattern&quot;, patterns[0]);
+cout &lt;&lt; &quot;Press any key when ready&quot; &lt;&lt; endl;
+waitKey(0);
+</code></pre>
+<p>@endcode</p>
+<p>In this tutorial, 30 images are projected so, each of the three patterns is projected ten times.<br>The “while” loop takes care of the projection process. The captured images are stored in a vector of Mat. There is a 30 ms delay between two successive captures.<br>When the projection is done, the user has to press “Enter” to start computing the phase maps.</p>
+<p>@code{.cpp}<br>    int nbrOfImages &#x3D; 30;<br>    int count &#x3D; 0;</p>
+<pre><code>vector&lt;Mat&gt; img(nbrOfImages);
+Size camSize(-1, -1);
+
+while( count &lt; nbrOfImages )
+{
+    for(int i = 0; i &lt; (int)patterns.size(); ++i )
+    {
+        imshow(&quot;pattern&quot;, patterns[i]);
+        waitKey(30);
+        cap &gt;&gt; img[count];
+        count += 1;
+    }
+}
+
+cout &lt;&lt; &quot;press enter when ready&quot; &lt;&lt; endl;
+bool loop = true;
+while ( loop )
+{
+    char c = waitKey(0);
+    if( c == 10 )
+    {
+        loop = false;
+    }
+}
+</code></pre>
+<p>@endcode<br>The phase maps are ready to be computed according to the selected method.<br>For FTP, a phase map is computed for each projected pattern, but we need to compute the shadow mask from three successive patterns, as explained in @cite faps. Therefore, three patterns are set in a vector called captures. Care is taken to fill this vector with three patterns, especially when we reach the last captures. The unwrapping algorithm needs to know the size of the captured images so, we make sure to give it to the “unwrapPhaseMap” method.<br>The phase maps are converted to 8-bit images in order to save them as png.</p>
+<p>@code{.cpp}<br>switch(params.methodId)<br>    {<br>        case structured_light::FTP:<br>            for( int i &#x3D; 0; i &lt; nbrOfImages; ++i )<br>            {<br>                &#x2F;*We need three images to compute the shadow mask, as described in the reference paper<br>                 * even if the phase map is computed from one pattern only<br>                *&#x2F;<br>                vector<Mat> captures;<br>                if( i &#x3D;&#x3D; nbrOfImages - 2 )<br>                {<br>                    captures.push_back(img[i]);<br>                    captures.push_back(img[i-1]);<br>                    captures.push_back(img[i+1]);<br>                }<br>                else if( i &#x3D;&#x3D; nbrOfImages - 1 )<br>                {<br>                    captures.push_back(img[i]);<br>                    captures.push_back(img[i-1]);<br>                    captures.push_back(img[i-2]);<br>                }<br>                else<br>                {<br>                    captures.push_back(img[i]);<br>                    captures.push_back(img[i+1]);<br>                    captures.push_back(img[i+2]);<br>                }<br>                sinus-&gt;computePhaseMap(captures, wrappedPhaseMap, shadowMask);<br>                if( camSize.height &#x3D;&#x3D; -1 )<br>                {<br>                    camSize.height &#x3D; img[i].rows;<br>                    camSize.width &#x3D; img[i].cols;<br>                }<br>                sinus-&gt;unwrapPhaseMap(wrappedPhaseMap, unwrappedPhaseMap, camSize, shadowMask);<br>                unwrappedPhaseMap.convertTo(unwrappedPhaseMap8, CV_8U, 1, 128);<br>                wrappedPhaseMap.convertTo(wrappedPhaseMap8, CV_8U, 255, 128);</p>
+<pre><code>            if( !outputUnwrappedPhasePath.empty() )
+            {
+                ostringstream name;
+                name &lt;&lt; i;
+                imwrite(outputUnwrappedPhasePath + &quot;_FTP_&quot; + name.str() + &quot;.png&quot;, unwrappedPhaseMap8);
+            }
+
+            if( !outputWrappedPhasePath.empty() )
+            {
+                ostringstream name;
+                name &lt;&lt; i;
+                imwrite(outputWrappedPhasePath + &quot;_FTP_&quot; + name.str() + &quot;.png&quot;, wrappedPhaseMap8);
+            }
+        }
+        break;
+</code></pre>
+<p>@endcode</p>
+<p>For PSP and FAPS, three projected images are used to compute a single phase map. These three images are set in “captures”, a vector working as a FIFO.Here again, phase maps are converted to 8-bit images in order to save them as png.<br>@code{.cpp}<br>case structured_light::PSP:<br>        case structured_light::FAPS:<br>            for( int i &#x3D; 0; i &lt; nbrOfImages - 2; ++i )<br>            {<br>                vector<Mat> captures;<br>                captures.push_back(img[i]);<br>                captures.push_back(img[i+1]);<br>                captures.push_back(img[i+2]);</p>
+<pre><code>            sinus-&gt;computePhaseMap(captures, wrappedPhaseMap, shadowMask);
+            if( camSize.height == -1 )
+            {
+                camSize.height = img[i].rows;
+                camSize.width = img[i].cols;
+            }
+            sinus-&gt;unwrapPhaseMap(wrappedPhaseMap, unwrappedPhaseMap, camSize, shadowMask);
+            unwrappedPhaseMap.convertTo(unwrappedPhaseMap8, CV_8U, 1, 128);
+            wrappedPhaseMap.convertTo(wrappedPhaseMap8, CV_8U, 255, 128);
+
+            if( !outputUnwrappedPhasePath.empty() )
+            {
+                ostringstream name;
+                name &lt;&lt; i;
+                if( params.methodId == structured_light::PSP )
+                    imwrite(outputUnwrappedPhasePath + &quot;_PSP_&quot; + name.str() + &quot;.png&quot;, unwrappedPhaseMap8);
+                else
+                    imwrite(outputUnwrappedPhasePath + &quot;_FAPS_&quot; + name.str() + &quot;.png&quot;, unwrappedPhaseMap8);
+            }
+
+            if( !outputWrappedPhasePath.empty() )
+            {
+                ostringstream name;
+                name &lt;&lt; i;
+                if( params.methodId == structured_light::PSP )
+                    imwrite(outputWrappedPhasePath + &quot;_PSP_&quot; + name.str() + &quot;.png&quot;, wrappedPhaseMap8);
+                else
+                    imwrite(outputWrappedPhasePath + &quot;_FAPS_&quot; + name.str() + &quot;.png&quot;, wrappedPhaseMap8);
+            }
+        }
+        break;
+</code></pre>
+<p>@endcode</p>

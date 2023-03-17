@@ -1,0 +1,77 @@
+<h1 id="Histogram-Comparison-tutorial-histogram-comparison"><a href="#Histogram-Comparison-tutorial-histogram-comparison" class="headerlink" title="Histogram Comparison {#tutorial_histogram_comparison}"></a>Histogram Comparison {#tutorial_histogram_comparison}</h1><p>@prev_tutorial{tutorial_histogram_calculation}<br>@next_tutorial{tutorial_back_projection}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the function @ref cv::compareHist to get a numerical parameter that express how well two<br>histograms match with each other.</li>
+<li>Use different metrics to compare histograms</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><ul>
+<li>To compare two histograms ( \f$H_{1}\f$ and \f$H_{2}\f$ ), first we have to choose a <em>metric</em><br>(\f$d(H_{1}, H_{2})\f$) to express how well both histograms match.</li>
+<li>OpenCV implements the function @ref cv::compareHist to perform a comparison. It also offers 4<br>different metrics to compute the matching:<br>-#  <strong>Correlation ( CV_COMP_CORREL )</strong><br>\f[d(H_1,H_2) &#x3D;  \frac{\sum_I (H_1(I) - \bar{H_1}) (H_2(I) - \bar{H_2})}{\sqrt{\sum_I(H_1(I) - \bar{H_1})^2 \sum_I(H_2(I) - \bar{H_2})^2}}\f]<br>where<br>\f[\bar{H_k} &#x3D;  \frac{1}{N} \sum _J H_k(J)\f]<br>and \f$N\f$ is the total number of histogram bins.<br>-#  <strong>Chi-Square ( CV_COMP_CHISQR )</strong><br>\f[d(H_1,H_2) &#x3D;  \sum _I  \frac{\left(H_1(I)-H_2(I)\right)^2}{H_1(I)}\f]<br>-#  <strong>Intersection ( method&#x3D;CV_COMP_INTERSECT )</strong><br>\f[d(H_1,H_2) &#x3D;  \sum _I  \min (H_1(I), H_2(I))\f]<br>-#  <strong>Bhattacharyya distance ( CV_COMP_BHATTACHARYYA )</strong><br>\f[d(H_1,H_2) &#x3D;  \sqrt{1 - \frac{1}{\sqrt{\bar{H_1} \bar{H_2} N^2}} \sum_I \sqrt{H_1(I) \cdot H_2(I)}}\f]</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><strong>What does this program do?</strong><ul>
+<li>Loads a <em>base image</em> and 2 <em>test images</em> to be compared with it.</li>
+<li>Generate 1 image that is the lower half of the <em>base image</em></li>
+<li>Convert the images to HSV format</li>
+<li>Calculate the H-S histogram for all the images and normalize them in order to compare them.</li>
+<li>Compare the histogram of the <em>base image</em> with respect to the 2 test histograms, the<br>histogram of the lower half base image and with the same base image histogram.</li>
+<li>Display the numerical matching parameters obtained.</li>
+</ul>
+</li>
+</ul>
+<p>@add_toggle_cpp</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/Histograms_Matching/compareHist_Demo.cpp">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp<br>@end_toggle</p>
+</li>
+</ul>
+<p>@add_toggle_java</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/Histograms_Matching/histogram_comparison/CompareHistDemo.java">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java<br>@end_toggle</p>
+</li>
+</ul>
+<p>@add_toggle_python</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/Histograms_Matching/histogram_comparison/compareHist_Demo.py">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py<br>@end_toggle</p>
+</li>
+</ul>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><ul>
+<li><p>Load the base image (src_base) and the other two test images:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Load three images with different environment settings<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Load three images with different environment settings<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Load three images with different environment settings<br>@end_toggle</p>
+</li>
+<li><p>Convert them to HSV format:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Convert to HSV<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Convert to HSV<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Convert to HSV<br>@end_toggle</p>
+</li>
+<li><p>Also, create an image of half the base image (in HSV format):</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Convert to HSV half<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Convert to HSV half<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Convert to HSV half<br>@end_toggle</p>
+</li>
+<li><p>Initialize the arguments to calculate the histograms (bins, ranges and channels H and S ).</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Using 50 bins for hue and 60 for saturation<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Using 50 bins for hue and 60 for saturation<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Using 50 bins for hue and 60 for saturation<br>@end_toggle</p>
+</li>
+<li><p>Calculate the Histograms for the base image, the 2 test images and the half-down base image:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Calculate the histograms for the HSV images<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Calculate the histograms for the HSV images<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Calculate the histograms for the HSV images<br>@end_toggle</p>
+</li>
+<li><p>Apply sequentially the 4 comparison methods between the histogram of the base image (hist_base)<br>and the other histograms:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;compareHist_Demo.cpp Apply the histogram comparison methods<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;CompareHistDemo.java Apply the histogram comparison methods<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;Histograms_Matching&#x2F;histogram_comparison&#x2F;compareHist_Demo.py Apply the histogram comparison methods<br>@end_toggle</p>
+</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>-#  We use as input the following images:<br>    <img src="/images/Histogram_Comparison_Source_0.jpg" alt="Base_0"><br>    <img src="/images/Histogram_Comparison_Source_1.jpg" alt="Test_1"><br>    <img src="/images/Histogram_Comparison_Source_2.jpg" alt="Test_2"><br>    where the first one is the base (to be compared to the others), the other 2 are the test images.<br>    We will also compare the first image with respect to itself and with respect of half the base<br>    image.</p>
+<p>-#  We should expect a perfect match when we compare the base image histogram with itself. Also,<br>    compared with the histogram of half the base image, it should present a high match since both<br>    are from the same source. For the other two test images, we can observe that they have very<br>    different lighting conditions, so the matching should not be very good:</p>
+<p>-#  Here the numeric results we got with OpenCV 3.4.1:<br>      <em>Method</em>        |  Base - Base |  Base - Half |  Base - Test 1 |  Base - Test 2<br>    —————– | ———— | ———— | ————– | —————<br>      <em>Correlation</em>   |  1.000000    |  0.880438    |  0.20457       |  0.0664547<br>      <em>Chi-square</em>    |  0.000000    |  4.6834      |  2697.98       |  4763.8<br>      <em>Intersection</em>  |  18.8947     |  13.022      |  5.44085       |  2.58173<br>      <em>Bhattacharyya</em> |  0.000000    |  0.237887    |  0.679826      |  0.874173<br>    For the <em>Correlation</em> and <em>Intersection</em> methods, the higher the metric, the more accurate the<br>    match. As we can see, the match <em>base-base</em> is the highest of all as expected. Also we can observe<br>    that the match <em>base-half</em> is the second best match (as we predicted). For the other two metrics,<br>    the less the result, the better the match. We can observe that the matches between the test 1 and<br>    test 2 with respect to the base are worse, which again, was expected.</p>

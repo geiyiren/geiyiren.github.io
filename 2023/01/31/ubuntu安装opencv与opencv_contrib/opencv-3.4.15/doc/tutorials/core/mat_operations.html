@@ -1,0 +1,72 @@
+<h1 id="Operations-with-images-tutorial-mat-operations"><a href="#Operations-with-images-tutorial-mat-operations" class="headerlink" title="Operations with images {#tutorial_mat_operations}"></a>Operations with images {#tutorial_mat_operations}</h1><p>@prev_tutorial{tutorial_mat_mask_operations}<br>@next_tutorial{tutorial_adding_images}</p>
+<h2 id="Input-x2F-Output"><a href="#Input-x2F-Output" class="headerlink" title="Input&#x2F;Output"></a>Input&#x2F;Output</h2><h3 id="Images"><a href="#Images" class="headerlink" title="Images"></a>Images</h3><p>Load an image from a file:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Load an image from a file<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Load an image from a file<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Load an image from a file<br>@end_toggle</p>
+<p>If you read a jpg file, a 3 channel image is created by default. If you need a grayscale image, use:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Load an image from a file in grayscale<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Load an image from a file in grayscale<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Load an image from a file in grayscale<br>@end_toggle</p>
+<p>@note Format of the file is determined by its content (first few bytes). To save an image to a file:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Save image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Save image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Save image<br>@end_toggle</p>
+<p>@note Format of the file is determined by its extension.</p>
+<p>@note Use cv::imdecode and cv::imencode to read and write an image from&#x2F;to memory rather than a file.</p>
+<h2 id="Basic-operations-with-images"><a href="#Basic-operations-with-images" class="headerlink" title="Basic operations with images"></a>Basic operations with images</h2><h3 id="Accessing-pixel-intensity-values"><a href="#Accessing-pixel-intensity-values" class="headerlink" title="Accessing pixel intensity values"></a>Accessing pixel intensity values</h3><p>In order to get pixel intensity value, you have to know the type of an image and the number of<br>channels. Here is an example for a single channel grey scale image (type 8UC1) and pixel coordinates<br>x and y:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Pixel access 1<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Pixel access 1<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Pixel access 1<br>@end_toggle</p>
+<p>C++ version only:<br>intensity.val[0] contains a value from 0 to 255. Note the ordering of x and y. Since in OpenCV<br>images are represented by the same structure as matrices, we use the same convention for both<br>cases - the 0-based row index (or y-coordinate) goes first and the 0-based column index (or<br>x-coordinate) follows it. Alternatively, you can use the following notation (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Pixel access 2</p>
+<p>Now let us consider a 3 channel image with BGR color ordering (the default format returned by<br>imread):</p>
+<p><strong>C++ code</strong><br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Pixel access 3</p>
+<p><strong>Python Python</strong><br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Pixel access 3</p>
+<p>You can use the same method for floating-point images (for example, you can get such an image by<br>running Sobel on a 3 channel image) (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Pixel access 4</p>
+<p>The same method can be used to change pixel intensities:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Pixel access 5<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Pixel access 5<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Pixel access 5<br>@end_toggle</p>
+<p>There are functions in OpenCV, especially from calib3d module, such as cv::projectPoints, that take an<br>array of 2D or 3D points in the form of Mat. Matrix should contain exactly one column, each row<br>corresponds to a point, matrix type should be 32FC2 or 32FC3 correspondingly. Such a matrix can be<br>easily constructed from <code>std::vector</code> (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Mat from points vector</p>
+<p>One can access a point in this matrix using the same method <code>Mat::at</code> (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Point access</p>
+<h3 id="Memory-management-and-reference-counting"><a href="#Memory-management-and-reference-counting" class="headerlink" title="Memory management and reference counting"></a>Memory management and reference counting</h3><p>Mat is a structure that keeps matrix&#x2F;image characteristics (rows and columns number, data type etc)<br>and a pointer to data. So nothing prevents us from having several instances of Mat corresponding to<br>the same data. A Mat keeps a reference count that tells if data has to be deallocated when a<br>particular instance of Mat is destroyed. Here is an example of creating two matrices without copying<br>data (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Reference counting 1</p>
+<p>As a result, we get a 32FC1 matrix with 3 columns instead of 32FC3 matrix with 1 column. <code>pointsMat</code><br>uses data from points and will not deallocate the memory when destroyed. In this particular<br>instance, however, developer has to make sure that lifetime of <code>points</code> is longer than of <code>pointsMat</code><br>If we need to copy the data, this is done using, for example, cv::Mat::copyTo or cv::Mat::clone:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Reference counting 2<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Reference counting 2<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Reference counting 2<br>@end_toggle</p>
+<p>To the contrary with C API where an output image had to be created by the developer, an empty output Mat<br>can be supplied to each function. Each implementation calls Mat::create for a destination matrix.<br>This method allocates data for a matrix if it is empty. If it is not empty and has the correct size<br>and type, the method does nothing. If however, size or type are different from the input arguments, the<br>data is deallocated (and lost) and a new data is allocated. For example:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Reference counting 3<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Reference counting 3<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Reference counting 3<br>@end_toggle</p>
+<h3 id="Primitive-operations"><a href="#Primitive-operations" class="headerlink" title="Primitive operations"></a>Primitive operations</h3><p>There is a number of convenient operators defined on a matrix. For example, here is how we can make<br>a black image from an existing greyscale image <code>img</code></p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Set image to black<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Set image to black<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Set image to black<br>@end_toggle</p>
+<p>Selecting a region of interest:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Select ROI<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Select ROI<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Select ROI<br>@end_toggle</p>
+<p>A conversion from Mat to C API data structures (<strong>C++ only</strong>):</p>
+<p>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp C-API conversion</p>
+<p>Note that there is no data copying here.</p>
+<p>Conversion from color to greyscale:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp BGR to Gray<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java BGR to Gray<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py BGR to Gray<br>@end_toggle</p>
+<p>Change image type from 8UC1 to 32FC1:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp Convert to CV_32F<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java Convert to CV_32F<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py Convert to CV_32F<br>@end_toggle</p>
+<h3 id="Visualizing-images"><a href="#Visualizing-images" class="headerlink" title="Visualizing images"></a>Visualizing images</h3><p>It is very useful to see intermediate results of your algorithm during development process. OpenCV<br>provides a convenient way of visualizing images. A 8U image can be shown using:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp imshow 1<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java imshow 1<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py imshow 1<br>@end_toggle</p>
+<p>A call to waitKey() starts a message passing cycle that waits for a key stroke in the “image”<br>window. A 32F image needs to be converted to 8U type. For example:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.cpp imshow 2<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;MatOperations.java imshow 2<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;core&#x2F;mat_operations&#x2F;mat_operations.py imshow 2<br>@end_toggle</p>
+<p>@note Here cv::namedWindow is not necessary since it is immediately followed by cv::imshow.<br>Nevertheless, it can be used to change the window properties or when using cv::createTrackbar</p>

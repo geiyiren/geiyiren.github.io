@@ -1,0 +1,191 @@
+<h1 id="Build-OpenCV-js-tutorial-js-setup"><a href="#Build-OpenCV-js-tutorial-js-setup" class="headerlink" title="Build OpenCV.js {#tutorial_js_setup}"></a>Build OpenCV.js {#tutorial_js_setup}</h1><p>@note<br>You don’t have to build your own copy if you simply want to start using it. Refer the Using Opencv.js tutorial for steps on getting a prebuilt copy from our releases or online documentation.</p>
+<h2 id="Installing-Emscripten"><a href="#Installing-Emscripten" class="headerlink" title="Installing Emscripten"></a>Installing Emscripten</h2><p><a href="https://github.com/emscripten-core/emscripten">Emscripten</a> is an LLVM-to-JavaScript compiler. We will use Emscripten to build OpenCV.js.</p>
+<p>@note<br>While this describes installation of required tools from scratch, there’s a section below also describing an alternative procedure to perform the same build using docker containers which is often easier.</p>
+<p>To Install Emscripten, follow instructions of <a href="https://emscripten.org/docs/getting_started/downloads.html">Emscripten SDK</a>.</p>
+<p>For example:<br>@code{.bash}<br>.&#x2F;emsdk update<br>.&#x2F;emsdk install latest<br>.&#x2F;emsdk activate latest<br>@endcode</p>
+<p>After install, ensure the <code>EMSDK</code> environment is setup correctly.</p>
+<p>For example:<br>@code{.bash}<br>source .&#x2F;emsdk_env.sh<br>echo ${EMSDK}<br>@endcode</p>
+<p>Modern versions of Emscripten requires to use <code>emcmake</code> &#x2F; <code>emmake</code> launchers:</p>
+<p>@code{.bash}<br>emcmake sh -c ‘echo ${EMSCRIPTEN}’<br>@endcode</p>
+<p>The version 2.0.10 of emscripten is verified for latest WebAssembly. Please check the version of Emscripten to use the newest features of WebAssembly.</p>
+<p>For example:<br>@code{.bash}<br>.&#x2F;emsdk update<br>.&#x2F;emsdk install 2.0.10<br>.&#x2F;emsdk activate 2.0.10<br>@endcode</p>
+<h2 id="Obtaining-OpenCV-Source-Code"><a href="#Obtaining-OpenCV-Source-Code" class="headerlink" title="Obtaining OpenCV Source Code"></a>Obtaining OpenCV Source Code</h2><p>You can use the latest stable OpenCV version or you can grab the latest snapshot from our <a href="https://github.com/opencv/opencv.git">Git<br>repository</a>.</p>
+<h3 id="Obtaining-the-Latest-Stable-OpenCV-Version"><a href="#Obtaining-the-Latest-Stable-OpenCV-Version" class="headerlink" title="Obtaining the Latest Stable OpenCV Version"></a>Obtaining the Latest Stable OpenCV Version</h3><ul>
+<li>Go to our <a href="http://opencv.org/releases.html">releases page</a>.</li>
+<li>Download the source archive and unpack it.</li>
+</ul>
+<h3 id="Obtaining-the-Cutting-edge-OpenCV-from-the-Git-Repository"><a href="#Obtaining-the-Cutting-edge-OpenCV-from-the-Git-Repository" class="headerlink" title="Obtaining the Cutting-edge OpenCV from the Git Repository"></a>Obtaining the Cutting-edge OpenCV from the Git Repository</h3><p>Launch Git client and clone <a href="http://github.com/opencv/opencv">OpenCV repository</a>.</p>
+<p>For example:<br>@code{.bash}<br>git clone <a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a><br>@endcode</p>
+<p>@note<br>It requires <code>git</code> installed in your development environment.</p>
+<h2 id="Building-OpenCV-js-from-Source"><a href="#Building-OpenCV-js-from-Source" class="headerlink" title="Building OpenCV.js from Source"></a>Building OpenCV.js from Source</h2><p>-#  To build <code>opencv.js</code>, execute python script <code>&lt;opencv_src_dir&gt;/platforms/js/build_js.py &lt;build_dir&gt;</code>.</p>
+<pre><code>For example, to build in `build_js` directory:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js
+@endcode
+
+@note
+It requires `python` and `cmake` installed in your development environment.
+</code></pre>
+<p>-#  The build script builds asm.js version by default. To build WebAssembly version, append <code>--build_wasm</code> switch.</p>
+<pre><code>For example, to build wasm version in `build_wasm` directory:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_wasm --build_wasm
+@endcode
+</code></pre>
+<p>-#  [Optional] To build the OpenCV.js loader, append <code>--build_loader</code>.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_loader
+@endcode
+
+@note
+The loader is implemented as a js file in the path `&lt;opencv_js_dir&gt;/bin/loader.js`. The loader utilizes the [WebAssembly Feature Detection](https://github.com/GoogleChromeLabs/wasm-feature-detect) to detect the features of the broswer and load corresponding OpenCV.js automatically. To use it, you need to use the UMD version of [WebAssembly Feature Detection](https://github.com/GoogleChromeLabs/wasm-feature-detect) and introduce the `loader.js` in your Web application.
+
+Example Code:
+@code{.javascipt}
+// Set paths configuration
+let pathsConfig = {
+    wasm: &quot;../../build_wasm/opencv.js&quot;,
+    threads: &quot;../../build_mt/opencv.js&quot;,
+    simd: &quot;../../build_simd/opencv.js&quot;,
+    threadsSimd: &quot;../../build_mtSIMD/opencv.js&quot;,
+}
+
+// Load OpenCV.js and use the pathsConfiguration and main function as the params.
+loadOpenCV(pathsConfig, main);
+@endcode
+</code></pre>
+<p>-#  [optional] To build documents, append <code>--build_doc</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_doc
+@endcode
+
+@note
+It requires `doxygen` installed in your development environment.
+</code></pre>
+<p>-#  [optional] To build tests, append <code>--build_test</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_test
+@endcode
+</code></pre>
+<p>-#  [optional] To enable OpenCV contrib modules append <code>--cmake_option=&quot;-DOPENCV_EXTRA_MODULES_PATH=/path/to/opencv_contrib/modules/&quot;</code></p>
+<pre><code>For example:
+@code{.bash}
+python ./platforms/js/build_js.py build_js --cmake_option=&quot;-DOPENCV_EXTRA_MODULES_PATH=opencv_contrib/modules&quot;
+@endcode
+</code></pre>
+<h2 id="Running-OpenCV-js-Tests"><a href="#Running-OpenCV-js-Tests" class="headerlink" title="Running OpenCV.js Tests"></a>Running OpenCV.js Tests</h2><p>Remember to launch the build command passing <code>--build_test</code> as mentioned previously. This will generate test source code ready to run together with <code>opencv.js</code> file in <code>build_js/bin</code></p>
+<h3 id="Manually-in-your-browser"><a href="#Manually-in-your-browser" class="headerlink" title="Manually in your browser"></a>Manually in your browser</h3><p>To run tests, launch a local web server in <code>\&lt;build_dir\&gt;/bin</code> folder. For example, node http-server which serves on <code>localhost:8080</code>.</p>
+<p>Navigate the web browser to <code>http://localhost:8080/tests.html</code>, which runs the unit tests automatically. Command example:</p>
+<p>@code{.sh}<br>npx http-server build_js&#x2F;bin<br>firefox <a href="http://localhost:8080/tests.html">http://localhost:8080/tests.html</a><br>@endcode</p>
+<p>@note<br>This snippet and the following require <a href="https://nodejs.org/">Node.js</a> to be installed.</p>
+<h3 id="Headless-with-Puppeteer"><a href="#Headless-with-Puppeteer" class="headerlink" title="Headless with Puppeteer"></a>Headless with Puppeteer</h3><p>Alternatively tests can run with <a href="https://github.com/GoogleChrome/puppeteer#readme">GoogleChrome&#x2F;puppeteer</a> which is a version of Google Chrome that runs in the terminal (useful for Continuos integration like travis CI, etc)</p>
+<p>@code{.sh}<br>cd build_js&#x2F;bin<br>npm install<br>npm install –no-save puppeteer    # automatically downloads Chromium package<br>node run_puppeteer.js<br>@endcode</p>
+<p>@note<br>Checkout <code>node run_puppeteer --help</code> for more options to debug and reporting.</p>
+<p>@note<br>The command <code>npm install</code> only needs to be executed once, since installs the tools dependencies; after that they are ready to use.</p>
+<p>@note<br>Use <code>PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm install --no-save puppeteer</code> to skip automatic downloading of Chromium.<br>You may specify own Chromium&#x2F;Chrome binary through <code>PUPPETEER_EXECUTABLE_PATH=$(which google-chrome)</code> environment variable.<br><strong>BEWARE</strong>: Puppeteer is only guaranteed to work with the bundled Chromium, use at your own risk.</p>
+<h3 id="Using-Node-js"><a href="#Using-Node-js" class="headerlink" title="Using Node.js."></a>Using Node.js.</h3><p>For example:</p>
+<p>@code{.sh}<br>cd build_js&#x2F;bin<br>npm install<br>node tests.js<br>@endcode</p>
+<p>@note If all tests are failed, then consider using Node.js from 8.x version (<code>lts/carbon</code> from <code>nvm</code>).</p>
+<p>-#  [optional] To build <code>opencv.js</code> with threads optimization, append <code>--threads</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_wasm --threads
+@endcode
+
+The default threads number is the logic core number of your device. You can use `cv.parallel_pthreads_set_threads_num(number)` to set threads number by yourself and use `cv.parallel_pthreads_get_threads_num()` to get the current threads number.
+
+@note
+You should build wasm version of `opencv.js` if you want to enable this optimization. And the threads optimization only works in browser, not in node.js. You need to enable the `WebAssembly threads support` feature first with your browser. For example, if you use Chrome, please enable this flag in chrome://flags.
+</code></pre>
+<p>-#  [optional] To build <code>opencv.js</code> with wasm simd optimization, append <code>--simd</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_wasm --simd
+@endcode
+
+The simd optimization is experimental as wasm simd is still in development.
+
+@note
+Now only emscripten LLVM upstream backend supports wasm simd, refering to https://emscripten.org/docs/porting/simd.html. So you need to setup upstream backend environment with the following command first:
+@code{.bash}
+./emsdk update
+./emsdk install latest-upstream
+./emsdk activate latest-upstream
+source ./emsdk_env.sh
+@endcode
+
+@note
+You should build wasm version of `opencv.js` if you want to enable this optimization. For browser, you need to enable the `WebAssembly SIMD support` feature first. For example, if you use Chrome, please enable this flag in chrome://flags. For Node.js, you need to run script with flag `--experimental-wasm-simd`.
+
+@note
+The simd version of `opencv.js` built by latest LLVM upstream may not work with the stable browser or old version of Node.js. Please use the latest version of unstable browser or Node.js to get new features, like `Chrome Dev`.
+</code></pre>
+<p>-#  [optional] To build wasm intrinsics tests, append <code>--build_wasm_intrin_test</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_wasm --simd --build_wasm_intrin_test
+@endcode
+
+For wasm intrinsics tests, you can use the following function to test all the cases:
+@code{.js}
+cv.test_hal_intrin_all()
+@endcode
+
+And the failed cases will be logged in the JavaScript debug console.
+
+If you only want to test single data type of wasm intrinsics, you can use the following functions:
+@code{.js}
+cv.test_hal_intrin_uint8()
+cv.test_hal_intrin_int8()
+cv.test_hal_intrin_uint16()
+cv.test_hal_intrin_int16()
+cv.test_hal_intrin_uint32()
+cv.test_hal_intrin_int32()
+cv.test_hal_intrin_uint64()
+cv.test_hal_intrin_int64()
+cv.test_hal_intrin_float32()
+cv.test_hal_intrin_float64()
+@endcode
+</code></pre>
+<p>-#  [optional] To build performance tests, append <code>--build_perf</code> option.</p>
+<pre><code>For example:
+@code{.bash}
+emcmake python ./opencv/platforms/js/build_js.py build_js --build_perf
+@endcode
+
+To run performance tests, launch a local web server in \&lt;build_dir\&gt;/bin folder. For example, node http-server which serves on `localhost:8080`.
+
+There are some kernels now in the performance test like `cvtColor`, `resize` and `threshold`. For example, if you want to test `threshold`, please navigate the web browser to `http://localhost:8080/perf/perf_imgproc/perf_threshold.html`. You need to input the test parameter like `(1920x1080, CV_8UC1, THRESH_BINARY)`, and then click the `Run` button to run the case. And if you don&#39;t input the parameter, it will run all the cases of this kernel.
+
+You can also run tests using Node.js.
+
+For example, run `threshold` with parameter `(1920x1080, CV_8UC1, THRESH_BINARY)`:
+@code{.sh}
+cd bin/perf
+npm install
+node perf_threshold.js --test_param_filter=&quot;(1920x1080, CV_8UC1, THRESH_BINARY)&quot;
+@endcode
+</code></pre>
+<h2 id="Building-OpenCV-js-with-Docker"><a href="#Building-OpenCV-js-with-Docker" class="headerlink" title="Building OpenCV.js with Docker"></a>Building OpenCV.js with Docker</h2><p>Alternatively, the same build can be can be accomplished using <a href="https://www.docker.com/">docker</a> containers which is often easier and more reliable, particularly in non linux systems. You only need to install <a href="https://www.docker.com/">docker</a> on your system and use a popular container that provides a clean well tested environment for emscripten builds like this, that already has latest versions of all the necessary tools installed.</p>
+<p>So, make sure <a href="https://www.docker.com/">docker</a> is installed in your system and running. The following shell script should work in Linux and MacOS:</p>
+<p>@code{.bash}<br>git clone <a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a><br>cd opencv<br>docker run –rm -v $(pwd):&#x2F;src -u $(id -u):$(id -g) emscripten&#x2F;emsdk emcmake python3 .&#x2F;platforms&#x2F;js&#x2F;build_js.py build_js<br>@endcode</p>
+<p>In Windows use the following PowerShell command:</p>
+<p>@code{.bash}<br>docker run –rm –workdir &#x2F;src -v “$(get-location):&#x2F;src” “emscripten&#x2F;emsdk” emcmake python3 .&#x2F;platforms&#x2F;js&#x2F;build_js.py build_js<br>@endcode</p>
+<p>@warning<br>The example uses latest version of emscripten. If the build fails you should try a version that is known to work fine which is <code>2.0.10</code> using the following command:</p>
+<p>@code{.bash}<br>docker run –rm -v $(pwd):&#x2F;src -u $(id -u):$(id -g) emscripten&#x2F;emsdk:2.0.10 emcmake python3 .&#x2F;platforms&#x2F;js&#x2F;build_js.py build_js<br>@endcode</p>
+<p>In Windows use the following PowerShell command:</p>
+<p>@code{.bash}<br>docker run –rm –workdir &#x2F;src -v “$(get-location):&#x2F;src” “emscripten&#x2F;emsdk:2.0.10” emcmake python3 .&#x2F;platforms&#x2F;js&#x2F;build_js.py build_js<br>@endcode</p>
+<h3 id="Building-the-documentation-with-Docker"><a href="#Building-the-documentation-with-Docker" class="headerlink" title="Building the documentation with Docker"></a>Building the documentation with Docker</h3><p>To build the documentation <code>doxygen</code> needs to be installed. Create a file named <code>Dockerfile</code> with the following content:</p>
+<pre><code>FROM emscripten/emsdk:2.0.10
+
+RUN apt-get update \
+  &amp;&amp; DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends doxygen \
+  &amp;&amp; rm -rf /var/lib/apt/lists/*
+</code></pre>
+<p>Then we build the docker image and name it <code>opencv-js-doc</code> with the following command (that needs to be run only once):</p>
+<p>@code{.bash}<br>docker build . -t opencv-js-doc<br>@endcode</p>
+<p>Now run the build command again, this time using the new image and passing <code>--build_doc</code>:</p>
+<p>@code{.bash}<br>docker run –rm -v $(pwd):&#x2F;src -u $(id -u):$(id -g) “opencv-js-doc” emcmake python3 .&#x2F;platforms&#x2F;js&#x2F;build_js.py build_js –build_doc<br>@endcode</p>

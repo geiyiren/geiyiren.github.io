@@ -1,0 +1,78 @@
+<h1 id="Installation-in-Linux-tutorial-linux-install"><a href="#Installation-in-Linux-tutorial-linux-install" class="headerlink" title="Installation in Linux {#tutorial_linux_install}"></a>Installation in Linux {#tutorial_linux_install}</h1><p>@next_tutorial{tutorial_linux_gcc_cmake}</p>
+<p>The following steps have been tested for Ubuntu 10.04 but should work with other distros as well.</p>
+<h2 id="Required-Packages"><a href="#Required-Packages" class="headerlink" title="Required Packages"></a>Required Packages</h2><ul>
+<li>GCC 4.4.x or later</li>
+<li>CMake 2.8.7 or higher</li>
+<li>Git</li>
+<li>GTK+2.x or higher, including headers (libgtk2.0-dev)</li>
+<li>pkg-config</li>
+<li>Python 2.6 or later and Numpy 1.5 or later with developer packages (python-dev, python-numpy)</li>
+<li>ffmpeg or libav development packages: libavcodec-dev, libavformat-dev, libswscale-dev</li>
+<li>[optional] libtbb2 libtbb-dev</li>
+<li>[optional] libdc1394 2.x</li>
+<li>[optional] libjpeg-dev, libpng-dev, libtiff-dev, libjasper-dev, libdc1394-22-dev</li>
+<li>[optional] CUDA Toolkit 6.5 or higher</li>
+</ul>
+<h2 id="The-packages-can-be-installed-using-a-terminal-and-the-following-commands-or-by-using-SynapticManager-code-bash-compiler-sudo-apt-get-install-build-essential-required-sudo-apt-get-install-cmake-git-libgtk2-0-dev-pkg-config-libavcodec-dev-libavformat-dev-libswscale-dev-optional-sudo-apt-get-install-python-dev-python-numpy-libtbb2-libtbb-dev-libjpeg-dev-libpng-dev-libtiff-dev-libjasper-dev-libdc1394-22-dev-endcodeGetting-OpenCV-Source-Code"><a href="#The-packages-can-be-installed-using-a-terminal-and-the-following-commands-or-by-using-SynapticManager-code-bash-compiler-sudo-apt-get-install-build-essential-required-sudo-apt-get-install-cmake-git-libgtk2-0-dev-pkg-config-libavcodec-dev-libavformat-dev-libswscale-dev-optional-sudo-apt-get-install-python-dev-python-numpy-libtbb2-libtbb-dev-libjpeg-dev-libpng-dev-libtiff-dev-libjasper-dev-libdc1394-22-dev-endcodeGetting-OpenCV-Source-Code" class="headerlink" title="The packages can be installed using a terminal and the following commands or by using SynapticManager:@code{.bash}[compiler] sudo apt-get install build-essential[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev@endcodeGetting OpenCV Source Code"></a>The packages can be installed using a terminal and the following commands or by using Synaptic<br>Manager:<br>@code{.bash}<br>[compiler] sudo apt-get install build-essential<br>[required] sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev<br>[optional] sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev<br>@endcode<br>Getting OpenCV Source Code</h2><p>You can use the latest stable OpenCV version or you can grab the latest snapshot from our <a href="https://github.com/opencv/opencv.git">Git<br>repository</a>.</p>
+<h3 id="Getting-the-Latest-Stable-OpenCV-Version"><a href="#Getting-the-Latest-Stable-OpenCV-Version" class="headerlink" title="Getting the Latest Stable OpenCV Version"></a>Getting the Latest Stable OpenCV Version</h3><ul>
+<li>Go to our <a href="http://opencv.org/releases.html">downloads page</a>.</li>
+<li>Download the source archive and unpack it.</li>
+</ul>
+<h3 id="Getting-the-Cutting-edge-OpenCV-from-the-Git-Repository"><a href="#Getting-the-Cutting-edge-OpenCV-from-the-Git-Repository" class="headerlink" title="Getting the Cutting-edge OpenCV from the Git Repository"></a>Getting the Cutting-edge OpenCV from the Git Repository</h3><p>Launch Git client and clone <a href="http://github.com/opencv/opencv">OpenCV repository</a>. If you need<br>modules from <a href="http://github.com/opencv/opencv_contrib">OpenCV contrib repository</a> then clone it as well.</p>
+<h2 id="For-example-code-bash-cd-x2F-git-clone-https-github-com-opencv-opencv-gitgit-clone-https-github-com-opencv-opencv-contrib-git-endcodeBuilding-OpenCV-from-Source-Using-CMake"><a href="#For-example-code-bash-cd-x2F-git-clone-https-github-com-opencv-opencv-gitgit-clone-https-github-com-opencv-opencv-contrib-git-endcodeBuilding-OpenCV-from-Source-Using-CMake" class="headerlink" title="For example@code{.bash}cd ~&#x2F;git clone https://github.com/opencv/opencv.gitgit clone https://github.com/opencv/opencv_contrib.git@endcodeBuilding OpenCV from Source Using CMake"></a>For example<br>@code{.bash}<br>cd ~&#x2F;<my_working_directory><br>git clone <a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a><br>git clone <a href="https://github.com/opencv/opencv_contrib.git">https://github.com/opencv/opencv_contrib.git</a><br>@endcode<br>Building OpenCV from Source Using CMake</h2><p>-#  Create a temporary directory, which we denote as &lt;cmake_build_dir&gt;, where you want to put<br>    the generated Makefiles, project files as well the object files and output binaries and enter<br>    there.</p>
+<pre><code>For example
+@code{.bash}
+cd ~/opencv
+mkdir build
+cd build
+@endcode
+</code></pre>
+<p>-#  Configuring. Run cmake [&lt;some optional parameters&gt;] &lt;path to the OpenCV source directory&gt;</p>
+<pre><code>For example
+@code{.bash}
+cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..
+@endcode
+or cmake-gui
+
+-   set full path to OpenCV source code, e.g. /home/user/opencv
+-   set full path to \&lt;cmake_build_dir\&gt;, e.g. /home/user/opencv/build
+-   set optional parameters
+-   run: “Configure”
+-   run: “Generate”
+
+@note
+Use `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..` , without spaces after -D if the above example doesn&#39;t work.
+</code></pre>
+<p>-#  Description of some parameters<br>    -   build type: <code>CMAKE_BUILD_TYPE=Release\Debug</code><br>    -   to build with modules from opencv_contrib set OPENCV_EXTRA_MODULES_PATH to &lt;path to<br>        opencv_contrib&#x2F;modules&#x2F;&gt;<br>    -   set BUILD_DOCS for building documents<br>    -   set BUILD_EXAMPLES to build all examples</p>
+<p>-#  [optional] Building python. Set the following python parameters:<br>    -   PYTHON2(3)_EXECUTABLE &#x3D; &lt;path to python&gt;<br>    -   PYTHON_INCLUDE_DIR &#x3D; &#x2F;usr&#x2F;include&#x2F;python&lt;version&gt;<br>    -   PYTHON_INCLUDE_DIR2 &#x3D; &#x2F;usr&#x2F;include&#x2F;x86_64-linux-gnu&#x2F;python&lt;version&gt;<br>    -   PYTHON_LIBRARY &#x3D; &#x2F;usr&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;libpython&lt;version&gt;.so<br>    -   PYTHON2(3)_NUMPY_INCLUDE_DIRS &#x3D;<br>        &#x2F;usr&#x2F;lib&#x2F;python&lt;version&gt;&#x2F;dist-packages&#x2F;numpy&#x2F;core&#x2F;include&#x2F;</p>
+<p>-#  [optional] Building java.<br>    -   Unset parameter: BUILD_SHARED_LIBS<br>    -   It is useful also to unset BUILD_EXAMPLES, BUILD_TESTS, BUILD_PERF_TESTS - as they all<br>        will be statically linked with OpenCV and can take a lot of memory.</p>
+<p>-#  Build. From build directory execute <em>make</em>, it is recommended to do this in several threads</p>
+<pre><code>For example
+@code{.bash}
+make -j7 # runs 7 jobs in parallel
+@endcode
+</code></pre>
+<p>-#  [optional] Building documents. Enter &lt;cmake_build_dir&#x2F;doc&#x2F;&gt; and run make with target<br>    “doxygen”</p>
+<pre><code>For example
+@code{.bash}
+cd ~/opencv/build/doc/
+make -j7 doxygen
+@endcode
+</code></pre>
+<p>-#  To install libraries, execute the following command from build directory<br>    @code{.bash}<br>    sudo make install<br>    @endcode<br>-#  [optional] Running tests</p>
+<pre><code>-   Get the required test data from [OpenCV extra
+    repository](https://github.com/opencv/opencv_extra).
+
+For example
+@code{.bash}
+git clone https://github.com/opencv/opencv_extra.git
+@endcode
+-   set OPENCV_TEST_DATA_PATH environment variable to \&lt;path to opencv_extra/testdata\&gt;.
+-   execute tests from build directory.
+
+For example
+@code{.bash}
+&lt;cmake_build_dir&gt;/bin/opencv_test_core
+@endcode
+</code></pre>
+<p>@note<br>   If the size of the created library is a critical issue (like in case of an Android build) you<br>    can use the install&#x2F;strip command to get the smallest size possible. The <em>stripped</em> version<br>    appears to be twice as small. However, we do not recommend using this unless those extra<br>    megabytes do really matter.</p>

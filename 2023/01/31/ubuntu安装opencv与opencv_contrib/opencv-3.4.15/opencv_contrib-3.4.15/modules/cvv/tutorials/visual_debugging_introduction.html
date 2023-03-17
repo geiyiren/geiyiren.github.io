@@ -1,0 +1,118 @@
+<h1 id="Interactive-Visual-Debugging-of-Computer-Vision-applications-tutorial-cvv-introduction"><a href="#Interactive-Visual-Debugging-of-Computer-Vision-applications-tutorial-cvv-introduction" class="headerlink" title="Interactive Visual Debugging of Computer Vision applications {#tutorial_cvv_introduction}"></a>Interactive Visual Debugging of Computer Vision applications {#tutorial_cvv_introduction}</h1><p>What is the most common way to debug computer vision applications? Usually the answer is temporary,<br>hacked together, custom code that must be removed from the code for release compilation.</p>
+<p>In this tutorial we will show how to use the visual debugging features of the <strong>cvv</strong> module<br>(<em>opencv2&#x2F;cvv.hpp</em>) instead.</p>
+<h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Add cvv debug calls to your application</li>
+<li>Use the visual debug GUI</li>
+<li>Enable and disable the visual debug features during compilation (with zero runtime overhead when<br>disabled)</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>The example code</p>
+<ul>
+<li>captures images (<em>videoio</em>), e.g. from a webcam,</li>
+<li>applies some filters to each image (<em>imgproc</em>),</li>
+<li>detects image features and matches them to the previous image (<em>features2d</em>).</li>
+</ul>
+<p>If the program is compiled without visual debugging (see CMakeLists.txt below) the only result is<br>some information printed to the command line. We want to demonstrate how much debugging or<br>development functionality is added by just a few lines of <em>cvv</em> commands.</p>
+<p>@includelineno cvv&#x2F;samples&#x2F;cvv_demo.cpp</p>
+<p>@code{.cmake}<br>cmake_minimum_required(VERSION 2.8)</p>
+<p>project(cvvisual_test)</p>
+<p>SET(CMAKE_PREFIX_PATH ~&#x2F;software&#x2F;opencv&#x2F;install)</p>
+<p>SET(CMAKE_CXX_COMPILER “g++-4.8”)<br>SET(CMAKE_CXX_FLAGS “-std&#x3D;c++11 -O2 -pthread -Wall -Werror”)</p>
+<h1 id="un-set-cmake-DCVV-DEBUG-MODE-x3D-OFF"><a href="#un-set-cmake-DCVV-DEBUG-MODE-x3D-OFF" class="headerlink" title="(un)set: cmake -DCVV_DEBUG_MODE&#x3D;OFF .."></a>(un)set: cmake -DCVV_DEBUG_MODE&#x3D;OFF ..</h1><p>OPTION(CVV_DEBUG_MODE “cvvisual-debug-mode” ON)<br>if(CVV_DEBUG_MODE MATCHES ON)<br>  set(CMAKE_CXX_FLAGS “${CMAKE_CXX_FLAGS} -DCVVISUAL_DEBUGMODE”)<br>endif()</p>
+<p>FIND_PACKAGE(OpenCV REQUIRED)<br>include_directories(${OpenCV_INCLUDE_DIRS})</p>
+<p>add_executable(cvvt main.cpp)<br>target_link_libraries(cvvt<br>  opencv_core opencv_videoio opencv_imgproc opencv_features2d<br>  opencv_cvv<br>)<br>@endcode</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>-#  We compile the program either using the above CmakeLists.txt with Option <em>CVV_DEBUG_MODE&#x3D;ON</em><br>    (<em>cmake -DCVV_DEBUG_MODE&#x3D;ON</em>) or by adding the corresponding define <em>CVVISUAL_DEBUGMODE</em> to<br>    our compiler (e.g. <em>g++ -DCVVISUAL_DEBUGMODE</em>).<br>-#  The first cvv call simply shows the image (similar to <em>imshow</em>) with the imgIdString as comment.<br>    @code{.cpp}<br>    cvv::showImage(imgRead, CVVISUAL_LOCATION, imgIdString.c_str());<br>    @endcode<br>    The image is added to the overview tab in the visual debug GUI and the cvv call blocks.</p>
+<pre><code>![image](images/01_overview_single.jpg)
+
+The image can then be selected and viewed
+
+![image](images/02_single_image_view.jpg)
+
+Whenever you want to continue in the code, i.e. unblock the cvv call, you can either continue
+until the next cvv call (*Step*), continue until the last cvv call (*\&gt;\&gt;*) or run the
+application until it exists (*Close*).
+
+We decide to press the green *Step* button.
+</code></pre>
+<p>-#  The next cvv calls are used to debug all kinds of filter operations, i.e. operations that take a<br>    picture as input and return a picture as output.<br>    @code{.cpp}<br>    cvv::debugFilter(imgRead, imgGray, CVVISUAL_LOCATION, “to gray”);<br>    @endcode<br>    As with every cvv call, you first end up in the overview.</p>
+<pre><code>![image](images/03_overview_two.jpg)
+
+We decide not to care about the conversion to gray scale and press *Step*.
+@code{.cpp}
+cvv::debugFilter(imgGray, imgGraySmooth, CVVISUAL_LOCATION, &quot;smoothed&quot;);
+@endcode
+If you open the filter call, you will end up in the so called &quot;DefaultFilterView&quot;. Both images
+are shown next to each other and you can (synchronized) zoom into them.
+
+![image](images/04_default_filter_view.jpg)
+
+When you go to very high zoom levels, each pixel is annotated with its numeric values.
+
+![image](images/05_default_filter_view_high_zoom.jpg)
+
+We press *Step* twice and have a look at the dilated image.
+@code{.cpp}
+cvv::debugFilter(imgEdges, imgEdgesDilated, CVVISUAL_LOCATION, &quot;dilated edges&quot;);
+@endcode
+The DefaultFilterView showing both images
+
+![image](images/06_default_filter_view_edges.jpg)
+
+Now we use the *View* selector in the top right and select the &quot;DualFilterView&quot;. We select
+&quot;Changed Pixels&quot; as filter and apply it (middle image).
+
+![image](images/07_dual_filter_view_edges.jpg)
+
+After we had a close look at these images, perhaps using different views, filters or other GUI
+features, we decide to let the program run through. Therefore we press the yellow *\&gt;\&gt;* button.
+
+The program will block at
+@code{.cpp}
+cvv::finalShow();
+@endcode
+and display the overview with everything that was passed to cvv in the meantime.
+
+![image](images/08_overview_all.jpg)
+</code></pre>
+<p>-#  The cvv debugDMatch call is used in a situation where there are two images each with a set of<br>    descriptors that are matched to each other.</p>
+<pre><code>We pass both images, both sets of keypoints and their matching to the visual debug module.
+@code{.cpp}
+cvv::debugDMatch(prevImgGray, prevKeypoints, imgGray, keypoints, matches, CVVISUAL_LOCATION, allMatchIdString.c_str());
+@endcode
+Since we want to have a look at matches, we use the filter capabilities (*\#type match*) in the
+overview to only show match calls.
+
+![image](images/09_overview_filtered_type_match.jpg)
+
+We want to have a closer look at one of them, e.g. to tune our parameters that use the matching.
+The view has various settings how to display keypoints and matches. Furthermore, there is a
+mouseover tooltip.
+
+![image](images/10_line_match_view.jpg)
+
+We see (visual debugging!) that there are many bad matches. We decide that only 70% of the
+matches should be shown - those 70% with the lowest match distance.
+
+![image](images/11_line_match_view_portion_selector.jpg)
+
+Having successfully reduced the visual distraction, we want to see more clearly what changed
+between the two images. We select the &quot;TranslationMatchView&quot; that shows to where the keypoint
+was matched in a different way.
+
+![image](images/12_translation_match_view_portion_selector.jpg)
+
+It is easy to see that the cup was moved to the left during the two images.
+
+Although, cvv is all about interactively *seeing* the computer vision bugs, this is complemented
+by a &quot;RawView&quot; that allows to have a look at the underlying numeric data.
+
+![image](images/13_raw_view.jpg)
+</code></pre>
+<p>-#  There are many more useful features contained in the cvv GUI. For instance, one can group the<br>    overview tab.</p>
+<pre><code>![image](images/14_overview_group_by_line.jpg)
+</code></pre>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><ul>
+<li>By adding a view expressive lines to our computer vision program we can interactively debug it<br>through different visualizations.</li>
+<li>Once we are done developing&#x2F;debugging we do not have to remove those lines. We simply disable<br>cvv debugging (<em>cmake -DCVV_DEBUG_MODE&#x3D;OFF</em> or g++ without <em>-DCVVISUAL_DEBUGMODE</em>) and our<br>programs runs without any debug overhead.</li>
+</ul>
+<p>Enjoy computer vision!</p>

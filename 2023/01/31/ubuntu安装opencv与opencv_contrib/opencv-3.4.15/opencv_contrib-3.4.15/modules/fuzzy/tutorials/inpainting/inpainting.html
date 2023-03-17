@@ -1,0 +1,49 @@
+<h1 id="Inpainting-using-F-transform-tutorial-fuzzy-inpainting"><a href="#Inpainting-using-F-transform-tutorial-fuzzy-inpainting" class="headerlink" title="Inpainting using F-transform {#tutorial_fuzzy_inpainting}"></a>Inpainting using F-transform {#tutorial_fuzzy_inpainting}</h1><h1 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h1><p>In this tutorial, you will learn how image inpainting using F-transform works. It consists in:</p>
+<ul>
+<li>basic theory behind,</li>
+<li>three different algorithms.</li>
+</ul>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>The goal of this tutorial is to show that the inverse F-transform can be used for image reconstruction. By the image reconstruction, we mean a reconstruction of a corrupted image where corruption is everything that the original image does not include. It can be noise, text, scratch, etc. Proposal is to solve the problem of reconstruction with the help of an approximation technique. This means that we will be looking for an approximating image which is close to the given one and at the same time, does not contain what we recognize as the corruption. This task is called <em>image inpainting</em>.</p>
+<h1 id="Fuzzy-transform-application"><a href="#Fuzzy-transform-application" class="headerlink" title="Fuzzy transform application"></a>Fuzzy transform application</h1><p>As I shown in previous tutorial, F-transform is a tool of fuzzy mathematics highly usable in image processing. Let me rewrite the formula using kernel \f$g\f$ introduced before as well:</p>
+<p>\f[<br>    F^0_{kl}&#x3D;\frac{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} \iota_{kl}(x,y) g(x,y)}{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} g(x,y)},<br>\f]</p>
+<p>where \f$\iota_{kl} \subset I\f$ centered to pixel \f$(k \cdot h,l \cdot h)\f$ and \f$g\f$ is a kernel. For purpose of image processing, a binary mask \f$S\f$ is used such as</p>
+<p>\f[<br>    g^s_{kl} &#x3D; g \circ s_{kl}<br>\f]</p>
+<p>where \f$s_{k,l} \subset S\f$. Subarea \f$s\f$ of mask \f$S\f$ corresponds with subarea \f$\iota\f$ of image \f$I\f$. Operator \f$\circ\f$ is element-wise matrix multiplication (Hadamard product). Formula is updated to</p>
+<p>\f[<br>    F^0_{kl}&#x3D;\frac{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} \iota_{kl}(x,y) g^s(x,y)}{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} g^s(x,y)}.<br>\f]</p>
+<p>More details can be found in related papers.</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><p>@include fuzzy&#x2F;samples&#x2F;fuzzy_inpainting.cpp</p>
+<h1 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h1><p>The sample below demonstrates the usage of image inpainting. Three artificial images are created using the same input and three different type of corruption. In the real life usage, the input image will be already presented but here we created it by ourselves.</p>
+<p>First of all, we must load our image and three masks used for artificial damage creation.</p>
+<p>@code{.cpp}<br>    &#x2F;&#x2F; Input image<br>    Mat I &#x3D; imread(“input.png”);</p>
+<pre><code>// Various masks
+Mat mask1 = imread(&quot;mask1.png&quot;, IMREAD_GRAYSCALE);
+Mat mask2 = imread(&quot;mask2.png&quot;, IMREAD_GRAYSCALE);
+Mat mask3 = imread(&quot;mask3.png&quot;, IMREAD_GRAYSCALE);
+</code></pre>
+<p>@endcode</p>
+<blockquote>
+<p>See that mask must be loaded as <code>IMREAD_GRAYSCALE</code>.</p>
+</blockquote>
+<p>In the next step, the masks are used for damaging our input image.</p>
+<p>@code{.cpp}<br>    &#x2F;&#x2F; Apply the damage<br>    Mat input1, input2, input3;</p>
+<pre><code>I.copyTo(input1, mask1);
+I.copyTo(input2, mask2);
+I.copyTo(input3, mask3);
+</code></pre>
+<p>@endcode</p>
+<p>Using the masks, we applied three different kind of corruption on the same input image. Here is the result.</p>
+<p><img src="/images/fuzzy_inp_input.jpg" alt="input1, input2 and input3"></p>
+<blockquote>
+<p>Do not forget that in real life usage, images <code>input1</code>, <code>input2</code> and <code>input3</code> are created naturally and used as the input directly.</p>
+</blockquote>
+<p>Declaration of output images follows. In the following lines, the method of inpainting is applied. Let me explain three different algorithms one by one.</p>
+<p>First of them is <code>ONE_STEP</code>.</p>
+<p>@code{.cpp}<br>    ft::inpaint(input1, mask1, output1, 2, ft::LINEAR, ft::ONE_STEP);<br>@endcode</p>
+<p>The <code>ONE_STEP</code> algorithm simply compute direct F-transform ignoring damaged parts using kernel with radius <code>2</code> (as specified in the method calling). Inverse F-transform fill up the missing area using values from the components nearby. It is up to you to choose radius which is big enough.</p>
+<p>Second is <code>MULTI_STEP</code>.</p>
+<p>@code{.cpp}<br>    ft::inpaint(input2, mask2, output2, 2, ft::LINEAR, ft::MULTI_STEP);<br>    ft::inpaint(input3, mask3, output3, 2, ft::LINEAR, ft::MULTI_STEP);<br>@endcode</p>
+<p><code>MULTI_STEP</code> algorithm works in the same way but defined radius (<code>2</code> in this case) is automatically increased if it is found insufficient. If you want to fill up the hole and you are not sure how big radius you need, you can choose <code>MULTI_STEP</code> and let the computer decide. The lowest possible will be found.</p>
+<p>Last one is <code>ITERATIVE</code>.</p>
+<p>@code{.cpp}<br>    ft::inpaint(input3, mask3, output4, 2, ft::LINEAR, ft::ITERATIVE);<br>@endcode</p>
+<p>Best choice in majority of cases is <code>ITERATIVE</code>. This way of processing use small radius of basic functions for small kind of damage and higher ones for bigger holes.</p>
+<p><img src="/images/fuzzy_inp_output.jpg" alt="output1 (ONE_STEP), output2 (MULTI_STEP), output3 (MULTI_STEP), output4 (ITERATIVE)"></p>

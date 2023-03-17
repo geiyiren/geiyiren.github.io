@@ -1,0 +1,134 @@
+<h1 id="Basic-Drawing-tutorial-basic-geometric-drawing"><a href="#Basic-Drawing-tutorial-basic-geometric-drawing" class="headerlink" title="Basic Drawing {#tutorial_basic_geometric_drawing}"></a>Basic Drawing {#tutorial_basic_geometric_drawing}</h1><p>@next_tutorial{tutorial_random_generator_and_text}</p>
+<h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Draw a <strong>line</strong> by using the OpenCV function <strong>line()</strong></li>
+<li>Draw an <strong>ellipse</strong> by using the OpenCV function <strong>ellipse()</strong></li>
+<li>Draw a <strong>rectangle</strong> by using the OpenCV function <strong>rectangle()</strong></li>
+<li>Draw a <strong>circle</strong> by using the OpenCV function <strong>circle()</strong></li>
+<li>Draw a <strong>filled polygon</strong> by using the OpenCV function <strong>fillPoly()</strong></li>
+</ul>
+<h2 id="add-toggle-cppOpenCV-Theory"><a href="#add-toggle-cppOpenCV-Theory" class="headerlink" title="@add_toggle_cppOpenCV Theory"></a>@add_toggle_cpp<br>OpenCV Theory</h2><p>For this tutorial, we will heavily use two structures: @ref cv::Point and @ref cv::Scalar :</p>
+<h3 id="Point"><a href="#Point" class="headerlink" title="Point"></a>Point</h3><p>It represents a 2D point, specified by its image coordinates \f$x\f$ and \f$y\f$. We can define it as:<br>@code{.cpp}<br>Point pt;<br>pt.x &#x3D; 10;<br>pt.y &#x3D; 8;<br>@endcode<br>or<br>@code{.cpp}<br>Point pt &#x3D;  Point(10, 8);<br>@endcode</p>
+<h3 id="Scalar"><a href="#Scalar" class="headerlink" title="Scalar"></a>Scalar</h3><ul>
+<li>Represents a 4-element vector. The type Scalar is widely used in OpenCV for passing pixel<br>values.</li>
+<li>In this tutorial, we will use it extensively to represent BGR color values (3 parameters). It is<br>not necessary to define the last argument if it is not going to be used.</li>
+<li>Let’s see an example, if we are asked for a color argument and we give:<br>@code{.cpp}<br>Scalar( a, b, c )<br>@endcode<br>We would be defining a BGR color such as: <em>Blue &#x3D; a</em>, <em>Green &#x3D; b</em> and <em>Red &#x3D; c</em><br>@end_toggle</li>
+</ul>
+<h2 id="add-toggle-javaOpenCV-Theory"><a href="#add-toggle-javaOpenCV-Theory" class="headerlink" title="@add_toggle_javaOpenCV Theory"></a>@add_toggle_java<br>OpenCV Theory</h2><p>For this tutorial, we will heavily use two structures: @ref cv::Point and @ref cv::Scalar :</p>
+<h3 id="Point-1"><a href="#Point-1" class="headerlink" title="Point"></a>Point</h3><p>It represents a 2D point, specified by its image coordinates \f$x\f$ and \f$y\f$. We can define it as:<br>@code{.java}<br>Point pt &#x3D; new Point();<br>pt.x &#x3D; 10;<br>pt.y &#x3D; 8;<br>@endcode<br>or<br>@code{.java}<br>Point pt &#x3D; new Point(10, 8);<br>@endcode</p>
+<h3 id="Scalar-1"><a href="#Scalar-1" class="headerlink" title="Scalar"></a>Scalar</h3><ul>
+<li>Represents a 4-element vector. The type Scalar is widely used in OpenCV for passing pixel<br>values.</li>
+<li>In this tutorial, we will use it extensively to represent BGR color values (3 parameters). It is<br>not necessary to define the last argument if it is not going to be used.</li>
+<li>Let’s see an example, if we are asked for a color argument and we give:<br>@code{.java}<br>Scalar( a, b, c )<br>@endcode<br>We would be defining a BGR color such as: <em>Blue &#x3D; a</em>, <em>Green &#x3D; b</em> and <em>Red &#x3D; c</em><br>@end_toggle</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp</p>
+<ul>
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;basic_drawing&#x2F;Drawing_1.cpp<br>@end_toggle</li>
+</ul>
+<p>@add_toggle_java</p>
+<ul>
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/java/tutorial_code/ImgProc/BasicGeometricDrawing/BasicGeometricDrawing.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java<br>@end_toggle</li>
+</ul>
+<p>@add_toggle_python</p>
+<ul>
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/python/tutorial_code/imgProc/BasicGeometricDrawing/basic_geometric_drawing.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py<br>@end_toggle</li>
+</ul>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>Since we plan to draw two examples (an atom and a rook), we have to create two images and two<br>windows to display them.<br>@add_toggle_cpp<br>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;basic_drawing&#x2F;Drawing_1.cpp create_images<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java create_images<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py create_images<br>@end_toggle</p>
+<p>We created functions to draw different geometric shapes. For instance, to draw the atom we used<br><strong>MyEllipse</strong> and <strong>MyFilledCircle</strong>:<br>@add_toggle_cpp<br>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;basic_drawing&#x2F;Drawing_1.cpp draw_atom<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java draw_atom<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py draw_atom<br>@end_toggle</p>
+<p>And to draw the rook we employed <strong>MyLine</strong>, <strong>rectangle</strong> and a <strong>MyPolygon</strong>:<br>@add_toggle_cpp<br>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;basic_drawing&#x2F;Drawing_1.cpp draw_rook<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java draw_rook<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py draw_rook<br>@end_toggle</p>
+<p>Let’s check what is inside each of these functions:<br>@add_toggle_cpp<br>@end_toggle</p>
+<H4>MyLine</H4>
+@add_toggle_cpp
+@snippet cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp my_line
+@end_toggle
+
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java my_line<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py my_line<br>@end_toggle</p>
+<ul>
+<li>As we can see, <strong>MyLine</strong> just call the function <strong>line()</strong> , which does the following:<ul>
+<li>Draw a line from Point <strong>start</strong> to Point <strong>end</strong></li>
+<li>The line is displayed in the image <strong>img</strong></li>
+<li>The line color is defined by <B>( 0, 0, 0 )</B> which is the RGB value correspondent<br>to <strong>Black</strong></li>
+<li>The line thickness is set to <strong>thickness</strong> (in this case 2)</li>
+<li>The line is a 8-connected one (<strong>lineType</strong> &#x3D; 8)</li>
+</ul>
+</li>
+</ul>
+<H4>MyEllipse</H4>
+@add_toggle_cpp
+@snippet cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp my_ellipse
+@end_toggle
+
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java my_ellipse<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py my_ellipse<br>@end_toggle</p>
+<ul>
+<li><p>From the code above, we can observe that the function <strong>ellipse()</strong> draws an ellipse such<br>that:</p>
+<ul>
+<li>The ellipse is displayed in the image <strong>img</strong></li>
+<li>The ellipse center is located in the point <B>(w&#x2F;2, w&#x2F;2)</B> and is enclosed in a box<br>of size <B>(w&#x2F;4, w&#x2F;16)</B></li>
+<li>The ellipse is rotated <strong>angle</strong> degrees</li>
+<li>The ellipse extends an arc between <strong>0</strong> and <strong>360</strong> degrees</li>
+<li>The color of the figure will be <B>( 255, 0, 0 )</B> which means blue in BGR value.</li>
+<li>The ellipse’s <strong>thickness</strong> is 2.</li>
+</ul>
+</li>
+</ul>
+<H4>MyFilledCircle</H4>
+@add_toggle_cpp
+@snippet cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp my_filled_circle
+@end_toggle
+
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java my_filled_circle<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py my_filled_circle<br>@end_toggle</p>
+<ul>
+<li><p>Similar to the ellipse function, we can observe that <em>circle</em> receives as arguments:</p>
+<ul>
+<li>The image where the circle will be displayed (<strong>img</strong>)</li>
+<li>The center of the circle denoted as the point <strong>center</strong></li>
+<li>The radius of the circle: <strong>w&#x2F;32</strong></li>
+<li>The color of the circle: <B>( 0, 0, 255 )</B> which means <em>Red</em> in BGR</li>
+<li>Since <strong>thickness</strong> &#x3D; -1, the circle will be drawn filled.</li>
+</ul>
+</li>
+</ul>
+<H4>MyPolygon</H4>
+@add_toggle_cpp
+@snippet cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp my_polygon
+@end_toggle
+
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java my_polygon<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py my_polygon<br>@end_toggle</p>
+<ul>
+<li><p>To draw a filled polygon we use the function <strong>fillPoly()</strong> . We note that:</p>
+<ul>
+<li>The polygon will be drawn on <strong>img</strong></li>
+<li>The vertices of the polygon are the set of points in <strong>ppt</strong></li>
+<li>The color of the polygon is defined by <B>( 255, 255, 255 )</B>, which is the BGR<br>value for <em>white</em></li>
+</ul>
+</li>
+</ul>
+<H4>rectangle</H4>
+@add_toggle_cpp
+@snippet cpp/tutorial_code/ImgProc/basic_drawing/Drawing_1.cpp rectangle
+@end_toggle
+
+<p>@add_toggle_java<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;BasicGeometricDrawing&#x2F;BasicGeometricDrawing.java rectangle<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;BasicGeometricDrawing&#x2F;basic_geometric_drawing.py rectangle<br>@end_toggle</p>
+<ul>
+<li><p>Finally we have the @ref cv::rectangle function (we did not create a special function for<br>this guy). We note that:</p>
+<ul>
+<li>The rectangle will be drawn on <strong>rook_image</strong></li>
+<li>Two opposite vertices of the rectangle are defined by <B>( 0, 7*w&#x2F;8 )</B><br>and <B>( w, w )</B></li>
+<li>The color of the rectangle is given by <B>( 0, 255, 255 )</B> which is the BGR value<br>for <em>yellow</em></li>
+<li>Since the thickness value is given by <strong>FILLED (-1)</strong>, the rectangle will be filled.</li>
+</ul>
+</li>
+</ul>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>Compiling and running your program should give you a result like this:</p>
+<p><img src="/images/Drawing_1_Tutorial_Result_0.png"></p>

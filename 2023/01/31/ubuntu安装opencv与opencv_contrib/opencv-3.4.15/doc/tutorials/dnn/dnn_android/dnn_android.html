@@ -1,0 +1,65 @@
+<h1 id="How-to-run-deep-networks-on-Android-device-tutorial-dnn-android"><a href="#How-to-run-deep-networks-on-Android-device-tutorial-dnn-android" class="headerlink" title="How to run deep networks on Android device {#tutorial_dnn_android}"></a>How to run deep networks on Android device {#tutorial_dnn_android}</h1><p>@prev_tutorial{tutorial_dnn_halide_scheduling}<br>@next_tutorial{tutorial_dnn_yolo}</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In this tutorial you’ll know how to run deep learning networks on Android device<br>using OpenCV deep learning module.</p>
+<p>Tutorial was written for the following versions of corresponding software:</p>
+<ul>
+<li>Android Studio 2.3.3</li>
+<li>OpenCV 3.3.0+</li>
+</ul>
+<h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><ul>
+<li><p>Download and install Android Studio from <a href="https://developer.android.com/studio">https://developer.android.com/studio</a>.</p>
+</li>
+<li><p>Get the latest pre-built OpenCV for Android release from <a href="https://github.com/opencv/opencv/releases">https://github.com/opencv/opencv/releases</a> and unpack it (for example, <code>opencv-3.X.Y-android-sdk.zip</code>).</p>
+</li>
+<li><p>Download MobileNet object detection model from <a href="https://github.com/chuanqi305/MobileNet-SSD">https://github.com/chuanqi305/MobileNet-SSD</a>. We need a configuration file <code>MobileNetSSD_deploy.prototxt</code> and weights <code>MobileNetSSD_deploy.caffemodel</code>.</p>
+</li>
+</ul>
+<h2 id="Create-an-empty-Android-Studio-project"><a href="#Create-an-empty-Android-Studio-project" class="headerlink" title="Create an empty Android Studio project"></a>Create an empty Android Studio project</h2><ul>
+<li><p>Open Android Studio. Start a new project. Let’s call it <code>opencv_mobilenet</code>.<br><img src="/1_start_new_project.png"></p>
+</li>
+<li><p>Keep default target settings.<br><img src="/2_start_new_project.png"></p>
+</li>
+<li><p>Use “Empty Activity” template. Name activity as <code>MainActivity</code> with a<br>corresponding layout <code>activity_main</code>.<br><img src="/3_start_new_project.png"></p>
+<p><img src="/4_start_new_project.png"></p>
+</li>
+<li><p>Wait until a project was created. Go to <code>Run-&gt;Edit Configurations</code>.<br>Choose <code>USB Device</code> as target device for runs.<br><img src="/5_setup.png"><br>Plug in your device and run the project. It should be installed and launched<br>successfully before we’ll go next.<br>@note Read @ref tutorial_android_dev_intro in case of problems.</p>
+</li>
+</ul>
+<p><img src="/6_run_empty_project.png"></p>
+<h2 id="Add-OpenCV-dependency"><a href="#Add-OpenCV-dependency" class="headerlink" title="Add OpenCV dependency"></a>Add OpenCV dependency</h2><ul>
+<li><p>Go to <code>File-&gt;New-&gt;Import module</code> and provide a path to <code>unpacked_OpenCV_package/sdk/java</code>. The name of module detects automatically.<br>Disable all features that Android Studio will suggest you on the next window.<br><img src="/7_import_module.png"></p>
+<p><img src="/8_import_module.png"></p>
+</li>
+<li><p>Open two files:</p>
+<ol>
+<li><p><code>AndroidStudioProjects/opencv_mobilenet/app/build.gradle</code></p>
+</li>
+<li><p><code>AndroidStudioProjects/opencv_mobilenet/openCVLibrary330/build.gradle</code></p>
+</li>
+</ol>
+<p>Copy both <code>compileSdkVersion</code> and <code>buildToolsVersion</code> from the first file to<br>the second one.</p>
+<p><code>compileSdkVersion 14</code> -&gt; <code>compileSdkVersion 26</code></p>
+<p><code>buildToolsVersion &quot;25.0.0&quot;</code> -&gt; <code>buildToolsVersion &quot;26.0.1&quot;</code></p>
+</li>
+<li><p>Make the project. There is no errors should be at this point.</p>
+</li>
+<li><p>Go to <code>File-&gt;Project Structure</code>. Add OpenCV module dependency.<br><img src="/9_opencv_dependency.png"></p>
+<p><img src="/10_opencv_dependency.png"></p>
+</li>
+<li><p>Install once an appropriate OpenCV manager from <code>unpacked_OpenCV_package/apk</code><br>to target device.<br>@code<br>adb install OpenCV_3.3.0_Manager_3.30_armeabi-v7a.apk<br>@endcode</p>
+</li>
+<li><p>Congratulations! We’re ready now to make a sample using OpenCV.</p>
+</li>
+</ul>
+<h2 id="Make-a-sample"><a href="#Make-a-sample" class="headerlink" title="Make a sample"></a>Make a sample</h2><p>Our sample will takes pictures from a camera, forwards it into a deep network and<br>receives a set of rectangles, class identifiers and confidence values in <code>[0, 1]</code><br>range.</p>
+<ul>
+<li><p>First of all, we need to add a necessary widget which displays processed<br>frames. Modify <code>app/src/main/res/layout/activity_main.xml</code>:<br>@include android&#x2F;mobilenet-objdetect&#x2F;res&#x2F;layout&#x2F;activity_main.xml</p>
+</li>
+<li><p>Put downloaded <code>MobileNetSSD_deploy.prototxt</code> and <code>MobileNetSSD_deploy.caffemodel</code><br>into <code>app/build/intermediates/assets/debug</code> folder.</p>
+</li>
+<li><p>Modify <code>/app/src/main/AndroidManifest.xml</code> to enable full-screen mode, set up<br>a correct screen orientation and allow to use a camera.<br>@include android&#x2F;mobilenet-objdetect&#x2F;AndroidManifest.xml</p>
+</li>
+<li><p>Replace content of <code>app/src/main/java/org/opencv/samples/opencv_mobilenet/MainActivity.java</code>:<br>@include android&#x2F;mobilenet-objdetect&#x2F;src&#x2F;org&#x2F;opencv&#x2F;samples&#x2F;opencv_mobilenet&#x2F;MainActivity.java</p>
+</li>
+<li><p>Launch an application and make a fun!<br><img src="/11_demo.jpg"></p>
+</li>
+</ul>

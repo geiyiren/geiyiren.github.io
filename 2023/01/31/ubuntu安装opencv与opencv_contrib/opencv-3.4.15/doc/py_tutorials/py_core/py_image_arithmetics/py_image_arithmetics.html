@@ -1,0 +1,48 @@
+<h1 id="Arithmetic-Operations-on-Images-tutorial-py-image-arithmetics"><a href="#Arithmetic-Operations-on-Images-tutorial-py-image-arithmetics" class="headerlink" title="Arithmetic Operations on Images {#tutorial_py_image_arithmetics}"></a>Arithmetic Operations on Images {#tutorial_py_image_arithmetics}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Learn several arithmetic operations on images, like addition, subtraction, bitwise operations, and etc.</li>
+<li>Learn these functions: <strong>cv.add()</strong>, <strong>cv.addWeighted()</strong>, etc.</li>
+</ul>
+<h2 id="Image-Addition"><a href="#Image-Addition" class="headerlink" title="Image Addition"></a>Image Addition</h2><p>You can add two images with the OpenCV function, cv.add(), or simply by the numpy operation<br>res &#x3D; img1 + img2. Both images should be of same depth and type, or the second image can just be a<br>scalar value.</p>
+<p>@note There is a difference between OpenCV addition and Numpy addition. OpenCV addition is a<br>saturated operation while Numpy addition is a modulo operation.</p>
+<p>For example, consider the below sample:<br>@code{.py}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>x &#x3D; np.uint8([250])<br>y &#x3D; np.uint8([10])</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print( cv.add(x,y) ) # 250+10 &#x3D; 260 &#x3D;&gt; 255<br>[[255]]</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>print( x+y )          # 250+10 &#x3D; 260 % 256 &#x3D; 4<br>[4]<br>@endcode<br>This will be more visible when you add two images. Stick with OpenCV functions, because they will provide a better result.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="Image-Blending"><a href="#Image-Blending" class="headerlink" title="Image Blending"></a>Image Blending</h2><p>This is also image addition, but different weights are given to images in order to give a feeling of<br>blending or transparency. Images are added as per the equation below:</p>
+<p>\f[g(x) &#x3D; (1 - \alpha)f_{0}(x) + \alpha f_{1}(x)\f]</p>
+<p>By varying \f$\alpha\f$ from \f$0 \rightarrow 1\f$, you can perform a cool transition between one image to<br>another.</p>
+<p>Here I took two images to blend together. The first image is given a weight of 0.7 and the second image<br>is given 0.3. cv.addWeighted() applies the following equation to the image:</p>
+<p>\f[dst &#x3D; \alpha \cdot img1 + \beta \cdot img2 + \gamma\f]</p>
+<p>Here \f$\gamma\f$ is taken as zero.<br>@code{.py}<br>img1 &#x3D; cv.imread(‘ml.png’)<br>img2 &#x3D; cv.imread(‘opencv-logo.png’)</p>
+<p>dst &#x3D; cv.addWeighted(img1,0.7,img2,0.3,0)</p>
+<p>cv.imshow(‘dst’,dst)<br>cv.waitKey(0)<br>cv.destroyAllWindows()<br>@endcode<br>Check the result below:</p>
+<p><img src="/images/blending.jpg" alt="image"></p>
+<h2 id="Bitwise-Operations"><a href="#Bitwise-Operations" class="headerlink" title="Bitwise Operations"></a>Bitwise Operations</h2><p>This includes the bitwise AND, OR, NOT, and XOR operations. They will be highly useful while extracting<br>any part of the image (as we will see in coming chapters), defining and working with non-rectangular<br>ROI’s, and etc. Below we will see an example of how to change a particular region of an image.</p>
+<p>I want to put the OpenCV logo above an image. If I add two images, it will change the color. If I blend them,<br>I get a transparent effect. But I want it to be opaque. If it was a rectangular region, I could use<br>ROI as we did in the last chapter. But the OpenCV logo is a not a rectangular shape. So you can do it with<br>bitwise operations as shown below:<br>@code{.py}</p>
+<h1 id="Load-two-images"><a href="#Load-two-images" class="headerlink" title="Load two images"></a>Load two images</h1><p>img1 &#x3D; cv.imread(‘messi5.jpg’)<br>img2 &#x3D; cv.imread(‘opencv-logo-white.png’)</p>
+<h1 id="I-want-to-put-logo-on-top-left-corner-So-I-create-a-ROI"><a href="#I-want-to-put-logo-on-top-left-corner-So-I-create-a-ROI" class="headerlink" title="I want to put logo on top-left corner, So I create a ROI"></a>I want to put logo on top-left corner, So I create a ROI</h1><p>rows,cols,channels &#x3D; img2.shape<br>roi &#x3D; img1[0:rows, 0:cols]</p>
+<h1 id="Now-create-a-mask-of-logo-and-create-its-inverse-mask-also"><a href="#Now-create-a-mask-of-logo-and-create-its-inverse-mask-also" class="headerlink" title="Now create a mask of logo and create its inverse mask also"></a>Now create a mask of logo and create its inverse mask also</h1><p>img2gray &#x3D; cv.cvtColor(img2,cv.COLOR_BGR2GRAY)<br>ret, mask &#x3D; cv.threshold(img2gray, 10, 255, cv.THRESH_BINARY)<br>mask_inv &#x3D; cv.bitwise_not(mask)</p>
+<h1 id="Now-black-out-the-area-of-logo-in-ROI"><a href="#Now-black-out-the-area-of-logo-in-ROI" class="headerlink" title="Now black-out the area of logo in ROI"></a>Now black-out the area of logo in ROI</h1><p>img1_bg &#x3D; cv.bitwise_and(roi,roi,mask &#x3D; mask_inv)</p>
+<h1 id="Take-only-region-of-logo-from-logo-image"><a href="#Take-only-region-of-logo-from-logo-image" class="headerlink" title="Take only region of logo from logo image."></a>Take only region of logo from logo image.</h1><p>img2_fg &#x3D; cv.bitwise_and(img2,img2,mask &#x3D; mask)</p>
+<h1 id="Put-logo-in-ROI-and-modify-the-main-image"><a href="#Put-logo-in-ROI-and-modify-the-main-image" class="headerlink" title="Put logo in ROI and modify the main image"></a>Put logo in ROI and modify the main image</h1><p>dst &#x3D; cv.add(img1_bg,img2_fg)<br>img1[0:rows, 0:cols ] &#x3D; dst</p>
+<p>cv.imshow(‘res’,img1)<br>cv.waitKey(0)<br>cv.destroyAllWindows()<br>@endcode<br>See the result below. Left image shows the mask we created. Right image shows the final result. For<br>more understanding, display all the intermediate images in the above code, especially img1_bg and<br>img2_fg.</p>
+<p><img src="/images/overlay.jpg" alt="image"></p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2><p>-#  Create a slide show of images in a folder with smooth transition between images using<br>    cv.addWeighted function</p>

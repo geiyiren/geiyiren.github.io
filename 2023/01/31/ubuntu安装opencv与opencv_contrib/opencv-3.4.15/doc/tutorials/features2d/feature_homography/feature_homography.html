@@ -1,0 +1,15 @@
+<h1 id="Features2D-Homography-to-find-a-known-object-tutorial-feature-homography"><a href="#Features2D-Homography-to-find-a-known-object-tutorial-feature-homography" class="headerlink" title="Features2D + Homography to find a known object {#tutorial_feature_homography}"></a>Features2D + Homography to find a known object {#tutorial_feature_homography}</h1><p>@prev_tutorial{tutorial_feature_flann_matcher}<br>@next_tutorial{tutorial_detection_of_planar_objects}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the function @ref cv::findHomography to find the transform between matched keypoints.</li>
+<li>Use the function @ref cv::perspectiveTransform to map the points.</li>
+</ul>
+<p>\warning You need the <a href="https://github.com/opencv/opencv_contrib">OpenCV contrib modules</a> to be able to use the SURF features<br>(alternatives are ORB, KAZE, … features).</p>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/features2D/feature_homography/SURF_FLANN_matching_homography_Demo.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_homography&#x2F;SURF_FLANN_matching_homography_Demo.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/features2D/feature_homography/SURFFLANNMatchingHomographyDemo.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_homography&#x2F;SURFFLANNMatchingHomographyDemo.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/features2D/feature_homography/SURF_FLANN_matching_homography_Demo.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;features2D&#x2F;feature_homography&#x2F;SURF_FLANN_matching_homography_Demo.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><ul>
+<li><p>And here is the result for the detected object (highlighted in green). Note that since the homography is estimated with a RANSAC approach,<br>detected false matches will not impact the homography calculation.</p>
+<p><img src="/images/Feature_Homography_Result.jpg"></p>
+</li>
+</ul>

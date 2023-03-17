@@ -1,0 +1,77 @@
+<h1 id="Sobel-Derivatives-tutorial-sobel-derivatives"><a href="#Sobel-Derivatives-tutorial-sobel-derivatives" class="headerlink" title="Sobel Derivatives {#tutorial_sobel_derivatives}"></a>Sobel Derivatives {#tutorial_sobel_derivatives}</h1><p>@prev_tutorial{tutorial_copyMakeBorder}<br>@next_tutorial{tutorial_laplace_operator}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the OpenCV function <strong>Sobel()</strong> to calculate the derivatives from an image.</li>
+<li>Use the OpenCV function <strong>Scharr()</strong> to calculate a more accurate derivative for a kernel of<br>size \f$3 \cdot 3\f$</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>@note The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+<p>-#  In the last two tutorials we have seen applicative examples of convolutions. One of the most<br>    important convolutions is the computation of derivatives in an image (or an approximation to<br>    them).<br>-#  Why may be important the calculus of the derivatives in an image? Let’s imagine we want to<br>    detect the <em>edges</em> present in the image. For instance:</p>
+<pre><code>![](images/Sobel_Derivatives_Tutorial_Theory_0.jpg)
+
+You can easily notice that in an *edge*, the pixel intensity *changes* in a notorious way. A
+good way to express *changes* is by using *derivatives*. A high change in gradient indicates a
+major change in the image.
+</code></pre>
+<p>-#  To be more graphical, let’s assume we have a 1D-image. An edge is shown by the “jump” in<br>    intensity in the plot below:</p>
+<pre><code>![](images/Sobel_Derivatives_Tutorial_Theory_Intensity_Function.jpg)
+</code></pre>
+<p>-#  The edge “jump” can be seen more easily if we take the first derivative (actually, here appears<br>    as a maximum)</p>
+<pre><code>![](images/Sobel_Derivatives_Tutorial_Theory_dIntensity_Function.jpg)
+</code></pre>
+<p>-#  So, from the explanation above, we can deduce that a method to detect edges in an image can be<br>    performed by locating pixel locations where the gradient is higher than its neighbors (or to<br>    generalize, higher than a threshold).<br>-#  More detailed explanation, please refer to <strong>Learning OpenCV</strong> by Bradski and Kaehler</p>
+<h3 id="Sobel-Operator"><a href="#Sobel-Operator" class="headerlink" title="Sobel Operator"></a>Sobel Operator</h3><p>-#  The Sobel Operator is a discrete differentiation operator. It computes an approximation of the<br>    gradient of an image intensity function.<br>-#  The Sobel Operator combines Gaussian smoothing and differentiation.</p>
+<h4 id="Formulation"><a href="#Formulation" class="headerlink" title="Formulation"></a>Formulation</h4><p>Assuming that the image to be operated is \f$I\f$:</p>
+<p>-#  We calculate two derivatives:<br>    -#  <strong>Horizontal changes</strong>: This is computed by convolving \f$I\f$ with a kernel \f$G_{x}\f$ with odd<br>        size. For example for a kernel size of 3, \f$G_{x}\f$ would be computed as:</p>
+<pre><code>    \f[G_{x} = \begin{bmatrix}
+    -1 &amp; 0 &amp; +1  \\
+    -2 &amp; 0 &amp; +2  \\
+    -1 &amp; 0 &amp; +1
+    \end{bmatrix} * I\f]
+
+-#  **Vertical changes**: This is computed by convolving \f$I\f$ with a kernel \f$G_{y}\f$ with odd
+    size. For example for a kernel size of 3, \f$G_{y}\f$ would be computed as:
+
+    \f[G_{y} = \begin{bmatrix}
+    -1 &amp; -2 &amp; -1  \\
+    0 &amp; 0 &amp; 0  \\
+    +1 &amp; +2 &amp; +1
+    \end{bmatrix} * I\f]
+</code></pre>
+<p>-#  At each point of the image we calculate an approximation of the <em>gradient</em> in that point by<br>    combining both results above:</p>
+<pre><code>\f[G = \sqrt{ G_{x}^{2} + G_{y}^{2} }\f]
+
+Although sometimes the following simpler equation is used:
+
+\f[G = |G_{x}| + |G_{y}|\f]
+</code></pre>
+<p>@note<br>    When the size of the kernel is <code>3</code>, the Sobel kernel shown above may produce noticeable<br>    inaccuracies (after all, Sobel is only an approximation of the derivative). OpenCV addresses<br>    this inaccuracy for kernels of size 3 by using the <strong>Scharr()</strong> function. This is as fast<br>    but more accurate than the standard Sobel function. It implements the following kernels:<br>    \f[G_{x} &#x3D; \begin{bmatrix}<br>    -3 &amp; 0 &amp; +3  \<br>    -10 &amp; 0 &amp; +10  \<br>    -3 &amp; 0 &amp; +3<br>    \end{bmatrix}\f]\f[G_{y} &#x3D; \begin{bmatrix}<br>    -3 &amp; -10 &amp; -3  \<br>    0 &amp; 0 &amp; 0  \<br>    +3 &amp; +10 &amp; +3<br>    \end{bmatrix}\f]<br>@note<br>    You can check out more information of this function in the OpenCV reference - <strong>Scharr()</strong> .<br>    Also, in the sample code below, you will notice that above the code for <strong>Sobel()</strong> function<br>    there is also code for the <strong>Scharr()</strong> function commented. Uncommenting it (and obviously<br>    commenting the Sobel stuff) should give you an idea of how this function works.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>-#  <strong>What does this program do?</strong><br>    -   Applies the <em>Sobel Operator</em> and generates as output an image with the detected <em>edges</em><br>        bright on a darker background.</p>
+<p>-#  The tutorial code’s is shown lines below.</p>
+<p>@add_toggle_cpp<br>You can also download it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/cpp/tutorial_code/ImgTrans/Sobel_Demo.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>You can also download it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/java/tutorial_code/ImgTrans/SobelDemo/SobelDemo.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;SobelDemo&#x2F;SobelDemo.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>You can also download it from<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/python/tutorial_code/ImgTrans/SobelDemo/sobel_demo.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;SobelDemo&#x2F;sobel_demo.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><h4 id="Declare-variables"><a href="#Declare-variables" class="headerlink" title="Declare variables"></a>Declare variables</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp variables</p>
+<h4 id="Load-source-image"><a href="#Load-source-image" class="headerlink" title="Load source image"></a>Load source image</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp load</p>
+<h4 id="Reduce-noise"><a href="#Reduce-noise" class="headerlink" title="Reduce noise"></a>Reduce noise</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp reduce_noise</p>
+<h4 id="Grayscale"><a href="#Grayscale" class="headerlink" title="Grayscale"></a>Grayscale</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp convert_to_gray</p>
+<h4 id="Sobel-Operator-1"><a href="#Sobel-Operator-1" class="headerlink" title="Sobel Operator"></a>Sobel Operator</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp sobel</p>
+<ul>
+<li><p>We calculate the “derivatives” in <em>x</em> and <em>y</em> directions. For this, we use the<br>function <strong>Sobel()</strong> as shown below:<br>The function takes the following arguments:</p>
+<ul>
+<li><em>src_gray</em>: In our example, the input image. Here it is <em>CV_8U</em></li>
+<li><em>grad_x</em> &#x2F; <em>grad_y</em> : The output image.</li>
+<li><em>ddepth</em>: The depth of the output image. We set it to <em>CV_16S</em> to avoid overflow.</li>
+<li><em>x_order</em>: The order of the derivative in <strong>x</strong> direction.</li>
+<li><em>y_order</em>: The order of the derivative in <strong>y</strong> direction.</li>
+<li><em>scale</em>, <em>delta</em> and <em>BORDER_DEFAULT</em>: We use default values.</li>
+</ul>
+<p>Notice that to calculate the gradient in <em>x</em> direction we use: \f$x_{order}&#x3D; 1\f$ and<br>\f$y_{order} &#x3D; 0\f$. We do analogously for the <em>y</em> direction.</p>
+</li>
+</ul>
+<h4 id="Convert-output-to-a-CV-8U-image"><a href="#Convert-output-to-a-CV-8U-image" class="headerlink" title="Convert output to a CV_8U image"></a>Convert output to a CV_8U image</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp convert</p>
+<h4 id="Gradient"><a href="#Gradient" class="headerlink" title="Gradient"></a>Gradient</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp blend</p>
+<p>We try to approximate the <em>gradient</em> by adding both directional gradients (note that<br>this is not an exact calculation at all! but it is good for our purposes).</p>
+<h4 id="Show-results"><a href="#Show-results" class="headerlink" title="Show results"></a>Show results</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Sobel_Demo.cpp display</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>-#  Here is the output of applying our basic detector to <em>lena.jpg</em>:</p>
+<pre><code>![](images/Sobel_Derivatives_Tutorial_Result.jpg)
+</code></pre>

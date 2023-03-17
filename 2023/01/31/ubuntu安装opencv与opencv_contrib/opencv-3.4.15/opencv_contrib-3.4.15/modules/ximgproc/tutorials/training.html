@@ -1,0 +1,53 @@
+<h1 id="Structured-forest-training-tutorial-ximgproc-training"><a href="#Structured-forest-training-tutorial-ximgproc-training" class="headerlink" title="Structured forest training {#tutorial_ximgproc_training}"></a>Structured forest training {#tutorial_ximgproc_training}</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>In this tutorial we show how to train your own structured forest using author’s initial Matlab<br>implementation.</p>
+<h2 id="Training-pipeline"><a href="#Training-pipeline" class="headerlink" title="Training pipeline"></a>Training pipeline</h2><p>-#  Download “Piotr’s Toolbox” from <a href="http://vision.ucsd.edu/~pdollar/toolbox/doc/index.html">link</a><br>    and put it into separate directory, e.g. PToolbox</p>
+<p>-#  Download BSDS500 dataset from<br>    link &lt;<a href="http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/BSR//&gt;">http://www.eecs.berkeley.edu/Research/Projects/CS/vision/grouping/BSR/\&gt;</a> and put it into<br>    separate directory named exactly BSR<br>-#  Add both directory and their subdirectories to Matlab path.</p>
+<p>-#  Download detector code from<br>    link &lt;<a href="http://research.microsoft.com/en-us/downloads/389109f6-b4e8-404c-84bf-239f7cbf4e3d//&gt;">http://research.microsoft.com/en-us/downloads/389109f6-b4e8-404c-84bf-239f7cbf4e3d/\&gt;</a> and<br>    put it into root directory. Now you should have :<br>    @code<br>        .<br>            BSR<br>            PToolbox<br>            models<br>            private<br>            Contents.m<br>            edgesChns.m<br>            edgesDemo.m<br>            edgesDemoRgbd.m<br>            edgesDetect.m<br>            edgesEval.m<br>            edgesEvalDir.m<br>            edgesEvalImg.m<br>            edgesEvalPlot.m<br>            edgesSweeps.m<br>            edgesTrain.m<br>            license.txt<br>            readme.txt<br>    @endcode</p>
+<p>-#  Rename models&#x2F;forest&#x2F;modelFinal.mat to models&#x2F;forest&#x2F;modelFinal.mat.backup</p>
+<p>-#  Open edgesChns.m and comment lines 26–41. Add after commented lines the following:<br>    @code{.cpp}<br>            shrink&#x3D;opts.shrink;<br>            chns &#x3D; single(getFeatures( im2double(I) ));<br>    @endcode</p>
+<p>-#  Now it is time to compile promised getFeatures. I do with the following code:<br>    @code{.cpp}<br>    #include &lt;cv.h&gt;<br>    #include &lt;highgui.h&gt;</p>
+<pre><code>#include &lt;mat.h&gt;
+#include &lt;mex.h&gt;
+
+#include &quot;MxArray.hpp&quot; // https://github.com/kyamagu/mexopencv
+
+class NewRFFeatureGetter : public cv::RFFeatureGetter
+{
+public:
+    NewRFFeatureGetter() : name(&quot;NewRFFeatureGetter&quot;){}
+
+    virtual void getFeatures(const cv::Mat &amp;src, NChannelsMat &amp;features,
+                             const int gnrmRad, const int gsmthRad,
+                             const int shrink, const int outNum, const int gradNum) const
+    {
+        // here your feature extraction code, the default one is:
+        // resulting features Mat should be n-channels, floating point matrix
+    }
+
+protected:
+    cv::String name;
+};
+
+MEXFUNCTION_LINKAGE void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+{
+    if (nlhs != 1) mexErrMsgTxt(&quot;nlhs != 1&quot;);
+    if (nrhs != 1) mexErrMsgTxt(&quot;nrhs != 1&quot;);
+
+    cv::Mat src = MxArray(prhs[0]).toMat();
+    src.convertTo(src, cv::DataType&lt;float&gt;::type);
+
+    std::string modelFile = MxArray(prhs[1]).toString();
+    NewRFFeatureGetter *pDollar = createNewRFFeatureGetter();
+
+    cv::Mat edges;
+    pDollar-&gt;getFeatures(src, edges, 4, 0, 2, 13, 4);
+    // you can use other numbers here
+
+    edges.convertTo(edges, cv::DataType&lt;double&gt;::type);
+
+    plhs[0] = MxArray(edges);
+}
+@endcode
+</code></pre>
+<p>-#  Place compiled mex file into root dir and run edgesDemo. You will need to wait a couple of hours<br>    after that the new model will appear inside models&#x2F;forest&#x2F;.</p>
+<p>-#  The final step is converting trained model from Matlab binary format to YAML which you can use<br>    with our ocv::StructuredEdgeDetection. For this purpose run<br>    opencv_contrib&#x2F;ximgproc&#x2F;tutorials&#x2F;scripts&#x2F;modelConvert(model, “model.yml”)</p>
+<h2 id="How-to-use-your-model"><a href="#How-to-use-your-model" class="headerlink" title="How to use your model"></a>How to use your model</h2><p>Just use expanded constructor with above defined class NewRFFeatureGetter<br>@code{.cpp}<br>cv::StructuredEdgeDetection pDollar<br>    &#x3D; cv::createStructuredEdgeDetection( modelName, makePtr<NewRFFeatureGetter>() );<br>@endcode</p>

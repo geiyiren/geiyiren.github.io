@@ -1,0 +1,48 @@
+<h1 id="Harris-Corner-Detection-tutorial-py-features-harris"><a href="#Harris-Corner-Detection-tutorial-py-features-harris" class="headerlink" title="Harris Corner Detection {#tutorial_py_features_harris}"></a>Harris Corner Detection {#tutorial_py_features_harris}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this chapter,</p>
+<ul>
+<li>We will understand the concepts behind Harris Corner Detection.</li>
+<li>We will see the following functions: <strong>cv.cornerHarris()</strong>, <strong>cv.cornerSubPix()</strong></li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>In the last chapter, we saw that corners are regions in the image with large variation in intensity in<br>all the directions. One early attempt to find these corners was done by <strong>Chris Harris &amp; Mike<br>Stephens</strong> in their paper <strong>A Combined Corner and Edge Detector</strong> in 1988, so now it is called<br>the Harris Corner Detector. He took this simple idea to a mathematical form. It basically finds the<br>difference in intensity for a displacement of \f$(u,v)\f$ in all directions. This is expressed as below:</p>
+<p>\f[E(u,v) &#x3D; \sum_{x,y} \underbrace{w(x,y)}_\text{window function} , [\underbrace{I(x+u,y+v)}_\text{shifted intensity}-\underbrace{I(x,y)}_\text{intensity}]^2\f]</p>
+<p>The window function is either a rectangular window or a Gaussian window which gives weights to pixels<br>underneath.</p>
+<p>We have to maximize this function \f$E(u,v)\f$ for corner detection. That means we have to maximize the<br>second term. Applying Taylor Expansion to the above equation and using some mathematical steps (please<br>refer to any standard text books you like for full derivation), we get the final equation as:</p>
+<p>\f[E(u,v) \approx \begin{bmatrix} u &amp; v \end{bmatrix} M \begin{bmatrix} u \ v \end{bmatrix}\f]</p>
+<p>where</p>
+<p>\f[M &#x3D; \sum_{x,y} w(x,y) \begin{bmatrix}I_x I_x &amp; I_x I_y \<br>                                     I_x I_y &amp; I_y I_y \end{bmatrix}\f]</p>
+<p>Here, \f$I_x\f$ and \f$I_y\f$ are image derivatives in x and y directions respectively. (These can be easily found<br>using <strong>cv.Sobel()</strong>).</p>
+<p>Then comes the main part. After this, they created a score, basically an equation, which<br>determines if a window can contain a corner or not.</p>
+<p>\f[R &#x3D; \det(M) - k(\operatorname{trace}(M))^2\f]</p>
+<p>where<br>    -   \f$\det(M) &#x3D; \lambda_1 \lambda_2\f$<br>    -   \f$\operatorname{trace}(M) &#x3D; \lambda_1 + \lambda_2\f$<br>    -   \f$\lambda_1\f$ and \f$\lambda_2\f$ are the eigenvalues of \f$M\f$</p>
+<p>So the magnitudes of these eigenvalues decide whether a region is a corner, an edge, or flat.</p>
+<ul>
+<li>When \f$|R|\f$ is small, which happens when \f$\lambda_1\f$ and \f$\lambda_2\f$ are small, the region is<br>flat.</li>
+<li>When \f$R&lt;0\f$, which happens when \f$\lambda_1 &gt;&gt; \lambda_2\f$ or vice versa, the region is edge.</li>
+<li>When \f$R\f$ is large, which happens when \f$\lambda_1\f$ and \f$\lambda_2\f$ are large and<br>\f$\lambda_1 \sim \lambda_2\f$, the region is a corner.</li>
+</ul>
+<p>It can be represented in a nice picture as follows:</p>
+<p><img src="/images/harris_region.jpg" alt="image"></p>
+<p>So the result of Harris Corner Detection is a grayscale image with these scores. Thresholding for a<br>suitable score gives you the corners in the image. We will do it with a simple image.</p>
+<h2 id="Harris-Corner-Detector-in-OpenCV"><a href="#Harris-Corner-Detector-in-OpenCV" class="headerlink" title="Harris Corner Detector in OpenCV"></a>Harris Corner Detector in OpenCV</h2><p>OpenCV has the function <strong>cv.cornerHarris()</strong> for this purpose. Its arguments are:</p>
+<ul>
+<li><strong>img</strong> - Input image. It should be grayscale and float32 type.</li>
+<li><strong>blockSize</strong> - It is the size of neighbourhood considered for corner detection</li>
+<li><strong>ksize</strong> - Aperture parameter of the Sobel derivative used.</li>
+<li><strong>k</strong> - Harris detector free parameter in the equation.</li>
+</ul>
+<p>See the example below:<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>filename &#x3D; ‘chessboard.png’<br>img &#x3D; cv.imread(filename)<br>gray &#x3D; cv.cvtColor(img,cv.COLOR_BGR2GRAY)</p>
+<p>gray &#x3D; np.float32(gray)<br>dst &#x3D; cv.cornerHarris(gray,2,3,0.04)</p>
+<p>#result is dilated for marking the corners, not important<br>dst &#x3D; cv.dilate(dst,None)</p>
+<h1 id="Threshold-for-an-optimal-value-it-may-vary-depending-on-the-image"><a href="#Threshold-for-an-optimal-value-it-may-vary-depending-on-the-image" class="headerlink" title="Threshold for an optimal value, it may vary depending on the image."></a>Threshold for an optimal value, it may vary depending on the image.</h1><p>img[dst&gt;0.01*dst.max()]&#x3D;[0,0,255]</p>
+<p>cv.imshow(‘dst’,img)<br>if cv.waitKey(0) &amp; 0xff &#x3D;&#x3D; 27:<br>    cv.destroyAllWindows()<br>@endcode<br>Below are the three results:</p>
+<p><img src="/images/harris_result.jpg" alt="image"></p>
+<h2 id="Corner-with-SubPixel-Accuracy"><a href="#Corner-with-SubPixel-Accuracy" class="headerlink" title="Corner with SubPixel Accuracy"></a>Corner with SubPixel Accuracy</h2><p>Sometimes, you may need to find the corners with maximum accuracy. OpenCV comes with a function<br><strong>cv.cornerSubPix()</strong> which further refines the corners detected with sub-pixel accuracy. Below is<br>an example. As usual, we need to find the Harris corners first. Then we pass the centroids of these<br>corners (There may be a bunch of pixels at a corner, we take their centroid) to refine them. Harris<br>corners are marked in red pixels and refined corners are marked in green pixels. For this function,<br>we have to define the criteria when to stop the iteration. We stop it after a specified number of<br>iterations or a certain accuracy is achieved, whichever occurs first. We also need to define the size<br>of the neighbourhood it searches for corners.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>filename &#x3D; ‘chessboard2.jpg’<br>img &#x3D; cv.imread(filename)<br>gray &#x3D; cv.cvtColor(img,cv.COLOR_BGR2GRAY)</p>
+<h1 id="find-Harris-corners"><a href="#find-Harris-corners" class="headerlink" title="find Harris corners"></a>find Harris corners</h1><p>gray &#x3D; np.float32(gray)<br>dst &#x3D; cv.cornerHarris(gray,2,3,0.04)<br>dst &#x3D; cv.dilate(dst,None)<br>ret, dst &#x3D; cv.threshold(dst,0.01*dst.max(),255,0)<br>dst &#x3D; np.uint8(dst)</p>
+<h1 id="find-centroids"><a href="#find-centroids" class="headerlink" title="find centroids"></a>find centroids</h1><p>ret, labels, stats, centroids &#x3D; cv.connectedComponentsWithStats(dst)</p>
+<h1 id="define-the-criteria-to-stop-and-refine-the-corners"><a href="#define-the-criteria-to-stop-and-refine-the-corners" class="headerlink" title="define the criteria to stop and refine the corners"></a>define the criteria to stop and refine the corners</h1><p>criteria &#x3D; (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 100, 0.001)<br>corners &#x3D; cv.cornerSubPix(gray,np.float32(centroids),(5,5),(-1,-1),criteria)</p>
+<h1 id="Now-draw-them"><a href="#Now-draw-them" class="headerlink" title="Now draw them"></a>Now draw them</h1><p>res &#x3D; np.hstack((centroids,corners))<br>res &#x3D; np.int0(res)<br>img[res[:,1],res[:,0]]&#x3D;[0,0,255]<br>img[res[:,3],res[:,2]] &#x3D; [0,255,0]</p>
+<p>cv.imwrite(‘subpixel5.png’,img)<br>@endcode<br>Below is the result, where some important locations are shown in the zoomed window to visualize:</p>
+<p><img src="/images/subpixel3.png" alt="image"></p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2>

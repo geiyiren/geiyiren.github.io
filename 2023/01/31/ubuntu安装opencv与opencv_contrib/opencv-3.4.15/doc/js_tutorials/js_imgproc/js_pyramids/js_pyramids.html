@@ -1,0 +1,21 @@
+<h1 id="Image-Pyramids-tutorial-js-pyramids"><a href="#Image-Pyramids-tutorial-js-pyramids" class="headerlink" title="Image Pyramids {#tutorial_js_pyramids}"></a>Image Pyramids {#tutorial_js_pyramids}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>We will learn about Image Pyramids</li>
+<li>We will learn these functions: <strong>cv.pyrUp()</strong>, <strong>cv.pyrDown()</strong></li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>Normally, we used to work with an image of constant size. But on some occasions, we need to work<br>with (the same) images in different resolution. For example, while searching for something in<br>an image, like face, we are not sure at what size the object will be present in said image. In that<br>case, we will need to create a set of the same image with different resolutions and search for object<br>in all of them. These set of images with different resolutions are called <strong>Image Pyramids</strong> (because<br>when they are kept in a stack with the highest resolution image at the bottom and the lowest resolution<br>image at top, it looks like a pyramid).</p>
+<p>There are two kinds of Image Pyramids. 1) <strong>Gaussian Pyramid</strong> and 2) <strong>Laplacian Pyramids</strong></p>
+<p>Higher level (Low resolution) in a Gaussian Pyramid is formed by removing consecutive rows and<br>columns in Lower level (higher resolution) image. Then each pixel in higher level is formed by the<br>contribution from 5 pixels in underlying level with gaussian weights. By doing so, a \f$M \times N\f$<br>image becomes \f$M&#x2F;2 \times N&#x2F;2\f$ image. So area reduces to one-fourth of original area. It is called<br>an Octave. The same pattern continues as we go upper in pyramid (ie, resolution decreases).<br>Similarly while expanding, area becomes 4 times in each level. We can find Gaussian pyramids using<br><strong>cv.pyrDown()</strong> and <strong>cv.pyrUp()</strong> functions.</p>
+<p>Laplacian Pyramids are formed from the Gaussian Pyramids. There is no exclusive function for that.<br>Laplacian pyramid images are like edge images only. Most of its elements are zeros. They are used in<br>image compression. A level in Laplacian Pyramid is formed by the difference between that level in<br>Gaussian Pyramid and expanded version of its upper level in Gaussian Pyramid.</p>
+<h2 id="Downsample"><a href="#Downsample" class="headerlink" title="Downsample"></a>Downsample</h2><p>We use the function: <strong>cv.pyrDown (src, dst, dstsize &#x3D; new cv.Size(0, 0), borderType  &#x3D; cv.BORDER_DEFAULT)</strong><br>@param src         input image.<br>@param dst         output image; it has the specified size and the same type as src.<br>@param dstsize     size of the output image.<br>@param borderType  pixel extrapolation method(see cv.BorderTypes, cv.BORDER_CONSTANT isn’t supported).</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_pyramids_pyrDown.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<h2 id="Upsample"><a href="#Upsample" class="headerlink" title="Upsample"></a>Upsample</h2><p>We use the function: <strong>cv.pyrUp (src, dst, dstsize &#x3D; new cv.Size(0, 0), borderType  &#x3D; cv.BORDER_DEFAULT)</strong><br>@param src         input image.<br>@param dst         output image; it has the specified size and the same type as src.<br>@param dstsize     size of the output image.<br>@param borderType  pixel extrapolation method(see cv.BorderTypes, only cv.BORDER_DEFAULT is supported).</p>
+<h2 id="Try-it-1"><a href="#Try-it-1" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_pyramids_pyrUp.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

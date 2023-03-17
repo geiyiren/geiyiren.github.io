@@ -1,0 +1,33 @@
+<h1 id="Pose-of-a-widget-tutorial-widget-pose"><a href="#Pose-of-a-widget-tutorial-widget-pose" class="headerlink" title="Pose of a widget {#tutorial_widget_pose}"></a>Pose of a widget {#tutorial_widget_pose}</h1><p>@prev_tutorial{tutorial_launching_viz}<br>@next_tutorial{tutorial_transformations}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to</p>
+<ul>
+<li>Add widgets to the visualization window</li>
+<li>Use Affine3 to set pose of a widget</li>
+<li>Rotating and translating a widget along an axis</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>You can download the code from <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/viz/widget_pose.cpp">here </a>.<br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;viz&#x2F;widget_pose.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>Here is the general structure of the program:</p>
+<ul>
+<li><p>Create a visualization window.<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Create a window<br>viz::Viz3d myWindow(“Coordinate Frame”);<br>@endcode</p>
+</li>
+<li><p>Show coordinate axes in the window using CoordinateSystemWidget.<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Add coordinate axes<br>myWindow.showWidget(“Coordinate Widget”, viz::WCoordinateSystem());<br>@endcode</p>
+</li>
+<li><p>Display a line representing the axis (1,1,1).<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Add line to represent (1,1,1) axis<br>viz::WLine axis(Point3f(-1.0f,-1.0f,-1.0f), Point3f(1.0f,1.0f,1.0f));<br>axis.setRenderingProperty(viz::LINE_WIDTH, 4.0);<br>myWindow.showWidget(“Line Widget”, axis);<br>@endcode</p>
+</li>
+<li><p>Construct a cube.<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Construct a cube widget<br>viz::WCube cube_widget(Point3f(0.5,0.5,0.0), Point3f(0.0,0.0,-0.5), true, viz::Color::blue());<br>cube_widget.setRenderingProperty(viz::LINE_WIDTH, 4.0);<br>myWindow.showWidget(“Cube Widget”, cube_widget);<br>@endcode</p>
+</li>
+<li><p>Create rotation matrix from rodrigues vector<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Rotate around (1,1,1)<br>rot_vec.at<float>(0,0) +&#x3D; CV_PI * 0.01f;<br>rot_vec.at<float>(0,1) +&#x3D; CV_PI * 0.01f;<br>rot_vec.at<float>(0,2) +&#x3D; CV_PI * 0.01f;</p>
+<p>…</p>
+<p>Mat rot_mat;<br>Rodrigues(rot_vec, rot_mat);<br>@endcode</p>
+</li>
+<li><p>Use Affine3f to set pose of the cube.<br>@code{.cpp}<br>&#x2F;&#x2F;&#x2F; Construct pose<br>Affine3f pose(rot_mat, Vec3f(translation, translation, translation));<br>myWindow.setWidgetPose(“Cube Widget”, pose);<br>@endcode</p>
+</li>
+<li><p>Animate the rotation using wasStopped and spinOnce<br>@code{.cpp}<br>while(!myWindow.wasStopped())<br>{<br>…<br><br>myWindow.spinOnce(1, true);<br>}<br>@endcode</p>
+</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Here is the result of the program.</p>
+<p>\htmlonly</p>
+<div align="center">
+<iframe width="420" height="315" src="https://www.youtube.com/embed/22HKMN657U0" frameborder="0" allowfullscreen></iframe>
+</div>
+\endhtmlonly

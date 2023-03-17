@@ -1,0 +1,179 @@
+<h1 id="Random-generator-and-text-with-OpenCV-tutorial-random-generator-and-text"><a href="#Random-generator-and-text-with-OpenCV-tutorial-random-generator-and-text" class="headerlink" title="Random generator and text with OpenCV {#tutorial_random_generator_and_text}"></a>Random generator and text with OpenCV {#tutorial_random_generator_and_text}</h1><p>@prev_tutorial{tutorial_basic_geometric_drawing}<br>@next_tutorial{tutorial_gausian_median_blur_bilateral_filter}</p>
+<h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the <em>Random Number generator class</em> (@ref cv::RNG ) and how to get a random number from a<br>uniform distribution.</li>
+<li>Display text on an OpenCV window by using the function @ref cv::putText</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><ul>
+<li>In the previous tutorial (@ref tutorial_basic_geometric_drawing) we drew diverse geometric figures, giving as input<br>parameters such as coordinates (in the form of @ref cv::Point), color, thickness, etc. You<br>might have noticed that we gave specific values for these arguments.</li>
+<li>In this tutorial, we intend to use <em>random</em> values for the drawing parameters. Also, we intend<br>to populate our image with a big number of geometric figures. Since we will be initializing them<br>in a random fashion, this process will be automatic and made by using <em>loops</em> .</li>
+<li>This code is in your OpenCV sample folder. Otherwise you can grab it from<br><a href="http://code.opencv.org/projects/opencv/repository/revisions/master/raw/samples/cpp/tutorial_code/core/Matrix/Drawing_2.cpp">here</a></li>
+</ul>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>-#  Let’s start by checking out the <em>main</em> function. We observe that first thing we do is creating a<br>    <em>Random Number Generator</em> object (RNG):<br>    @code{.cpp}<br>    RNG rng( 0xFFFFFFFF );<br>    @endcode<br>    RNG implements a random number generator. In this example, <em>rng</em> is a RNG element initialized<br>    with the value <em>0xFFFFFFFF</em></p>
+<p>-#  Then we create a matrix initialized to <em>zeros</em> (which means that it will appear as black),<br>    specifying its height, width and its type:<br>    @code{.cpp}<br>    &#x2F;&#x2F;&#x2F; Initialize a matrix filled with zeros<br>    Mat image &#x3D; Mat::zeros( window_height, window_width, CV_8UC3 );</p>
+<pre><code>/// Show it in a window during DELAY ms
+imshow( window_name, image );
+@endcode
+</code></pre>
+<p>-#  Then we proceed to draw crazy stuff. After taking a look at the code, you can see that it is<br>    mainly divided in 8 sections, defined as functions:<br>    @code{.cpp}<br>    &#x2F;&#x2F;&#x2F; Now, let’s draw some lines<br>    c &#x3D; Drawing_Random_Lines(image, window_name, rng);<br>    if( c !&#x3D; 0 ) return 0;</p>
+<pre><code>/// Go on drawing, this time nice rectangles
+c = Drawing_Random_Rectangles(image, window_name, rng);
+if( c != 0 ) return 0;
+
+/// Draw some ellipses
+c = Drawing_Random_Ellipses( image, window_name, rng );
+if( c != 0 ) return 0;
+
+/// Now some polylines
+c = Drawing_Random_Polylines( image, window_name, rng );
+if( c != 0 ) return 0;
+
+/// Draw filled polygons
+c = Drawing_Random_Filled_Polygons( image, window_name, rng );
+if( c != 0 ) return 0;
+
+/// Draw circles
+c = Drawing_Random_Circles( image, window_name, rng );
+if( c != 0 ) return 0;
+
+/// Display text in random positions
+c = Displaying_Random_Text( image, window_name, rng );
+if( c != 0 ) return 0;
+
+/// Displaying the big end!
+c = Displaying_Big_End( image, window_name, rng );
+@endcode
+All of these functions follow the same pattern, so we will analyze only a couple of them, since
+the same explanation applies for all.
+</code></pre>
+<p>-#  Checking out the function <strong>Drawing_Random_Lines</strong>:<br>    @code{.cpp}<br>    int Drawing_Random_Lines( Mat image, char* window_name, RNG rng )<br>    {<br>      int lineType &#x3D; 8;<br>      Point pt1, pt2;</p>
+<pre><code>  for( int i = 0; i &lt; NUMBER; i++ )
+  {
+   pt1.x = rng.uniform( x_1, x_2 );
+   pt1.y = rng.uniform( y_1, y_2 );
+   pt2.x = rng.uniform( x_1, x_2 );
+   pt2.y = rng.uniform( y_1, y_2 );
+
+   line( image, pt1, pt2, randomColor(rng), rng.uniform(1, 10), 8 );
+   imshow( window_name, image );
+   if( waitKey( DELAY ) &gt;= 0 )
+   { return -1; }
+  }
+  return 0;
+}
+@endcode
+We can observe the following:
+
+-   The *for* loop will repeat **NUMBER** times. Since the function @ref cv::line is inside this
+    loop, that means that **NUMBER** lines will be generated.
+-   The line extremes are given by *pt1* and *pt2*. For *pt1* we can see that:
+    @code{.cpp}
+    pt1.x = rng.uniform( x_1, x_2 );
+    pt1.y = rng.uniform( y_1, y_2 );
+    @endcode
+    -   We know that **rng** is a *Random number generator* object. In the code above we are
+        calling **rng.uniform(a,b)**. This generates a randomly uniformed distribution between
+        the values **a** and **b** (inclusive in **a**, exclusive in **b**).
+    -   From the explanation above, we deduce that the extremes *pt1* and *pt2* will be random
+        values, so the lines positions will be quite impredictable, giving a nice visual effect
+        (check out the Result section below).
+    -   As another observation, we notice that in the @ref cv::line arguments, for the *color*
+        input we enter:
+        @code{.cpp}
+        randomColor(rng)
+        @endcode
+        Let&#39;s check the function implementation:
+        @code{.cpp}
+        static Scalar randomColor( RNG&amp; rng )
+          {
+          int icolor = (unsigned) rng;
+          return Scalar( icolor&amp;255, (icolor&gt;&gt;8)&amp;255, (icolor&gt;&gt;16)&amp;255 );
+          }
+        @endcode
+        As we can see, the return value is an *Scalar* with 3 randomly initialized values, which
+        are used as the *R*, *G* and *B* parameters for the line color. Hence, the color of the
+        lines will be random too!
+</code></pre>
+<p>-#  The explanation above applies for the other functions generating circles, ellipses, polygons,<br>    etc. The parameters such as <em>center</em> and <em>vertices</em> are also generated randomly.<br>-#  Before finishing, we also should take a look at the functions <em>Display_Random_Text</em> and<br>    <em>Displaying_Big_End</em>, since they both have a few interesting features:<br>-#  <strong>Display_Random_Text:</strong><br>    @code{.cpp}<br>    int Displaying_Random_Text( Mat image, char* window_name, RNG rng )<br>    {<br>      int lineType &#x3D; 8;</p>
+<pre><code>  for ( int i = 1; i &lt; NUMBER; i++ )
+  {
+    Point org;
+    org.x = rng.uniform(x_1, x_2);
+    org.y = rng.uniform(y_1, y_2);
+
+    putText( image, &quot;Testing text rendering&quot;, org, rng.uniform(0,8),
+             rng.uniform(0,100)*0.05+0.1, randomColor(rng), rng.uniform(1, 10), lineType);
+
+    imshow( window_name, image );
+    if( waitKey(DELAY) &gt;= 0 )
+      { return -1; }
+  }
+
+  return 0;
+}
+@endcode
+Everything looks familiar but the expression:
+@code{.cpp}
+putText( image, &quot;Testing text rendering&quot;, org, rng.uniform(0,8),
+         rng.uniform(0,100)*0.05+0.1, randomColor(rng), rng.uniform(1, 10), lineType);
+@endcode
+So, what does the function @ref cv::putText do? In our example:
+
+-   Draws the text **&quot;Testing text rendering&quot;** in **image**
+-   The bottom-left corner of the text will be located in the Point **org**
+-   The font type is a random integer value in the range: \f$[0, 8&gt;\f$.
+-   The scale of the font is denoted by the expression **rng.uniform(0, 100)x0.05 + 0.1**
+    (meaning its range is: \f$[0.1, 5.1&gt;\f$)
+-   The text color is random (denoted by **randomColor(rng)**)
+-   The text thickness ranges between 1 and 10, as specified by **rng.uniform(1,10)**
+
+As a result, we will get (analagously to the other drawing functions) **NUMBER** texts over our
+image, in random locations.
+</code></pre>
+<p>-#  <strong>Displaying_Big_End</strong><br>    @code{.cpp}<br>    int Displaying_Big_End( Mat image, char* window_name, RNG rng )<br>    {<br>      Size textsize &#x3D; getTextSize(“OpenCV forever!”, FONT_HERSHEY_COMPLEX, 3, 5, 0);<br>      Point org((window_width - textsize.width)&#x2F;2, (window_height - textsize.height)&#x2F;2);<br>      int lineType &#x3D; 8;</p>
+<pre><code>  Mat image2;
+
+  for( int i = 0; i &lt; 255; i += 2 )
+  {
+    image2 = image - Scalar::all(i);
+    putText( image2, &quot;OpenCV forever!&quot;, org, FONT_HERSHEY_COMPLEX, 3,
+           Scalar(i, i, 255), 5, lineType );
+
+    imshow( window_name, image2 );
+    if( waitKey(DELAY) &gt;= 0 )
+      { return -1; }
+  }
+
+  return 0;
+}
+@endcode
+Besides the function **getTextSize** (which gets the size of the argument text), the new
+operation we can observe is inside the *foor* loop:
+@code{.cpp}
+image2 = image - Scalar::all(i)
+@endcode
+So, **image2** is the subtraction of **image** and **Scalar::all(i)**. In fact, what happens
+here is that every pixel of **image2** will be the result of subtracting every pixel of
+**image** minus the value of **i** (remember that for each pixel we are considering three values
+such as R, G and B, so each of them will be affected)
+
+Also remember that the subtraction operation *always* performs internally a **saturate**
+operation, which means that the result obtained will always be inside the allowed range (no
+negative and between 0 and 255 for our example).
+</code></pre>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>As you just saw in the Code section, the program will sequentially execute diverse drawing<br>functions, which will produce:</p>
+<p>-#  First a random set of <em>NUMBER</em> lines will appear on screen such as it can be seen in this<br>    screenshot:</p>
+<pre><code>![](images/Drawing_2_Tutorial_Result_0.jpg)
+</code></pre>
+<p>-#  Then, a new set of figures, these time <em>rectangles</em> will follow.<br>-#  Now some ellipses will appear, each of them with random position, size, thickness and arc<br>    length:</p>
+<pre><code>![](images/Drawing_2_Tutorial_Result_2.jpg)
+</code></pre>
+<p>-#  Now, <em>polylines</em> with 03 segments will appear on screen, again in random configurations.</p>
+<pre><code>![](images/Drawing_2_Tutorial_Result_3.jpg)
+</code></pre>
+<p>-#  Filled polygons (in this example triangles) will follow.<br>-#  The last geometric figure to appear: circles!</p>
+<pre><code>![](images/Drawing_2_Tutorial_Result_5.jpg)
+</code></pre>
+<p>-#  Near the end, the text <em>“Testing Text Rendering”</em> will appear in a variety of fonts, sizes,<br>    colors and positions.<br>-#  And the big end (which by the way expresses a big truth too):</p>
+<pre><code>![](images/Drawing_2_Tutorial_Result_big.jpg)
+</code></pre>

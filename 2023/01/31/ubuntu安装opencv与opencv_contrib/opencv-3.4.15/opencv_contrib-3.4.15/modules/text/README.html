@@ -1,0 +1,29 @@
+<h1 id="Scene-Text-Detection-and-Recognition-in-Natural-Scene-Images"><a href="#Scene-Text-Detection-and-Recognition-in-Natural-Scene-Images" class="headerlink" title="Scene Text Detection and Recognition in Natural Scene Images"></a>Scene Text Detection and Recognition in Natural Scene Images</h1><p>The module contains algorithms to detect text, segment words and recognise the text.<br>It’s mainly intended for the “text in the wild”, i.e. short phrases and separate words that occur on navigation signs and such. It’s not an OCR tool for scanned documents, do not treat it as such.<br>The detection part can in theory handle different languages, but will likely fail on hieroglyphic texts.</p>
+<p>The recognition part currently uses open-source Tesseract OCR (<a href="https://code.google.com/p/tesseract-ocr/">https://code.google.com/p/tesseract-ocr/</a>). If Tesseract OCR is not installed on your system, the corresponding part of the functionality will be unavailable.</p>
+<p>Here are instructions on how to install Tesseract on your machine (Linux or Mac; Windows users should look for precompiled binaries or try to adopt the instructions below):</p>
+<h2 id="Tesseract-installation-instruction-Linux-Mac"><a href="#Tesseract-installation-instruction-Linux-Mac" class="headerlink" title="Tesseract installation instruction (Linux, Mac)"></a>Tesseract installation instruction (Linux, Mac)</h2><ol start="0">
+<li><p>Linux users may try to install tesseract-3.03-rc1 (or later) and leptonica-1.70 (or later) with the corresponding development packages using their package manager. Mac users may try brew. The instructions below are for those who wants to build tesseract from source.</p>
+</li>
+<li><p>download leptonica 1.70 tarball (helper image processing library, used by tesseract. Later versions might work too):<br><a href="http://www.leptonica.com/download.html">http://www.leptonica.com/download.html</a><br>unpack and build it:</p>
+</li>
+</ol>
+<p>cd leptonica-1.70<br>mkdir build &amp;&amp; cd build &amp;&amp; ..&#x2F;configure &amp;&amp; make &amp;&amp; sudo make install</p>
+<p>leptonica will be installed to &#x2F;usr&#x2F;local.</p>
+<ol start="2">
+<li>download tesseract-3.03-rc1 tarball from <a href="https://drive.google.com/folderview?id=0B7l10Bj_LprhQnpSRkpGMGV2eE0&amp;usp=sharing">https://drive.google.com/folderview?id=0B7l10Bj_LprhQnpSRkpGMGV2eE0&amp;usp=sharing</a><br>unpack and build it:</li>
+</ol>
+<h1 id="needed-only-to-build-tesseract"><a href="#needed-only-to-build-tesseract" class="headerlink" title="needed only to build tesseract"></a>needed only to build tesseract</h1><p>export LIBLEPT_HEADERSDIR&#x3D;&#x2F;usr&#x2F;local&#x2F;include&#x2F;<br>cd tesseract-3.03<br>mkdir build &amp;&amp; cd build<br>..&#x2F;configure –with-extra-includes&#x3D;&#x2F;usr&#x2F;local –with-extra-libraries&#x3D;&#x2F;usr&#x2F;local<br>make &amp;&amp; sudo make install</p>
+<p>Tesseract will be installed to &#x2F;usr&#x2F;local.</p>
+<ol start="3">
+<li>download the pre-trained classifier data for English language:<br><a href="https://code.google.com/p/tesseract-ocr/downloads/detail?name=eng.traineddata.gz">https://code.google.com/p/tesseract-ocr/downloads/detail?name=eng.traineddata.gz</a></li>
+</ol>
+<p>unzip it (gzip -d eng.traineddata.gz) and copy to &#x2F;usr&#x2F;local&#x2F;share&#x2F;tessdata.</p>
+<h2 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h2><ol>
+<li><p>Google announced that they close code.google.com, so at some moment in the future you may have to find Tesseract 3.03rc1 or later.</p>
+</li>
+<li><p>Tesseract configure script may fail to detect leptonica, so you may have to edit the configure script - comment off some if’s around this message and retain only “then” branch.</p>
+</li>
+<li><p>You are encouraged to search the Net for some better pre-trained classifiers, as well as classifiers for other languages.</p>
+</li>
+</ol>
+<h1 id="Text-Detection-CNN"><a href="#Text-Detection-CNN" class="headerlink" title="Text Detection CNN"></a>Text Detection CNN</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><p>The text module now have a text detection and recognition using deep CNN. The text detector deep CNN that takes an image which may contain multiple words. This outputs a list of Rects with bounding boxes and probability of text there. The text recognizer provides a probabillity over a given vocabulary for each of these rects.</p>

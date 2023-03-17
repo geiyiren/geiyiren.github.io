@@ -1,0 +1,67 @@
+<h1 id="Creating-Bounding-boxes-and-circles-for-contours-tutorial-bounding-rects-circles"><a href="#Creating-Bounding-boxes-and-circles-for-contours-tutorial-bounding-rects-circles" class="headerlink" title="Creating Bounding boxes and circles for contours {#tutorial_bounding_rects_circles}"></a>Creating Bounding boxes and circles for contours {#tutorial_bounding_rects_circles}</h1><p>@prev_tutorial{tutorial_hull}<br>@next_tutorial{tutorial_bounding_rotated_ellipses}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the OpenCV function @ref cv::boundingRect</li>
+<li>Use the OpenCV function @ref cv::minEnclosingCircle</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/ShapeDescriptors/generalContours_demo1.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/ShapeDescriptors/bounding_rects_circles/GeneralContoursDemo1.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/ShapeDescriptors/bounding_rects_circles/generalContours_demo1.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>The main function is rather simple, as follows from the comments we do the following:</p>
+<ul>
+<li>Open the image, convert it into grayscale and blur it to get rid of the noise.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp setup<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java setup<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py setup<br>@end_toggle</p>
+<ul>
+<li>Create a window with header “Source” and display the source file in it.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp createWindow<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java createWindow<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py createWindow<br>@end_toggle</p>
+<ul>
+<li>Create a trackbar on the <code>source_window</code> and assign a callback function to it.<br>In general callback functions are used to react to some kind of signal, in our<br>case it’s trackbar’s state change.<br>Explicit one-time call of <code>thresh_callback</code> is necessary to display<br>the “Contours” window simultaniously with the “Source” window.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp trackbar<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java trackbar<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py trackbar<br>@end_toggle</p>
+<p>The callback function does all the interesting job.</p>
+<ul>
+<li>Use @ref cv::Canny to detect edges in the images.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp Canny<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java Canny<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py Canny<br>@end_toggle</p>
+<ul>
+<li>Finds contours and saves them to the vectors <code>contour</code> and <code>hierarchy</code>.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp findContours<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java findContours<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py findContours<br>@end_toggle</p>
+<ul>
+<li>For every found contour we now apply approximation to polygons<br>with accuracy +-3 and stating that the curve must be closed.<br>After that we find a bounding rect for every polygon and save it to <code>boundRect</code>.<br>At last we find a minimum enclosing circle for every polygon and<br>save it to <code>center</code> and <code>radius</code> vectors.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp allthework<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java allthework<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py allthework<br>@end_toggle</p>
+<p>We found everything we need, all we have to do is to draw.</p>
+<ul>
+<li>Create new Mat of unsigned 8-bit chars, filled with zeros.<br>It will contain all the drawings we are going to make (rects and circles).</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp zeroMat<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java zeroMat<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py zeroMat<br>@end_toggle</p>
+<ul>
+<li>For every contour: pick a random color, draw the contour, the bounding rectangle and<br>the minimal enclosing circle with it.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp forContour<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java forContour<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py forContour<br>@end_toggle</p>
+<ul>
+<li>Display the results: create a new window “Contours” and show everything we added to drawings on it.</li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;generalContours_demo1.cpp showDrawings<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;GeneralContoursDemo1.java showDrawings<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ShapeDescriptors&#x2F;bounding_rects_circles&#x2F;generalContours_demo1.py showDrawings<br>@end_toggle</p>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>Here it is:<br><img src="/images/Bounding_Rects_Circles_Source_Image.jpg"><br><img src="/images/Bounding_Rects_Circles_Result.jpg"></p>

@@ -1,0 +1,24 @@
+<h1 id="Contours-Getting-Started-tutorial-js-contours-begin"><a href="#Contours-Getting-Started-tutorial-js-contours-begin" class="headerlink" title="Contours : Getting Started {#tutorial_js_contours_begin}"></a>Contours : Getting Started {#tutorial_js_contours_begin}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Understand what contours are.</li>
+<li>Learn to find contours, draw contours etc</li>
+<li>You will learn these functions : <strong>cv.findContours()</strong>, <strong>cv.drawContours()</strong></li>
+</ul>
+<h2 id="What-are-contours"><a href="#What-are-contours" class="headerlink" title="What are contours?"></a>What are contours?</h2><p>Contours can be explained simply as a curve joining all the continuous points (along the boundary),<br>having same color or intensity. The contours are a useful tool for shape analysis and object<br>detection and recognition.</p>
+<ul>
+<li>For better accuracy, use binary images. So before finding contours, apply threshold or canny<br>edge detection.</li>
+<li>Since opencv 3.2 source image is not modified by this function.</li>
+<li>In OpenCV, finding contours is like finding white object from black background. So remember,<br>object to be found should be white and background should be black.</li>
+</ul>
+<h2 id="How-to-draw-the-contours"><a href="#How-to-draw-the-contours" class="headerlink" title="How to draw the contours?"></a>How to draw the contours?</h2><p>To draw the contours, cv.drawContours function is used. It can also be used to draw any shape<br>provided you have its boundary points.</p>
+<p>We use the functions: <strong>cv.findContours (image, contours, hierarchy, mode, method, offset &#x3D; new cv.Point(0, 0))</strong><br>@param image         source, an 8-bit single-channel image. Non-zero pixels are treated as 1’s. Zero pixels remain 0’s, so the image is treated as binary.<br>@param contours      detected contours.<br>@param hierarchy     containing information about the image topology. It has as many elements as the number of contours.<br>@param mode          contour retrieval mode(see cv.RetrievalModes).<br>@param method        contour approximation method(see cv.ContourApproximationModes).<br>@param offset        optional offset by which every contour point is shifted. This is useful if the contours are extracted from the image ROI and then they should be analyzed in the whole image context.</p>
+<p><strong>cv.drawContours (image, contours, contourIdx, color, thickness &#x3D; 1, lineType &#x3D; cv.LINE_8, hierarchy &#x3D; new cv.Mat(), maxLevel &#x3D; INT_MAX, offset &#x3D; new cv.Point(0, 0))</strong><br>@param image         destination image.<br>@param contours      all the input contours.<br>@param contourIdx    parameter indicating a contour to draw. If it is negative, all the contours are drawn.<br>@param color         color of the contours.<br>@param thickness     thickness of lines the contours are drawn with. If it is negative, the contour interiors are drawn.<br>@param lineType      line connectivity(see cv.LineTypes).<br>@param hierarchy     optional information about hierarchy. It is only needed if you want to draw only some of the contours(see maxLevel).</p>
+<p>@param maxLevel      maximal level for drawn contours. If it is 0, only the specified contour is drawn. If it is 1, the function draws the contour(s) and all the nested contours. If it is 2, the function draws the contours, all the nested contours, all the nested-to-nested contours, and so on. This parameter is only taken into account when there is hierarchy available.<br>@param offset        optional contour shift parameter.</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contours_begin_contours.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<h1 id="Contour-Approximation-Method"><a href="#Contour-Approximation-Method" class="headerlink" title="Contour Approximation Method"></a>Contour Approximation Method</h1><p>This is the fifth argument in cv.findContours function. What does it denote actually?</p>
+<p>Above, we told that contours are the boundaries of a shape with same intensity. It stores the (x,y)<br>coordinates of the boundary of a shape. But does it store all the coordinates ? That is specified by<br>this contour approximation method.</p>
+<p>If you pass cv.ContourApproximationModes.CHAIN_APPROX_NONE.value, all the boundary points are stored. But actually do we need all<br>the points? For eg, you found the contour of a straight line. Do you need all the points on the line<br>to represent that line? No, we need just two end points of that line. This is what<br>cv.CHAIN_APPROX_SIMPLE does. It removes all redundant points and compresses the contour, thereby<br>saving memory.</p>

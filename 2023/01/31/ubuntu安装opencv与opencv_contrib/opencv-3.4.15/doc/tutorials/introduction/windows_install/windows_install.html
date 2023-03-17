@@ -1,0 +1,208 @@
+<h1 id="Installation-in-Windows-tutorial-windows-install"><a href="#Installation-in-Windows-tutorial-windows-install" class="headerlink" title="Installation in Windows {#tutorial_windows_install}"></a>Installation in Windows {#tutorial_windows_install}</h1><p>@prev_tutorial{tutorial_linux_eclipse}<br>@next_tutorial{tutorial_windows_visual_studio_opencv}</p>
+<p>The description here was tested on Windows 7 SP1. Nevertheless, it should also work on any other<br>relatively modern version of Windows OS. If you encounter errors after following the steps described<br>below, feel free to contact us via our <a href="https://forum.opencv.org/">OpenCV Q&amp;A forum</a>. We’ll do our<br>best to help you out.</p>
+<p>@note To use the OpenCV library you have two options: @ref tutorial_windows_install_prebuilt or<br>@ref tutorial_windows_install_build. While the first one is easier to complete, it only works if you are coding<br>with the latest Microsoft Visual Studio IDE and do not take advantage of the most advanced<br>technologies we integrate into our library. .. _Windows_Install_Prebuild:</p>
+<h1 id="Installation-by-Using-the-Pre-built-Libraries-tutorial-windows-install-prebuilt"><a href="#Installation-by-Using-the-Pre-built-Libraries-tutorial-windows-install-prebuilt" class="headerlink" title="Installation by Using the Pre-built Libraries {#tutorial_windows_install_prebuilt}"></a>Installation by Using the Pre-built Libraries {#tutorial_windows_install_prebuilt}</h1><p>-#  Launch a web browser of choice and go to our <a href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/">page on<br>    Sourceforge</a>.<br>-#  Choose a build you want to use and download it.<br>-#  Make sure you have admin rights. Unpack the self-extracting archive.<br>-#  You can check the installation at the chosen path as you can see below.</p>
+<pre><code>![](images/OpenCV_Install_Directory.png)
+</code></pre>
+<p>-#  To finalize the installation go to the @ref tutorial_windows_install_path section.</p>
+<h1 id="Installation-by-Using-git-bash-version-gt-x3D-2-14-1-and-cmake-version-gt-x3D-3-9-1-tutorial-windows-gitbash-build"><a href="#Installation-by-Using-git-bash-version-gt-x3D-2-14-1-and-cmake-version-gt-x3D-3-9-1-tutorial-windows-gitbash-build" class="headerlink" title="Installation by Using git-bash (version&gt;&#x3D;2.14.1) and cmake (version &gt;&#x3D;3.9.1){#tutorial_windows_gitbash_build}"></a>Installation by Using git-bash (version&gt;&#x3D;2.14.1) and cmake (version &gt;&#x3D;3.9.1){#tutorial_windows_gitbash_build}</h1><p>-#  You must download <a href="https://cmake.org/">cmake (version &gt;&#x3D;3.9.1)</a> and install it. You must add cmake to PATH variable during installation</p>
+<p>-#  You must install <a href="https://git-for-windows.github.io/">git-bash (version&gt;&#x3D;2.14.1)</a>. Don’t add git to PATH variable during installation</p>
+<p>-#  Run git-bash. You observe a command line window.<br>Suppose you want to build opencv and opencv_contrib in c:&#x2F;lib</p>
+<p>-#  In git command line enter following command (if folder does not exist) :<br>@code{.bash}<br>mkdir &#x2F;c&#x2F;lib<br>cd &#x2F;c&#x2F;lib<br>@endcode</p>
+<p>-#  save this script with name installOCV.sh in c:&#x2F;lib<br>@code{.bash}<br>#!&#x2F;bin&#x2F;bash -e<br>myRepo&#x3D;$(pwd)<br>CMAKE_GENERATOR_OPTIONS&#x3D;-G”Visual Studio 16 2019”<br>#CMAKE_GENERATOR_OPTIONS&#x3D;-G”Visual Studio 15 2017 Win64”<br>#CMAKE_GENERATOR_OPTIONS&#x3D;(-G”Visual Studio 16 2019” -A x64)  # CMake 3.14+ is required<br>if [  ! -d “$myRepo&#x2F;opencv”  ]; then<br>    echo “cloning opencv”<br>    git clone <a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a><br>else<br>    cd opencv<br>    git pull –rebase<br>    cd ..<br>fi<br>if [  ! -d “$myRepo&#x2F;opencv_contrib”  ]; then<br>    echo “cloning opencv_contrib”<br>    git clone <a href="https://github.com/opencv/opencv_contrib.git">https://github.com/opencv/opencv_contrib.git</a><br>else<br>    cd opencv_contrib<br>    git pull –rebase<br>    cd ..<br>fi<br>RepoSource&#x3D;opencv<br>mkdir -p build_opencv<br>pushd build_opencv<br>CMAKE_OPTIONS&#x3D;(-DBUILD_PERF_TESTS:BOOL&#x3D;OFF -DBUILD_TESTS:BOOL&#x3D;OFF -DBUILD_DOCS:BOOL&#x3D;OFF  -DWITH_CUDA:BOOL&#x3D;OFF -DBUILD_EXAMPLES:BOOL&#x3D;OFF -DINSTALL_CREATE_DISTRIB&#x3D;ON)<br>set -x<br>cmake “${CMAKE_GENERATOR_OPTIONS[@]}” “${CMAKE_OPTIONS[@]}” -DOPENCV_EXTRA_MODULES_PATH&#x3D;”$myRepo”&#x2F;opencv_contrib&#x2F;modules -DCMAKE_INSTALL_PREFIX&#x3D;”$myRepo&#x2F;install&#x2F;$RepoSource” “$myRepo&#x2F;$RepoSource”<br>echo “************************* $Source_DIR –&gt;debug”<br>cmake –build .  –config debug<br>echo “************************* $Source_DIR –&gt;release”<br>cmake –build .  –config release<br>cmake –build .  –target install –config release<br>cmake –build .  –target install –config debug<br>popd<br>@endcode<br>    In this script I suppose you use VS 2015 in 64 bits<br>@code{.bash}<br>CMAKE_GENERATOR_OPTIONS&#x3D;-G”Visual Studio 14 2015 Win64”<br>@endcode<br>    and opencv will be installed in c:&#x2F;lib&#x2F;install&#x2F;opencv<br>@code{.bash}<br>-DCMAKE_INSTALL_PREFIX&#x3D;”$myRepo&#x2F;install&#x2F;$RepoSource”<br>@endcode<br>    with no Perf tests, no tests, no doc, no CUDA and no example<br>@code{.bash}<br>CMAKE_OPTIONS&#x3D;(-DBUILD_PERF_TESTS:BOOL&#x3D;OFF -DBUILD_TESTS:BOOL&#x3D;OFF -DBUILD_DOCS:BOOL&#x3D;OFF -DBUILD_EXAMPLES:BOOL&#x3D;OFF)<br>@endcode<br>-#  In git command line enter following command :<br>@code{.bash}<br>.&#x2F;installOCV.sh<br>@endcode<br>-# Drink a coffee or two… opencv is ready : That’s all!<br>-# Next time you run this script, opencv and opencv_contrib will be updated and rebuild</p>
+<h1 id="Installation-by-Making-Your-Own-Libraries-from-the-Source-Files-tutorial-windows-install-build"><a href="#Installation-by-Making-Your-Own-Libraries-from-the-Source-Files-tutorial-windows-install-build" class="headerlink" title="Installation by Making Your Own Libraries from the Source Files {#tutorial_windows_install_build}"></a>Installation by Making Your Own Libraries from the Source Files {#tutorial_windows_install_build}</h1><p>You may find the content of this tutorial also inside the following videos:<br><a href="https://www.youtube.com/watch?v=NnovZ1cTlMs">Part 1</a> and <a href="https://www.youtube.com/watch?v=qGNWMcfWwPU">Part 2</a>, hosted on YouTube.</p>
+<p>@youtube{NnovZ1cTlMs}<br>@youtube{qGNWMcfWwPU}</p>
+<p><strong>warning</strong></p>
+<p>These videos above are long-obsolete and contain inaccurate information. Be careful, since<br>solutions described in those videos are no longer supported and may even break your install.</p>
+<p>If you are building your own libraries you can take the source files from our <a href="https://github.com/opencv/opencv.git">Git<br>repository</a>.</p>
+<p>Building the OpenCV library from scratch requires a couple of tools installed beforehand:</p>
+<ul>
+<li>An IDE of choice (preferably), or just a CC++ compiler that will actually make the binary files.<br>Here we will use the <a href="https://www.microsoft.com/visualstudio/en-us">Microsoft Visual Studio</a>.<br>However, you can use any other IDE that has a valid CC++ compiler.</li>
+<li><a href="http://www.cmake.org/cmake/resources/software.html">CMake</a>, which is a neat tool to make the project files (for your chosen IDE) from the OpenCV<br>source files. It will also allow an easy configuration of the OpenCV build files, in order to<br>make binary files that fits exactly to your needs.</li>
+<li>Git to acquire the OpenCV source files. A good tool for this is <a href="http://code.google.com/p/tortoisegit/wiki/Download">TortoiseGit</a>. Alternatively,<br>you can just download an archived version of the source files from our <a href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/">page on<br>Sourceforge</a></li>
+</ul>
+<p>OpenCV may come in multiple flavors. There is a “core” section that will work on its own.<br>Nevertheless, there is a couple of tools, libraries made by 3rd parties that offer services of which<br>the OpenCV may take advantage. These will improve its capabilities in many ways. In order to use any<br>of them, you need to download and install them on your system.</p>
+<ul>
+<li>The <a href="http://www.python.org/downloads/">Python libraries</a> are required to build the <em>Python interface</em> of OpenCV. For now use the<br>version <code>2.7.{x}</code>. This is also a must if you want to build the <em>OpenCV documentation</em>.</li>
+<li><a href="http://numpy.scipy.org/">Numpy</a> is a scientific computing package for Python. Required for the <em>Python interface</em>.</li>
+<li><a href="http://threadingbuildingblocks.org/file.php?fid=77">Intel Threading Building Blocks (<em>TBB</em>)</a> is used inside OpenCV for parallel code<br>snippets. Using this will make sure that the OpenCV library will take advantage of all the cores<br>you have in your system’s CPU.</li>
+<li><a href="http://software.intel.com/en-us/articles/intel-ipp/">Intel Integrated Performance Primitives (<em>IPP</em>)</a> may be used to improve the performance<br>of color conversion, Haar training and DFT functions of the OpenCV library. Watch out, since<br>this is not a free service.</li>
+<li>OpenCV offers a somewhat fancier and more useful graphical user interface, than the default one<br>by using the <a href="http://qt.nokia.com/downloads">Qt framework</a>. For a quick overview of what this has to offer, look into the<br>documentations <em>highgui</em> module, under the <em>Qt New Functions</em> section. Version 4.6 or later of<br>the framework is required.</li>
+<li><a href="http://eigen.tuxfamily.org/index.php?title=Main_Page#Download">Eigen</a> is a C++ template library for linear algebra.</li>
+<li>The latest <a href="http://developer.nvidia.com/cuda-downloads">CUDA Toolkit</a> will allow you to use the power lying inside your GPU. This will<br>drastically improve performance for some algorithms (e.g the HOG descriptor). Getting more and<br>more of our algorithms to work on the GPUs is a constant effort of the OpenCV team.</li>
+<li><a href="http://www.openexr.com/downloads.html">OpenEXR</a> source files are required for the library to work with this high dynamic range (HDR)<br>image file format.</li>
+<li>The OpenNI Framework contains a set of open source APIs that provide support for natural interaction with devices via methods such as voice command recognition, hand gestures, and body<br>motion tracking. Prebuilt binaries can be found <a href="http://structure.io/openni">here</a>. The source code of <a href="https://github.com/OpenNI/OpenNI">OpenNI</a> and <a href="https://github.com/OpenNI/OpenNI2">OpenNI2</a> are also available on Github.</li>
+<li><a href="http://www.doxygen.nl/">Doxygen</a> is a documentation generator and is the tool that will actually create the<br><em>OpenCV documentation</em>.</li>
+</ul>
+<p>Now we will describe the steps to follow for a full build (using all the above frameworks, tools and<br>libraries). If you do not need the support for some of these, you can just freely skip this section.</p>
+<h3 id="Building-the-library"><a href="#Building-the-library" class="headerlink" title="Building the library"></a>Building the library</h3><p>-#  Make sure you have a working IDE with a valid compiler. In case of the Microsoft Visual Studio<br>    just install it and make sure it starts up.<br>-#  Install <a href="http://www.cmake.org/cmake/resources/software.html">CMake</a>. Simply follow the wizard, no need to add it to the path. The default install<br>    options are OK.<br>-#  Download and install an up-to-date version of msysgit from its <a href="http://code.google.com/p/msysgit/downloads/list">official<br>    site</a>. There is also the portable version,<br>    which you need only to unpack to get access to the console version of Git. Supposing that for<br>    some of us it could be quite enough.<br>-#  Install <a href="http://code.google.com/p/tortoisegit/wiki/Download">TortoiseGit</a>. Choose the 32 or 64 bit version according to the type of OS you work in.<br>    While installing, locate your msysgit (if it does not do that automatically). Follow the<br>    wizard – the default options are OK for the most part.<br>-#  Choose a directory in your file system, where you will download the OpenCV libraries to. I<br>    recommend creating a new one that has short path and no special characters in it, for example<br>    <code>D:/OpenCV</code>. For this tutorial, I will suggest you do so. If you use your own path and know, what<br>    you are doing – it is OK.<br>    -#  Clone the repository to the selected directory. After clicking <em>Clone</em> button, a window will<br>        appear where you can select from what repository you want to download source files<br>        (<a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a>) and to what directory (<code>D:/OpenCV</code>).<br>    -#  Push the OK button and be patient as the repository is quite a heavy download. It will take<br>        some time depending on your Internet connection.</p>
+<p>-#  In this section, I will cover installing the 3rd party libraries.<br>    -#  Download the <a href="http://www.python.org/downloads/">Python libraries</a> and install it with the default options. You will need a<br>        couple other python extensions. Luckily installing all these may be automated by a nice tool<br>        called <a href="http://pypi.python.org/pypi/setuptools#downloads">Setuptools</a>. Download and install<br>        again.</p>
+<pre><code>-#  The easiest way to install Numpy is to just download its binaries from the [sourceforge page](http://sourceforge.net/projects/numpy/files/NumPy/).
+    Make sure your download and install
+    exactly the binary for your python version (so for version `2.7`).
+
+-#  For the [Intel Threading Building Blocks (*TBB*)](http://threadingbuildingblocks.org/file.php?fid=77)
+    download the source files and extract
+    it inside a directory on your system. For example let there be `D:/OpenCV/dep`. For installing
+    the [Intel Integrated Performance Primitives (*IPP*)](http://software.intel.com/en-us/articles/intel-ipp/)
+    the story is the same. For
+    extracting the archives, I recommend using the [7-Zip](http://www.7-zip.org/) application.
+
+    ![](images/IntelTBB.png)
+
+-#  In case of the [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page#Download) library it is again a case of download and extract to the
+    `D:/OpenCV/dep` directory.
+-#  Same as above with [OpenEXR](http://www.openexr.com/downloads.html).
+-#  For the [OpenNI Framework](http://www.openni.org/) you need to install both the [development
+    build](http://www.openni.org/downloadfiles/opennimodules/openni-binaries/21-stable) and the
+    [PrimeSensor
+    Module](http://www.openni.org/downloadfiles/opennimodules/openni-compliant-hardware-binaries/32-stable).
+-#  For the CUDA you need again two modules: the latest [CUDA Toolkit](http://developer.nvidia.com/cuda-downloads) and the *CUDA Tools SDK*.
+    Download and install both of them with a *complete* option by using the 32 or 64 bit setups
+    according to your OS.
+-#  In case of the Qt framework you need to build yourself the binary files (unless you use the
+    Microsoft Visual Studio 2008 with 32 bit compiler). To do this go to the [Qt
+    Downloads](http://qt.nokia.com/downloads) page. Download the source files (not the
+    installers!!!):
+
+    ![](images/qtDownloadThisPackage.png)
+
+    Extract it into a nice and short named directory like `D:/OpenCV/dep/qt/` . Then you need to
+    build it. Start up a *Visual* *Studio* *Command* *Prompt* (*2010*) by using the start menu
+    search (or navigate through the start menu
+    All Programs --\&gt; Microsoft Visual Studio 2010 --\&gt; Visual Studio Tools --\&gt; Visual Studio Command Prompt (2010)).
+
+    ![](images/visualstudiocommandprompt.jpg)
+
+    Now navigate to the extracted folder and enter inside it by using this console window. You
+    should have a folder containing files like *Install*, *Make* and so on. Use the *dir* command
+    to list files inside your current directory. Once arrived at this directory enter the
+    following command:
+    @code{.bash}
+    configure.exe -release -no-webkit -no-phonon -no-phonon-backend -no-script -no-scripttools
+                  -no-qt3support -no-multimedia -no-ltcg
+    @endcode
+    Completing this will take around 10-20 minutes. Then enter the next command that will take a
+    lot longer (can easily take even more than a full hour):
+    @code{.bash}
+    nmake
+    @endcode
+    After this set the Qt environment variables using the following command on Windows 7:
+    @code{.bash}
+    setx -m QTDIR D:/OpenCV/dep/qt/qt-everywhere-opensource-src-4.7.3
+    @endcode
+    Also, add the built binary files path to the system path by using the [PathEditor](http://www.redfernplace.com/software-projects/patheditor/). In our
+    case this is `D:/OpenCV/dep/qt/qt-everywhere-opensource-src-4.7.3/bin`.
+
+    @note
+    If you plan on doing Qt application development you can also install at this point the *Qt
+    Visual Studio Add-in*. After this you can make and build Qt applications without using the *Qt
+    Creator*. Everything is nicely integrated into Visual Studio.
+</code></pre>
+<p>-#  Now start the <em>CMake (cmake-gui)</em>. You may again enter it in the start menu search or get it<br>    from the All Programs –&gt; CMake 2.8 –&gt; CMake (cmake-gui). First, select the directory for the<br>    source files of the OpenCV library (1). Then, specify a directory where you will build the<br>    binary files for OpenCV (2).</p>
+<pre><code>![](images/CMakeSelectBin.jpg)
+
+Press the Configure button to specify the compiler (and *IDE*) you want to use. Note that in
+case you can choose between different compilers for making either 64 bit or 32 bit libraries.
+Select the one you use in your application development.
+
+![](images/CMake_Configure_Windows.jpg)
+
+CMake will start out and based on your system variables will try to automatically locate as many
+packages as possible. You can modify the packages to use for the build in the WITH --\&gt; WITH_X
+menu points (where *X* is the package abbreviation). Here are a list of current packages you can
+turn on or off:
+
+![](images/CMakeBuildWithWindowsGUI.jpg)
+
+Select all the packages you want to use and press again the *Configure* button. For an easier
+overview of the build options make sure the *Grouped* option under the binary directory
+selection is turned on. For some of the packages CMake may not find all of the required files or
+directories. In case of these, CMake will throw an error in its output window (located at the
+bottom of the GUI) and set its field values to not found constants. For example:
+
+![](images/CMakePackageNotFoundWindows.jpg)
+
+![](images/CMakeOutputPackageNotFound.jpg)
+
+For these you need to manually set the queried directories or files path. After this press again
+the *Configure* button to see if the value entered by you was accepted or not. Do this until all
+entries are good and you cannot see errors in the field/value or the output part of the GUI. Now
+I want to emphasize an option that you will definitely love:
+ENABLE --\&gt; ENABLE_SOLUTION_FOLDERS. OpenCV will create many-many projects and turning this
+option will make sure that they are categorized inside directories in the *Solution Explorer*.
+It is a must have feature, if you ask me.
+
+![](images/CMakeBuildOptionsOpenCV.jpg)
+
+Furthermore, you need to select what part of OpenCV you want to build.
+
+-   *BUILD_DOCS* -\&gt; It creates two projects for building the documentation of OpenCV (there
+    will be a separate project for building the HTML and the PDF files). Note that these are not
+    built together with the solution. You need to make an explicit build project command on
+    these to do so.
+-   *BUILD_EXAMPLES* -\&gt; OpenCV comes with many example applications from which you may learn
+    most of the libraries capabilities. This will also come handy to easily try out if OpenCV is
+    fully functional on your computer.
+-   *BUILD_PACKAGE* -\&gt; Prior to version 2.3 with this you could build a project that will
+    build an OpenCV installer. With this, you can easily install your OpenCV flavor on other
+    systems. For the latest source files of OpenCV, it generates a new project that simply
+    creates a zip archive with OpenCV sources.
+-   *BUILD_SHARED_LIBS* -\&gt; With this you can control to build DLL files (when turned on) or
+    static library files (\*.lib) otherwise.
+-   *BUILD_TESTS* -\&gt; Each module of OpenCV has a test project assigned to it. Building these
+    test projects is also a good way to try out, that the modules work just as expected on your
+    system too.
+-   *BUILD_PERF_TESTS* -\&gt; There are also performance tests for many OpenCV functions. If
+    you are concerned about performance, build them and run.
+-   *BUILD_opencv_python* -\&gt; Self-explanatory. Create the binaries to use OpenCV from the
+    Python language.
+-   *BUILD_opencv_world* -\&gt; Generate a single &quot;opencv_world&quot; binary (a shared or static library, depending on *BUILD_SHARED_LIBS*) including all the modules instead of a collection of separate binaries, one binary per module.
+
+Press again the *Configure* button and ensure no errors are reported. If this is the case, you
+can tell CMake to create the project files by pushing the *Generate* button. Go to the build
+directory and open the created **OpenCV** solution. Depending on just how much of the above
+options you have selected the solution may contain quite a lot of projects so be tolerant on the
+IDE at the startup. Now you need to build both the *Release* and the *Debug* binaries. Use the
+drop-down menu on your IDE to change to another of these after building for one of them.
+
+![](images/ChangeBuildVisualStudio.jpg)
+
+In the end, you can observe the built binary files inside the bin directory:
+
+![](images/OpenCVBuildResultWindows.jpg)
+
+For the documentation, you need to explicitly issue the build commands on the *doxygen* project for
+the HTML documentation. It will call *Doxygen* to do
+all the hard work. You can find the generated documentation inside the `build/doc/doxygen/html`.
+
+To collect the header and the binary files, that you will use during your own projects, into a
+separate directory (similarly to how the pre-built binaries ship) you need to explicitly build
+the *Install* project.
+
+![](images/WindowsBuildInstall.png)
+
+This will create an *Install* directory inside the *Build* one collecting all the built binaries
+into a single place. Use this only after you built both the *Release* and *Debug* versions.
+
+To test your build just go into the `Build/bin/Debug` or `Build/bin/Release` directory and start
+a couple of applications like the *contours.exe*. If they run, you are done. Otherwise,
+something definitely went awfully wrong. In this case you should contact us at our [Q&amp;A forum](https://forum.opencv.org/).
+If everything is okay, the *contours.exe* output should resemble the following image (if
+built with Qt support):
+
+![](images/WindowsQtContoursOutput.png)
+</code></pre>
+<p>@note<br>   If you use the GPU module (CUDA libraries), make sure you also upgrade to the latest drivers of<br>    your GPU. Error messages containing invalid entries in (or cannot find) the nvcuda.dll are<br>    caused mostly by old video card drivers. For testing the GPU (if built) run the<br>    <em>performance_gpu.exe</em> sample application.</p>
+<h1 id="Set-the-OpenCV-environment-variable-and-add-it-to-the-systems-path-tutorial-windows-install-path"><a href="#Set-the-OpenCV-environment-variable-and-add-it-to-the-systems-path-tutorial-windows-install-path" class="headerlink" title="Set the OpenCV environment variable and add it to the systems path {#tutorial_windows_install_path}"></a>Set the OpenCV environment variable and add it to the systems path {#tutorial_windows_install_path}</h1><p>First we set an environment variable to make easier our work. This will hold the build directory of<br>our OpenCV library that we use in our projects. Start up a command window and enter:<br>@code<br>    setx -m OPENCV_DIR D:\OpenCV\Build\x86\vc11     (suggested for Visual Studio 2012 - 32 bit Windows)<br>    setx -m OPENCV_DIR D:\OpenCV\Build\x64\vc11     (suggested for Visual Studio 2012 - 64 bit Windows)</p>
+<pre><code>setx -m OPENCV_DIR D:\OpenCV\Build\x86\vc12     (suggested for Visual Studio 2013 - 32 bit Windows)
+setx -m OPENCV_DIR D:\OpenCV\Build\x64\vc12     (suggested for Visual Studio 2013 - 64 bit Windows)
+
+setx -m OPENCV_DIR D:\OpenCV\Build\x64\vc14     (suggested for Visual Studio 2015 - 64 bit Windows)
+</code></pre>
+<p>@endcode<br>Here the directory is where you have your OpenCV binaries (<em>extracted</em> or <em>built</em>). You can have<br>different platform (e.g. x64 instead of x86) or compiler type, so substitute appropriate value.<br>Inside this, you should have two folders called <em>lib</em> and <em>bin</em>. The -m should be added if you wish<br>to make the settings computer wise, instead of user wise.</p>
+<p>If you built static libraries then you are done. Otherwise, you need to add the <em>bin</em> folders path<br>to the systems path. This is because you will use the OpenCV library in form of <em>“Dynamic-link<br>libraries”</em> (also known as <strong>DLL</strong>). Inside these are stored all the algorithms and information the<br>OpenCV library contains. The operating system will load them only on demand, during runtime.<br>However, to do this the operating system needs to know where they are. The systems <strong>PATH</strong> contains<br>a list of folders where DLLs can be found. Add the OpenCV library path to this and the OS will know<br>where to look if he ever needs the OpenCV binaries. Otherwise, you will need to copy the used DLLs<br>right beside the applications executable file (<em>exe</em>) for the OS to find it, which is highly<br>unpleasant if you work on many projects. To do this start up again the <a href="http://www.redfernplace.com/software-projects/patheditor/">PathEditor</a> and add the<br>following new entry (right click in the application to bring up the menu):<br>@code<br>    %OPENCV_DIR%\bin<br>@endcode</p>
+<p><img src="/images/PathEditorOpenCVInsertNew.png"></p>
+<p><img src="/images/PathEditorOpenCVSetPath.png"></p>
+<p>Save it to the registry and you are done. If you ever change the location of your build directories<br>or want to try out your application with a different build, all you will need to do is to update the<br>OPENCV_DIR variable via the <em>setx</em> command inside a command window.</p>
+<p>Now you can continue reading the tutorials with the @ref tutorial_windows_visual_studio_opencv section.<br>There you will find out how to use the OpenCV library in your own projects with the help of the<br>Microsoft Visual Studio IDE.</p>

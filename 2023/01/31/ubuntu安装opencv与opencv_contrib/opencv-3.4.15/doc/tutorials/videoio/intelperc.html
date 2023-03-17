@@ -1,0 +1,31 @@
+<h1 id="Using-Creative-Senz3D-and-other-Intel-Perceptual-Computing-SDK-compatible-depth-sensors-tutorial-intelperc"><a href="#Using-Creative-Senz3D-and-other-Intel-Perceptual-Computing-SDK-compatible-depth-sensors-tutorial-intelperc" class="headerlink" title="Using Creative Senz3D and other Intel Perceptual Computing SDK compatible depth sensors {#tutorial_intelperc}"></a>Using Creative Senz3D and other Intel Perceptual Computing SDK compatible depth sensors {#tutorial_intelperc}</h1><p>@prev_tutorial{tutorial_kinect_openni}</p>
+<p>Depth sensors compatible with Intel Perceptual Computing SDK are supported through VideoCapture<br>class. Depth map, RGB image and some other formats of output can be retrieved by using familiar<br>interface of VideoCapture.</p>
+<p>In order to use depth sensor with OpenCV you should do the following preliminary steps:</p>
+<p>-#  Install Intel Perceptual Computing SDK (from here <a href="http://www.intel.com/software/perceptual">http://www.intel.com/software/perceptual</a>).</p>
+<p>-#  Configure OpenCV with Intel Perceptual Computing SDK support by setting WITH_INTELPERC flag in<br>    CMake. If Intel Perceptual Computing SDK is found in install folders OpenCV will be built with<br>    Intel Perceptual Computing SDK library (see a status INTELPERC in CMake log). If CMake process<br>    doesn’t find Intel Perceptual Computing SDK installation folder automatically, the user should<br>    change corresponding CMake variables INTELPERC_LIB_DIR and INTELPERC_INCLUDE_DIR to the<br>    proper value.</p>
+<p>-#  Build OpenCV.</p>
+<p>VideoCapture can retrieve the following data:</p>
+<p>-#  data given from depth generator:<br>    -   CAP_INTELPERC_DEPTH_MAP - each pixel is a 16-bit integer. The value indicates the<br>            distance from an object to the camera’s XY plane or the Cartesian depth. (CV_16UC1)<br>    -   CAP_INTELPERC_UVDEPTH_MAP - each pixel contains two 32-bit floating point values in<br>        the range of 0-1, representing the mapping of depth coordinates to the color<br>        coordinates. (CV_32FC2)<br>    -   CAP_INTELPERC_IR_MAP - each pixel is a 16-bit integer. The value indicates the<br>        intensity of the reflected laser beam. (CV_16UC1)</p>
+<p>-#  data given from RGB image generator:<br>    -   CAP_INTELPERC_IMAGE - color image. (CV_8UC3)</p>
+<p>In order to get depth map from depth sensor use VideoCapture::operator &gt;&gt;, e. g. :<br>@code{.cpp}<br>    VideoCapture capture( CAP_INTELPERC );<br>    for(;;)<br>    {<br>        Mat depthMap;<br>        capture &gt;&gt; depthMap;</p>
+<pre><code>    if( waitKey( 30 ) &gt;= 0 )
+        break;
+}
+</code></pre>
+<p>@endcode<br>For getting several data maps use VideoCapture::grab and VideoCapture::retrieve, e.g. :<br>@code{.cpp}<br>    VideoCapture capture(CAP_INTELPERC);<br>    for(;;)<br>    {<br>        Mat depthMap;<br>        Mat image;<br>        Mat irImage;</p>
+<pre><code>    capture.grab();
+
+    capture.retrieve( depthMap, CAP_INTELPERC_DEPTH_MAP );
+    capture.retrieve(    image, CAP_INTELPERC_IMAGE );
+    capture.retrieve(  irImage, CAP_INTELPERC_IR_MAP);
+
+    if( waitKey( 30 ) &gt;= 0 )
+        break;
+}
+</code></pre>
+<p>@endcode<br>For setting and getting some property of sensor` data generators use VideoCapture::set and<br>VideoCapture::get methods respectively, e.g. :<br>@code{.cpp}<br>    VideoCapture capture( CAP_INTELPERC );<br>    capture.set( CAP_INTELPERC_DEPTH_GENERATOR | CAP_PROP_INTELPERC_PROFILE_IDX, 0 );<br>    cout &lt;&lt; “FPS    “ &lt;&lt; capture.get( CAP_INTELPERC_DEPTH_GENERATOR+CAP_PROP_FPS ) &lt;&lt; endl;<br>@endcode<br>Since two types of sensor’s data generators are supported (image generator and depth generator),<br>there are two flags that should be used to set&#x2F;get property of the needed generator:</p>
+<ul>
+<li>CAP_INTELPERC_IMAGE_GENERATOR – a flag for access to the image generator properties.</li>
+<li>CAP_INTELPERC_DEPTH_GENERATOR – a flag for access to the depth generator properties. This<br>flag value is assumed by default if neither of the two possible values of the property is set.</li>
+</ul>
+<p>For more information please refer to the example of usage<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/videocapture_intelperc.cpp">videocapture_intelperc.cpp</a><br>in opencv&#x2F;samples&#x2F;cpp folder.</p>

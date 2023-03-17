@@ -1,0 +1,27 @@
+<h1 id="Trackbar-as-the-Color-Palette-tutorial-py-trackbar"><a href="#Trackbar-as-the-Color-Palette-tutorial-py-trackbar" class="headerlink" title="Trackbar as the Color Palette {#tutorial_py_trackbar}"></a>Trackbar as the Color Palette {#tutorial_py_trackbar}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Learn to bind trackbar to OpenCV windows</li>
+<li>You will learn these functions : <strong>cv.getTrackbarPos()</strong>, <strong>cv.createTrackbar()</strong> etc.</li>
+</ul>
+<h2 id="Code-Demo"><a href="#Code-Demo" class="headerlink" title="Code Demo"></a>Code Demo</h2><p>Here we will create a simple application which shows the color you specify. You have a window which<br>shows the color and three trackbars to specify each of B,G,R colors. You slide the trackbar and<br>correspondingly window color changes. By default, initial color will be set to Black.</p>
+<p>For cv.createTrackbar() function, first argument is the trackbar name, second one is the window<br>name to which it is attached, third argument is the default value, fourth one is the maximum value<br>and fifth one is the callback function which is executed every time trackbar value changes. The<br>callback function always has a default argument which is the trackbar position. In our case,<br>function does nothing, so we simply pass.</p>
+<p>Another important application of trackbar is to use it as a button or switch. OpenCV, by default,<br>doesn’t have button functionality. So you can use trackbar to get such functionality. In our<br>application, we have created one switch in which application works only if switch is ON, otherwise<br>screen is always black.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>def nothing(x):<br>    pass</p>
+<h1 id="Create-a-black-image-a-window"><a href="#Create-a-black-image-a-window" class="headerlink" title="Create a black image, a window"></a>Create a black image, a window</h1><p>img &#x3D; np.zeros((300,512,3), np.uint8)<br>cv.namedWindow(‘image’)</p>
+<h1 id="create-trackbars-for-color-change"><a href="#create-trackbars-for-color-change" class="headerlink" title="create trackbars for color change"></a>create trackbars for color change</h1><p>cv.createTrackbar(‘R’,’image’,0,255,nothing)</p>
+<p>cv.createTrackbar(‘G’,’image’,0,255,nothing)<br>cv.createTrackbar(‘B’,’image’,0,255,nothing)</p>
+<h1 id="create-switch-for-ON-x2F-OFF-functionality"><a href="#create-switch-for-ON-x2F-OFF-functionality" class="headerlink" title="create switch for ON&#x2F;OFF functionality"></a>create switch for ON&#x2F;OFF functionality</h1><p>switch &#x3D; ‘0 : OFF \n1 : ON’<br>cv.createTrackbar(switch, ‘image’,0,1,nothing)</p>
+<p>while(1):<br>    cv.imshow(‘image’,img)<br>    k &#x3D; cv.waitKey(1) &amp; 0xFF<br>    if k &#x3D;&#x3D; 27:<br>        break</p>
+<pre><code># get current positions of four trackbars
+r = cv.getTrackbarPos(&#39;R&#39;,&#39;image&#39;)
+g = cv.getTrackbarPos(&#39;G&#39;,&#39;image&#39;)
+b = cv.getTrackbarPos(&#39;B&#39;,&#39;image&#39;)
+s = cv.getTrackbarPos(switch,&#39;image&#39;)
+
+if s == 0:
+    img[:] = 0
+else:
+    img[:] = [b,g,r]
+</code></pre>
+<p>cv.destroyAllWindows()<br>@endcode<br>The screenshot of the application looks like below :</p>
+<p><img src="/images/trackbar_screenshot.jpg" alt="image"></p>
+<h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2><p>-#  Create a Paint application with adjustable colors and brush radius using trackbars. For drawing,<br>    refer previous tutorial on mouse handling.</p>

@@ -1,0 +1,12 @@
+<h1 id="FreeType-Module"><a href="#FreeType-Module" class="headerlink" title="FreeType Module"></a>FreeType Module</h1><p>This FreeType module allows you to draw strings with outlines and bitmaps.</p>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>harfbuzz is requested to convert UTF8 to gid(GlyphID).<br>freetype library is requested to rasterize given gid.</p>
+<p>harfbuzz <a href="https://www.freedesktop.org/wiki/Software/HarfBuzz/">https://www.freedesktop.org/wiki/Software/HarfBuzz/</a><br>freetype <a href="https://www.freetype.org/">https://www.freetype.org/</a></p>
+<h2 id="Usage"><a href="#Usage" class="headerlink" title="Usage"></a>Usage</h2><p>cv::freetype::FreeType2 ft2;<br>ft2.loadFontData(“your-font.ttf”, 0);<br>ft2.setSplitNumber( 4 ); &#x2F;&#x2F; Bezier-line is splited by 4 segment.<br>ft2.putText(src, …. )</p>
+<h2 id="Option"><a href="#Option" class="headerlink" title="Option"></a>Option</h2><ul>
+<li>2nd argument of loadFontData is used if font file has many font data.</li>
+<li>3 drawing mode is available.<br>– outline mode is used if lineWidth is larger than 0. (like original putText)<br>– bitmap  mode is used if lineWidth is less than 0.<br>— 1bit bitmap mode is used if lineStyle is 4 or 8.<br>— gray bitmap mode is used if lineStyle is 16.</li>
+</ul>
+<h2 id="Future-work"><a href="#Future-work" class="headerlink" title="Future work"></a>Future work</h2><ul>
+<li>test<br>– CJK and …</li>
+<li>RTL,LTR,TTB,BTT…</li>
+</ul>

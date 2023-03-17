@@ -1,0 +1,52 @@
+<h1 id="Using-Maven-to-build-OpenCV"><a href="#Using-Maven-to-build-OpenCV" class="headerlink" title="Using Maven to build OpenCV"></a>Using Maven to build OpenCV</h1><p>This page describes the how to build OpenCV using <a href="http://maven.apache.org/index.html">Apache Maven</a>. The Maven build is simply a wrapper around the existing CMake process but has the additional aims of creating Java OSGi-compatible bundles with included native support and also allow the build to be carried out on RaspberryPi (ARM) architecture. There is nothing preventing using the POM on x86 Linux however.</p>
+<p>The following assumes building on Debian-based Linux platform.</p>
+<h2 id="1-Overview"><a href="#1-Overview" class="headerlink" title="1 - Overview"></a>1 - Overview</h2><p>The Maven build process aims to:</p>
+<ol>
+<li>Provide a simpler route to build OpenCV and Java bundles.</li>
+<li>Automatically check the required native dependencies.</li>
+<li>Make the Java libraries OSGi compatible.</li>
+<li>Include the native OpenCV native library inside the Java bundle.</li>
+<li>Integration testing of the bundle within an OSGi environment.</li>
+<li>Allow the build to function on x86, x86_64 or amd architectures, Debian-based Linux platform.</li>
+</ol>
+<h3 id="2-Preparing-The-Build-environment"><a href="#2-Preparing-The-Build-environment" class="headerlink" title="2 - Preparing The Build environment"></a>2 - Preparing The Build environment</h3><p>To build using the Maven build process both <code>Maven</code> and and up-to-date <code>JDK</code> (Java Development Kit) need to be installed. If you know you already have these installed then continue to <code>Environment Variable</code> otherwise the easiest solution is to install them using the aptitude package manager:</p>
+<p><code>sudo aptitude install maven default-jdk</code></p>
+<p>Note that installing via <code>aptitude</code> you are unlikely to get the latest version of Maven or JDK although if you are not developing Java code this shouldn’t matter for this build process.</p>
+<h3 id="3-Starting-the-build"><a href="#3-Starting-the-build" class="headerlink" title="3 - Starting the build"></a>3 - Starting the build</h3><h4 id="3-1-Environment-variables"><a href="#3-1-Environment-variables" class="headerlink" title="3.1 - Environment variables"></a>3.1 - Environment variables</h4><p><strong>Applicability:</strong> All processors.</p>
+<p>   The following environment variables must be set otherwise the build will fail and halt:</p>
+<ul>
+<li><code>$JAVA_HOME</code> (the absolute path to the JDK root directory)</li>
+<li><code>$ANT_HOME</code> (the absolute path to the Ant root directory)</li>
+</ul>
+<p>It is recommended that advantage is taken of multiple processor cores to reduce build time. This can be done by setting a MAKEFLAGS environment variable specifying the number of parallel builds e.g.:</p>
+<ul>
+<li><code>$MAKEFLAGS=&quot;-j8&quot;</code></li>
+</ul>
+<p>However if this flag is not set the build will NOT fail. On a RaspberryPi 2 typical build times are 5 hours with <code>-j1</code> (which is the default if <code>$MAKEFLAGS</code> is not specified) and a little over 2 hours with <code>-j4</code>.</p>
+<p>All of the above environment variables can be set on an ad-hoc basis using ‘export’.</p>
+<h4 id="3-2-Build-Directory"><a href="#3-2-Build-Directory" class="headerlink" title="3.2 - Build Directory"></a>3.2 - Build Directory</h4><p><strong>Applicability:</strong> All processors</p>
+<p>By default the following build directories are created.</p>
+<p><code>&lt;OpenCV_root_dir&gt;/build</code></p>
+<p><code>&lt;OpenCV_root_dir&gt;/build/maven/opencv/target</code></p>
+<p><code>&lt;OpenCV_root_dir&gt;/build/maven/opencv-it/target</code></p>
+<p>Under <code>build</code> are the standard OpenCV artifacts. Under <code>build/maven/opencv/target</code> can be found the OSGi compatible Java bundle. When deploying the bundle into an OSGi framework e.g. <a href="http://karaf.apache.org/">Apache Karaf</a>, loading of the native library is automatically taken care of. An integration testing module is created under the <code>opencv-it</code> directory and is only of use during the build but is disabled by fault. The standard Java library as created by the CMake process is also available as specified in the existing OpenCV documentation.</p>
+<p>The Maven build is initiated from the directory contain the <code>pom.xml</code> file.</p>
+<h4 id="3-3-x86-or-x86-64-Architecture"><a href="#3-3-x86-or-x86-64-Architecture" class="headerlink" title="3.3 - x86 or x86_64 Architecture:"></a>3.3 - x86 or x86_64 Architecture:</h4><p>Generally all that is required is the standard Maven command:</p>
+<p><code>mvn clean install</code></p>
+<p>One of the first things the build will do is check the required native dependencies. The Maven build indicates the status of the required dependencies and will fail at this point if any are missing. Install using the package manager e.g. aptitude or apt-get, and restart the build with the above command.</p>
+<p>Once the build successfully completes the OSGi compatible artifacts are available as described above in ‘Build Directory’.</p>
+<h4 id="3-4-ARM-32-bit-Architecture-Raspbian-Distribution"><a href="#3-4-ARM-32-bit-Architecture-Raspbian-Distribution" class="headerlink" title="3.4 - ARM 32-bit Architecture - Raspbian Distribution"></a>3.4 - ARM 32-bit Architecture - Raspbian Distribution</h4><p>Similar to the x86 architecture the native dependencies are first checked so install any that are missing, however at the time of writing there are no official <code>libtbb2</code> and <code>libtbb-dev</code> packages in Raspbian. Version 4.4.3 of Intel’s Thread Building Blocks library are available <a href="http://www.javatechnics.com/thread-building-blocks-tbb-4-4-3-for-raspbian">here</a> as a Raspbian-compatible Debian packages.</p>
+<p><strong>PLEASE NOTE THESE ARE NOT OFFICIAL RASPBIAN PACKAGES. INSTALL AT YOUR OWN RISK.</strong></p>
+<p>The build can be started with the following command:</p>
+<p><code>mvn clean install</code></p>
+<p>Upon a successful build the libraries will be available as described above in ‘Build Directory’.</p>
+<h4 id="3-5-CMake"><a href="#3-5-CMake" class="headerlink" title="3.5 CMake"></a>3.5 CMake</h4><p><strong>Applicability:</strong> x86 processors</p>
+<p>The CMake Maven plugin is configured to use the native CMake package (recommended) i.e. it will NOT download the latest CMake binary. Should you require CMake download then include the following Maven commandline switch when building:</p>
+<p> <code>-Ddownload.cmake=true</code></p>
+<h4 id="3-6-Integration-Tests"><a href="#3-6-Integration-Tests" class="headerlink" title="3.6 Integration Tests"></a>3.6 Integration Tests</h4><p> <strong>Applicability:</strong> All processors</p>
+<p> OSGi integration tests can be run as part of the build by including the following commandline switch to Maven:</p>
+<p> <code>-Pintegration</code></p>
+<h3 id="4-0-Maintainer-Notes"><a href="#4-0-Maintainer-Notes" class="headerlink" title="4.0 Maintainer Notes"></a>4.0 Maintainer Notes</h3><p>This section is relevant to those maintaining the Maven platform build. If you just want to build the library then you do not need to refer to this section.</p>
+<h4 id="4-1-Updating-POM-Version-to-Match-Core-Version"><a href="#4-1-Updating-POM-Version-to-Match-Core-Version" class="headerlink" title="4.1 Updating POM Version to Match Core Version"></a>4.1 Updating POM Version to Match Core Version</h4><p>Maven requires the version to be hard-coded in the POM or in otherwords it cannot be changed at runtime. When the core C&#x2F;C++ code version changes it is easy to forget to update the Maven version. The POM utilises the enforcer plugin to ensure the POM and Core versions match causing the build to fail if they do not.</p>
+<p>Should the POM version require updating then this can be done utilising the Maven ‘versions’ plugin and this will apply the correct version to all POMs within the project. Execute the following Maven command from the root directory of the Maven project:</p>
+<p><code>mvn versions:set -DnewVersion=$(. ./opencv/scripts/functions &amp;&amp; cd ./opencv/scripts &amp;&amp; extract_version &amp;&amp; echo $REPLY)</code></p>

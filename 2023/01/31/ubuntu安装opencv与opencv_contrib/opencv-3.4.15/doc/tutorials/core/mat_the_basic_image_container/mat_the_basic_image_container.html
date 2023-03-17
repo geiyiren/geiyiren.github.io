@@ -1,0 +1,90 @@
+<h1 id="Mat-The-Basic-Image-Container-tutorial-mat-the-basic-image-container"><a href="#Mat-The-Basic-Image-Container-tutorial-mat-the-basic-image-container" class="headerlink" title="Mat - The Basic Image Container {#tutorial_mat_the_basic_image_container}"></a>Mat - The Basic Image Container {#tutorial_mat_the_basic_image_container}</h1><p>@next_tutorial{tutorial_how_to_scan_images}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>We have multiple ways to acquire digital images from the real world: digital cameras, scanners,<br>computed tomography, and magnetic resonance imaging to name a few. In every case what we (humans)<br>see are images. However, when transforming this to our digital devices what we record are numerical<br>values for each of the points of the image.</p>
+<p><img src="/images/MatBasicImageForComputer.jpg"></p>
+<p>For example in the above image you can see that the mirror of the car is nothing more than a matrix<br>containing all the intensity values of the pixel points. How we get and store the pixels values may<br>vary according to our needs, but in the end all images inside a computer world may be reduced to<br>numerical matrices and other information describing the matrix itself. <em>OpenCV</em> is a computer vision<br>library whose main focus is to process and manipulate this information. Therefore, the first thing<br>you need to be familiar with is how OpenCV stores and handles images.</p>
+<h2 id="Mat"><a href="#Mat" class="headerlink" title="Mat"></a>Mat</h2><p>OpenCV has been around since 2001. In those days the library was built around a <em>C</em> interface and to<br>store the image in the memory they used a C structure called <em>IplImage</em>. This is the one you’ll see<br>in most of the older tutorials and educational materials. The problem with this is that it brings to<br>the table all the minuses of the C language. The biggest issue is the manual memory management. It<br>builds on the assumption that the user is responsible for taking care of memory allocation and<br>deallocation. While this is not a problem with smaller programs, once your code base grows it will<br>be more of a struggle to handle all this rather than focusing on solving your development goal.</p>
+<p>Luckily C++ came around and introduced the concept of classes making easier for the user through<br>automatic memory management (more or less). The good news is that C++ is fully compatible with C so<br>no compatibility issues can arise from making the change. Therefore, OpenCV 2.0 introduced a new C++<br>interface which offered a new way of doing things which means you do not need to fiddle with memory<br>management, making your code concise (less to write, to achieve more). The main downside of the C++<br>interface is that many embedded development systems at the moment support only C. Therefore, unless<br>you are targeting embedded platforms, there’s no point to using the <em>old</em> methods (unless you’re a<br>masochist programmer and you’re asking for trouble).</p>
+<p>The first thing you need to know about <em>Mat</em> is that you no longer need to manually allocate its<br>memory and release it as soon as you do not need it. While doing this is still a possibility, most<br>of the OpenCV functions will allocate its output data automatically. As a nice bonus if you pass on<br>an already existing <em>Mat</em> object, which has already allocated the required space for the matrix,<br>this will be reused. In other words we use at all times only as much memory as we need to perform<br>the task.</p>
+<p><em>Mat</em> is basically a class with two data parts: the matrix header (containing information such as<br>the size of the matrix, the method used for storing, at which address is the matrix stored, and so<br>on) and a pointer to the matrix containing the pixel values (taking any dimensionality depending on<br>the method chosen for storing) . The matrix header size is constant, however the size of the matrix<br>itself may vary from image to image and usually is larger by orders of magnitude.</p>
+<p>OpenCV is an image processing library. It contains a large collection of image processing functions.<br>To solve a computational challenge, most of the time you will end up using multiple functions of the<br>library. Because of this, passing images to functions is a common practice. We should not forget<br>that we are talking about image processing algorithms, which tend to be quite computational heavy.<br>The last thing we want to do is further decrease the speed of your program by making unnecessary<br>copies of potentially <em>large</em> images.</p>
+<p>To tackle this issue OpenCV uses a reference counting system. The idea is that each <em>Mat</em> object has<br>its own header, however a matrix may be shared between two <em>Mat</em> objects by having their matrix<br>pointers point to the same address. Moreover, the copy operators <strong>will only copy the headers</strong> and<br>the pointer to the large matrix, not the data itself.</p>
+<p>@code{.cpp}<br>Mat A, C;                          &#x2F;&#x2F; creates just the header parts<br>A &#x3D; imread(argv[1], IMREAD_COLOR); &#x2F;&#x2F; here we’ll know the method used (allocate matrix)</p>
+<p>Mat B(A);                                 &#x2F;&#x2F; Use the copy constructor</p>
+<p>C &#x3D; A;                                    &#x2F;&#x2F; Assignment operator<br>@endcode</p>
+<p>All the above objects, in the end, point to the same single data matrix and making a modification<br>using any of them will affect all the other ones as well. In practice the different objects just<br>provide different access methods to the same underlying data. Nevertheless, their header parts are<br>different. The real interesting part is that you can create headers which refer to only a subsection<br>of the full data. For example, to create a region of interest (<em>ROI</em>) in an image you just create<br>a new header with the new boundaries:<br>@code{.cpp}<br>Mat D (A, Rect(10, 10, 100, 100) ); &#x2F;&#x2F; using a rectangle<br>Mat E &#x3D; A(Range::all(), Range(1,3)); &#x2F;&#x2F; using row and column boundaries<br>@endcode<br>Now you may ask – if the matrix itself may belong to multiple <em>Mat</em> objects who takes responsibility<br>for cleaning it up when it’s no longer needed. The short answer is: the last object that used it.<br>This is handled by using a reference counting mechanism. Whenever somebody copies a header of a<br><em>Mat</em> object, a counter is increased for the matrix. Whenever a header is cleaned, this counter<br>is decreased. When the counter reaches zero the matrix is freed. Sometimes you will want to copy<br>the matrix itself too, so OpenCV provides @ref cv::Mat::clone() and @ref cv::Mat::copyTo() functions.<br>@code{.cpp}<br>Mat F &#x3D; A.clone();<br>Mat G;<br>A.copyTo(G);<br>@endcode<br>Now modifying <em>F</em> or <em>G</em> will not affect the matrix pointed by the <em>A</em>‘s header. What you need to<br>remember from all this is that:</p>
+<ul>
+<li>Output image allocation for OpenCV functions is automatic (unless specified otherwise).</li>
+<li>You do not need to think about memory management with OpenCV’s C++ interface.</li>
+<li>The assignment operator and the copy constructor only copies the header.</li>
+<li>The underlying matrix of an image may be copied using the @ref cv::Mat::clone() and @ref cv::Mat::copyTo()<br>functions.</li>
+</ul>
+<h2 id="Storing-methods"><a href="#Storing-methods" class="headerlink" title="Storing methods"></a>Storing methods</h2><p>This is about how you store the pixel values. You can select the color space and the data type used.<br>The color space refers to how we combine color components in order to code a given color. The<br>simplest one is the grayscale where the colors at our disposal are black and white. The combination<br>of these allows us to create many shades of gray.</p>
+<p>For <em>colorful</em> ways we have a lot more methods to choose from. Each of them breaks it down to three<br>or four basic components and we can use the combination of these to create the others. The most<br>popular one is RGB, mainly because this is also how our eye builds up colors. Its base colors are<br>red, green and blue. To code the transparency of a color sometimes a fourth element: alpha (A) is<br>added.</p>
+<p>There are, however, many other color systems each with their own advantages:</p>
+<ul>
+<li>RGB is the most common as our eyes use something similar, however keep in mind that OpenCV standard display<br>system composes colors using the BGR color space (red and blue channels are swapped places).</li>
+<li>The HSV and HLS decompose colors into their hue, saturation and value&#x2F;luminance components,<br>which is a more natural way for us to describe colors. You might, for example, dismiss the last<br>component, making your algorithm less sensible to the light conditions of the input image.</li>
+<li>YCrCb is used by the popular JPEG image format.</li>
+<li>CIE L*a*b* is a perceptually uniform color space, which comes in handy if you need to measure<br>the <em>distance</em> of a given color to another color.</li>
+</ul>
+<p>Each of the building components has its own valid domains. This leads to the data type used. How<br>we store a component defines the control we have over its domain. The smallest data type possible is<br><em>char</em>, which means one byte or 8 bits. This may be unsigned (so can store values from 0 to 255) or<br>signed (values from -127 to +127). Although in case of three components this already gives 16<br>million possible colors to represent (like in case of RGB) we may acquire an even finer control by<br>using the float (4 byte &#x3D; 32 bit) or double (8 byte &#x3D; 64 bit) data types for each component.<br>Nevertheless, remember that increasing the size of a component also increases the size of the whole<br>picture in the memory.</p>
+<h2 id="Creating-a-Mat-object-explicitly"><a href="#Creating-a-Mat-object-explicitly" class="headerlink" title="Creating a Mat object explicitly"></a>Creating a Mat object explicitly</h2><p>In the @ref tutorial_load_save_image tutorial you have already learned how to write a matrix to an image<br>file by using the @ref cv::imwrite() function. However, for debugging purposes it’s much more<br>convenient to see the actual values. You can do this using the &lt;&lt; operator of <em>Mat</em>. Be aware that<br>this only works for two dimensional matrices.</p>
+<p>Although <em>Mat</em> works really well as an image container, it is also a general matrix class.<br>Therefore, it is possible to create and manipulate multidimensional matrices. You can create a Mat<br>object in multiple ways:</p>
+<ul>
+<li><p>@ref cv::Mat::Mat Constructor</p>
+<p>@snippet mat_the_basic_image_container.cpp constructor</p>
+<p><img src="/images/MatBasicContainerOut1.png"></p>
+<p>For two dimensional and multichannel images we first define their size: row and column count wise.</p>
+<p>Then we need to specify the data type to use for storing the elements and the number of channels<br>per matrix point. To do this we have multiple definitions constructed according to the following<br>convention:<br>@code<br>CV_[The number of bits per item][Signed or Unsigned][Type Prefix]C[The channel number]<br>@endcode<br>For instance, <em>CV_8UC3</em> means we use unsigned char types that are 8 bit long and each pixel has<br>three of these to form the three channels. There are types predefined for up to four channels. The<br>@ref cv::Scalar is four element short vector. Specify it and you can initialize all matrix<br>points with a custom value. If you need more you can create the type with the upper macro, setting<br>the channel number in parenthesis as you can see below.</p>
+</li>
+<li><p>Use C&#x2F;C++ arrays and initialize via constructor</p>
+<p>@snippet mat_the_basic_image_container.cpp init</p>
+<p>The upper example shows how to create a matrix with more than two dimensions. Specify its<br>dimension, then pass a pointer containing the size for each dimension and the rest remains the<br>same.</p>
+</li>
+<li><p>@ref cv::Mat::create function:</p>
+<p>@snippet mat_the_basic_image_container.cpp create</p>
+<p><img src="/images/MatBasicContainerOut2.png"></p>
+<p>You cannot initialize the matrix values with this construction. It will only reallocate its matrix<br>data memory if the new size will not fit into the old one.</p>
+</li>
+<li><p>MATLAB style initializer: @ref cv::Mat::zeros , @ref cv::Mat::ones , @ref cv::Mat::eye . Specify size and<br>data type to use:</p>
+<p>@snippet mat_the_basic_image_container.cpp matlab</p>
+<p><img src="/images/MatBasicContainerOut3.png"></p>
+</li>
+<li><p>For small matrices you may use comma separated initializers or initializer lists (C++11 support is required in the last case):</p>
+<p>@snippet mat_the_basic_image_container.cpp comma</p>
+<p>@snippet mat_the_basic_image_container.cpp list</p>
+<p><img src="/images/MatBasicContainerOut6.png"></p>
+</li>
+<li><p>Create a new header for an existing <em>Mat</em> object and @ref cv::Mat::clone or @ref cv::Mat::copyTo it.</p>
+<p>@snippet mat_the_basic_image_container.cpp clone</p>
+<p><img src="/images/MatBasicContainerOut7.png"></p>
+<p>@note<br>You can fill out a matrix with random values using the @ref cv::randu() function. You need to<br>give a lower and upper limit for the random values:<br>@snippet mat_the_basic_image_container.cpp random</p>
+</li>
+</ul>
+<h2 id="Output-formatting"><a href="#Output-formatting" class="headerlink" title="Output formatting"></a>Output formatting</h2><p>In the above examples you could see the default formatting option. OpenCV, however, allows you to<br>format your matrix output:</p>
+<ul>
+<li><p>Default<br>@snippet mat_the_basic_image_container.cpp out-default<br><img src="/images/MatBasicContainerOut8.png"></p>
+</li>
+<li><p>Python<br>@snippet mat_the_basic_image_container.cpp out-python<br><img src="/images/MatBasicContainerOut16.png"></p>
+</li>
+<li><p>Comma separated values (CSV)<br>@snippet mat_the_basic_image_container.cpp out-csv<br><img src="/images/MatBasicContainerOut10.png"></p>
+</li>
+<li><p>Numpy<br>@snippet mat_the_basic_image_container.cpp out-numpy<br><img src="/images/MatBasicContainerOut9.png"></p>
+</li>
+<li><p>C<br>@snippet mat_the_basic_image_container.cpp out-c<br><img src="/images/MatBasicContainerOut11.png"></p>
+</li>
+</ul>
+<h2 id="Output-of-other-common-items"><a href="#Output-of-other-common-items" class="headerlink" title="Output of other common items"></a>Output of other common items</h2><p>OpenCV offers support for output of other common OpenCV data structures too via the &lt;&lt; operator:</p>
+<ul>
+<li><p>2D Point<br>@snippet mat_the_basic_image_container.cpp out-point2<br><img src="/images/MatBasicContainerOut12.png"></p>
+</li>
+<li><p>3D Point<br>@snippet mat_the_basic_image_container.cpp out-point3<br><img src="/images/MatBasicContainerOut13.png"></p>
+</li>
+<li><p>std::vector via cv::Mat<br>@snippet mat_the_basic_image_container.cpp out-vector<br><img src="/images/MatBasicContainerOut14.png"></p>
+</li>
+<li><p>std::vector of points<br>@snippet mat_the_basic_image_container.cpp out-vector-points<br><img src="/images/MatBasicContainerOut15.png"></p>
+</li>
+</ul>
+<p>Most of the samples here have been included in a small console application. You can download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/core/mat_the_basic_image_container/mat_the_basic_image_container.cpp">here</a><br>or in the core section of the cpp samples.</p>
+<p>You can also find a quick video demonstration of this on<br><a href="https://www.youtube.com/watch?v=1tibU7vGWpk">YouTube</a>.</p>
+<p>@youtube{1tibU7vGWpk}</p>

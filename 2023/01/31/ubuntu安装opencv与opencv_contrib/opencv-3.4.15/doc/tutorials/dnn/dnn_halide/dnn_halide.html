@@ -1,0 +1,36 @@
+<h1 id="How-to-enable-Halide-backend-for-improve-efficiency-tutorial-dnn-halide"><a href="#How-to-enable-Halide-backend-for-improve-efficiency-tutorial-dnn-halide" class="headerlink" title="How to enable Halide backend for improve efficiency  {#tutorial_dnn_halide}"></a>How to enable Halide backend for improve efficiency  {#tutorial_dnn_halide}</h1><p>@prev_tutorial{tutorial_dnn_googlenet}<br>@next_tutorial{tutorial_dnn_halide_scheduling}</p>
+<h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>This tutorial guidelines how to run your models in OpenCV deep learning module<br>using Halide language backend. Halide is an open-source project that let us<br>write image processing algorithms in well-readable format, schedule computations<br>according to specific device and evaluate it with a quite good efficiency.</p>
+<p>An official website of the Halide project: <a href="http://halide-lang.org/">http://halide-lang.org/</a>.</p>
+<p>An up to date efficiency comparison: <a href="https://github.com/opencv/opencv/wiki/DNN-Efficiency">https://github.com/opencv/opencv/wiki/DNN-Efficiency</a></p>
+<h2 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h2><h3 id="LLVM-compiler"><a href="#LLVM-compiler" class="headerlink" title="LLVM compiler"></a>LLVM compiler</h3><p>@note LLVM compilation might take a long time.</p>
+<ul>
+<li><p>Download LLVM source code from <a href="http://releases.llvm.org/4.0.0/llvm-4.0.0.src.tar.xz">http://releases.llvm.org/4.0.0/llvm-4.0.0.src.tar.xz</a>.<br>Unpack it. Let <strong>llvm_root</strong> is a root directory of source code.</p>
+</li>
+<li><p>Create directory <strong>llvm_root</strong>&#x2F;tools&#x2F;clang</p>
+</li>
+<li><p>Download Clang with the same version as LLVM. In our case it will be from<br><a href="http://releases.llvm.org/4.0.0/cfe-4.0.0.src.tar.xz">http://releases.llvm.org/4.0.0/cfe-4.0.0.src.tar.xz</a>. Unpack it into<br><strong>llvm_root</strong>&#x2F;tools&#x2F;clang. Note that it should be a root for Clang source code.</p>
+</li>
+<li><p>Build LLVM on Linux<br>@code<br>cd llvm_root<br>mkdir build &amp;&amp; cd build<br>cmake -DLLVM_ENABLE_TERMINFO&#x3D;OFF -DLLVM_TARGETS_TO_BUILD&#x3D;”X86” -DLLVM_ENABLE_ASSERTIONS&#x3D;ON -DCMAKE_BUILD_TYPE&#x3D;Release ..<br>make -j4<br>@endcode</p>
+</li>
+<li><p>Build LLVM on Windows (Developer Command Prompt)<br>@code<br>mkdir \path-to-llvm-build\ &amp;&amp; cd \path-to-llvm-build\<br>cmake.exe -DLLVM_ENABLE_TERMINFO&#x3D;OFF -DLLVM_TARGETS_TO_BUILD&#x3D;X86 -DLLVM_ENABLE_ASSERTIONS&#x3D;ON -DCMAKE_BUILD_TYPE&#x3D;Release -DCMAKE_INSTALL_PREFIX&#x3D;\path-to-llvm-install\ -G “Visual Studio 14 Win64” \path-to-llvm-src\<br>MSBuild.exe &#x2F;m:4 &#x2F;t:Build &#x2F;p:Configuration&#x3D;Release .\INSTALL.vcxproj<br>@endcode</p>
+</li>
+</ul>
+<p>@note <code>\\path-to-llvm-build\\</code> and <code>\\path-to-llvm-install\\</code> are different directories.</p>
+<h3 id="Halide-language"><a href="#Halide-language" class="headerlink" title="Halide language."></a>Halide language.</h3><ul>
+<li><p>Download source code from GitHub repository, <a href="https://github.com/halide/Halide">https://github.com/halide/Halide</a><br>or using git. The root directory will be a <strong>halide_root</strong>.<br>@code<br>git clone <a href="https://github.com/halide/Halide.git">https://github.com/halide/Halide.git</a><br>@endcode</p>
+</li>
+<li><p>Build Halide on Linux<br>@code<br>cd halide_root<br>mkdir build &amp;&amp; cd build<br>cmake -DLLVM_DIR&#x3D;llvm_root&#x2F;build&#x2F;lib&#x2F;cmake&#x2F;llvm -DCMAKE_BUILD_TYPE&#x3D;Release -DLLVM_VERSION&#x3D;40 -DWITH_TESTS&#x3D;OFF -DWITH_APPS&#x3D;OFF -DWITH_TUTORIALS&#x3D;OFF ..<br>make -j4<br>@endcode</p>
+</li>
+<li><p>Build Halide on Windows (Developer Command Prompt)<br>@code<br>cd halide_root<br>mkdir build &amp;&amp; cd build<br>cmake.exe -DLLVM_DIR&#x3D;\path-to-llvm-install\lib\cmake\llvm -DLLVM_VERSION&#x3D;40 -DWITH_TESTS&#x3D;OFF -DWITH_APPS&#x3D;OFF -DWITH_TUTORIALS&#x3D;OFF -DCMAKE_BUILD_TYPE&#x3D;Release -G “Visual Studio 14 Win64” ..<br>MSBuild.exe &#x2F;m:4 &#x2F;t:Build &#x2F;p:Configuration&#x3D;Release .\ALL_BUILD.vcxproj<br>@endcode</p>
+</li>
+</ul>
+<h2 id="Build-OpenCV-with-Halide-backend"><a href="#Build-OpenCV-with-Halide-backend" class="headerlink" title="Build OpenCV with Halide backend"></a>Build OpenCV with Halide backend</h2><p>When you build OpenCV add the following configuration flags:</p>
+<ul>
+<li><p><code>ENABLE_CXX11</code> - enable C++11 standard</p>
+</li>
+<li><p><code>WITH_HALIDE</code> - enable Halide linkage</p>
+</li>
+<li><p><code>HALIDE_ROOT_DIR</code> - path to Halide build directory</p>
+</li>
+</ul>
+<h2 id="Set-Halide-as-a-preferable-backend"><a href="#Set-Halide-as-a-preferable-backend" class="headerlink" title="Set Halide as a preferable backend"></a>Set Halide as a preferable backend</h2><p>@code<br>net.setPreferableBackend(DNN_BACKEND_HALIDE);<br>@endcode</p>

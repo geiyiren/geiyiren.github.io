@@ -1,0 +1,61 @@
+<h1 id="High-Dynamic-Range-Imaging-tutorial-hdr-imaging"><a href="#High-Dynamic-Range-Imaging-tutorial-hdr-imaging" class="headerlink" title="High Dynamic Range Imaging {#tutorial_hdr_imaging}"></a>High Dynamic Range Imaging {#tutorial_hdr_imaging}</h1><h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Today most digital images and imaging devices use 8 bits per channel thus limiting the dynamic range<br>of the device to two orders of magnitude (actually 256 levels), while human eye can adapt to<br>lighting conditions varying by ten orders of magnitude. When we take photographs of a real world<br>scene bright regions may be overexposed, while the dark ones may be underexposed, so we can’t<br>capture all details using a single exposure. HDR imaging works with images that use more that 8 bits<br>per channel (usually 32-bit float values), allowing much wider dynamic range.</p>
+<p>There are different ways to obtain HDR images, but the most common one is to use photographs of the<br>scene taken with different exposure values. To combine this exposures it is useful to know your<br>camera’s response function and there are algorithms to estimate it. After the HDR image has been<br>blended it has to be converted back to 8-bit to view it on usual displays. This process is called<br>tonemapping. Additional complexities arise when objects of the scene or camera move between shots,<br>since images with different exposures should be registered and aligned.</p>
+<p>In this tutorial we show how to generate and display HDR image from an exposure sequence. In our<br>case images are already aligned and there are no moving objects. We also demonstrate an alternative<br>approach called exposure fusion that produces low dynamic range image. Each step of HDR pipeline can<br>be implemented using different algorithms so take a look at the reference manual to see them all.</p>
+<h2 id="Exposure-sequence"><a href="#Exposure-sequence" class="headerlink" title="Exposure sequence"></a>Exposure sequence</h2><p><img src="/images/memorial.png"></p>
+<h2 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h2><p>@add_toggle_cpp<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/photo/hdr_imaging/hdr_imaging.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/photo/hdr_imaging/HDRImagingDemo.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/photo/hdr_imaging/hdr_imaging.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py<br>@end_toggle</p>
+<h2 id="Sample-images"><a href="#Sample-images" class="headerlink" title="Sample images"></a>Sample images</h2><p>Data directory that contains images, exposure times and <code>list.txt</code> file can be downloaded from<br><a href="https://github.com/opencv/opencv_extra/tree/3.4/testdata/cv/hdr/exposures">here</a>.</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><ul>
+<li><strong>Load images and exposure times</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Load images and exposure times<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Load images and exposure times<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Load images and exposure times<br>@end_toggle</p>
+<p>Firstly we load input images and exposure times from user-defined folder. The folder should<br>contain images and <em>list.txt</em> - file that contains file names and inverse exposure times.</p>
+<p>For our image sequence the list is following:<br>    @code{.none}<br>    memorial00.png 0.03125<br>    memorial01.png 0.0625<br>    …<br>    memorial15.png 1024<br>    @endcode</p>
+<ul>
+<li><strong>Estimate camera response</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Estimate camera response<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Estimate camera response<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Estimate camera response<br>@end_toggle</p>
+<p>It is necessary to know camera response function (CRF) for a lot of HDR construction algorithms.<br>We use one of the calibration algorithms to estimate inverse CRF for all 256 pixel values.</p>
+<ul>
+<li><strong>Make HDR image</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Make HDR image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Make HDR image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Make HDR image<br>@end_toggle</p>
+<p>We use Debevec’s weighting scheme to construct HDR image using response calculated in the previous<br>item.</p>
+<ul>
+<li><strong>Tonemap HDR image</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Tonemap HDR image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Tonemap HDR image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Tonemap HDR image<br>@end_toggle</p>
+<p>Since we want to see our results on common LDR display we have to map our HDR image to 8-bit range<br>preserving most details. It is the main goal of tonemapping methods. We use tonemapper with<br>bilateral filtering and set 2.2 as the value for gamma correction.</p>
+<ul>
+<li><strong>Perform exposure fusion</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Perform exposure fusion<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Perform exposure fusion<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Perform exposure fusion<br>@end_toggle</p>
+<p>There is an alternative way to merge our exposures in case when we don’t need HDR image. This<br>process is called exposure fusion and produces LDR image that doesn’t require gamma correction. It<br>also doesn’t use exposure values of the photographs.</p>
+<ul>
+<li><strong>Write results</strong></li>
+</ul>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.cpp Write results<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;HDRImagingDemo.java Write results<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;photo&#x2F;hdr_imaging&#x2F;hdr_imaging.py Write results<br>@end_toggle</p>
+<p>Now it’s time to look at the results. Note that HDR image can’t be stored in one of common image<br>formats, so we save it to Radiance image (.hdr). Also all HDR imaging functions return results in<br>[0, 1] range so we should multiply result by 255.</p>
+<p>You can try other tonemap algorithms: cv::TonemapDrago, cv::TonemapMantiuk and cv::TonemapReinhard<br>You can also adjust the parameters in the HDR calibration and tonemap methods for your own photos.</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><h3 id="Tonemapped-image"><a href="#Tonemapped-image" class="headerlink" title="Tonemapped image"></a>Tonemapped image</h3><p><img src="/images/ldr.png"></p>
+<h3 id="Exposure-fusion"><a href="#Exposure-fusion" class="headerlink" title="Exposure fusion"></a>Exposure fusion</h3><p><img src="/images/fusion.png"></p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><ol>
+<li>Paul E Debevec and Jitendra Malik. Recovering high dynamic range radiance maps from photographs. In ACM SIGGRAPH 2008 classes, page 31. ACM, 2008. @cite DM97</li>
+<li>Mark A Robertson, Sean Borman, and Robert L Stevenson. Dynamic range improvement through multiple exposures. In Image Processing, 1999. ICIP 99. Proceedings. 1999 International Conference on, volume 3, pages 159–163. IEEE, 1999. @cite RB99</li>
+<li>Tom Mertens, Jan Kautz, and Frank Van Reeth. Exposure fusion. In Computer Graphics and Applications, 2007. PG’07. 15th Pacific Conference on, pages 382–390. IEEE, 2007. @cite MK07</li>
+<li><a href="https://en.wikipedia.org/wiki/High-dynamic-range_imaging">Wikipedia-HDR</a></li>
+<li><a href="http://www.pauldebevec.com/Research/HDR/">Recovering High Dynamic Range Radiance Maps from Photographs (webpage)</a></li>
+</ol>

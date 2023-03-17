@@ -1,0 +1,29 @@
+<h1 id="Using-OpenCV-with-gcc-and-CMake-tutorial-linux-gcc-cmake"><a href="#Using-OpenCV-with-gcc-and-CMake-tutorial-linux-gcc-cmake" class="headerlink" title="Using OpenCV with gcc and CMake {#tutorial_linux_gcc_cmake}"></a>Using OpenCV with gcc and CMake {#tutorial_linux_gcc_cmake}</h1><p>@prev_tutorial{tutorial_linux_install}<br>@next_tutorial{tutorial_linux_eclipse}</p>
+<p>@note We assume that you have successfully installed OpenCV in your workstation.</p>
+<ul>
+<li>The easiest way of using OpenCV in your code is to use <a href="http://www.cmake.org/">CMake</a>. A few<br>advantages (taken from the Wiki):<br>-#  No need to change anything when porting between Linux and Windows<br>-#  Can easily be combined with other tools by CMake( i.e. Qt, ITK and VTK )</li>
+<li>If you are not familiar with CMake, checkout the<br><a href="http://www.cmake.org/cmake/help/cmake_tutorial.html">tutorial</a> on its website.</li>
+</ul>
+<h2 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h2><h3 id="Create-a-program-using-OpenCV"><a href="#Create-a-program-using-OpenCV" class="headerlink" title="Create a program using OpenCV"></a>Create a program using OpenCV</h3><p>Let’s use a simple program such as DisplayImage.cpp shown below.<br>@code{.cpp}<br>#include &lt;stdio.h&gt;<br>#include &lt;opencv2&#x2F;opencv.hpp&gt;</p>
+<p>using namespace cv;</p>
+<p>int main(int argc, char** argv )<br>{<br>    if ( argc !&#x3D; 2 )<br>    {<br>        printf(“usage: DisplayImage.out <Image_Path>\n”);<br>        return -1;<br>    }</p>
+<pre><code>Mat image;
+image = imread( argv[1], 1 );
+
+if ( !image.data )
+{
+    printf(&quot;No image data \n&quot;);
+    return -1;
+}
+namedWindow(&quot;Display Image&quot;, WINDOW_AUTOSIZE );
+imshow(&quot;Display Image&quot;, image);
+
+waitKey(0);
+
+return 0;
+</code></pre>
+<p>}<br>@endcode</p>
+<h3 id="Create-a-CMake-file"><a href="#Create-a-CMake-file" class="headerlink" title="Create a CMake file"></a>Create a CMake file</h3><p>Now you have to create your CMakeLists.txt file. It should look like this:<br>@code{.cmake}<br>cmake_minimum_required(VERSION 2.8)<br>project( DisplayImage )<br>find_package( OpenCV REQUIRED )<br>include_directories( ${OpenCV_INCLUDE_DIRS} )<br>add_executable( DisplayImage DisplayImage.cpp )<br>target_link_libraries( DisplayImage ${OpenCV_LIBS} )<br>@endcode</p>
+<h3 id="Generate-the-executable"><a href="#Generate-the-executable" class="headerlink" title="Generate the executable"></a>Generate the executable</h3><p>This part is easy, just proceed as with any other project using CMake:<br>@code{.bash}<br>cd <DisplayImage_directory><br>cmake .<br>make<br>@endcode</p>
+<h3 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h3><p>By now you should have an executable (called DisplayImage in this case). You just have to run it<br>giving an image location as an argument, i.e.:<br>@code{.bash}<br>.&#x2F;DisplayImage lena.jpg<br>@endcode<br>You should get a nice window as the one shown below:</p>
+<p><img src="/images/GCC_CMake_Example_Tutorial.jpg"></p>

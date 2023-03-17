@@ -1,0 +1,44 @@
+<h1 id="Camera-calibration-with-square-chessboard-tutorial-camera-calibration-square-chess"><a href="#Camera-calibration-with-square-chessboard-tutorial-camera-calibration-square-chess" class="headerlink" title="Camera calibration with square chessboard {#tutorial_camera_calibration_square_chess}"></a>Camera calibration with square chessboard {#tutorial_camera_calibration_square_chess}</h1><p>@prev_tutorial{tutorial_camera_calibration_pattern}<br>@next_tutorial{tutorial_camera_calibration}</p>
+<p>The goal of this tutorial is to learn how to calibrate a camera given a set of chessboard images.</p>
+<p><em>Test data</em>: use images in your data&#x2F;chess folder.</p>
+<ul>
+<li><p>Compile OpenCV with samples by setting BUILD_EXAMPLES to ON in cmake configuration.</p>
+</li>
+<li><p>Go to bin folder and use imagelist_creator to create an XML&#x2F;YAML list of your images.</p>
+</li>
+<li><p>Then, run calibration sample to get camera parameters. Use square size equal to 3cm.</p>
+</li>
+</ul>
+<h2 id="Pose-estimation"><a href="#Pose-estimation" class="headerlink" title="Pose estimation"></a>Pose estimation</h2><p>Now, let us write code that detects a chessboard in an image and finds its distance from the<br>camera. You can apply this method to any object with known 3D geometry; which you detect in an<br>image.</p>
+<p><em>Test data</em>: use chess_test*.jpg images from your data folder.</p>
+<ul>
+<li><p>Create an empty console project. Load a test image :</p>
+<pre><code>Mat img = imread(argv[1], IMREAD_GRAYSCALE);
+</code></pre>
+</li>
+<li><p>Detect a chessboard in this image using findChessboard function :</p>
+<pre><code>bool found = findChessboardCorners( img, boardSize, ptvec, CALIB_CB_ADAPTIVE_THRESH );
+</code></pre>
+</li>
+<li><p>Now, write a function that generates a vector&lt;Point3f&gt; array of 3d coordinates of a chessboard<br>in any coordinate system. For simplicity, let us choose a system such that one of the chessboard<br>corners is in the origin and the board is in the plane <em>z &#x3D; 0</em></p>
+</li>
+<li><p>Read camera parameters from XML&#x2F;YAML file :</p>
+<pre><code>FileStorage fs( filename, FileStorage::READ );
+Mat intrinsics, distortion;
+fs[&quot;camera_matrix&quot;] &gt;&gt; intrinsics;
+fs[&quot;distortion_coefficients&quot;] &gt;&gt; distortion;
+</code></pre>
+</li>
+<li><p>Now we are ready to find a chessboard pose by running `solvePnP` :</p>
+<pre><code>vector&lt;Point3f&gt; boardPoints;
+// fill the array
+...
+
+solvePnP(Mat(boardPoints), Mat(foundBoardCorners), cameraMatrix,
+                     distCoeffs, rvec, tvec, false);
+</code></pre>
+</li>
+<li><p>Calculate reprojection error like it is done in calibration sample (see<br>opencv&#x2F;samples&#x2F;cpp&#x2F;calibration.cpp, function computeReprojectionErrors).</p>
+</li>
+</ul>
+<p>Question: how would you calculate distance from the camera origin to any one of the corners?<br>Answer: As our image lies in a 3D space, firstly we would calculate the relative camera pose. This would give us 3D to 2D correspondences. Next, we can apply a simple L2 norm to calculate distance between any point (end point for corners).</p>

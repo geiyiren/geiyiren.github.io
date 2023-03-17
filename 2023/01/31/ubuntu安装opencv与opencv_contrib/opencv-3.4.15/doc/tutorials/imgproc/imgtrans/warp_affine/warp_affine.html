@@ -1,0 +1,137 @@
+<h1 id="Affine-Transformations-tutorial-warp-affine"><a href="#Affine-Transformations-tutorial-warp-affine" class="headerlink" title="Affine Transformations {#tutorial_warp_affine}"></a>Affine Transformations {#tutorial_warp_affine}</h1><p>@prev_tutorial{tutorial_remap}<br>@next_tutorial{tutorial_histogram_equalization}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the OpenCV function @ref cv::warpAffine to implement simple remapping routines.</li>
+<li>Use the OpenCV function @ref cv::getRotationMatrix2D to obtain a \f$2 \times 3\f$ rotation matrix</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><h3 id="What-is-an-Affine-Transformation"><a href="#What-is-an-Affine-Transformation" class="headerlink" title="What is an Affine Transformation?"></a>What is an Affine Transformation?</h3><p>-#  A transformation that can be expressed in the form of a <em>matrix multiplication</em> (linear<br>    transformation) followed by a <em>vector addition</em> (translation).<br>-#  From the above, we can use an Affine Transformation to express:</p>
+<pre><code>-#  Rotations (linear transformation)
+-#  Translations (vector addition)
+-#  Scale operations (linear transformation)
+
+you can see that, in essence, an Affine Transformation represents a **relation** between two
+images.
+</code></pre>
+<p>-#  The usual way to represent an Affine Transformation is by using a \f$2 \times 3\f$ matrix.</p>
+<pre><code>\f[
+A = \begin{bmatrix}
+    a_{00} &amp; a_{01} \\
+    a_{10} &amp; a_{11}
+    \end{bmatrix}_{2 \times 2}
+B = \begin{bmatrix}
+    b_{00} \\
+    b_{10}
+    \end{bmatrix}_{2 \times 1}
+\f]
+\f[
+M = \begin{bmatrix}
+    A &amp; B
+    \end{bmatrix}
+=
+</code></pre>
+<p>   \begin{bmatrix}<br>        a_{00} &amp; a_{01} &amp; b_{00} \<br>        a_{10} &amp; a_{11} &amp; b_{10}<br>   \end{bmatrix}_{2 \times 3}<br>   \f]</p>
+<pre><code>Considering that we want to transform a 2D vector \f$X = \begin{bmatrix}x \\ y\end{bmatrix}\f$ by
+using \f$A\f$ and \f$B\f$, we can do the same with:
+
+\f$T = A \cdot \begin{bmatrix}x \\ y\end{bmatrix} + B\f$ or \f$T = M \cdot  [x, y, 1]^{T}\f$
+
+\f[T =  \begin{bmatrix}
+    a_{00}x + a_{01}y + b_{00} \\
+    a_{10}x + a_{11}y + b_{10}
+    \end{bmatrix}\f]
+</code></pre>
+<h3 id="How-do-we-get-an-Affine-Transformation"><a href="#How-do-we-get-an-Affine-Transformation" class="headerlink" title="How do we get an Affine Transformation?"></a>How do we get an Affine Transformation?</h3><p>-#  We mentioned that an Affine Transformation is basically a <strong>relation</strong><br>    between two images. The information about this relation can come, roughly, in two ways:<br>    -#  We know both \f$X\f$ and T and we also know that they are related. Then our task is to find \f$M\f$<br>    -#  We know \f$M\f$ and \f$X\f$. To obtain \f$T\f$ we only need to apply \f$T &#x3D; M \cdot X\f$. Our information<br>        for \f$M\f$ may be explicit (i.e. have the 2-by-3 matrix) or it can come as a geometric relation<br>        between points.</p>
+<p>-#  Let’s explain this in a better way (b). Since \f$M\f$ relates 2 images, we can analyze the simplest<br>    case in which it relates three points in both images. Look at the figure below:</p>
+<pre><code>![](images/Warp_Affine_Tutorial_Theory_0.jpg)
+
+the points 1, 2 and 3 (forming a triangle in image 1) are mapped into image 2, still forming a
+triangle, but now they have changed notoriously. If we find the Affine Transformation with these
+3 points (you can choose them as you like), then we can apply this found relation to all the
+pixels in an image.
+</code></pre>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><ul>
+<li><strong>What does this program do?</strong><ul>
+<li>Loads an image</li>
+<li>Applies an Affine Transform to the image. This transform is obtained from the relation<br>between three points. We use the function @ref cv::warpAffine for that purpose.</li>
+<li>Applies a Rotation to the image after being transformed. This rotation is with respect to<br>the image center</li>
+<li>Waits until the user exits the program</li>
+</ul>
+</li>
+</ul>
+<p>@add_toggle_cpp</p>
+<ul>
+<li>The tutorial’s code is shown below. You can also download it<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/cpp/tutorial_code/ImgProc/Smoothing/Smoothing.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp<br>@end_toggle</li>
+</ul>
+<p>@add_toggle_java</p>
+<ul>
+<li>The tutorial’s code is shown below. You can also download it<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/cpp/tutorial_code/ImgProc/Smoothing/Smoothing.cpp">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java<br>@end_toggle</li>
+</ul>
+<p>@add_toggle_python</p>
+<ul>
+<li>The tutorial’s code is shown below. You can also download it<br><a href="https://raw.githubusercontent.com/opencv/opencv/3.4/samples/python/tutorial_code/ImgTrans/warp_affine/Geometric_Transforms_Demo.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py<br>@end_toggle</li>
+</ul>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><ul>
+<li><p>Load an image:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Load the image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Load the image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Load the image<br>@end_toggle</p>
+</li>
+<li><p><strong>Affine Transform:</strong> As we explained in lines above, we need two sets of 3 points to derive the<br>affine transform relation. Have a look:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Set your 3 points to calculate the  Affine Transform<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Set your 3 points to calculate the  Affine Transform<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Set your 3 points to calculate the  Affine Transform<br>@end_toggle<br>You may want to draw these points to get a better idea on how they change. Their locations are<br>approximately the same as the ones depicted in the example figure (in the Theory section). You<br>may note that the size and orientation of the triangle defined by the 3 points change.</p>
+</li>
+<li><p>Armed with both sets of points, we calculate the Affine Transform by using OpenCV function @ref<br>cv::getAffineTransform :</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Get the Affine Transform<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Get the Affine Transform<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Get the Affine Transform<br>@end_toggle<br>We get a \f$2 \times 3\f$ matrix as an output (in this case <strong>warp_mat</strong>)</p>
+</li>
+<li><p>We then apply the Affine Transform just found to the src image</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Apply the Affine Transform just found to the src image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Apply the Affine Transform just found to the src image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Apply the Affine Transform just found to the src image<br>@end_toggle<br>with the following arguments:</p>
+<ul>
+<li><strong>src</strong>: Input image</li>
+<li><strong>warp_dst</strong>: Output image</li>
+<li><strong>warp_mat</strong>: Affine transform</li>
+<li><strong>warp_dst.size()</strong>: The desired size of the output image</li>
+</ul>
+<p>We just got our first transformed image! We will display it in one bit. Before that, we also<br>want to rotate it…</p>
+</li>
+<li><p><strong>Rotate:</strong> To rotate an image, we need to know two things:</p>
+<p>-#  The center with respect to which the image will rotate<br>-#  The angle to be rotated. In OpenCV a positive angle is counter-clockwise<br>-#  <em>Optional:</em> A scale factor</p>
+<p>We define these parameters with the following snippet:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Compute a rotation matrix with respect to the center of the image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Compute a rotation matrix with respect to the center of the image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Compute a rotation matrix with respect to the center of the image<br>@end_toggle</p>
+</li>
+<li><p>We generate the rotation matrix with the OpenCV function @ref cv::getRotationMatrix2D , which<br>returns a \f$2 \times 3\f$ matrix (in this case <em>rot_mat</em>)</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Get the rotation matrix with the specifications above<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Get the rotation matrix with the specifications above<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Get the rotation matrix with the specifications above<br>@end_toggle</p>
+</li>
+<li><p>We now apply the found rotation to the output of our previous Transformation:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Rotate the warped image<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Rotate the warped image<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Rotate the warped image<br>@end_toggle</p>
+</li>
+<li><p>Finally, we display our results in two windows plus the original image for good measure:</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Show what you got<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Show what you got<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Show what you got<br>@end_toggle</p>
+</li>
+<li><p>We just have to wait until the user exits the program</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;Geometric_Transforms_Demo.cpp Wait until user exits the program<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;GeometricTransformsDemo.java Wait until user exits the program<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ImgTrans&#x2F;warp_affine&#x2F;Geometric_Transforms_Demo.py Wait until user exits the program<br>@end_toggle</p>
+</li>
+</ul>
+<h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><ul>
+<li><p>After compiling the code above, we can give it the path of an image as argument. For instance,<br>for a picture like:</p>
+<p><img src="/images/Warp_Affine_Tutorial_Original_Image.jpg"></p>
+<p>after applying the first Affine Transform we obtain:</p>
+<p><img src="/images/Warp_Affine_Tutorial_Result_Warp.jpg"></p>
+<p>and finally, after applying a negative rotation (remember negative means clockwise) and a scale<br>factor, we get:</p>
+<p><img src="/images/Warp_Affine_Tutorial_Result_Warp_Rotate.jpg"></p>
+</li>
+</ul>

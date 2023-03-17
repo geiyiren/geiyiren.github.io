@@ -1,0 +1,55 @@
+<h1 id="Installation-in-MacOS-tutorial-macos-install"><a href="#Installation-in-MacOS-tutorial-macos-install" class="headerlink" title="Installation in MacOS {#tutorial_macos_install}"></a>Installation in MacOS {#tutorial_macos_install}</h1><p>@prev_tutorial{tutorial_android_ocl_intro}<br>@next_tutorial{tutorial_ios_install}</p>
+<p>The following steps have been tested for MacOSX (Mavericks) but should work with other versions as well.</p>
+<h2 id="Required-Packages"><a href="#Required-Packages" class="headerlink" title="Required Packages"></a>Required Packages</h2><ul>
+<li>CMake 3.9 or higher</li>
+<li>Git</li>
+<li>Python 2.7 or later and Numpy 1.5 or later</li>
+</ul>
+<p>This tutorial will assume you have <a href="https://docs.python.org/3/using/mac.html">Python</a>,<br><a href="https://docs.scipy.org/doc/numpy-1.10.1/user/install.html">Numpy</a> and<br><a href="https://www.atlassian.com/git/tutorials/install-git">Git</a> installed on your machine.</p>
+<p>@note<br>OSX comes with Python 2.7 by default, you will need to install Python 3.8 if you want to use it specifically.</p>
+<p>@note<br>If you XCode and XCode Command Line-Tools installed, you already have git installed on your machine.</p>
+<h2 id="Installing-CMake"><a href="#Installing-CMake" class="headerlink" title="Installing CMake"></a>Installing CMake</h2><p>-# Find the version for your system and download CMake from their release’s <a href="https://cmake.org/download/">page</a></p>
+<p>-# Install the dmg package and launch it from Applications. That will give you the UI app of CMake</p>
+<p>-# From the CMake app window, choose menu Tools –&gt; How to Install For Command Line Use. Then, follow the instructions from the pop-up there.</p>
+<p>-# Install folder will be &#x2F;usr&#x2F;bin&#x2F; by default, submit it by choosing Install command line links.</p>
+<p>-# Test that it works by running<br>    @code{.bash}<br>    cmake –version<br>    @endcode</p>
+<p>@note You can use <a href="https://brew.sh/">Homebrew</a> to install CMake with @code{.bash} brew install cmake @endcode</p>
+<h2 id="Getting-OpenCV-Source-Code"><a href="#Getting-OpenCV-Source-Code" class="headerlink" title="Getting OpenCV Source Code"></a>Getting OpenCV Source Code</h2><p>You can use the latest stable OpenCV version or you can grab the latest snapshot from our<br><a href="https://github.com/opencv/opencv.git">Git repository</a>.</p>
+<h3 id="Getting-the-Latest-Stable-OpenCV-Version"><a href="#Getting-the-Latest-Stable-OpenCV-Version" class="headerlink" title="Getting the Latest Stable OpenCV Version"></a>Getting the Latest Stable OpenCV Version</h3><ul>
+<li>Go to our <a href="http://opencv.org/releases.html">downloads page</a>.</li>
+<li>Download the source archive and unpack it.</li>
+</ul>
+<h3 id="Getting-the-Cutting-edge-OpenCV-from-the-Git-Repository"><a href="#Getting-the-Cutting-edge-OpenCV-from-the-Git-Repository" class="headerlink" title="Getting the Cutting-edge OpenCV from the Git Repository"></a>Getting the Cutting-edge OpenCV from the Git Repository</h3><p>Launch Git client and clone <a href="http://github.com/opencv/opencv">OpenCV repository</a>.<br>If you need modules from <a href="http://github.com/opencv/opencv_contrib">OpenCV contrib repository</a> then clone it as well.</p>
+<h2 id="For-example-code-bash-cd-x2F-git-clone-https-github-com-opencv-opencv-gitgit-clone-https-github-com-opencv-opencv-contrib-git-endcodeBuilding-OpenCV-from-Source-Using-CMake"><a href="#For-example-code-bash-cd-x2F-git-clone-https-github-com-opencv-opencv-gitgit-clone-https-github-com-opencv-opencv-contrib-git-endcodeBuilding-OpenCV-from-Source-Using-CMake" class="headerlink" title="For example@code{.bash}cd ~&#x2F;git clone https://github.com/opencv/opencv.gitgit clone https://github.com/opencv/opencv_contrib.git@endcodeBuilding OpenCV from Source Using CMake"></a>For example<br>@code{.bash}<br>cd ~&#x2F;<my_working_directory><br>git clone <a href="https://github.com/opencv/opencv.git">https://github.com/opencv/opencv.git</a><br>git clone <a href="https://github.com/opencv/opencv_contrib.git">https://github.com/opencv/opencv_contrib.git</a><br>@endcode<br>Building OpenCV from Source Using CMake</h2><p>-#  Create a temporary directory, which we denote as <code>build_opencv</code>, where you want to put<br>    the generated Makefiles, project files as well the object files and output binaries and enter<br>    there.</p>
+<pre><code>For example
+@code{.bash}
+mkdir build_opencv
+cd build_opencv
+@endcode
+
+@note It is good practice to keep clean your source code directories. Create build directory outside of source tree.
+</code></pre>
+<p>-#  Configuring. Run <code>cmake [&lt;some optional parameters&gt;] &lt;path to the OpenCV source directory&gt;</code></p>
+<pre><code>For example
+@code{.bash}
+cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_EXAMPLES=ON ../opencv
+@endcode
+
+or cmake-gui
+
+-   set the OpenCV source code path to, e.g. `/home/user/opencv`
+-   set the binary build path to your CMake build directory, e.g. `/home/user/build_opencv`
+-   set optional parameters
+-   run: &quot;Configure&quot;
+-   run: &quot;Generate&quot;
+</code></pre>
+<p>-#  Description of some parameters<br>    -   build type: <code>CMAKE_BUILD_TYPE=Release</code> (or <code>Debug</code>)<br>    -   to build with modules from opencv_contrib set <code>OPENCV_EXTRA_MODULES_PATH</code> to <code>&lt;path to         opencv_contrib&gt;/modules</code><br>    -   set <code>BUILD_DOCS=ON</code> for building documents (doxygen is required)<br>    -   set <code>BUILD_EXAMPLES=ON</code> to build all examples</p>
+<p>-#  [optional] Building python. Set the following python parameters:<br>    -   <code>PYTHON3_EXECUTABLE = &lt;path to python&gt;</code><br>    -   <code>PYTHON3_INCLUDE_DIR = /usr/include/python&lt;version&gt;</code><br>    -   <code>PYTHON3_NUMPY_INCLUDE_DIRS =         /usr/lib/python&lt;version&gt;/dist-packages/numpy/core/include/</code><br>    @note<br>    To specify Python2 versions, you can replace <code>PYTHON3_</code> with <code>PYTHON2_</code> in the above parameters.</p>
+<p>-#  Build. From build directory execute <em>make</em>, it is recommended to do this in several threads</p>
+<pre><code>For example
+@code{.bash}
+make -j7 # runs 7 jobs in parallel
+@endcode
+</code></pre>
+<p>-#  To use OpenCV in your CMake-based projects through <code>find_package(OpenCV)</code> specify <code>OpenCV_DIR=&lt;path_to_build_or_install_directory&gt;</code> variable.</p>
+<p>@note<br>You can also use a package manager like <a href="https://brew.sh/">Homebrew</a><br>or <a href="https://pip.pypa.io/en/stable/">pip</a> to install releases of OpenCV only (Not the cutting edge).</p>

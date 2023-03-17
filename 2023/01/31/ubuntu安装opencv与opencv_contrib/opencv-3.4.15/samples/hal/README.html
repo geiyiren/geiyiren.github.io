@@ -1,0 +1,21 @@
+<h1 id="Custom-HAL-samples"><a href="#Custom-HAL-samples" class="headerlink" title="Custom HAL samples"></a>Custom HAL samples</h1><p>Samples in this folder are intended to demonstrate functionality replacement mechanism in the OpenCV library.</p>
+<p>The <strong>c_hal</strong> is the example of pure C replacement library with all functions returning error. It can be used to verify error handling in the function switching code.</p>
+<p>The <strong>slow_hal</strong> contains naive C++ implementations of the element-wise logical array operations (and, or, xor, not) making them twice slower than the default.</p>
+<h2 id="Build-custom-HAL-replacement-library"><a href="#Build-custom-HAL-replacement-library" class="headerlink" title="Build custom HAL replacement library"></a>Build custom HAL replacement library</h2><ol>
+<li>Create folder for build (for example <code>&lt;home-dir&gt;/my-hal-build</code>)</li>
+<li>Go to the created folder and run cmake: <code>cmake &lt;opencv-src&gt;/samples/hal/slow_hal</code></li>
+<li>Run make</li>
+</ol>
+<p>After build you will find static library in the build folder: <code>libslow_hal.a</code></p>
+<h2 id="Build-OpenCV-with-HAL-replacement"><a href="#Build-OpenCV-with-HAL-replacement" class="headerlink" title="Build OpenCV with HAL replacement"></a>Build OpenCV with HAL replacement</h2><ol>
+<li>Create folder for build (for example <code>&lt;home-dir&gt;/my-opencv-build</code>)</li>
+<li>Go to the created folder and run cmake:<pre><code>cmake \
+    -DOpenCV_HAL_DIR=&quot;&lt;home-dir&gt;/my-hal-build/&quot; \
+    &lt;opencv-src&gt;
+</code></pre>
+</li>
+<li>Run make (or <code>make opencv_perf_core</code> to build the demonstration test executable only)</li>
+<li>After build you can run the tests and verify that some functions works slower:<pre><code>./bin/opencv_perf_core --gtest_filter=*bitwise_and*
+</code></pre>
+</li>
+</ol>

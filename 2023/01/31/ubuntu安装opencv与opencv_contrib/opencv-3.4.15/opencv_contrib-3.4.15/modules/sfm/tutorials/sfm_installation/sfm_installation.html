@@ -1,0 +1,21 @@
+<h1 id="SFM-module-installation-tutorial-sfm-installation"><a href="#SFM-module-installation-tutorial-sfm-installation" class="headerlink" title="SFM module installation {#tutorial_sfm_installation}"></a>SFM module installation {#tutorial_sfm_installation}</h1><h2 id="Dependencies"><a href="#Dependencies" class="headerlink" title="Dependencies"></a>Dependencies</h2><p>The Structure from Motion module depends on some open source libraries.</p>
+<ul>
+<li><a href="http://eigen.tuxfamily.org/">Eigen</a> 3.2.2 or later. \b Required</li>
+<li><a href="https://github.com/google/glog">GLog</a> 0.3.1 or later. \b Required</li>
+<li><a href="https://github.com/gflags">GFlags</a>. \b Required</li>
+<li><a href="http://ceres-solver.org/">Ceres Solver</a>. Needed by the reconstruction API in order to solve part of the Bundle Adjustment plus the points Intersect. If Ceres Solver is not installed on your system, the reconstruction funcionality will be disabled. \b Recommended</li>
+</ul>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p><strong>Required Dependencies</strong></p>
+<p>In case you are on <a href="http://www.ubuntu.com/">Ubuntu</a> you can simply install the required dependencies by typing the following command:</p>
+<p>@code{.bash}<br>  sudo apt-get install libeigen3-dev libgflags-dev libgoogle-glog-dev<br>@endcode</p>
+<p><strong>Ceres Solver</strong></p>
+<p>Start by installing all the dependencies:</p>
+<p>@code{.bash}</p>
+<h1 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h1><p>  sudo apt-get install cmake</p>
+<h1 id="google-glog-gflags"><a href="#google-glog-gflags" class="headerlink" title="google-glog + gflags"></a>google-glog + gflags</h1><p>  sudo apt-get install libgoogle-glog-dev</p>
+<h1 id="BLAS-amp-LAPACK"><a href="#BLAS-amp-LAPACK" class="headerlink" title="BLAS &amp; LAPACK"></a>BLAS &amp; LAPACK</h1><p>  sudo apt-get install libatlas-base-dev</p>
+<h1 id="Eigen3"><a href="#Eigen3" class="headerlink" title="Eigen3"></a>Eigen3</h1><p>  sudo apt-get install libeigen3-dev</p>
+<h1 id="SuiteSparse-and-CXSparse-optional"><a href="#SuiteSparse-and-CXSparse-optional" class="headerlink" title="SuiteSparse and CXSparse (optional)"></a>SuiteSparse and CXSparse (optional)</h1><h1 id="If-you-want-to-build-Ceres-as-a-static-library-the-default"><a href="#If-you-want-to-build-Ceres-as-a-static-library-the-default" class="headerlink" title="- If you want to build Ceres as a static library (the default)"></a>- If you want to build Ceres as a <em>static</em> library (the default)</h1><h1 id="you-can-use-the-SuiteSparse-package-in-the-main-Ubuntu-package"><a href="#you-can-use-the-SuiteSparse-package-in-the-main-Ubuntu-package" class="headerlink" title="you can use the SuiteSparse package in the main Ubuntu package"></a>you can use the SuiteSparse package in the main Ubuntu package</h1><h1 id="repository"><a href="#repository" class="headerlink" title="repository:"></a>repository:</h1><p>  sudo apt-get install libsuitesparse-dev</p>
+<h1 id="However-if-you-want-to-build-Ceres-as-a-shared-library-you-must"><a href="#However-if-you-want-to-build-Ceres-as-a-shared-library-you-must" class="headerlink" title="- However, if you want to build Ceres as a shared library, you must"></a>- However, if you want to build Ceres as a <em>shared</em> library, you must</h1><h1 id="add-the-following-PPA"><a href="#add-the-following-PPA" class="headerlink" title="add the following PPA:"></a>add the following PPA:</h1><p>  sudo add-apt-repository ppa:bzindovic&#x2F;suitesparse-bugfix-1319687<br>  sudo apt-get update<br>  sudo apt-get install libsuitesparse-dev<br>@endcode</p>
+<p>We are now ready to build, test, and install Ceres:</p>
+<p>@code{.bash}<br>  git clone <a href="https://ceres-solver.googlesource.com/ceres-solver">https://ceres-solver.googlesource.com/ceres-solver</a><br>  cd ceres-solver<br>  mkdir build &amp;&amp; cd build<br>  cmake ..<br>  make -j4<br>  make test<br>  sudo make install<br>@endcode</p>

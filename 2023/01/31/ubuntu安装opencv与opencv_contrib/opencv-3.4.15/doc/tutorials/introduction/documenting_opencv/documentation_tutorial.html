@@ -1,0 +1,303 @@
+<h1 id="Writing-documentation-for-OpenCV-tutorial-documentation"><a href="#Writing-documentation-for-OpenCV-tutorial-documentation" class="headerlink" title="Writing documentation for OpenCV {#tutorial_documentation}"></a>Writing documentation for OpenCV {#tutorial_documentation}</h1><p>@prev_tutorial{tutorial_display_image}<br>@next_tutorial{tutorial_transition_guide}</p>
+<p>@tableofcontents</p>
+<h1 id="Doxygen-overview-tutorial-documentation-overview"><a href="#Doxygen-overview-tutorial-documentation-overview" class="headerlink" title="Doxygen overview {#tutorial_documentation_overview}"></a>Doxygen overview {#tutorial_documentation_overview}</h1><h2 id="Intro-tutorial-documentation-intro"><a href="#Intro-tutorial-documentation-intro" class="headerlink" title="Intro {#tutorial_documentation_intro}"></a>Intro {#tutorial_documentation_intro}</h2><p><a href="http://www.doxygen.nl/">Doxygen</a> is documentation generation system with a lot of great features, such as:</p>
+<ul>
+<li>parse program sources to produce actual and accurate documentation</li>
+<li>check documentation for errors</li>
+<li>insert images and formulas</li>
+<li>use markdown syntax and plain HTML for precise text formatting</li>
+<li>generate documentation in many different formats</li>
+</ul>
+<p>OpenCV library existing documentation has been converted to doxygen format.</p>
+<h2 id="Installation-tutorial-documentation-install"><a href="#Installation-tutorial-documentation-install" class="headerlink" title="Installation {#tutorial_documentation_install}"></a>Installation {#tutorial_documentation_install}</h2><p>Please, check official <a href="http://doxygen.nl/download.html">download</a> and <a href="http://doxygen.nl/manual/install.html">installation</a> pages.<br>Some linux distributions can also provide doxygen packages.</p>
+<h2 id="Generate-documentation-tutorial-documentation-generate"><a href="#Generate-documentation-tutorial-documentation-generate" class="headerlink" title="Generate documentation {#tutorial_documentation_generate}"></a>Generate documentation {#tutorial_documentation_generate}</h2><ul>
+<li>Get the OpenCV sources (version 3.0 and later)</li>
+<li><em>Optional:</em> get the OpenCV_contrib sources</li>
+<li>Create build directory near the sources folder(s) and go into it</li>
+<li>Run cmake (assuming you put sources to <em>opencv</em> folder):<br>@code{.sh}<br>cmake -DBUILD_DOCS&#x3D;ON ..&#x2F;opencv<br>@endcode<br>Or if you get contrib sources too:<br>@code{.sh}<br>cmake -DBUILD_DOCS&#x3D;ON -DOPENCV_EXTRA_MODULES_PATH&#x3D;..&#x2F;opencv_contrib&#x2F;modules ..&#x2F;opencv<br>@endcode</li>
+<li>Run make:<br>@code{.sh}<br>make doxygen<br>@endcode</li>
+<li>Open <i>doc&#x2F;doxygen&#x2F;html&#x2F;index.html</i> file in your favorite browser</li>
+<li>Test your Python code:<br>@code{.sh}<br>make check_pylint<br>@endcode<br>@note <a href="https://www.pylint.org/#install">Pylint</a> must be installed before running cmake to be<br>able to test Python code. You can install using your system’s package manager, or with pip:<br>@code{.sh} pip install pylint @endcode</li>
+</ul>
+<h1 id="Quick-start-tutorial-documentation-quick-start"><a href="#Quick-start-tutorial-documentation-quick-start" class="headerlink" title="Quick start {#tutorial_documentation_quick_start}"></a>Quick start {#tutorial_documentation_quick_start}</h1><p>@note These instructions are specific to OpenCV library documentation, other projects can use<br>different layout scheme and documenting agreements.</p>
+<h2 id="Documentation-locations-tutorial-documentation-quick-start-1"><a href="#Documentation-locations-tutorial-documentation-quick-start-1" class="headerlink" title="Documentation locations {#tutorial_documentation_quick_start_1}"></a>Documentation locations {#tutorial_documentation_quick_start_1}</h2><p>Whole documentation is gathered from many different places:</p>
+<ul>
+<li><p><strong>source code</strong> entities, like classes, functions or enumerations, should be documented in<br>corresponding header files, right prior entity definition. See examples in next sections.</p>
+</li>
+<li><p><strong>pages</strong> are good place to put big pieces of text with images and code examples not directly<br>connected with any source code entity. Pages should be located in separate files and<br>contained in several predefined places. This tutorial is example of such page.</p>
+</li>
+<li><p><strong>images</strong> can be used to illustrate described things. Usually located at the same places as pages,<br>images can be inserted to any place of the documentation.</p>
+</li>
+<li><p><strong>code examples</strong> show how to use the library in real applications. Each sample is<br>self-contained file which represents one simple application. Parts of these files can be<br>included into documentation and tutorials to demonstrate function calls and objects collaboration.</p>
+</li>
+<li><p><strong>BibTeX references</strong> are used to create one common bibliography. All science books, articles and<br>proceedings served as basis for library functionality should be put in this reference list.</p>
+</li>
+</ul>
+<p>Following scheme represents common documentation places for <em>opencv</em> repository:</p>
+<pre><code>&lt;opencv&gt;
+├── doc             - doxygen config files, root page (root.markdown.in), BibTeX file (opencv.bib)
+│   ├── tutorials       - tutorials hierarchy (pages and images)
+│   └── py_tutorials    - python tutorials hierarchy (pages and images)
+├── modules
+│   └── &lt;modulename&gt;
+│       ├── doc         - documentation pages and images for module
+│       └── include     - code documentation in header files
+└── samples         - place for all code examples
+    ├── cpp
+    │   └── tutorial_code   - place for tutorial code examples
+    └── ...
+</code></pre>
+<p>@note Automatic code parser looks for all header files (<i>“.h, .hpp”</i> except for <i>“.inl.hpp;<br>.impl.hpp; _detail.hpp”</i>) in <em>include</em> folder and its subfolders. Some module-specific<br>instructions (group definitions) and documentation should be put into<br><i>“include&#x2F;opencv2&#x2F;<module-name>.hpp”</i> file.</p>
+<p>@note You can put C++ template implementation and specialization to separate files<br>(<i>“.impl.hpp”</i>) ignored by doxygen.</p>
+<p>@note Files in <em>src</em> subfolder are not parsed, because documentation is intended mostly for the<br>library users, not developers. But it still is possible to generate full documentation by<br>customizing processed files list in cmake script (<i>doc&#x2F;CMakeLists.txt</i>) and doxygen options in<br>its configuration file (<i>doc&#x2F;Doxyfile.in</i>).</p>
+<p>Since version 3.0 all new modules are placed into <em>opencv_contrib</em> repository, it has slightly<br>different layout:</p>
+<pre><code>&lt;opencv_contrib&gt;
+└── modules
+    └── &lt;modulename&gt;
+        ├── doc         - documentation pages and images, BibTeX file (&lt;modulename&gt;.bib)
+        ├── include     - code documentation in header files
+        ├── samples     - place for code examples for documentation and tutorials
+        └── tutorials   - tutorial pages and images
+</code></pre>
+<h2 id="Example-tutorial-documentation-quick-start-2"><a href="#Example-tutorial-documentation-quick-start-2" class="headerlink" title="Example {#tutorial_documentation_quick_start_2}"></a>Example {#tutorial_documentation_quick_start_2}</h2><p>To add documentation for functions, classes and other entities, just insert special comment prior<br>its definition. Like this:</p>
+<p>@verbatim<br>&#x2F;** @brief Calculates the exponent of every array element.</p>
+<p>The function exp calculates the exponent of every element of the input array:<br>\f[ \texttt{dst} [I] &#x3D; e^{ src(I) } \f]</p>
+<p>The maximum relative error is about 7e-6 for single-precision input and less than 1e-10 for<br>double-precision input. Currently, the function converts denormalized values to zeros on output.<br>Special values (NaN, Inf) are not handled.</p>
+<p>@param src input array.<br>@param dst output array of the same size and type as src.</p>
+<p>@sa log , cartToPolar , polarToCart , phase , pow , sqrt , magnitude<br>*&#x2F;<br>CV_EXPORTS_W void exp(InputArray src, OutputArray dst);<br>@endverbatim</p>
+<p>Here you can see:</p>
+<ul>
+<li><p>special C-comment syntax denotes it is doxygen comment<br>@verbatim &#x2F;** … *&#x2F; @endverbatim</p>
+</li>
+<li><p>command <code>brief</code> denotes following paragraph is a brief description<br>@verbatim @brief @endverbatim</p>
+</li>
+<li><p>empty line denotes paragraph end</p>
+</li>
+<li><p>TeX formula between <code>f[</code> and <code>f]</code> commands<br>@verbatim \f[ … \f] @endverbatim</p>
+</li>
+<li><p>command <code>param</code> denotes following word is name of the parameter and following text is<br>description of the parameter; all parameters are placed in a list<br>@verbatim @param @endverbatim</p>
+</li>
+<li><p>command <code>sa</code> starts “See also” paragraph containing references to some classes, methods, pages or URLs.<br>@verbatim @sa @endverbatim</p>
+</li>
+</ul>
+<p>Produced reference item looks like this:<br><img src="/doxygen-2.png" alt="Reference link"></p>
+<p>The “More…” link brings you to the function documentation:<br><img src="/doxygen-1.png" alt="Function documentation"></p>
+<h2 id="Another-example-tutorial-documentation-quick-start-3"><a href="#Another-example-tutorial-documentation-quick-start-3" class="headerlink" title="Another example {#tutorial_documentation_quick_start_3}"></a>Another example {#tutorial_documentation_quick_start_3}</h2><p>Different comment syntax can be used for one-line short comments:</p>
+<p>@verbatim<br>&#x2F;&#x2F;! type of line<br>enum LineTypes {<br>    FILLED  &#x3D; -1,<br>    LINE_4  &#x3D; 4, &#x2F;&#x2F;!&lt; 4-connected line<br>    LINE_8  &#x3D; 8, &#x2F;&#x2F;!&lt; 8-connected line<br>    LINE_AA &#x3D; 16 &#x2F;&#x2F;!&lt; antialiased line<br>};<br>@endverbatim</p>
+<p>Here:</p>
+<ul>
+<li><p>special C++-comment syntax denotes it is doxygen comment<br>@verbatim &#x2F;&#x2F;! @endverbatim</p>
+</li>
+<li><p>additional symbol <code>&lt;</code> denotes this comment is located <em>after</em> documented entity<br>@verbatim &#x2F;&#x2F;!&lt; @endverbatim</p>
+</li>
+</ul>
+<p>Produced documentation block looks like this:<br><img src="/doxygen-3.png" alt="Enumeration documentation"></p>
+<h2 id="More-details-tutorial-documentation-quick-start-4"><a href="#More-details-tutorial-documentation-quick-start-4" class="headerlink" title="More details {#tutorial_documentation_quick_start_4}"></a>More details {#tutorial_documentation_quick_start_4}</h2><h3 id="Command-prefix"><a href="#Command-prefix" class="headerlink" title="Command prefix"></a>Command prefix</h3><p>Doxygen commands starts with <code>@</code> or <code>\</code> sign:<br>@verbatim<br>@brief …<br>or<br>\brief …<br>@endverbatim</p>
+<h3 id="Comment-syntax"><a href="#Comment-syntax" class="headerlink" title="Comment syntax"></a>Comment syntax</h3><p>Doxygen comment can have different forms:<br>@verbatim<br>C-style:<br>&#x2F;** … <em>&#x2F;<br>or<br>&#x2F;</em>! … *&#x2F;</p>
+<p>C++-style<br>&#x2F;&#x2F;! …<br>or<br>&#x2F;&#x2F;&#x2F; …</p>
+<p>Lines can start with ‘<em>‘:<br>&#x2F;</em>*</p>
+<ul>
+<li>…</li>
+<li>…<br> *&#x2F;</li>
+</ul>
+<p>Can be placed after documented entity:<br>&#x2F;&#x2F;!&lt; …<br>&#x2F;**&lt; … *&#x2F;<br>@endverbatim</p>
+<h3 id="Paragraph-end"><a href="#Paragraph-end" class="headerlink" title="Paragraph end"></a>Paragraph end</h3><p>To end paragraph, insert empty line or any command starting new paragraph:<br>@verbatim<br>@brief brief description paragraph<br>brief continues</p>
+<p>new paragraph</p>
+<p>@note new note paragraph<br>note paragraph continues</p>
+<p>another paragraph<br>paragraph continues<br>@endverbatim</p>
+<h3 id="Naming"><a href="#Naming" class="headerlink" title="Naming"></a>Naming</h3><p>Pages, anchors, groups and other named entities should have unique name inside the whole project.<br>It is a good idea to prefix such identifiers with module name:<br>@verbatim<br>@page core_explanation_1 Usage explanation<br>@defgroup imgproc_transform Image transformations<br>@anchor mymodule_interesting_note<br>@endverbatim</p>
+<h2 id="Supported-Markdown-tutorial-documentation-quick-start-md"><a href="#Supported-Markdown-tutorial-documentation-quick-start-md" class="headerlink" title="Supported Markdown {#tutorial_documentation_quick_start_md}"></a>Supported Markdown {#tutorial_documentation_quick_start_md}</h2><p>Doxygen supports Markdown formatting with some extensions. Short syntax reference is described<br>below, for details visit <a href="http://www.doxygen.nl/manual/markdown.html">Markdown support</a>.</p>
+<h3 id="lists-tutorial-documentation-md-list"><a href="#lists-tutorial-documentation-md-list" class="headerlink" title="lists {#tutorial_documentation_md_list}"></a>lists {#tutorial_documentation_md_list}</h3><p>@verbatim<br>Bulleted:</p>
+<ul>
+<li>item1</li>
+<li>item2<br>Numbered:</li>
+</ul>
+<ol>
+<li>item1</li>
+<li>item2<br>or<br>-# item1<br>-# item2<br>@endverbatim</li>
+</ol>
+<h3 id="emphasis-tutorial-documentation-md-emph"><a href="#emphasis-tutorial-documentation-md-emph" class="headerlink" title="emphasis {#tutorial_documentation_md_emph}"></a>emphasis {#tutorial_documentation_md_emph}</h3><p>@verbatim<br><em>italic</em><br><strong>bold</strong><br>use html in complex cases:<br><em>“path&#x2F;to&#x2F;file”</em><br>@endverbatim</p>
+<h3 id="links-tutorial-documentation-md-links"><a href="#links-tutorial-documentation-md-links" class="headerlink" title="links {#tutorial_documentation_md_links}"></a>links {#tutorial_documentation_md_links}</h3><p>@verbatim<br>explicit link:<br><a href="http://opencv.org/">OpenCV main site</a><br>automatic links:<br><a href="http://opencv.org/">http://opencv.org</a><br>or even:<br><a href="http://opencv.org/">http://opencv.org</a><br>@endverbatim</p>
+<h3 id="images-tutorial-documentation-md-image"><a href="#images-tutorial-documentation-md-image" class="headerlink" title="images {#tutorial_documentation_md_image}"></a>images {#tutorial_documentation_md_image}</h3><p>@verbatim<br>![image caption](image path)<br>@endverbatim</p>
+<h3 id="headers-tutorial-documentation-md-head"><a href="#headers-tutorial-documentation-md-head" class="headerlink" title="headers {#tutorial_documentation_md_head}"></a>headers {#tutorial_documentation_md_head}</h3><h1 id="verbatimLevel1"><a href="#verbatimLevel1" class="headerlink" title="@verbatimLevel1"></a>@verbatim<br>Level1</h1><h2 id="Level2"><a href="#Level2" class="headerlink" title="Level2"></a>Level2</h2><h3 id="Level3"><a href="#Level3" class="headerlink" title="Level3"></a>Level3</h3><h4 id="Level4"><a href="#Level4" class="headerlink" title="Level4"></a>Level4</h4><p>@endverbatim</p>
+<h3 id="header-id-tutorial-documentation-md-headid"><a href="#header-id-tutorial-documentation-md-headid" class="headerlink" title="header id {#tutorial_documentation_md_headid}"></a>header id {#tutorial_documentation_md_headid}</h3><h2 id="You-can-assign-a-unique-identifier-to-any-header-to-reference-it-from-other-places-verbatimHeader-some-unique-identifier"><a href="#You-can-assign-a-unique-identifier-to-any-header-to-reference-it-from-other-places-verbatimHeader-some-unique-identifier" class="headerlink" title="You can assign a unique identifier to any header to reference it from other places.@verbatimHeader {#some_unique_identifier}"></a>You can assign a unique identifier to any header to reference it from other places.<br>@verbatim<br>Header {#some_unique_identifier}</h2><p>…<br>See @ref some_unique_identifier for details<br>@endverbatim</p>
+<h3 id="page-id-tutorial-documentation-md-page"><a href="#page-id-tutorial-documentation-md-page" class="headerlink" title="page id {#tutorial_documentation_md_page}"></a>page id {#tutorial_documentation_md_page}</h3><h1 id="Each-page-should-have-additional-Level1-header-at-the-beginning-with-page-title-and-identifier-verbatimWriting-documentation-for-OpenCV-tutorial-documentation"><a href="#Each-page-should-have-additional-Level1-header-at-the-beginning-with-page-title-and-identifier-verbatimWriting-documentation-for-OpenCV-tutorial-documentation" class="headerlink" title="Each page should have additional Level1 header at the beginning with page title and identifier:@verbatimWriting documentation for OpenCV {#tutorial_documentation}"></a>Each page should have additional Level1 header at the beginning with page title and identifier:<br>@verbatim<br>Writing documentation for OpenCV {#tutorial_documentation}</h1><p>@endverbatim</p>
+<h3 id="tables-tutorial-documentation-md-table"><a href="#tables-tutorial-documentation-md-table" class="headerlink" title="tables {#tutorial_documentation_md_table}"></a>tables {#tutorial_documentation_md_table}</h3><p>Example from doxygen documentation:<br>@verbatim</p>
+<table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>Content Cell</td>
+<td>Content Cell</td>
+</tr>
+<tr>
+<td>@endverbatim</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="Commonly-used-commands-tutorial-documentation-quick-start-5"><a href="#Commonly-used-commands-tutorial-documentation-quick-start-5" class="headerlink" title="Commonly used commands {#tutorial_documentation_quick_start_5}"></a>Commonly used commands {#tutorial_documentation_quick_start_5}</h2><p>Most often used doxygen commands are described here with short examples. For the full list of<br>available commands and detailed description, please visit <a href="http://www.doxygen.nl/manual/commands.html">Command reference</a>.</p>
+<h3 id="Basic-commands-tutorial-documentation-commands-basic"><a href="#Basic-commands-tutorial-documentation-commands-basic" class="headerlink" title="Basic commands {#tutorial_documentation_commands_basic}"></a>Basic commands {#tutorial_documentation_commands_basic}</h3><ul>
+<li><p><strong>brief</strong> - paragraph with brief entity description</p>
+</li>
+<li><p><strong>param</strong> - description of function argument.</p>
+<p>Multiple adjacent statements are merged into one list. If argument with this name is not found<br>in actual function signature - doxygen warning will be produced. Function can have either <em>no</em><br>documented parameters, either <em>all</em> should be documented.</p>
+</li>
+<li><p><strong>sa</strong> - “See also” paragraph, contains references to classes, functions, pages or URLs</p>
+</li>
+<li><p><strong>note</strong> - visually highlighted “Note” paragraph. Multiple adjacent statements are merged into<br>one block.</p>
+</li>
+<li><p><strong>return, returns</strong> - describes returned value of a function</p>
+</li>
+<li><p><strong>overload</strong> - adds fixed text to the function description: <em>“This is an overloaded member<br>function, provided for convenience. It differs from the above function only in what argument(s)<br>it accepts.”</em></p>
+</li>
+<li><p><strong>anchor</strong> - places invisible named anchor, which can be referenced by <code>ref</code> command. It can be<br>used in pages only.</p>
+</li>
+<li><p><strong>ref</strong> - explicit reference to a named section, page or anchor.</p>
+<p>If such entity can not be found - doxygen warning will be generated. This command has an<br>optional argument - link text.</p>
+<p>Doxygen also generates some links automatically: if text contains word which can be found in<br>documented entities - reference will be generated. This functionality can be disabled by prefixing<br>the word with <code>%</code> symbol.<br>@verbatim</p>
+</li>
+</ul>
+<p>Explicit reference: @ref MyClass<br>Explicit named reference: @ref example_page “Example page”<br>Implicit reference: cv::abc::MyClass1 or just MyClass1<br>Disable implicit reference: %MyClass1<br>    @endverbatim</p>
+<ul>
+<li><p><strong>f</strong> - formula</p>
+<p>Inline formulas are bounded with <code>f$</code> command:<br>@verbatim</p>
+</li>
+</ul>
+<p>\f$ … \f$<br>    @endverbatim</p>
+<pre><code>Block formulas - with `f[` and `f]` commands:
+@verbatim
+</code></pre>
+<p>\f[ … \f]<br>    @endverbatim</p>
+<h3 id="Code-inclusion-commands-tutorial-documentation-commands-include"><a href="#Code-inclusion-commands-tutorial-documentation-commands-include" class="headerlink" title="Code inclusion commands {#tutorial_documentation_commands_include}"></a>Code inclusion commands {#tutorial_documentation_commands_include}</h3><p>To mark some text as a code in documentation, <em>code</em> and <em>endcode</em> commands are used.<br>@verbatim<br>@code<br>float val &#x3D; img.at<float>(borderInterpolate(100, img.rows, cv::BORDER_REFLECT_101),<br>                          borderInterpolate(-5, img.cols, cv::BORDER_WRAP));<br>@endcode<br>@endverbatim</p>
+<p>Syntax will be highlighted according to the currently parsed file type (C++ for <em>.hpp</em>, C for <em>.h</em>) or<br>you can manually specify it in curly braces:</p>
+<p>@verbatim<br>@code{.xml}<br>@endverbatim</p>
+<p>To include whole example file into documentation, <em>include</em> and <em>includelineno</em> commands are used.<br>The file is searched in common samples locations, so you can specify just its name or short part of<br>the path. The <em>includelineno</em> version also shows line numbers but prevents copy-pasting since<br>the line numbers are included.</p>
+<p>@verbatim<br>@include samples&#x2F;cpp&#x2F;test.cpp<br>@endverbatim</p>
+<p>If you want to include some parts of existing example file - use <em>snippet</em> command.</p>
+<p>First, mark the needed parts of the file with special doxygen comments:<br>@verbatim<br>&#x2F;&#x2F;! [var_init]<br>int a &#x3D; 0;<br>&#x2F;&#x2F;! [var_init]<br>@endverbatim</p>
+<p>Then include this snippet into documentation:<br>@verbatim<br>@snippet samples&#x2F;cpp&#x2F;test.cpp var_init<br>@endverbatim</p>
+<p>@note Currently most of such partial inclusions are made with <em>dontinclude</em> command for<br>compatibility with the old rST documentation. But newly created samples should be included with the<br><em>snippet</em> command, since this method is less affected by the changes in processed file.</p>
+<h3 id="Toggle-buttons-inclusion-commands-tutorial-documentation-toggle-buttons-commands-include"><a href="#Toggle-buttons-inclusion-commands-tutorial-documentation-toggle-buttons-commands-include" class="headerlink" title="Toggle buttons inclusion commands {#tutorial_documentation_toggle_buttons_commands_include}"></a>Toggle buttons inclusion commands {#tutorial_documentation_toggle_buttons_commands_include}</h3><p>Toggle buttons are used to display the selected configuration (e.g. programming language, OS, IDE).</p>
+<p>To use the buttons in documentation, <em>add_toggle</em> and <em>end_toggle</em> commands are used.</p>
+<p>The command <em>add_toggle</em> can be</p>
+<ul>
+<li>general: <em>add_toggle{Button Name}</em></li>
+<li>for C++: <em>add_toggle_cpp</em></li>
+<li>for Java: <em>add_toggle_java</em></li>
+<li>for Python: <em>add_toggle_python</em></li>
+</ul>
+<p>Example:<br>@verbatim<br>@add_toggle{Button Name}</p>
+<p>  text &#x2F; code &#x2F; doxygen commands</p>
+<p>@end_toggle<br>@endverbatim</p>
+<p>For example using toggle buttons with text and [code](@ref tutorial_documentation_commands_include) snippets:</p>
+<p>@verbatim</p>
+<h3 id="Buttons-Example"><a href="#Buttons-Example" class="headerlink" title="Buttons Example"></a>Buttons Example</h3><p>@add_toggle_cpp</p>
+<p>   Text for C++ button<br>   @snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;documentation.cpp hello_world</p>
+<p>@end_toggle</p>
+<p>@add_toggle_java</p>
+<p>   Text for Java button<br>   @snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;Documentation.java  hello_world</p>
+<p>@end_toggle</p>
+<p>@add_toggle_python</p>
+<p>   Text for Python button<br>   @snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;documentation.py hello_world</p>
+<p>@end_toggle</p>
+<p>@endverbatim</p>
+<p>Result looks like this:</p>
+<h3 id="Buttons-Example-1"><a href="#Buttons-Example-1" class="headerlink" title="Buttons Example"></a>Buttons Example</h3><p>@add_toggle_cpp</p>
+<p>   Text for C++ button<br>   @snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;documentation.cpp hello_world</p>
+<p>@end_toggle</p>
+<p>@add_toggle_java</p>
+<p>   Text for Java button<br>   @snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;Documentation.java  hello_world</p>
+<p>@end_toggle</p>
+<p>@add_toggle_python</p>
+<p>   Text for Python button<br>   @snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;introduction&#x2F;documentation&#x2F;documentation.py hello_world</p>
+<p>@end_toggle</p>
+<p>As you can see, the buttons are added automatically under the previous heading.</p>
+<h3 id="Grouping-commands-tutorial-documentation-commands-group"><a href="#Grouping-commands-tutorial-documentation-commands-group" class="headerlink" title="Grouping commands {#tutorial_documentation_commands_group}"></a>Grouping commands {#tutorial_documentation_commands_group}</h3><p>All code entities should be put into named groups representing OpenCV modules and their internal<br>structure, thus each module should be associated with a group with the same name. Good place to<br>define groups and subgroups is the main header file for this module:<br><em>“<module>&#x2F;include&#x2F;opencv2&#x2F;<module>.hpp”</em>.</p>
+<p>@note Doxygen groups are called “modules” and are shown on “Modules” page.</p>
+<p>@verbatim<br>&#x2F;**<br>@defgroup mymodule My great module<br>    optional description<br>@{<br>    @defgroup mymodule_basic Basic operations<br>        optional description<br>    @defgroup mymodule_experimental Experimental operations<br>        optional description<br>@}<br>*&#x2F;<br>@endverbatim</p>
+<p>To put classes and functions into specific group, just add <code>ingroup</code> command to its documentation,<br>or wrap the whole code block with <code>addtogroup</code> command:</p>
+<p>@verbatim<br>&#x2F;** @brief Example function<br>    @ingroup mymodule<br><em>&#x2F;<br>or<br>&#x2F;</em>*<br>@addtogroup mymodule_experimental<br>@{<br><em>&#x2F;<br>… several functions, classes or enumerations here<br>&#x2F;</em>*<br>@}<br>*&#x2F;<br>@endverbatim</p>
+<h3 id="Publication-reference-tutorial-documentation-commands-cite"><a href="#Publication-reference-tutorial-documentation-commands-cite" class="headerlink" title="Publication reference {#tutorial_documentation_commands_cite}"></a>Publication reference {#tutorial_documentation_commands_cite}</h3><p>Use <em>cite</em> command to insert reference to related publications listed in @ref citelist page.</p>
+<p>First, add publication BibTeX record into <i>“<opencv>&#x2F;doc&#x2F;opencv.bib”</i> or<br><i>“<opencv_contrib>&#x2F;modules&#x2F;<module>&#x2F;doc&#x2F;<module>.bib”</i> file:<br>@verbatim<br>@ARTICLE{Bradski98,<br>    author &#x3D; {Bradski, Gary R},<br>    title &#x3D; {Computer vision face tracking for use in a perceptual user interface},<br>    year &#x3D; {1998},<br>    publisher &#x3D; {Citeseer}<br>}<br>@endverbatim</p>
+<p>@note Try not to add publication duplicates because it can confuse documentation readers and writers later.</p>
+<p>Then make reference with <em>cite</em> command:<br>@verbatim<br>@cite Bradski98<br>@endverbatim</p>
+<p>@note To get BibTeX record for the publications one can use <a href="http://scholar.google.ru/">Google Scholar</a>. Once the publication<br>have been found - follow its “Cite” link and then choose “BibTeX” option:<br><img src="/scholarship_cite_dialog.png"></p>
+<h1 id="Step-by-step-tutorial-documentation-steps"><a href="#Step-by-step-tutorial-documentation-steps" class="headerlink" title="Step-by-step {#tutorial_documentation_steps}"></a>Step-by-step {#tutorial_documentation_steps}</h1><p>Steps described in this section can be used as checklist during documentation writing. It is not<br>necessary to do things in the same order, but some steps really depend on previous. And of course<br>these steps are just basic guidelines, there is always a place for creativity.</p>
+<h2 id="Document-the-function-tutorial-documentation-steps-fun"><a href="#Document-the-function-tutorial-documentation-steps-fun" class="headerlink" title="Document the function {#tutorial_documentation_steps_fun}"></a>Document the function {#tutorial_documentation_steps_fun}</h2><ol>
+<li>Add empty doxygen comment preceding function definition.</li>
+<li>Add <em>brief</em> command with short description of function meaning at the beginning.</li>
+<li>Add detailed description of the function.</li>
+<li><em>Optional</em>: insert formulas, images and blocks of example code to illustrate complex cases</li>
+<li><em>Optional</em>: describe each parameter using the <em>param</em> command.</li>
+<li><em>Optional</em>: describe return value of the function using the <em>returns</em> command.</li>
+<li><em>Optional</em>: add “See also” section with links to similar functions or classes</li>
+<li><em>Optional</em>: add bibliographic reference if any.</li>
+<li>Test your code. (Python: “make check_pylint”)</li>
+<li>Generate doxygen documentation and verify results.</li>
+</ol>
+<h2 id="Write-the-tutorial-tutorial-documentation-steps-tutorial"><a href="#Write-the-tutorial-tutorial-documentation-steps-tutorial" class="headerlink" title="Write the tutorial {#tutorial_documentation_steps_tutorial}"></a>Write the tutorial {#tutorial_documentation_steps_tutorial}</h2><ol>
+<li><p>Formulate the idea to be illustrated in the tutorial.</p>
+</li>
+<li><p>Make the example application, simple enough to be understood by a beginning developer. Be<br>laconic and write descriptive comments, don’t try to avoid every possible runtime error or to make<br>universal utility. Your goal is to illustrate the idea. And it should fit one source file!</p>
+<p>If you want to insert code blocks from this file into your tutorial, mark them with special doxygen comments (see [here](@ref tutorial_documentation_commands_include)).</p>
+<p>If you want to write the tutorial in more than one programming language, use the toggle buttons for alternative comments and code (see [here](@ref tutorial_documentation_toggle_buttons_commands_include)).</p>
+</li>
+<li><p>Collect results  of the application work. It can be “before&#x2F;after” images or some numbers<br>representing performance or even a video.</p>
+<p>Save it in appropriate format for later use in the tutorial:</p>
+<ul>
+<li>To save simple graph-like images use lossless “.png” format.</li>
+<li>For photo-like images - lossy “.jpg” format.</li>
+<li>Numbers will be inserted as plain text, possibly formatted as table.</li>
+<li>Video should be uploaded on YouTube.</li>
+</ul>
+</li>
+<li><p>Create new tutorial page (<em>“.markdown”</em>-file) in corresponding location (see<br>[here](@ref tutorial_documentation_quick_start_1)), and place all image files near it (or in “images”<br>subdirectory). Also put your example application file and make sure it is compiled together with the<br>OpenCV library when <code>-DBUILD_EXAMPLES=ON</code> option is enabled on cmake step.</p>
+</li>
+<li><p>Modify your new page:</p>
+<ul>
+<li><p>Add page title and identifier, usually prefixed with <em>“tutorial_”</em> (see [here](@ref tutorial_documentation_md_page)).<br>You can add a link to the previous and next tutorial using the identifier<br>@verbatim<br>@prev_tutorial{identifier}<br>@next_tutorial{identifier}<br>@endverbatim<br>@warning Do <strong>not</strong> write the <strong>hashtag (#)</strong>, example: \n Incorrect: @verbatim @prev_tutorial{#tutorial_documentation} @endverbatim Correct: @verbatim @prev_tutorial{tutorial_documentation} @endverbatim</p>
+</li>
+<li><p>Add brief description of your idea and tutorial goals.</p>
+</li>
+<li><p>Describe your program and&#x2F;or its interesting pieces.</p>
+</li>
+<li><p>Describe your results, insert previously added images or other results.</p>
+<p>To add a youtube video, e.g. <a href="http://www.youtube.com/watch?v=">www.youtube.com/watch?v=</a> <strong>ViPN810E0SU</strong>, use <em>youtube</em>{<strong>Video ID</strong>}:<br>@verbatim</p>
+</li>
+</ul>
+</li>
+</ol>
+<p>@youtube{ViPN810E0SU}<br>        @endverbatim</p>
+<pre><code>-   Add bibliographic references if any (see [here](@ref tutorial_documentation_commands_cite)).
+</code></pre>
+<ol start="6">
+<li>Add newly created tutorial to the corresponding table of contents. Just find<br><em>“table_of_content_*.markdown”</em> file with the needed table and place new record in it<br>similar to existing ones.<br>@verbatim</li>
+</ol>
+<ul>
+<li><p>@subpage tutorial_windows_visual_studio_image_watch</p>
+<p><em>Languages:</em> C++, Java, Python</p>
+<p><em>Compatibility:</em> &gt;&#x3D; OpenCV 2.4</p>
+<p><em>Author:</em> Wolf Kienzle</p>
+<p>You will learn how to visualize OpenCV matrices and images within Visual Studio 2012.<br>@endverbatim<br>As you can see it is just a list item with special <em>subpage</em> command which marks your page as a<br>child and places it into the existing pages hierarchy. Add compatibility information,<br>authors list and short description. Also note the list item indent, empty lines between<br>paragraphs and special <em>italic</em> markers.</p>
+</li>
+</ul>
+<ol start="7">
+<li>Generate doxygen documentation and verify results.</li>
+</ol>
+<h1 id="References-tutorial-documentation-refs"><a href="#References-tutorial-documentation-refs" class="headerlink" title="References {#tutorial_documentation_refs}"></a>References {#tutorial_documentation_refs}</h1><ul>
+<li><a href="http://www.doxygen.nl/">Doxygen</a> - main Doxygen page</li>
+<li><a href="http://www.doxygen.nl/manual/docblocks.html">Documenting basics</a> - how to include documentation in code</li>
+<li><a href="http://www.doxygen.nl/manual/markdown.html">Markdown support</a> - supported syntax and extensions</li>
+<li><a href="http://www.doxygen.nl/manual/formulas.html">Formulas support</a> - how to include formulas</li>
+<li><a href="http://docs.mathjax.org/en/latest/input/tex/macros/index.html">Supported formula commands</a> - HTML formulas use MathJax script for rendering</li>
+<li><a href="http://www.doxygen.nl/manual/commands.html">Command reference</a> - supported commands and their parameters</li>
+</ul>
+<!-- invisible references list -->

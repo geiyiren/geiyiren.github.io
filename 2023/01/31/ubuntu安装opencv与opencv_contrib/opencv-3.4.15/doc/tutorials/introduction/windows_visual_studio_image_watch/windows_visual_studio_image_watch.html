@@ -1,0 +1,52 @@
+<h1 id="Image-Watch-viewing-in-memory-images-in-the-Visual-Studio-debugger-tutorial-windows-visual-studio-image-watch"><a href="#Image-Watch-viewing-in-memory-images-in-the-Visual-Studio-debugger-tutorial-windows-visual-studio-image-watch" class="headerlink" title="Image Watch: viewing in-memory images in the Visual Studio debugger {#tutorial_windows_visual_studio_image_watch}"></a>Image Watch: viewing in-memory images in the Visual Studio debugger {#tutorial_windows_visual_studio_image_watch}</h1><p>@prev_tutorial{tutorial_windows_visual_studio_opencv}<br>@next_tutorial{tutorial_java_dev_intro}</p>
+<p>Image Watch is a plug-in for Microsoft Visual Studio that lets you to visualize in-memory images<br>(<em>cv::Mat</em> or <em>IplImage_</em> objects, for example) while debugging an application. This can be helpful<br>for tracking down bugs, or for simply understanding what a given piece of code is doing.</p>
+<h2 id="Prerequisites"><a href="#Prerequisites" class="headerlink" title="Prerequisites"></a>Prerequisites</h2><p>This tutorial assumes that you have the following available:</p>
+<p>-#  Visual Studio 2012 Professional (or better) with Update 1 installed. Update 1 can be downloaded<br>    <a href="http://www.microsoft.com/en-us/download/details.aspx?id=35774">here</a>.<br>-#  An OpenCV installation on your Windows machine (Tutorial: @ref tutorial_windows_install).<br>-#  Ability to create and build OpenCV projects in Visual Studio (Tutorial: @ref tutorial_windows_visual_studio_opencv).</p>
+<h2 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h2><p>Download the Image Watch installer. (<a href="https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.ImageWatch2019">Visual Studio 2019</a> | <a href="https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.ImageWatch2017">Visual Studio 2017</a> | <a href="https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.ImageWatch">Visual Studio 2012, 2013, 2015</a>)<br>The installer comes in a single file with extension .vsix (<em>Visual Studio Extension</em>). To launch it, simply<br>double-click on the .vsix file in Windows Explorer. When the installer has finished, make sure to<br>restart Visual Studio to complete the installation.</p>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><p>Image Watch works with any existing project that uses OpenCV image objects (for example, <em>cv::Mat</em>).<br>In this example, we use a minimal test program that loads an image from a file and runs an edge<br>detector. To build the program, create a console application project in Visual Studio, name it<br>“image-watch-demo”, and insert the source code below.<br>@code{.cpp}<br>&#x2F;&#x2F; Test application for the Visual Studio Image Watch Debugger extension</p>
+<p>#include <iostream>                        &#x2F;&#x2F; std::cout<br>#include &lt;opencv2&#x2F;core&#x2F;core.hpp&gt;           &#x2F;&#x2F; cv::Mat<br>#include &lt;opencv2&#x2F;imgcodecs&#x2F;imgcodecs.hpp&gt;     &#x2F;&#x2F; cv::imread()<br>#include &lt;opencv2&#x2F;imgproc&#x2F;imgproc.hpp&gt;     &#x2F;&#x2F; cv::Canny()</p>
+<p>using namespace std;<br>using namespace cv;</p>
+<p>void help()<br>{<br>    cout<br>        &lt;&lt; “—————————————————-“ &lt;&lt; endl<br>        &lt;&lt; “This is a test program for the Image Watch Debugger “ &lt;&lt; endl<br>        &lt;&lt; “plug-in for Visual Studio. The program loads an     “ &lt;&lt; endl<br>        &lt;&lt; “image from a file and runs the Canny edge detector. “ &lt;&lt; endl<br>        &lt;&lt; “No output is displayed or written to disk.”<br>        &lt;&lt; endl<br>        &lt;&lt; “Usage:”                                               &lt;&lt; endl<br>        &lt;&lt; “image-watch-demo inputimage”                          &lt;&lt; endl<br>        &lt;&lt; “—————————————————-“ &lt;&lt; endl<br>        &lt;&lt; endl;<br>}</p>
+<p>int main(int argc, char *argv[])<br>{<br>    help();</p>
+<pre><code>if (argc != 2)
+{
+    cout &lt;&lt; &quot;Wrong number of parameters&quot; &lt;&lt; endl;
+    return -1;
+}
+
+cout &lt;&lt; &quot;Loading input image: &quot; &lt;&lt; argv[1] &lt;&lt; endl;
+Mat input;
+input = imread(argv[1], IMREAD_COLOR);
+
+cout &lt;&lt; &quot;Detecting edges in input image&quot; &lt;&lt; endl;
+Mat edges;
+Canny(input, edges, 10, 100);
+
+return 0;
+</code></pre>
+<p>}<br>@endcode<br>Make sure your active solution configuration (Build –&gt; Configuration Manager) is set to a debug<br>build (usually called “Debug”). This should disable compiler optimizations so that viewing variables<br>in the debugger can work reliably.</p>
+<p>Build your solution (Build –&gt; Build Solution, or press <em>F7</em>).</p>
+<p>Before continuing, do not forget to add the command line argument of your input image to your<br>project (Right click on project –&gt; Properties –&gt; Configuration Properties –&gt; Debugging and<br>then set the field Command Arguments with the location of the image).</p>
+<p>Now set a breakpoint on the source line that says<br>@code{.cpp}<br>Mat edges;<br>@endcode<br>To set the breakpoint, right-click on the source line and select Breakpoints –&gt; Insert Breakpoint<br>from the context menu.</p>
+<p>Launch the program in the debugger (Debug –&gt; Start Debugging, or hit <em>F5</em>). When the breakpoint is<br>hit, the program is paused and Visual Studio displays a yellow instruction pointer at the<br>breakpoint:</p>
+<p><img src="/images/breakpoint.png"></p>
+<p>Now you can inspect the state of you program. For example, you can bring up the <em>Locals</em> window<br>(Debug –&gt; Windows –&gt; Locals), which will show the names and values of the variables in the<br>current scope:</p>
+<p><img src="/images/vs_locals.png"></p>
+<p>Note that the built-in <em>Locals</em> window will display text only. This is where the Image Watch plug-in<br>comes in. Image Watch is like another <em>Locals</em> window, but with an image viewer built into it. To<br>bring up Image Watch, select View –&gt; Other Windows –&gt; Image Watch. Like Visual Studio’s <em>Locals</em><br>window, Image Watch can dock to the Visual Studio IDE. Also, Visual Studio will remember whether you<br>had Image Watch open, and where it was located between debugging sessions. This means you only have<br>to do this once–the next time you start debugging, Image Watch will be back where you left it.<br>Here’s what the docked Image Watch window looks like at our breakpoint:</p>
+<p><img src="/images/toolwindow.jpg"></p>
+<p>The radio button at the top left (<em>Locals&#x2F;Watch</em>) selects what is shown in the <em>Image List</em> below:<br><em>Locals</em> lists all OpenCV image objects in the current scope (this list is automatically populated).<br><em>Watch</em> shows image expressions that have been pinned for continuous inspection (not described here,<br>see <a href="http://go.microsoft.com/fwlink/?LinkId=285461">Image Watch documentation</a> for details). The<br>image list shows basic information such as width, height, number of channels, and, if available, a<br>thumbnail. In our example, the image list contains our two local image variables, <em>input</em> and<br><em>edges</em>.</p>
+<p>If an image has a thumbnail, left-clicking on that image will select it for detailed viewing in the<br><em>Image Viewer</em> on the right. The viewer lets you pan (drag mouse) and zoom (mouse wheel). It also<br>displays the pixel coordinate and value at the current mouse position.</p>
+<p><img src="/images/viewer.jpg"></p>
+<p>Note that the second image in the list, <em>edges</em>, is shown as “invalid”. This indicates that some<br>data members of this image object have corrupt or invalid values (for example, a negative image<br>width). This is expected at this point in the program, since the C++ constructor for <em>edges</em> has not<br>run yet, and so its members have undefined values (in debug mode they are usually filled with “0xCD”<br>bytes).</p>
+<p>From here you can single-step through your code (Debug-&gt;Step Over, or press <em>F10</em>) and watch the<br>pixels change: if you step once, over the <em>Mat edges;</em> statement, the <em>edges</em> image will change from<br>“invalid” to “empty”, which means that it is now in a valid state (default constructed), even though<br>it has not been initialized yet (using <em>cv::Mat::create()</em>, for example). If you make one more step<br>over the <em>cv::Canny()</em> call, you will see a thumbnail of the edge image appear in the image list.</p>
+<p>Now assume you want to do a visual sanity check of the <em>cv::Canny()</em> implementation. Bring the<br><em>edges</em> image into the viewer by selecting it in the <em>Image List</em> and zoom into a region with a<br>clearly defined edge:</p>
+<p><img src="/images/edges_zoom.png"></p>
+<p>Right-click on the <em>Image Viewer</em> to bring up the view context menu and enable Link Views (a check<br>box next to the menu item indicates whether the option is enabled).</p>
+<p><img src="/images/viewer_context_menu.png"></p>
+<p>The Link Views feature keeps the view region fixed when flipping between images of the same size. To<br>see how this works, select the input image from the image list–you should now see the corresponding<br>zoomed-in region in the input image:</p>
+<p><img src="/images/input_zoom.png"></p>
+<p>You may also switch back and forth between viewing input and edges with your up&#x2F;down cursor keys.<br>That way you can easily verify that the detected edges line up nicely with the data in the input<br>image.</p>
+<h2 id="More-…"><a href="#More-…" class="headerlink" title="More …"></a>More …</h2><p>Image watch has a number of more advanced features, such as</p>
+<p>-#  pinning images to a <em>Watch</em> list for inspection across scopes or between debugging sessions<br>-#  clamping, thresholding, or diff’ing images directly inside the Watch window<br>-#  comparing an in-memory image against a reference image from a file</p>
+<p>Please refer to the online <a href="http://go.microsoft.com/fwlink/?LinkId=285461">Image Watch<br>Documentation</a> for details–you also can get to the<br>documentation page by clicking on the <em>Help</em> link in the Image Watch window:</p>
+<p><img src="/images/help_button.jpg"></p>

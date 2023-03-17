@@ -1,0 +1,119 @@
+<h1 id="Introduction-to-Principal-Component-Analysis-PCA-tutorial-introduction-to-pca"><a href="#Introduction-to-Principal-Component-Analysis-PCA-tutorial-introduction-to-pca" class="headerlink" title="Introduction to Principal Component Analysis (PCA) {#tutorial_introduction_to_pca}"></a>Introduction to Principal Component Analysis (PCA) {#tutorial_introduction_to_pca}</h1><p>@prev_tutorial{tutorial_non_linear_svms}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Use the OpenCV class @ref cv::PCA to calculate the orientation of an object.</li>
+</ul>
+<h2 id="What-is-PCA"><a href="#What-is-PCA" class="headerlink" title="What is PCA?"></a>What is PCA?</h2><p>Principal Component Analysis (PCA) is a statistical procedure that extracts the most important features of a dataset.</p>
+<p><img src="/images/pca_line.png"></p>
+<p>Consider that you have a set of 2D points as it is shown in the figure above. Each dimension corresponds to a feature you are interested in. Here some could argue that the points are set in a random order. However, if you have a better look you will see that there is a linear pattern (indicated by the blue line) which is hard to dismiss. A key point of PCA is the Dimensionality Reduction. Dimensionality Reduction is the process of reducing the number of the dimensions of the given dataset. For example, in the above case it is possible to approximate the set of points to a single line and therefore, reduce the dimensionality of the given points from 2D to 1D.</p>
+<p>Moreover, you could also see that the points vary the most along the blue line, more than they vary along the Feature 1 or Feature 2 axes. This means that if you know the position of a point along the blue line you have more information about the point than if you only knew where it was on Feature 1 axis or Feature 2 axis.</p>
+<p>Hence, PCA allows us to find the direction along which our data varies the most. In fact, the result of running PCA on the set of points in the diagram consist of 2 vectors called <em>eigenvectors</em> which are the <em>principal components</em> of the data set.</p>
+<p><img src="/images/pca_eigen.png"></p>
+<p>The size of each eigenvector is encoded in the corresponding eigenvalue and indicates how much the data vary along the principal component. The beginning of the eigenvectors is the center of all points in the data set. Applying PCA to N-dimensional data set yields N N-dimensional eigenvectors, N eigenvalues and 1 N-dimensional center point. Enough theory, let’s see how we can put these ideas into code.</p>
+<h2 id="How-are-the-eigenvectors-and-eigenvalues-computed"><a href="#How-are-the-eigenvectors-and-eigenvalues-computed" class="headerlink" title="How are the eigenvectors and eigenvalues computed?"></a>How are the eigenvectors and eigenvalues computed?</h2><p>The goal is to transform a given data set <strong>X</strong> of dimension <em>p</em> to an alternative data set <strong>Y</strong> of smaller dimension <em>L</em>. Equivalently, we are seeking to find the matrix <strong>Y</strong>, where <strong>Y</strong> is the <em>Karhunen–Loève transform</em> (KLT) of matrix <strong>X</strong>:</p>
+<p>\f[ \mathbf{Y} &#x3D; \mathbb{K} \mathbb{L} \mathbb{T} {\mathbf{X}} \f]</p>
+<p><strong>Organize the data set</strong></p>
+<p>Suppose you have data comprising a set of observations of <em>p</em> variables, and you want to reduce the data so that each observation can be described with only <em>L</em> variables, <em>L</em> &lt; <em>p</em>. Suppose further, that the data are arranged as a set of <em>n</em> data vectors \f$ x_1…x_n \f$ with each \f$ x_i \f$  representing a single grouped observation of the <em>p</em> variables.</p>
+<ul>
+<li>Write \f$ x_1…x_n \f$ as row vectors, each of which has <em>p</em> columns.</li>
+<li>Place the row vectors into a single matrix <strong>X</strong> of dimensions \f$ n\times p \f$.</li>
+</ul>
+<p><strong>Calculate the empirical mean</strong></p>
+<ul>
+<li><p>Find the empirical mean along each dimension \f$ j &#x3D; 1, …, p \f$.</p>
+</li>
+<li><p>Place the calculated mean values into an empirical mean vector <strong>u</strong> of dimensions \f$ p\times 1 \f$.</p>
+<p>\f[ \mathbf{u[j]} &#x3D; \frac{1}{n}\sum_{i&#x3D;1}^{n}\mathbf{X[i,j]} \f]</p>
+</li>
+</ul>
+<p><strong>Calculate the deviations from the mean</strong></p>
+<p>Mean subtraction is an integral part of the solution towards finding a principal component basis that minimizes the mean square error of approximating the data. Hence, we proceed by centering the data as follows:</p>
+<ul>
+<li><p>Subtract the empirical mean vector <strong>u</strong> from each row of the data matrix <strong>X</strong>.</p>
+</li>
+<li><p>Store mean-subtracted data in the \f$ n\times p \f$ matrix <strong>B</strong>.</p>
+<p>\f[ \mathbf{B} &#x3D; \mathbf{X} - \mathbf{h}\mathbf{u^{T}} \f]</p>
+<p>where <strong>h</strong> is an \f$ n\times 1 \f$ column vector of all 1s:</p>
+<p>\f[ h[i] &#x3D; 1, i &#x3D; 1, …, n \f]</p>
+</li>
+</ul>
+<p><strong>Find the covariance matrix</strong></p>
+<ul>
+<li><p>Find the \f$ p\times p \f$ empirical covariance matrix <strong>C</strong> from the outer product of matrix <strong>B</strong> with itself:</p>
+<p>\f[ \mathbf{C} &#x3D; \frac{1}{n-1} \mathbf{B^{*}} \cdot \mathbf{B} \f]</p>
+<p>where * is the conjugate transpose operator. Note that if B consists entirely of real numbers, which is the case in many applications, the “conjugate transpose” is the same as the regular transpose.</p>
+</li>
+</ul>
+<p><strong>Find the eigenvectors and eigenvalues of the covariance matrix</strong></p>
+<ul>
+<li><p>Compute the matrix <strong>V</strong> of eigenvectors which diagonalizes the covariance matrix <strong>C</strong>:</p>
+<p>\f[ \mathbf{V^{-1}} \mathbf{C} \mathbf{V} &#x3D; \mathbf{D} \f]</p>
+<p>where <strong>D</strong> is the diagonal matrix of eigenvalues of <strong>C</strong>.</p>
+</li>
+<li><p>Matrix <strong>D</strong> will take the form of an \f$ p \times p \f$ diagonal matrix:</p>
+<p>\f[ D[k,l] &#x3D; \left{\begin{matrix} \lambda_k, k &#x3D; l \ 0, k \neq l \end{matrix}\right. \f]</p>
+<p>here, \f$ \lambda_j \f$ is the <em>j</em>-th eigenvalue of the covariance matrix <strong>C</strong></p>
+</li>
+<li><p>Matrix <strong>V</strong>, also of dimension <em>p</em> x <em>p</em>, contains <em>p</em> column vectors, each of length <em>p</em>, which represent the <em>p</em> eigenvectors of the covariance matrix <strong>C</strong>.</p>
+</li>
+<li><p>The eigenvalues and eigenvectors are ordered and paired. The <em>j</em> th eigenvalue corresponds to the <em>j</em> th eigenvector.</p>
+</li>
+</ul>
+<p>@note sources <a href="https://robospace.wordpress.com/2013/10/09/object-orientation-principal-component-analysis-opencv/">[1]</a>, <a href="http://en.wikipedia.org/wiki/Principal_component_analysis">[2]</a> and special thanks to Svetlin Penkov for the original tutorial.</p>
+<h2 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h2><p>@add_toggle_cpp</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/ml/introduction_to_pca/introduction_to_pca.cpp">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp<br>@end_toggle</p>
+</li>
+</ul>
+<p>@add_toggle_java</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/ml/introduction_to_pca/IntroductionToPCADemo.java">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java<br>@end_toggle</p>
+</li>
+</ul>
+<p>@add_toggle_python</p>
+<ul>
+<li><p><strong>Downloadable code</strong>: Click<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/ml/introduction_to_pca/introduction_to_pca.py">here</a></p>
+</li>
+<li><p><strong>Code at glance:</strong><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py<br>@end_toggle</p>
+</li>
+</ul>
+<p>@note Another example using PCA for dimensionality reduction while maintaining an amount of variance can be found at <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/pca.cpp">opencv_source_code&#x2F;samples&#x2F;cpp&#x2F;pca.cpp</a></p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><ul>
+<li><strong>Read image and convert it to binary</strong></li>
+</ul>
+<p>Here we apply the necessary pre-processing procedures in order to be able to detect the objects of interest.</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp pre-process<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java pre-process<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py pre-process<br>@end_toggle</p>
+<ul>
+<li><strong>Extract objects of interest</strong></li>
+</ul>
+<p>Then find and filter contours by size and obtain the orientation of the remaining ones.</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp contours<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java contours<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py contours<br>@end_toggle</p>
+<ul>
+<li><strong>Extract orientation</strong></li>
+</ul>
+<p>Orientation is extracted by the call of getOrientation() function, which performs all the PCA procedure.</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp pca<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java pca<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py pca<br>@end_toggle</p>
+<p>First the data need to be arranged in a matrix with size n x 2, where n is the number of data points we have. Then we can perform that PCA analysis. The calculated mean (i.e. center of mass) is stored in the <em>cntr</em> variable and the eigenvectors and eigenvalues are stored in the corresponding std::vector’s.</p>
+<ul>
+<li><strong>Visualize result</strong></li>
+</ul>
+<p>The final result is visualized through the drawAxis() function, where the principal components are drawn in lines, and each eigenvector is multiplied by its eigenvalue and translated to the mean position.</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp visualization<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java visualization<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py visualization<br>@end_toggle</p>
+<p>@add_toggle_cpp<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.cpp visualization1<br>@end_toggle</p>
+<p>@add_toggle_java<br>@snippet samples&#x2F;java&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;IntroductionToPCADemo.java visualization1<br>@end_toggle</p>
+<p>@add_toggle_python<br>@snippet samples&#x2F;python&#x2F;tutorial_code&#x2F;ml&#x2F;introduction_to_pca&#x2F;introduction_to_pca.py visualization1<br>@end_toggle</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>The code opens an image, finds the orientation of the detected objects of interest and then visualizes the result by drawing the contours of the detected objects of interest, the center point, and the x-axis, y-axis regarding the extracted orientation.</p>
+<p><img src="/images/pca_test1.jpg"></p>
+<p><img src="/images/pca_output.png"></p>

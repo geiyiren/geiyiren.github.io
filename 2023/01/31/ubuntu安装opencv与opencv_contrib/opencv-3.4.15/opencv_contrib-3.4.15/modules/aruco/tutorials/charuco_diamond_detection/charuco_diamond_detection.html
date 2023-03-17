@@ -1,0 +1,75 @@
+<h1 id="Detection-of-Diamond-Markers-tutorial-charuco-diamond-detection"><a href="#Detection-of-Diamond-Markers-tutorial-charuco-diamond-detection" class="headerlink" title="Detection of Diamond Markers {#tutorial_charuco_diamond_detection}"></a>Detection of Diamond Markers {#tutorial_charuco_diamond_detection}</h1><p>A ChArUco diamond marker (or simply diamond marker) is a chessboard composed by 3x3 squares and 4 ArUco markers inside the white squares.<br>It is similar to a ChArUco board in appearance, however they are conceptually different.</p>
+<p><img src="/images/diamondmarkers.png" alt="Diamond marker examples"></p>
+<p>In both, ChArUco board and Diamond markers, their detection is based on the previous detected ArUco<br>markers. In the ChArUco case, the used markers are selected by directly looking their identifiers. This means<br>that if a marker (included in the board) is found on a image, it will be automatically assumed to belong to the board. Furthermore,<br>if a marker board is found more than once in the image, it will produce an ambiguity since the system wont<br>be able to know which one should be used for the Board.</p>
+<p>On the other hand, the detection of Diamond marker is not based on the identifiers. Instead, their detection<br>is based on the relative position of the markers. As a consequence, marker identifiers can be repeated in the<br>same diamond or among different diamonds, and they can be detected simultaneously without ambiguity. However,<br>due to the complexity of finding marker based on their relative position, the diamond markers are limited to<br>a size of 3x3 squares and 4 markers.</p>
+<p>As in a single ArUco marker, each Diamond marker is composed by 4 corners and a identifier. The four corners<br>correspond to the 4 chessboard corners in the marker and the identifier is actually an array of 4 numbers, which are<br>the identifiers of the four ArUco markers inside the diamond.</p>
+<p>Diamond markers are useful in those scenarios where repeated markers should be allowed. For instance:</p>
+<ul>
+<li><p>To increase the number of identifiers of single markers by using diamond marker for labeling. They would allow<br>up to N^4 different ids, being N the number of markers in the used dictionary.</p>
+</li>
+<li><p>Give to each of the four markers a conceptual meaning. For instance, one of the four marker ids could be<br>used to indicate the scale of the marker (i.e. the size of the square), so that the same diamond can be found<br>in the environment with different sizes just by changing one of the four markers and the user does not need<br>to manually indicate the scale of each of them. This case is included in the <code>diamond_detector.cpp</code> file inside<br>the samples folder of the module.</p>
+</li>
+</ul>
+<p>Furthermore, as its corners are chessboard corners, they can be used for accurate pose estimation.</p>
+<p>The diamond functionalities are included in <code>&lt;opencv2/aruco/charuco.hpp&gt;</code></p>
+<h2 id="ChArUco-Diamond-Creation"><a href="#ChArUco-Diamond-Creation" class="headerlink" title="ChArUco Diamond Creation"></a>ChArUco Diamond Creation</h2><p>The image of a diamond marker can be easily created using the <code>drawCharucoDiamond()</code> function.<br>For instance:</p>
+<p>@code{.cpp}<br>    cv::Mat diamondImage;<br>    cv::Ptr<a href="cv::aruco::Dictionary">cv::aruco::Dictionary</a> dictionary &#x3D; cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);<br>    cv::aruco::drawCharucoDiamond(dictionary, cv::Vec4i(45,68,28,74), 200, 120, markerImage);<br>@endcode</p>
+<p>This will create a diamond marker image with a square size of 200 pixels and a marker size of 120 pixels.<br>The marker ids are given in the second parameter as a <code>Vec4i</code> object. The order of the marker ids<br>in the diamond layout are the same as in a standard ChArUco board, i.e. top, left, right and bottom.</p>
+<p>The image produced will be:</p>
+<p><img src="/images/diamondmarker.png" alt="Diamond marker"></p>
+<p>A full working example is included in the <code>create_diamond.cpp</code> inside the module samples folder.</p>
+<p>Note: The samples now take input via commandline via the <a href="http://docs.opencv.org/trunk/d0/d2e/classcv_1_1CommandLineParser.html#gsc.tab=0">OpenCV Commandline Parser</a>. For this file the example parameters will look like<br>@code{.cpp}<br>    “<em>path</em>&#x2F;mydiamond.png” -sl&#x3D;200 -ml&#x3D;120 -d&#x3D;10 -ids&#x3D;45,68,28,74<br>@endcode</p>
+<h2 id="ChArUco-Diamond-Detection"><a href="#ChArUco-Diamond-Detection" class="headerlink" title="ChArUco Diamond Detection"></a>ChArUco Diamond Detection</h2><p>As in most cases, the detection of diamond markers requires a previous detection of ArUco markers.<br>After detecting markers, diamond are detected using the <code>detectCharucoDiamond()</code> function:</p>
+<p>@code{.cpp}<br>    cv::Mat inputImage;<br>    float squareLength &#x3D; 0.40;<br>    float markerLength &#x3D; 0.25;<br>    …</p>
+<pre><code>std::vector&lt;int&gt; markerIds;
+std::vector&lt;std::vector&lt; cv::Point2f&gt;&gt; markerCorners;
+
+// detect ArUco markers
+cv::aruco::detectMarkers(inputImage, dictionary, markerCorners, markerIds);
+
+std::vector&lt;cv::Vec4i&gt; diamondIds;
+std::vector&lt;std::vector&lt;cv::Point2f&gt;&gt; diamondCorners;
+
+// detect diamon diamonds
+cv::aruco::detectCharucoDiamond(inputImage, markerCorners, markerIds, squareLength / markerLength, diamondCorners, diamondIds);
+</code></pre>
+<p>@endcode</p>
+<p>The <code>detectCharucoDiamond()</code> function receives the original image and the previous detected marker corners and ids.<br>The input image is necessary to perform subpixel refinement in the ChArUco corners.<br>It also receives the rate between the square size and the marker sizes which is required for both, detecting the diamond<br>from the relative positions of the markers and interpolating the ChArUco corners.</p>
+<p>The function returns the detected diamonds in two parameters. The first parameter, <code>diamondCorners</code>, is an array containing<br>all the four corners of each detected diamond. Its format is similar to the detected corners by the <code>detectMarkers()</code><br>function and, for each diamond, the corners are represented in the same order than in the ArUco markers, i.e. clockwise order<br>starting with the top-left corner. The second returned parameter, <code>diamondIds</code>, contains all the ids of the returned<br>diamond corners in <code>diamondCorners</code>. Each id is actually an array of 4 integers that can be represented with <code>Vec4i</code>.</p>
+<p>The detected diamond can be visualized using the function <code>drawDetectedDiamonds()</code> which simply receives the image and the diamond<br>corners and ids:</p>
+<p>@code{.cpp}<br>    …<br>    std::vector<a href="cv::Vec4i">cv::Vec4i</a> diamondIds;<br>    std::vector&lt;std::vector<a href="cv::Point2f">cv::Point2f</a>&gt; diamondCorners;<br>    cv::aruco::detectCharucoDiamond(inputImage, markerCorners, markerIds, squareLength &#x2F; markerLength, diamondCorners, diamondIds);</p>
+<pre><code>cv::aruco::drawDetectedDiamonds(inputImage, diamondCorners, diamondIds);
+</code></pre>
+<p>@endcode</p>
+<p>The result is the same that the one produced by <code>drawDetectedMarkers()</code>, but printing the four ids of the diamond:</p>
+<p><img src="/images/detecteddiamonds.png" alt="Detected diamond markers"></p>
+<p>A full working example is included in the <code>detect_diamonds.cpp</code> inside the module samples folder.</p>
+<p>Note: The samples now take input via commandline via the <a href="http://docs.opencv.org/trunk/d0/d2e/classcv_1_1CommandLineParser.html#gsc.tab=0">OpenCV Commandline Parser</a>. For this file the example parameters will look like<br>@code{.cpp}<br>    -c&#x3D;”<em>path</em>&#x2F;calib.txt” -dp&#x3D;”<em>path</em>&#x2F;detector_params.yml” -sl&#x3D;0.04 -ml&#x3D;0.02 -d&#x3D;10<br>@endcode</p>
+<h2 id="ChArUco-Diamond-Pose-Estimation"><a href="#ChArUco-Diamond-Pose-Estimation" class="headerlink" title="ChArUco Diamond Pose Estimation"></a>ChArUco Diamond Pose Estimation</h2><p>Since a ChArUco diamond is represented by its four corners, its pose can be estimated in the same way than in a single ArUco marker,<br>i.e. using the <code>estimatePoseSingleMarkers()</code> function. For instance:</p>
+<p>@code{.cpp}<br>    …</p>
+<pre><code>std::vector&lt;cv::Vec4i&gt; diamondIds;
+std::vector&lt;std::vector&lt;cv::Point2f&gt;&gt; diamondCorners;
+
+// detect diamon diamonds
+cv::aruco::detectCharucoDiamond(inputImage, markerCorners, markerIds, squareLength / markerLength, diamondCorners, diamondIds);
+
+// estimate poses
+std::vector&lt;cv::Vec3d&gt; rvecs, tvecs;
+cv::aruco::estimatePoseSingleMarkers(diamondCorners, squareLength, camMatrix, distCoeffs, rvecs, tvecs);
+
+// draw axis
+for(unsigned int i=0; i&lt;rvecs.size(); i++)
+    cv::aruco::drawAxis(inputImage, camMatrix, distCoeffs, rvecs[i], tvecs[i], axisLength);
+</code></pre>
+<p>@endcode</p>
+<p>The function will obtain the rotation and translation vector for each of the diamond marker and store them<br>in <code>rvecs</code> and <code>tvecs</code>. Note that the diamond corners are a chessboard square corners and thus, the square length<br>has to be provided for pose estimation, and not the marker length. Camera calibration parameters are also required.</p>
+<p>Finally, an axis can be drawn to check the estimated pose is correct using <code>drawAxis()</code>:</p>
+<p><img src="/images/diamondsaxis.png" alt="Detected diamond axis"></p>
+<p>The coordinate system of the diamond pose will be in the center of the marker with the Z axis pointing out,<br>as in a simple ArUco marker pose estimation.</p>
+<p>Sample video:</p>
+<p>@htmlonly</p>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/OqKpBnglH7k" frameborder="0" allowfullscreen></iframe>
+@endhtmlonly
+
+<p>A full working example is included in the <code>detect_diamonds.cpp</code> inside the module samples folder.</p>
+<p>Note: The samples now take input via commandline via the <a href="http://docs.opencv.org/trunk/d0/d2e/classcv_1_1CommandLineParser.html#gsc.tab=0">OpenCV Commandline Parser</a>. For this file the example parameters will look like<br>@code{.cpp}<br>    -c&#x3D;”<em>output path</em>&#x2F;calib.txt” -dp&#x3D;”<em>path</em>&#x2F;detector_params.yml” -sl&#x3D;0.04 -ml&#x3D;0.02 -d&#x3D;10<br>@endcode</p>

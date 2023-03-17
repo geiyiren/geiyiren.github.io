@@ -1,0 +1,38 @@
+<h1 id="High-level-stitching-API-Stitcher-class-tutorial-stitcher"><a href="#High-level-stitching-API-Stitcher-class-tutorial-stitcher" class="headerlink" title="High level stitching API (Stitcher class) {#tutorial_stitcher}"></a>High level stitching API (Stitcher class) {#tutorial_stitcher}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>use the high-level stitching API for stitching provided by<ul>
+<li>@ref cv::Stitcher</li>
+</ul>
+</li>
+<li>learn how to use preconfigured Stitcher configurations to stitch images<br>using different camera models.</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/stitching.cpp">here</a>.</p>
+<p>@include samples&#x2F;cpp&#x2F;stitching.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>The most important code part is:</p>
+<p>@snippet cpp&#x2F;stitching.cpp stitching</p>
+<p>A new instance of stitcher is created and the @ref cv::Stitcher::stitch will<br>do all the hard work.</p>
+<p>@ref cv::Stitcher::create can create stitcher in one of the predefined<br>configurations (argument <code>mode</code>). See @ref cv::Stitcher::Mode for details. These<br>configurations will setup multiple stitcher properties to operate in one of<br>predefined scenarios. After you create stitcher in one of predefined<br>configurations you can adjust stitching by setting any of the stitcher<br>properties.</p>
+<p>If you have cuda device @ref cv::Stitcher can be configured to offload certain<br>operations to GPU. If you prefer this configuration set <code>try_use_gpu</code> to true.<br>OpenCL acceleration will be used transparently based on global OpenCV settings<br>regardless of this flag.</p>
+<p>Stitching might fail for several reasons, you should always check if<br>everything went good and resulting pano is stored in <code>pano</code>. See<br>@ref cv::Stitcher::Status documentation for possible error codes.</p>
+<h2 id="Camera-models"><a href="#Camera-models" class="headerlink" title="Camera models"></a>Camera models</h2><p>There are currently 2 camera models implemented in stitching pipeline.</p>
+<ul>
+<li><em>Homography model</em> expecting perspective transformations between images<br>implemented in @ref cv::detail::BestOf2NearestMatcher cv::detail::HomographyBasedEstimator<br>cv::detail::BundleAdjusterReproj cv::detail::BundleAdjusterRay</li>
+<li><em>Affine model</em> expecting affine transformation with 6 DOF or 4 DOF implemented in<br>@ref cv::detail::AffineBestOf2NearestMatcher cv::detail::AffineBasedEstimator<br>cv::detail::BundleAdjusterAffine cv::detail::BundleAdjusterAffinePartial cv::AffineWarper</li>
+</ul>
+<p>Homography model is useful for creating photo panoramas captured by camera,<br>while affine-based model can be used to stitch scans and object captured by<br>specialized devices.</p>
+<p>@note<br>Certain detailed settings of @ref cv::Stitcher might not make sense. Especially<br>you should not mix classes implementing affine model and classes implementing<br>Homography model, as they work with different transformations.</p>
+<h2 id="Try-it-out"><a href="#Try-it-out" class="headerlink" title="Try it out"></a>Try it out</h2><p>If you enabled building samples you can found binary under<br><code>build/bin/cpp-example-stitching</code>. This example is a console application, run it without<br>arguments to see help. <code>opencv_extra</code> provides some sample data for testing all available<br>configurations.</p>
+<p>to try panorama mode run:</p>
+<pre><code>./cpp-example-stitching --mode panorama &lt;path to opencv_extra&gt;/testdata/stitching/boat*
+</code></pre>
+<p><img src="/images/boat.jpg"></p>
+<p>to try scans mode run (dataset from home-grade scanner):</p>
+<pre><code>./cpp-example-stitching --mode scans &lt;path to opencv_extra&gt;/testdata/stitching/newspaper*
+</code></pre>
+<p><img src="/images/newspaper.jpg"></p>
+<p>or (dataset from professional book scanner):</p>
+<pre><code>./cpp-example-stitching --mode scans &lt;path to opencv_extra&gt;/testdata/stitching/budapest*
+</code></pre>
+<p><img src="/images/budapest.jpg"></p>
+<p>@note<br>Examples above expects POSIX platform, on windows you have to provide all files names explicitly<br>(e.g. <code>boat1.jpg</code> <code>boat2.jpg</code>…) as windows command line does not support <code>*</code> expansion.</p>
+<h2 id="See-also"><a href="#See-also" class="headerlink" title="See also"></a>See also</h2><p>If you want to study internals of the stitching pipeline or you want to experiment with detailed<br>configuration see<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/stitching_detailed.cpp">stitching_detailed.cpp</a><br>in <code>opencv/samples/cpp</code> folder.</p>

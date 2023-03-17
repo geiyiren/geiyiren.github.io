@@ -1,0 +1,75 @@
+<h1 id="Contour-Features-tutorial-py-contour-features"><a href="#Contour-Features-tutorial-py-contour-features" class="headerlink" title="Contour Features {#tutorial_py_contour_features}"></a>Contour Features {#tutorial_py_contour_features}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this article, we will learn</p>
+<ul>
+<li>To find the different features of contours, like area, perimeter, centroid, bounding box etc</li>
+<li>You will see plenty of functions related to contours.</li>
+</ul>
+<ol>
+<li>Moments</li>
+</ol>
+<hr>
+<p>Image moments help you to calculate some features like center of mass of the object, area of the<br>object etc. Check out the wikipedia page on <a href="http://en.wikipedia.org/wiki/Image_moment">Image<br>Moments</a></p>
+<p>The function <strong>cv.moments()</strong> gives a dictionary of all moment values calculated. See below:<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>img &#x3D; cv.imread(‘star.jpg’,0)<br>ret,thresh &#x3D; cv.threshold(img,127,255,0)<br>im2,contours,hierarchy &#x3D; cv.findContours(thresh, 1, 2)</p>
+<p>cnt &#x3D; contours[0]<br>M &#x3D; cv.moments(cnt)<br>print( M )<br>@endcode<br>From this moments, you can extract useful data like area, centroid etc. Centroid is given by the<br>relations, \f$C_x &#x3D; \frac{M_{10}}{M_{00}}\f$ and \f$C_y &#x3D; \frac{M_{01}}{M_{00}}\f$. This can be done as<br>follows:<br>@code{.py}<br>cx &#x3D; int(M[‘m10’]&#x2F;M[‘m00’])<br>cy &#x3D; int(M[‘m01’]&#x2F;M[‘m00’])<br>@endcode</p>
+<ol start="2">
+<li>Contour Area</li>
+</ol>
+<hr>
+<p>Contour area is given by the function <strong>cv.contourArea()</strong> or from moments, <strong>M[‘m00’]</strong>.<br>@code{.py}<br>area &#x3D; cv.contourArea(cnt)<br>@endcode</p>
+<ol start="3">
+<li>Contour Perimeter</li>
+</ol>
+<hr>
+<p>It is also called arc length. It can be found out using <strong>cv.arcLength()</strong> function. Second<br>argument specify whether shape is a closed contour (if passed True), or just a curve.<br>@code{.py}<br>perimeter &#x3D; cv.arcLength(cnt,True)<br>@endcode</p>
+<ol start="4">
+<li>Contour Approximation</li>
+</ol>
+<hr>
+<p>It approximates a contour shape to another shape with less number of vertices depending upon the<br>precision we specify. It is an implementation of <a href="http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm">Douglas-Peucker<br>algorithm</a>. Check the wikipedia page<br>for algorithm and demonstration.</p>
+<p>To understand this, suppose you are trying to find a square in an image, but due to some problems in<br>the image, you didn’t get a perfect square, but a “bad shape” (As shown in first image below). Now<br>you can use this function to approximate the shape. In this, second argument is called epsilon,<br>which is maximum distance from contour to approximated contour. It is an accuracy parameter. A wise<br>selection of epsilon is needed to get the correct output.<br>@code{.py}<br>epsilon &#x3D; 0.1*cv.arcLength(cnt,True)<br>approx &#x3D; cv.approxPolyDP(cnt,epsilon,True)<br>@endcode<br>Below, in second image, green line shows the approximated curve for epsilon &#x3D; 10% of arc length.<br>Third image shows the same for epsilon &#x3D; 1% of the arc length. Third argument specifies whether<br>curve is closed or not.</p>
+<p><img src="/images/approx.jpg" alt="image"></p>
+<ol start="5">
+<li>Convex Hull</li>
+</ol>
+<hr>
+<p>Convex Hull will look similar to contour approximation, but it is not (Both may provide same results<br>in some cases). Here, <strong>cv.convexHull()</strong> function checks a curve for convexity defects and<br>corrects it. Generally speaking, convex curves are the curves which are always bulged out, or<br>at-least flat. And if it is bulged inside, it is called convexity defects. For example, check the<br>below image of hand. Red line shows the convex hull of hand. The double-sided arrow marks shows the<br>convexity defects, which are the local maximum deviations of hull from contours.</p>
+<p><img src="/images/convexitydefects.jpg" alt="image"></p>
+<p>There is a little bit things to discuss about it its syntax:<br>@code{.py}<br>hull &#x3D; cv.convexHull(points[, hull[, clockwise[, returnPoints]]<br>@endcode<br>Arguments details:</p>
+<ul>
+<li><strong>points</strong> are the contours we pass into.</li>
+<li><strong>hull</strong> is the output, normally we avoid it.</li>
+<li><strong>clockwise</strong> : Orientation flag. If it is True, the output convex hull is oriented clockwise.<br>Otherwise, it is oriented counter-clockwise.</li>
+<li><strong>returnPoints</strong> : By default, True. Then it returns the coordinates of the hull points. If<br>False, it returns the indices of contour points corresponding to the hull points.</li>
+</ul>
+<p>So to get a convex hull as in above image, following is sufficient:<br>@code{.py}<br>hull &#x3D; cv.convexHull(cnt)<br>@endcode<br>But if you want to find convexity defects, you need to pass returnPoints &#x3D; False. To understand it,<br>we will take the rectangle image above. First I found its contour as cnt. Now I found its convex<br>hull with returnPoints &#x3D; True, I got following values:<br>[[[234 202]], [[ 51 202]], [[ 51 79]], [[234 79]]] which are the four corner points of rectangle.<br>Now if do the same with returnPoints &#x3D; False, I get following result: [[129],[ 67],[ 0],[142]].<br>These are the indices of corresponding points in contours. For eg, check the first value:<br>cnt[129] &#x3D; [[234, 202]] which is same as first result (and so on for others).</p>
+<p>You will see it again when we discuss about convexity defects.</p>
+<ol start="6">
+<li>Checking Convexity</li>
+</ol>
+<hr>
+<p>There is a function to check if a curve is convex or not, <strong>cv.isContourConvex()</strong>. It just return<br>whether True or False. Not a big deal.<br>@code{.py}<br>k &#x3D; cv.isContourConvex(cnt)<br>@endcode</p>
+<ol start="7">
+<li>Bounding Rectangle</li>
+</ol>
+<hr>
+<p>There are two types of bounding rectangles.</p>
+<h3 id="7-a-Straight-Bounding-Rectangle"><a href="#7-a-Straight-Bounding-Rectangle" class="headerlink" title="7.a. Straight Bounding Rectangle"></a>7.a. Straight Bounding Rectangle</h3><p>It is a straight rectangle, it doesn’t consider the rotation of the object. So area of the bounding<br>rectangle won’t be minimum. It is found by the function <strong>cv.boundingRect()</strong>.</p>
+<p>Let (x,y) be the top-left coordinate of the rectangle and (w,h) be its width and height.<br>@code{.py}<br>x,y,w,h &#x3D; cv.boundingRect(cnt)<br>cv.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)<br>@endcode</p>
+<h3 id="7-b-Rotated-Rectangle"><a href="#7-b-Rotated-Rectangle" class="headerlink" title="7.b. Rotated Rectangle"></a>7.b. Rotated Rectangle</h3><p>Here, bounding rectangle is drawn with minimum area, so it considers the rotation also. The function<br>used is <strong>cv.minAreaRect()</strong>. It returns a Box2D structure which contains following details - (<br>center (x,y), (width, height), angle of rotation ). But to draw this rectangle, we need 4 corners of<br>the rectangle. It is obtained by the function <strong>cv.boxPoints()</strong><br>@code{.py}<br>rect &#x3D; cv.minAreaRect(cnt)<br>box &#x3D; cv.boxPoints(rect)<br>box &#x3D; np.int0(box)<br>cv.drawContours(img,[box],0,(0,0,255),2)<br>@endcode<br>Both the rectangles are shown in a single image. Green rectangle shows the normal bounding rect. Red<br>rectangle is the rotated rect.</p>
+<p><img src="/images/boundingrect.png" alt="image"></p>
+<ol start="8">
+<li>Minimum Enclosing Circle</li>
+</ol>
+<hr>
+<p>Next we find the circumcircle of an object using the function <strong>cv.minEnclosingCircle()</strong>. It is a<br>circle which completely covers the object with minimum area.<br>@code{.py}<br>(x,y),radius &#x3D; cv.minEnclosingCircle(cnt)<br>center &#x3D; (int(x),int(y))<br>radius &#x3D; int(radius)<br>cv.circle(img,center,radius,(0,255,0),2)<br>@endcode<br><img src="/images/circumcircle.png" alt="image"></p>
+<ol start="9">
+<li>Fitting an Ellipse</li>
+</ol>
+<hr>
+<p>Next one is to fit an ellipse to an object. It returns the rotated rectangle in which the ellipse is<br>inscribed.<br>@code{.py}<br>ellipse &#x3D; cv.fitEllipse(cnt)<br>cv.ellipse(img,ellipse,(0,255,0),2)<br>@endcode<br><img src="/images/fitellipse.png" alt="image"></p>
+<ol start="10">
+<li>Fitting a Line</li>
+</ol>
+<hr>
+<p>Similarly we can fit a line to a set of points. Below image contains a set of white points. We can<br>approximate a straight line to it.<br>@code{.py}<br>rows,cols &#x3D; img.shape[:2]<br>[vx,vy,x,y] &#x3D; cv.fitLine(cnt, cv.DIST_L2,0,0.01,0.01)<br>lefty &#x3D; int((-x*vy&#x2F;vx) + y)<br>righty &#x3D; int(((cols-x)*vy&#x2F;vx)+y)<br>cv.line(img,(cols-1,righty),(0,lefty),(0,255,0),2)<br>@endcode<br><img src="/images/fitline.jpg" alt="image"></p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2>

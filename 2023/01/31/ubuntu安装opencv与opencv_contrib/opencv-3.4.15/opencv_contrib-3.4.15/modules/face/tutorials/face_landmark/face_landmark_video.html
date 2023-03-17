@@ -1,0 +1,80 @@
+<h1 id="Face-landmark-detection-in-a-video-tutorial-face-landmark-detection-in-video"><a href="#Face-landmark-detection-in-a-video-tutorial-face-landmark-detection-in-video" class="headerlink" title="Face landmark detection in a video{#tutorial_face_landmark_detection_in_video}"></a>Face landmark detection in a video{#tutorial_face_landmark_detection_in_video}</h1><h2 id="This-application-lets-you-detect-landmarks-of-detected-faces-in-a-video-This-application-first-detects-faces-in-a-current-video-frameand-then-finds-their-facial-landmarks-You-just-have-to-pass-the-video-as-input-Command-to-be-typed-for-running-the-sample-sampleDetectLandmarks-file-trained-model-dat-face-cascade-lbpcascadefrontalface-xml-video-path-to-video-video-aviDescription-of-command-parameters"><a href="#This-application-lets-you-detect-landmarks-of-detected-faces-in-a-video-This-application-first-detects-faces-in-a-current-video-frameand-then-finds-their-facial-landmarks-You-just-have-to-pass-the-video-as-input-Command-to-be-typed-for-running-the-sample-sampleDetectLandmarks-file-trained-model-dat-face-cascade-lbpcascadefrontalface-xml-video-path-to-video-video-aviDescription-of-command-parameters" class="headerlink" title="This application lets you detect landmarks of detected faces in a video.This application first detects faces in a current video frameand then finds their facial landmarks. You just have to pass the video as input.// Command to be typed for running the sample ./sampleDetectLandmarks -file=trained_model.dat -face_cascade=lbpcascadefrontalface.xml -video=/path_to_video/video.aviDescription of command parameters"></a>This application lets you detect landmarks of detected faces in a video.This application first detects faces in a current video frame<br>and then finds their facial landmarks. You just have to pass the video as input.<br><code>// Command to be typed for running the sample ./sampleDetectLandmarks -file=trained_model.dat -face_cascade=lbpcascadefrontalface.xml -video=/path_to_video/video.avi</code><br>Description of command parameters</h2><blockquote>
+<ul>
+<li><strong>model_filename</strong> f : (REQUIRED) A path to binary file storing the trained model which is to be loaded [example - &#x2F;data&#x2F;file.dat]</li>
+<li><strong>video</strong> v : (REQUIRED) A path to video in which face landmarks have to be detected.[example - &#x2F;data&#x2F;video.avi]</li>
+<li><strong>face_cascade</strong> c : (REQUIRED) A path to the face cascade xml file which you want to use as a face detector.</li>
+</ul>
+</blockquote>
+<h3 id="Understanding-code"><a href="#Understanding-code" class="headerlink" title="Understanding code"></a>Understanding code</h3><p>This tutorial will explain the sample code for face landmark detection. Jumping directly to the code :</p>
+<pre><code class="c++">CascadeClassifier face_cascade;
+bool myDetector( InputArray image, OutputArray ROIs );
+
+bool myDetector( InputArray image, OutputArray ROIs ){
+    Mat gray;
+    std::vector&lt;Rect&gt; faces;
+    if(image.channels()&gt;1){
+        cvtColor(image.getMat(),gray,COLOR_BGR2GRAY);
+    }
+    else{
+        gray = image.getMat().clone();
+    }
+    equalizeHist( gray, gray );
+    face_cascade.detectMultiScale( gray, faces, 1.1, 3,0, Size(30, 30) );
+    Mat(faces).copyTo(ROIs);
+    return true;
+}
+</code></pre>
+<p>The facemark API provides the functionality to the user to use their own face detector to be used in face landmark detection.The above code creartes a sample face detector. The above function would be passed to a function pointer in the facemark API.</p>
+<pre><code class="c++">VideoCapture cap(video);
+if(!cap.isOpened()){
+    cerr&lt;&lt;&quot;Video cannot be loaded. Give correct path&quot;&lt;&lt;endl;
+    return -1;
+}
+</code></pre>
+<p>The above code creates a video capture object and then loads the video.<br>If the video is not loaded properly it prompts the user else the code proceeds.</p>
+<pre><code class="c++">Mat img = imread(image);
+face_cascade.load(cascade_name);
+FacemarkKazemi::Params params;
+params.configfile = configfile_name;
+Ptr&lt;Facemark&gt; facemark = FacemarkKazemi::create(params);
+facemark-&gt;setFaceDetector(myDetector);
+</code></pre>
+<p>The above code creates a pointer of the face landmark detection class. The face detector created above has to be passed<br>as function pointer to the facemark pointer created for detecting faces.</p>
+<pre><code class="c++">vector&lt;Rect&gt; faces;
+vector&lt; vector&lt;Point2f&gt; &gt; shapes;
+Mat img;
+</code></pre>
+<p>The above code creates a vector to store the detected faces and a vector of vector to store shapes for each<br>face detected in the current frame.</p>
+<pre><code class="c++">while(1){
+    faces.clear();
+    shapes.clear();
+    cap&gt;&gt;img;
+    resize(img,img,Size(600,600),0,0,INTER_LINEAR_EXACT);
+    facemark-&gt;getFaces(img,faces);
+    if(faces.size()==0){
+        cout&lt;&lt;&quot;No faces found in this frame&quot;&lt;&lt;endl;
+    }
+    else{
+        for( size_t i = 0; i &lt; faces.size(); i++ )
+        {
+        cv::rectangle(img,faces[i],Scalar( 255, 0, 0 ));
+        }
+        if(facemark-&gt;fit(img,faces,shapes))
+        {
+        for(unsigned long i=0;i&lt;faces.size();i++){
+            for(unsigned long k=0;k&lt;shapes[i].size();k++)
+                cv::circle(img,shapes[i][k],3,cv::Scalar(0,0,255),FILLED);
+        }
+        }
+    }
+    namedWindow(&quot;Detected_shape&quot;);
+    imshow(&quot;Detected_shape&quot;,img);
+    if(waitKey(1) &gt;= 0) break;
+}
+</code></pre>
+<p>The above code then reads each frame and detects faces and the landmarks corresponding to each shape detected.<br>It then displays the current frame.</p>
+<p>After running the above code you will get results something like this</p>
+<p>Sample video:</p>
+<p>@htmlonly</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ZtaV07T90D8" frameborder="0" allowfullscreen></iframe>
+@endhtmlonly

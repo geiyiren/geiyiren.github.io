@@ -1,0 +1,17 @@
+# Target labels
+ Extra
+ opencv_bioinspired
+ PerfTest
+# Source files and their labels
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bioinspired/perf/opencl/perf_retina.ocl.cpp
+ Extra
+ opencv_bioinspired
+ PerfTest
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bioinspired/perf/perf_main.cpp
+ Extra
+ opencv_bioinspired
+ PerfTest
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bioinspired/perf/perf_precomp.hpp
+ Extra
+ opencv_bioinspired
+ PerfTest

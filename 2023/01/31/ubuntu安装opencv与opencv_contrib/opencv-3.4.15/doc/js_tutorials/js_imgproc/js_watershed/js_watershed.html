@@ -1,0 +1,50 @@
+<h1 id="Image-Segmentation-with-Watershed-Algorithm-tutorial-js-watershed"><a href="#Image-Segmentation-with-Watershed-Algorithm-tutorial-js-watershed" class="headerlink" title="Image Segmentation with Watershed Algorithm {#tutorial_js_watershed}"></a>Image Segmentation with Watershed Algorithm {#tutorial_js_watershed}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>We will learn how to use marker-based image segmentation using watershed algorithm</li>
+<li>We will learn: <strong>cv.watershed()</strong></li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>Any grayscale image can be viewed as a topographic surface where high intensity denotes peaks and<br>hills while low intensity denotes valleys. You start filling every isolated valleys (local minima)<br>with different colored water (labels). As the water rises, depending on the peaks (gradients)<br>nearby, water from different valleys, obviously with different colors will start to merge. To avoid<br>that, you build barriers in the locations where water merges. You continue the work of filling water<br>and building barriers until all the peaks are under water. Then the barriers you created gives you<br>the segmentation result. This is the “philosophy” behind the watershed. You can visit the <a href="http://cmm.ensmp.fr/~beucher/wtshed.html">CMM<br>webpage on watershed</a> to understand it with the help of<br>some animations.</p>
+<p>But this approach gives you oversegmented result due to noise or any other irregularities in the<br>image. So OpenCV implemented a marker-based watershed algorithm where you specify which are all<br>valley points are to be merged and which are not. It is an interactive image segmentation. What we<br>do is to give different labels for our object we know. Label the region which we are sure of being<br>the foreground or object with one color (or intensity), label the region which we are sure of being<br>background or non-object with another color and finally the region which we are not sure of<br>anything, label it with 0. That is our marker. Then apply watershed algorithm. Then our marker will<br>be updated with the labels we gave, and the boundaries of objects will have a value of -1.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>Below we will see an example on how to use the Distance Transform along with watershed to segment<br>mutually touching objects.</p>
+<p>Consider the coins image below, the coins are touching each other. Even if you threshold it, it will<br>be touching each other.</p>
+<p>We start with finding an approximate estimate of the coins. For that, we can use the Otsu’s<br>binarization.</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_watershed_threshold.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<p>Now we need to remove any small white noises in the image. For that we can use morphological<br>opening. To remove any small holes in the object, we can use morphological closing. So, now we know<br>for sure that region near to center of objects are foreground and region much away from the object<br>are background. Only region we are not sure is the boundary region of coins.</p>
+<p>So we need to extract the area which we are sure they are coins. Erosion removes the boundary<br>pixels. So whatever remaining, we can be sure it is coin. That would work if objects were not<br>touching each other. But since they are touching each other, another good option would be to find<br>the distance transform and apply a proper threshold. Next we need to find the area which we are sure<br>they are not coins. For that, we dilate the result. Dilation increases object boundary to<br>background. This way, we can make sure whatever region in background in result is really a<br>background, since boundary region is removed. See the image below.</p>
+<h2 id="Try-it-1"><a href="#Try-it-1" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_watershed_background.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<p>The remaining regions are those which we don’t have any idea, whether it is coins or background.<br>Watershed algorithm should find it. These areas are normally around the boundaries of coins where<br>foreground and background meet (Or even two different coins meet). We call it border. It can be<br>obtained from subtracting sure_fg area from sure_bg area.</p>
+<p>We use the function: <strong>cv.distanceTransform (src, dst, distanceType, maskSize, labelType &#x3D; cv.CV_32F)</strong></p>
+<p>@param src           8-bit, single-channel (binary) source image.<br>@param dst           output image with calculated distances. It is a 8-bit or 32-bit floating-point, single-channel image of the same size as src.<br>@param distanceType  type of distance(see cv.DistanceTypes).<br>@param maskSize      size of the distance transform mask, see (cv.DistanceTransformMasks).<br>@param labelType     type of output image. It can be cv.CV_8U or cv.CV_32F. Type cv.CV_8U can be used only for the first variant of the function and distanceType &#x3D;&#x3D; DIST_L1.</p>
+<h2 id="Try-it-2"><a href="#Try-it-2" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_watershed_distanceTransform.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<p>In the thresholded image, we get some regions of coins which we are sure of coins<br>and they are detached now. (In some cases, you may be interested in only foreground segmentation,<br>not in separating the mutually touching objects. In that case, you need not use distance transform,<br>just erosion is sufficient. Erosion is just another method to extract sure foreground area, that’s<br>all.)</p>
+<h2 id="Try-it-3"><a href="#Try-it-3" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_watershed_foreground.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<p>Now we know for sure which are region of coins, which are background and all. So we create marker<br>(it is an array of same size as that of original image, but with int32 datatype) and label the<br>regions inside it. The regions we know for sure (whether foreground or background) are labelled with<br>any positive integers, but different integers, and the area we don’t know for sure are just left as<br>zero. For this we use <strong>cv.connectedComponents()</strong>. It labels background of the image with 0, then<br>other objects are labelled with integers starting from 1.</p>
+<p>But we know that if background is marked with 0, watershed will consider it as unknown area. So we<br>want to mark it with different integer. Instead, we will mark unknown region, defined by unknown,<br>with 0.</p>
+<p>Now our marker is ready. It is time for final step, apply watershed. Then marker image will be<br>modified. The boundary region will be marked with -1.</p>
+<p>We use the function: <strong>cv.connectedComponents (image, labels, connectivity &#x3D; 8, ltype &#x3D; cv.CV_32S)</strong><br>@param image         the 8-bit single-channel image to be labeled.<br>@param labels        destination labeled image(cv.CV_32SC1 type).<br>@param connectivity  8 or 4 for 8-way or 4-way connectivity respectively.<br>@param ltype         output image label type. Currently cv.CV_32S and cv.CV_16U are supported.</p>
+<p>We use the function: <strong>cv.watershed (image, markers)</strong></p>
+<p>@param image         input 8-bit 3-channel image.<br>@param markers       input&#x2F;output 32-bit single-channel image (map) of markers. It should have the same size as image .</p>
+<h2 id="Try-it-4"><a href="#Try-it-4" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_watershed_watershed.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

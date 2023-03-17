@@ -1,0 +1,26 @@
+<h1 id="Getting-Started-with-Videos-tutorial-js-video-display"><a href="#Getting-Started-with-Videos-tutorial-js-video-display" class="headerlink" title="Getting Started with Videos {#tutorial_js_video_display}"></a>Getting Started with Videos {#tutorial_js_video_display}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Learn to capture video from a camera and display it.</li>
+</ul>
+<h2 id="Capture-video-from-camera"><a href="#Capture-video-from-camera" class="headerlink" title="Capture video from camera"></a>Capture video from camera</h2><p>Often, we have to capture live stream with a camera. In OpenCV.js, we use <a href="https://webrtc.org/">WebRTC</a><br>and HTML canvas element to implement this. Let’s capture a video from the camera(built-in<br>or a usb), convert it into grayscale video and display it.</p>
+<p>To capture a video, you need to add some HTML elements to the web page:</p>
+<ul>
+<li>a &lt;video&gt; to display video from camera directly</li>
+<li>a &lt;canvas&gt; to transfer video to canvas ImageData frame-by-frame</li>
+<li>another &lt;canvas&gt; to display the video OpenCV.js gets</li>
+</ul>
+<p>First, we use WebRTC navigator.mediaDevices.getUserMedia to get the media stream.<br>@code{.js}<br>let video &#x3D; document.getElementById(“videoInput”); &#x2F;&#x2F; video is the id of video tag<br>navigator.mediaDevices.getUserMedia({ video: true, audio: false })<br>    .then(function(stream) {<br>        video.srcObject &#x3D; stream;<br>        video.play();<br>    })<br>    .catch(function(err) {<br>        console.log(“An error occurred! “ + err);<br>    });<br>@endcode</p>
+<p>@note This function is unnecessary when you capture video from a video file. But notice that<br>HTML video element only supports video formats of Ogg(Theora), WebM(VP8&#x2F;VP9) or MP4(H.264).</p>
+<h2 id="Playing-video"><a href="#Playing-video" class="headerlink" title="Playing video"></a>Playing video</h2><p>Now, the browser gets the camera stream. Then, we use CanvasRenderingContext2D.drawImage() method<br>of the Canvas 2D API to draw video onto the canvas. Finally, we can use the method in @ref tutorial_js_image_display<br> to read and display image in canvas. For playing video, cv.imshow() should be executed every delay<br>milliseconds. We recommend setTimeout() method. And if the video is 30fps, the delay milliseconds<br>should be (1000&#x2F;30 - processing_time).<br>@code{.js}<br>let canvasFrame &#x3D; document.getElementById(“canvasFrame”); &#x2F;&#x2F; canvasFrame is the id of <canvas><br>let context &#x3D; canvasFrame.getContext(“2d”);<br>let src &#x3D; new cv.Mat(height, width, cv.CV_8UC4);<br>let dst &#x3D; new cv.Mat(height, width, cv.CV_8UC1);</p>
+<p>const FPS &#x3D; 30;<br>function processVideo() {<br>    let begin &#x3D; Date.now();<br>    context.drawImage(video, 0, 0, width, height);<br>    src.data.set(context.getImageData(0, 0, width, height).data);<br>    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);<br>    cv.imshow(“canvasOutput”, dst); &#x2F;&#x2F; canvasOutput is the id of another <canvas>;<br>    &#x2F;&#x2F; schedule next one.<br>    let delay &#x3D; 1000&#x2F;FPS - (Date.now() - begin);<br>    setTimeout(processVideo, delay);<br>}</p>
+<p>&#x2F;&#x2F; schedule first one.<br>setTimeout(processVideo, 0);<br>@endcode</p>
+<p>OpenCV.js implements <strong>cv.VideoCapture (videoSource)</strong> using the above method. You need not to<br>add the hidden canvas element manually.<br>@param videoSource   the video id or element.<br>@return              cv.VideoCapture instance</p>
+<p>We use <strong>read (image)</strong> to get one frame of the video. For performance reasons, the image should be<br>constructed with cv.CV_8UC4 type and same size as the video.<br>@param image         image with cv.CV_8UC4 type and same size as the video.</p>
+<p>The above code of playing video could be simplified as below.<br>@code{.js}<br>let src &#x3D; new cv.Mat(height, width, cv.CV_8UC4);<br>let dst &#x3D; new cv.Mat(height, width, cv.CV_8UC1);<br>let cap &#x3D; new cv.VideoCapture(videoSource);</p>
+<p>const FPS &#x3D; 30;<br>function processVideo() {<br>    let begin &#x3D; Date.now();<br>    cap.read(src);<br>    cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY);<br>    cv.imshow(“canvasOutput”, dst);<br>    &#x2F;&#x2F; schedule next one.<br>    let delay &#x3D; 1000&#x2F;FPS - (Date.now() - begin);<br>    setTimeout(processVideo, delay);<br>}</p>
+<p>&#x2F;&#x2F; schedule first one.<br>setTimeout(processVideo, 0);<br>@endcode</p>
+<p>@note Remember to delete src and dst after when stop.</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_video_display.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

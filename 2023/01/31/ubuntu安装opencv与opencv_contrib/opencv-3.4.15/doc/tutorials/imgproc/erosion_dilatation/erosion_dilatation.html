@@ -1,0 +1,144 @@
+<h1 id="Eroding-and-Dilating-tutorial-erosion-dilatation"><a href="#Eroding-and-Dilating-tutorial-erosion-dilatation" class="headerlink" title="Eroding and Dilating {#tutorial_erosion_dilatation}"></a>Eroding and Dilating {#tutorial_erosion_dilatation}</h1><p>@prev_tutorial{tutorial_gausian_median_blur_bilateral_filter}<br>@next_tutorial{tutorial_opening_closing_hats}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to:</p>
+<ul>
+<li>Apply two very common morphological operators: Erosion and Dilation. For this purpose, you will use<br>the following OpenCV functions:<ul>
+<li>@ref cv::erode</li>
+<li>@ref cv::dilate</li>
+</ul>
+</li>
+</ul>
+<p>@note The explanation below belongs to the book <strong>Learning OpenCV</strong> by Bradski and Kaehler.</p>
+<h2 id="Morphological-Operations"><a href="#Morphological-Operations" class="headerlink" title="Morphological Operations"></a>Morphological Operations</h2><ul>
+<li><p>In short: A set of operations that process images based on shapes. Morphological operations<br>apply a <em>structuring element</em> to an input image and generate an output image.</p>
+</li>
+<li><p>The most basic morphological operations are: Erosion and Dilation. They have a wide array of<br>uses, i.e. :</p>
+<ul>
+<li>Removing noise</li>
+<li>Isolation of individual elements and joining disparate elements in an image.</li>
+<li>Finding of intensity bumps or holes in an image</li>
+</ul>
+</li>
+<li><p>We will explain dilation and erosion briefly, using the following image as an example:</p>
+<p><img src="/images/Morphology_1_Tutorial_Theory_Original_Image.png"></p>
+</li>
+</ul>
+<h3 id="Dilation"><a href="#Dilation" class="headerlink" title="Dilation"></a>Dilation</h3><ul>
+<li><p>This operations consists of convolving an image \f$A\f$ with some kernel (\f$B\f$), which can have any<br>shape or size, usually a square or circle.</p>
+</li>
+<li><p>The kernel \f$B\f$ has a defined <em>anchor point</em>, usually being the center of the kernel.</p>
+</li>
+<li><p>As the kernel \f$B\f$ is scanned over the image, we compute the maximal pixel value overlapped by<br>\f$B\f$ and replace the image pixel in the anchor point position with that maximal value. As you can<br>deduce, this maximizing operation causes bright regions within an image to “grow” (therefore the<br>name <em>dilation</em>).</p>
+</li>
+<li><p>The dilatation operation is: \f$\texttt{dst} (x,y) &#x3D;  \max _{(x’,y’):  , \texttt{element} (x’,y’) \ne0 } \texttt{src} (x+x’,y+y’)\f$</p>
+</li>
+<li><p>Take the above image as an example. Applying dilation we can get:</p>
+<p><img src="/images/Morphology_1_Tutorial_Theory_Dilation.png"></p>
+</li>
+<li><p>The bright area of the letter dilates around the black regions of the background.</p>
+</li>
+</ul>
+<h3 id="Erosion"><a href="#Erosion" class="headerlink" title="Erosion"></a>Erosion</h3><ul>
+<li><p>This operation is the sister of dilation. It computes a local minimum over the<br>area of given kernel.</p>
+</li>
+<li><p>As the kernel \f$B\f$ is scanned over the image, we compute the minimal pixel value overlapped by<br>\f$B\f$ and replace the image pixel under the anchor point with that minimal value.</p>
+</li>
+<li><p>The erosion operation is: \f$\texttt{dst} (x,y) &#x3D;  \min _{(x’,y’):  , \texttt{element} (x’,y’) \ne0 } \texttt{src} (x+x’,y+y’)\f$</p>
+</li>
+<li><p>Analagously to the example for dilation, we can apply the erosion operator to the original image<br>(shown above). You can see in the result below that the bright areas of the image get thinner,<br>whereas the dark zones gets bigger.</p>
+<p><img src="/images/Morphology_1_Tutorial_Theory_Erosion.png"></p>
+</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/ImgProc/Morphology_1.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_1.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/ImgProc/erosion_dilatation/MorphologyDemo1.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial’s code is shown below. You can also download it<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/imgProc/erosion_dilatation/morphology_1.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;imgProc&#x2F;erosion_dilatation&#x2F;morphology_1.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>@add_toggle_cpp<br>Most of the material shown here is trivial (if you have any doubt, please refer to the tutorials in<br>previous sections). Let’s check the general structure of the C++ program:</p>
+<p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_1.cpp main</p>
+<p>-#   Load an image (can be BGR or grayscale)<br>-#   Create two windows (one for dilation output, the other for erosion)<br>-#   Create a set of two Trackbars for each operation:<br>    -   The first trackbar “Element” returns either <strong>erosion_elem</strong> or <strong>dilation_elem</strong><br>    -   The second trackbar “Kernel size” return <strong>erosion_size</strong> or <strong>dilation_size</strong> for the<br>        corresponding operation.<br>-#  Call once erosion and dilation to show the initial image.</p>
+<p>Every time we move any slider, the user’s function <strong>Erosion</strong> or <strong>Dilation</strong> will be<br>called and it will update the output image based on the current trackbar values.</p>
+<p>Let’s analyze these two functions:</p>
+<h4 id="The-erosion-function"><a href="#The-erosion-function" class="headerlink" title="The erosion function"></a>The erosion function</h4><p>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_1.cpp erosion</p>
+<p>The function that performs the <em>erosion</em> operation is @ref cv::erode . As we can see, it<br>receives three arguments:</p>
+<ul>
+<li><p><em>src</em>: The source image</p>
+</li>
+<li><p><em>erosion_dst</em>: The output image</p>
+</li>
+<li><p><em>element</em>: This is the kernel we will use to perform the operation. If we do not<br>specify, the default is a simple <code>3x3</code> matrix. Otherwise, we can specify its<br>shape. For this, we need to use the function cv::getStructuringElement :<br>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_1.cpp kernel</p>
+<p>We can choose any of three shapes for our kernel:</p>
+<ul>
+<li>Rectangular box: MORPH_RECT</li>
+<li>Cross: MORPH_CROSS</li>
+<li>Ellipse: MORPH_ELLIPSE</li>
+</ul>
+<p>Then, we just have to specify the size of our kernel and the <em>anchor point</em>. If not<br>specified, it is assumed to be in the center.</p>
+</li>
+</ul>
+<p>That is all. We are ready to perform the erosion of our image.</p>
+<h4 id="The-dilation-function"><a href="#The-dilation-function" class="headerlink" title="The dilation function"></a>The dilation function</h4><p>The code is below. As you can see, it is completely similar to the snippet of code for <strong>erosion</strong>.<br>Here we also have the option of defining our kernel, its anchor point and the size of the operator<br>to be used.<br>@snippet cpp&#x2F;tutorial_code&#x2F;ImgProc&#x2F;Morphology_1.cpp dilation<br>@end_toggle</p>
+<p>@add_toggle_java<br>Most of the material shown here is trivial (if you have any doubt, please refer to the tutorials in<br>previous sections). Let’s check however the general structure of the java class. There are 4 main<br>parts in the java class:</p>
+<ul>
+<li>the class constructor which setups the window that will be filled with window components</li>
+<li>the <code>addComponentsToPane</code> method, which fills out the window</li>
+<li>the <code>update</code> method, which determines what happens when the user changes any value</li>
+<li>the <code>main</code> method, which is the entry point of the program</li>
+</ul>
+<p>In this tutorial we will focus on the <code>addComponentsToPane</code> and <code>update</code> methods. However, for completion the<br>steps followed in the constructor are:</p>
+<p>-#  Load an image (can be BGR or grayscale)<br>-#  Create a window<br>-#  Add various control components with <code>addComponentsToPane</code><br>-#  show the window</p>
+<p>The components were added by the following method:</p>
+<p>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java components</p>
+<p>In short we</p>
+<p>-#  create a panel for the sliders<br>-#  create a combo box for the element types<br>-#  create a slider for the kernel size<br>-#  create a combo box for the morphology function to use (erosion or dilation)</p>
+<p>The action and state changed listeners added call at the end the <code>update</code> method which updates<br>the image based on the current slider values. So every time we move any slider, the <code>update</code> method is triggered.</p>
+<h4 id="Updating-the-image"><a href="#Updating-the-image" class="headerlink" title="Updating the image"></a>Updating the image</h4><p>To update the image we used the following implementation:</p>
+<p>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java update</p>
+<p>In other words we</p>
+<p>-# get the structuring element the user chose<br>-# execute the <strong>erosion</strong> or <strong>dilation</strong> function based on <code>doErosion</code><br>-# reload the image with the morphology applied<br>-# repaint the frame</p>
+<p>Let’s analyze the <code>erode</code> and <code>dilate</code> methods:</p>
+<h4 id="The-erosion-method"><a href="#The-erosion-method" class="headerlink" title="The erosion method"></a>The erosion method</h4><p>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java erosion</p>
+<p>The function that performs the <em>erosion</em> operation is @ref cv::erode . As we can see, it<br>receives three arguments:</p>
+<ul>
+<li><p><em>src</em>: The source image</p>
+</li>
+<li><p><em>erosion_dst</em>: The output image</p>
+</li>
+<li><p><em>element</em>: This is the kernel we will use to perform the operation. For specifying the shape, we need to use<br>the function cv::getStructuringElement :<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java kernel</p>
+<p>We can choose any of three shapes for our kernel:</p>
+<ul>
+<li>Rectangular box: CV_SHAPE_RECT</li>
+<li>Cross: CV_SHAPE_CROSS</li>
+<li>Ellipse: CV_SHAPE_ELLIPSE</li>
+</ul>
+<p>Together with the shape we specify the size of our kernel and the <em>anchor point</em>. If the anchor point is not<br>specified, it is assumed to be in the center.</p>
+</li>
+</ul>
+<p>That is all. We are ready to perform the erosion of our image.</p>
+<h4 id="The-dilation-function-1"><a href="#The-dilation-function-1" class="headerlink" title="The dilation function"></a>The dilation function</h4><p>The code is below. As you can see, it is completely similar to the snippet of code for <strong>erosion</strong>.<br>Here we also have the option of defining our kernel, its anchor point and the size of the operator<br>to be used.<br>@snippet java&#x2F;tutorial_code&#x2F;ImgProc&#x2F;erosion_dilatation&#x2F;MorphologyDemo1.java dilation<br>@end_toggle</p>
+<p>@add_toggle_python<br>Most of the material shown here is trivial (if you have any doubt, please refer to the tutorials in<br>previous sections). Let’s check the general structure of the python script:</p>
+<p>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;erosion_dilatation&#x2F;morphology_1.py main</p>
+<p>-#  Load an image (can be BGR or grayscale)<br>-#  Create two windows (one for erosion output, the other for dilation) with a set of trackbars each<br>    -   The first trackbar “Element” returns the value for the morphological type that will be mapped<br>        (1 &#x3D; rectangle, 2 &#x3D; cross, 3 &#x3D; ellipse)<br>    -   The second trackbar “Kernel size” returns the size of the element for the<br>        corresponding operation<br>-#  Call once erosion and dilation to show the initial image</p>
+<p>Every time we move any slider, the user’s function <strong>erosion</strong> or <strong>dilation</strong> will be<br>called and it will update the output image based on the current trackbar values.</p>
+<p>Let’s analyze these two functions:</p>
+<h4 id="The-erosion-function-1"><a href="#The-erosion-function-1" class="headerlink" title="The erosion function"></a>The erosion function</h4><p>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;erosion_dilatation&#x2F;morphology_1.py erosion</p>
+<p>The function that performs the <em>erosion</em> operation is @ref cv::erode . As we can see, it<br>receives two arguments and returns the processed image:</p>
+<ul>
+<li><p><em>src</em>: The source image</p>
+</li>
+<li><p><em>element</em>: The kernel we will use to perform the operation. We can specify its<br>shape by using the function cv::getStructuringElement :<br>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;erosion_dilatation&#x2F;morphology_1.py kernel</p>
+<p>We can choose any of three shapes for our kernel:</p>
+<ul>
+<li>Rectangular box: MORPH_RECT</li>
+<li>Cross: MORPH_CROSS</li>
+<li>Ellipse: MORPH_ELLIPSE</li>
+</ul>
+</li>
+</ul>
+<p>Then, we just have to specify the size of our kernel and the <em>anchor point</em>. If the anchor point not<br>specified, it is assumed to be in the center.</p>
+<p>That is all. We are ready to perform the erosion of our image.</p>
+<h4 id="The-dilation-function-2"><a href="#The-dilation-function-2" class="headerlink" title="The dilation function"></a>The dilation function</h4><p>The code is below. As you can see, it is completely similar to the snippet of code for <strong>erosion</strong>.<br>Here we also have the option of defining our kernel, its anchor point and the size of the operator<br>to be used.</p>
+<p>@snippet python&#x2F;tutorial_code&#x2F;imgProc&#x2F;erosion_dilatation&#x2F;morphology_1.py dilation<br>@end_toggle</p>
+<p>@note Additionally, there are further parameters that allow you to perform multiple erosions&#x2F;dilations<br>(iterations) at once and also set the border type and value. However, We haven’t used those<br>in this simple tutorial. You can check out the reference for more details.</p>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Compile the code above and execute it (or run the script if using python) with an image as argument.<br>If you do not provide an image as argument the default sample image<br>(<a href="https://github.com/opencv/opencv/tree/master/samples/data/LinuxLogo.jpg">LinuxLogo.jpg</a>) will be used.</p>
+<p>For instance, using this image:</p>
+<p><img src="/images/Morphology_1_Tutorial_Original_Image.jpg"></p>
+<p>We get the results below. Varying the indices in the Trackbars give different output images,<br>naturally. Try them out! You can even try to add a third Trackbar to control the number of<br>iterations.</p>
+<p><img src="/images/Morphology_1_Result.jpg"><br>(depending on the programming language the output might vary a little or be only 1 window)</p>

@@ -1,0 +1,130 @@
+<h1 id="Contour-Features-tutorial-js-contour-features"><a href="#Contour-Features-tutorial-js-contour-features" class="headerlink" title="Contour Features {#tutorial_js_contour_features}"></a>Contour Features {#tutorial_js_contour_features}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>To find the different features of contours, like area, perimeter, centroid, bounding box etc</li>
+<li>You will learn plenty of functions related to contours.</li>
+</ul>
+<ol>
+<li>Moments</li>
+</ol>
+<hr>
+<p>Image moments help you to calculate some features like center of mass of the object, area of the<br>object etc. Check out the wikipedia page on <a href="http://en.wikipedia.org/wiki/Image_moment">Image<br>Moments</a></p>
+<p>We use the function: <strong>cv.moments (array, binaryImage &#x3D; false)</strong><br>@param array         raster image (single-channel, 8-bit or floating-point 2D array) or an array ( 1×N or N×1 ) of 2D points.<br>@param binaryImage   if it is true, all non-zero image pixels are treated as 1’s. The parameter is used for images only.</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_moments.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<p>From this moments, you can extract useful data like area, centroid etc. Centroid is given by the<br>relations, \f$C_x &#x3D; \frac{M_{10}}{M_{00}}\f$ and \f$C_y &#x3D; \frac{M_{01}}{M_{00}}\f$. This can be done as<br>follows:<br>@code{.js}<br>let cx &#x3D; M.m10&#x2F;M.m00<br>let cy &#x3D; M.m01&#x2F;M.m00<br>@endcode</p>
+<ol start="2">
+<li>Contour Area</li>
+</ol>
+<hr>
+<p>Contour area is given by the function <strong>cv.contourArea()</strong> or from moments, <strong>M[‘m00’]</strong>.</p>
+<p>We use the function: <strong>cv.contourArea (contour, oriented &#x3D; false)</strong><br>@param contour    input vector of 2D points (contour vertices)<br>@param oriented   oriented area flag. If it is true, the function returns a signed area value, depending on the contour orientation (clockwise or counter-clockwise). Using this feature you can determine orientation of a contour by taking the sign of an area. By default, the parameter is false, which means that the absolute value is returned.</p>
+<h2 id="Try-it-1"><a href="#Try-it-1" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_area.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="3">
+<li>Contour Perimeter</li>
+</ol>
+<hr>
+<p>It is also called arc length. It can be found out using <strong>cv.arcLength()</strong> function.</p>
+<p>We use the function: <strong>cv.arcLength (curve, closed)</strong><br>@param curve    input vector of 2D points.<br>@param closed   flag indicating whether the curve is closed or not.</p>
+<h2 id="Try-it-2"><a href="#Try-it-2" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_perimeter.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="4">
+<li>Contour Approximation</li>
+</ol>
+<hr>
+<p>It approximates a contour shape to another shape with less number of vertices depending upon the<br>precision we specify. It is an implementation of <a href="http://en.wikipedia.org/wiki/Ramer-Douglas-Peucker_algorithm">Douglas-Peucker<br>algorithm</a>. Check the wikipedia page<br>for algorithm and demonstration.</p>
+<p>We use the function: <strong>cv.approxPolyDP (curve, approxCurve, epsilon, closed)</strong><br>@param curve        input vector of 2D points stored in cv.Mat.<br>@param approxCurve  result of the approximation. The type should match the type of the input curve.<br>@param epsilon      parameter specifying the approximation accuracy. This is the maximum distance between the original curve and its approximation.<br>@param closed       If true, the approximated curve is closed (its first and last vertices are connected). Otherwise, it is not closed.</p>
+<h2 id="Try-it-3"><a href="#Try-it-3" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_approxPolyDP.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="5">
+<li>Convex Hull</li>
+</ol>
+<hr>
+<p>Convex Hull will look similar to contour approximation, but it is not (Both may provide same results<br>in some cases). Here, <strong>cv.convexHull()</strong> function checks a curve for convexity defects and<br>corrects it. Generally speaking, convex curves are the curves which are always bulged out, or<br>at-least flat. And if it is bulged inside, it is called convexity defects. For example, check the<br>below image of hand. Red line shows the convex hull of hand. The double-sided arrow marks shows the<br>convexity defects, which are the local maximum deviations of hull from contours.</p>
+<p><img src="/images/convexitydefects.jpg" alt="image"></p>
+<p>We use the function: <strong>cv.convexHull (points, hull, clockwise &#x3D; false, returnPoints &#x3D; true)</strong><br>@param points        input 2D point set.<br>@param hull          output convex hull.<br>@param clockwise     orientation flag. If it is true, the output convex hull is oriented clockwise. Otherwise, it is oriented counter-clockwise. The assumed coordinate system has its X axis pointing to the right, and its Y axis pointing upwards.<br>@param returnPoints  operation flag. In case of a matrix, when the flag is true, the function returns convex hull points. Otherwise, it returns indices of the convex hull points.</p>
+<h2 id="Try-it-4"><a href="#Try-it-4" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_convexHull.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="6">
+<li>Checking Convexity</li>
+</ol>
+<hr>
+<p>There is a function to check if a curve is convex or not, <strong>cv.isContourConvex()</strong>. It just return<br>whether True or False. Not a big deal.</p>
+<p>@code{.js}<br>cv.isContourConvex(cnt);<br>@endcode</p>
+<ol start="7">
+<li>Bounding Rectangle</li>
+</ol>
+<hr>
+<p>There are two types of bounding rectangles.</p>
+<h3 id="7-a-Straight-Bounding-Rectangle"><a href="#7-a-Straight-Bounding-Rectangle" class="headerlink" title="7.a. Straight Bounding Rectangle"></a>7.a. Straight Bounding Rectangle</h3><p>It is a straight rectangle, it doesn’t consider the rotation of the object. So area of the bounding<br>rectangle won’t be minimum.</p>
+<p>We use the function: <strong>cv.boundingRect (points)</strong><br>@param points        input 2D point set.</p>
+<h2 id="Try-it-5"><a href="#Try-it-5" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_boundingRect.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<h3 id="7-b-Rotated-Rectangle"><a href="#7-b-Rotated-Rectangle" class="headerlink" title="7.b. Rotated Rectangle"></a>7.b. Rotated Rectangle</h3><p>Here, bounding rectangle is drawn with minimum area, so it considers the rotation also.</p>
+<p>We use the function: <strong>cv.minAreaRect (points)</strong><br>@param points        input 2D point set.</p>
+<h2 id="Try-it-6"><a href="#Try-it-6" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_minAreaRect.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="8">
+<li>Minimum Enclosing Circle</li>
+</ol>
+<hr>
+<p>Next we find the circumcircle of an object using the function <strong>cv.minEnclosingCircle()</strong>. It is a<br>circle which completely covers the object with minimum area.</p>
+<p>We use the functions: <strong>cv.minEnclosingCircle (points)</strong><br>@param points        input 2D point set.</p>
+<p><strong>cv.circle (img, center, radius, color, thickness &#x3D; 1, lineType &#x3D; cv.LINE_8, shift &#x3D; 0)</strong><br>@param img          image where the circle is drawn.<br>@param center       center of the circle.<br>@param radius       radius of the circle.<br>@param color        circle color.<br>@param thickness    thickness of the circle outline, if positive. Negative thickness means that a filled circle is to be drawn.<br>@param lineType     type of the circle boundary.<br>@param shift        number of fractional bits in the coordinates of the center and in the radius value.</p>
+<h2 id="Try-it-7"><a href="#Try-it-7" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_minEnclosingCircle.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="9">
+<li>Fitting an Ellipse</li>
+</ol>
+<hr>
+<p>Next one is to fit an ellipse to an object. It returns the rotated rectangle in which the ellipse is<br>inscribed.<br>We use the functions: <strong>cv.fitEllipse (points)</strong><br>@param points        input 2D point set.</p>
+<p><strong>cv.ellipse1 (img, box, color, thickness &#x3D; 1, lineType &#x3D; cv.LINE_8)</strong><br>@param img        image.<br>@param box        alternative ellipse representation via RotatedRect. This means that the function draws an ellipse inscribed in the rotated rectangle.<br>@param color      ellipse color.<br>@param thickness  thickness of the ellipse arc outline, if positive. Otherwise, this indicates that a filled ellipse sector is to be drawn.<br>@param lineType   type of the ellipse boundary.</p>
+<h2 id="Try-it-8"><a href="#Try-it-8" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_fitEllipse.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly
+
+<ol start="10">
+<li>Fitting a Line</li>
+</ol>
+<hr>
+<p>Similarly we can fit a line to a set of points. We can approximate a straight line to it.</p>
+<p>We use the functions: <strong>cv.fitLine (points, line, distType, param, reps, aeps)</strong><br>@param points     input 2D point set.<br>@param line       output line parameters. It should be a Mat of 4 elements[vx, vy, x0, y0], where [vx, vy] is a normalized vector collinear to the line and [x0, y0] is a point on the line.<br>@param distType   distance used by the M-estimator(see cv.DistanceTypes).<br>@param param      numerical parameter ( C ) for some types of distances. If it is 0, an optimal value is chosen.<br>@param reps       sufficient accuracy for the radius (distance between the coordinate origin and the line).<br>@param aeps       sufficient accuracy for the angle. 0.01 would be a good default value for reps and aeps.</p>
+<p><strong>cv.line (img, pt1, pt2, color, thickness &#x3D; 1, lineType &#x3D; cv.LINE_8, shift &#x3D; 0)</strong><br>@param img          image.<br>@param pt1          first point of the line segment.<br>@param pt2          second point of the line segment.<br>@param color        line color.<br>@param thickness    line thickness.<br>@param lineType     type of the line,.<br>@param shift        number of fractional bits in the point coordinates.</p>
+<h2 id="Try-it-9"><a href="#Try-it-9" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_contour_features_fitLine.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

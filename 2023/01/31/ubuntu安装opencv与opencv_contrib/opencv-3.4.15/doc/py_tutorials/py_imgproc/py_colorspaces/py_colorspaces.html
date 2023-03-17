@@ -1,0 +1,61 @@
+<h1 id="Changing-Colorspaces-tutorial-py-colorspaces"><a href="#Changing-Colorspaces-tutorial-py-colorspaces" class="headerlink" title="Changing Colorspaces {#tutorial_py_colorspaces}"></a>Changing Colorspaces {#tutorial_py_colorspaces}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>In this tutorial, you will learn how to convert images from one color-space to another, like<br>BGR \f$\leftrightarrow\f$ Gray, BGR \f$\leftrightarrow\f$ HSV, etc.</li>
+<li>In addition to that, we will create an application to extract a colored object in a video</li>
+<li>You will learn the following functions: <strong>cv.cvtColor()</strong>, <strong>cv.inRange()</strong>, etc.</li>
+</ul>
+<h2 id="Changing-Color-space"><a href="#Changing-Color-space" class="headerlink" title="Changing Color-space"></a>Changing Color-space</h2><p>There are more than 150 color-space conversion methods available in OpenCV. But we will look into<br>only two, which are most widely used ones: BGR \f$\leftrightarrow\f$ Gray and BGR \f$\leftrightarrow\f$ HSV.</p>
+<p>For color conversion, we use the function cv.cvtColor(input_image, flag) where flag determines the<br>type of conversion.</p>
+<p>For BGR \f$\rightarrow\f$ Gray conversion, we use the flag cv.COLOR_BGR2GRAY. Similarly for BGR<br>\f$\rightarrow\f$ HSV, we use the flag cv.COLOR_BGR2HSV. To get other flags, just run following<br>commands in your Python terminal:<br>@code{.py}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>import cv2 as cv<br>flags &#x3D; [i for i in dir(cv) if i.startswith(‘COLOR_’)]<br>print( flags )<br>@endcode<br>@note For HSV, hue range is [0,179], saturation range is [0,255], and value range is [0,255].<br>Different software use different scales. So if you are comparing OpenCV values with them, you need<br>to normalize these ranges.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="Object-Tracking"><a href="#Object-Tracking" class="headerlink" title="Object Tracking"></a>Object Tracking</h2><p>Now that we know how to convert a BGR image to HSV, we can use this to extract a colored object. In HSV, it<br>is easier to represent a color than in BGR color-space. In our application, we will try to extract<br>a blue colored object. So here is the method:</p>
+<ul>
+<li>Take each frame of the video</li>
+<li>Convert from BGR to HSV color-space</li>
+<li>We threshold the HSV image for a range of blue color</li>
+<li>Now extract the blue object alone, we can do whatever we want on that image.</li>
+</ul>
+<p>Below is the code which is commented in detail:<br>@code{.py}<br>import cv2 as cv<br>import numpy as np</p>
+<p>cap &#x3D; cv.VideoCapture(0)</p>
+<p>while(1):</p>
+<pre><code># Take each frame
+_, frame = cap.read()
+
+# Convert BGR to HSV
+hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+
+# define range of blue color in HSV
+lower_blue = np.array([110,50,50])
+upper_blue = np.array([130,255,255])
+
+# Threshold the HSV image to get only blue colors
+mask = cv.inRange(hsv, lower_blue, upper_blue)
+
+# Bitwise-AND mask and original image
+res = cv.bitwise_and(frame,frame, mask= mask)
+
+cv.imshow(&#39;frame&#39;,frame)
+cv.imshow(&#39;mask&#39;,mask)
+cv.imshow(&#39;res&#39;,res)
+k = cv.waitKey(5) &amp; 0xFF
+if k == 27:
+    break
+</code></pre>
+<p>cv.destroyAllWindows()<br>@endcode<br>Below image shows tracking of the blue object:</p>
+<p><img src="/images/frame.jpg" alt="image"></p>
+<p>@note There is some noise in the image. We will see how to remove it in later chapters.</p>
+<p>@note This is the simplest method in object tracking. Once you learn functions of contours, you can<br>do plenty of things like find the centroid of an object and use it to track the object, draw diagrams<br>just by moving your hand in front of a camera, and other fun stuff.</p>
+<h2 id="How-to-find-HSV-values-to-track"><a href="#How-to-find-HSV-values-to-track" class="headerlink" title="How to find HSV values to track?"></a>How to find HSV values to track?</h2><p>This is a common question found in <a href="http://www.stackoverflow.com/">stackoverflow.com</a>. It is very simple and<br>you can use the same function, cv.cvtColor(). Instead of passing an image, you just pass the BGR<br>values you want. For example, to find the HSV value of Green, try the following commands in a Python<br>terminal:<br>@code{.py}</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>green &#x3D; np.uint8([[[0,255,0 ]]])<br>hsv_green &#x3D; cv.cvtColor(green,cv.COLOR_BGR2HSV)<br>print( hsv_green )<br>[[[ 60 255 255]]]<br>@endcode<br>Now you take [H-10, 100,100] and [H+10, 255, 255] as the lower bound and upper bound respectively. Apart<br>from this method, you can use any image editing tools like GIMP or any online converters to find<br>these values, but don’t forget to adjust the HSV ranges.</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2><p>-#  Try to find a way to extract more than one colored object, for example, extract red, blue, and green<br>objects simultaneously.</p>

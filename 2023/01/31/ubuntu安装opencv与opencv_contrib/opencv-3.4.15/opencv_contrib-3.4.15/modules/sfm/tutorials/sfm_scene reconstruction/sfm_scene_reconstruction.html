@@ -1,0 +1,31 @@
+<h1 id="Scene-Reconstruction-tutorial-sfm-scene-reconstruction"><a href="#Scene-Reconstruction-tutorial-sfm-scene-reconstruction" class="headerlink" title="Scene Reconstruction {#tutorial_sfm_scene_reconstruction}"></a>Scene Reconstruction {#tutorial_sfm_scene_reconstruction}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to use the reconstruction api for sparse reconstruction:</p>
+<ul>
+<li>Load and file with a list of image paths.</li>
+<li>Run libmv reconstruction pipeline.</li>
+<li>Show obtained results using Viz.</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@include sfm&#x2F;samples&#x2F;scene_reconstruction.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>Firstly, we need to load the file containing list of image paths in order to feed the reconstruction api:</p>
+<p>@code{.cpp}<br>  &#x2F;home&#x2F;eriba&#x2F;software&#x2F;opencv_contrib&#x2F;modules&#x2F;sfm&#x2F;samples&#x2F;data&#x2F;images&#x2F;resized_IMG_2889.jpg<br>  &#x2F;home&#x2F;eriba&#x2F;software&#x2F;opencv_contrib&#x2F;modules&#x2F;sfm&#x2F;samples&#x2F;data&#x2F;images&#x2F;resized_IMG_2890.jpg<br>  &#x2F;home&#x2F;eriba&#x2F;software&#x2F;opencv_contrib&#x2F;modules&#x2F;sfm&#x2F;samples&#x2F;data&#x2F;images&#x2F;resized_IMG_2891.jpg<br>  &#x2F;home&#x2F;eriba&#x2F;software&#x2F;opencv_contrib&#x2F;modules&#x2F;sfm&#x2F;samples&#x2F;data&#x2F;images&#x2F;resized_IMG_2892.jpg</p>
+<p>  …</p>
+<p>  int getdir(const string _filename, vector<string> &amp;files)<br>  {<br>    ifstream myfile(_filename.c_str());<br>    if (!myfile.is_open()) {<br>      cout &lt;&lt; “Unable to read file: “ &lt;&lt; _filename &lt;&lt; endl;<br>      exit(0);<br>    } else {<br>      string line_str;<br>      while ( getline(myfile, line_str) )<br>        files.push_back(line_str);<br>    }<br>    return 1;<br>  }<br>@endcode</p>
+<p>Secondly, the built container will be used to feed the reconstruction api. It is important outline that the estimated results must be stored in a vector<Mat>. In this<br>case is called the overloaded signature for real images which from the images, internally extracts and compute the sparse 2d features using DAISY descriptors in order to be matched using FlannBasedMatcher and build the tracks structure.</p>
+<p>@code{.cpp}<br>  bool is_projective &#x3D; true;<br>  vector<Mat> Rs_est, ts_est, points3d_estimated;<br>  reconstruct(images_paths, Rs_est, ts_est, K, points3d_estimated, is_projective);</p>
+<p>  &#x2F;&#x2F; Print output</p>
+<p>  cout &lt;&lt; “\n—————————-\n” &lt;&lt; endl;<br>  cout &lt;&lt; “Reconstruction: “ &lt;&lt; endl;<br>  cout &lt;&lt; “&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;” &lt;&lt; endl;<br>  cout &lt;&lt; “Estimated 3D points: “ &lt;&lt; points3d_estimated.size() &lt;&lt; endl;<br>  cout &lt;&lt; “Estimated cameras: “ &lt;&lt; Rs_est.size() &lt;&lt; endl;<br>  cout &lt;&lt; “Refined intrinsics: “ &lt;&lt; endl &lt;&lt; K &lt;&lt; endl &lt;&lt; endl;<br>@endcode</p>
+<p>Finally, the obtained results will be shown in Viz.</p>
+<h2 id="Usage-and-Results"><a href="#Usage-and-Results" class="headerlink" title="Usage and Results"></a>Usage and Results</h2><p>In order to run this sample we need to specify the path to the image paths files, the focal length of the camera in addition to the center projection coordinates (in pixels).</p>
+<p><strong>1. Middlebury temple</strong></p>
+<p>Using following image sequence [1] and the followings camera parameters we can compute the sparse 3d reconstruction:</p>
+<p>@code{.bash}<br>  .&#x2F;example_sfm_scene_reconstruction image_paths_file.txt 800 400 225<br>@endcode</p>
+<p><img src="/pics/temple_input.jpg"></p>
+<p>The following picture shows the obtained camera motion in addition to the estimated sparse 3d reconstruction:</p>
+<p><img src="/pics/temple_reconstruction.jpg"></p>
+<p><strong>2. Sagrada Familia</strong></p>
+<p>Using following image sequence [2] and the followings camera parameters we can compute the sparse 3d reconstruction:</p>
+<p>@code{.bash}<br>  .&#x2F;example_sfm_scene_reconstruction image_paths_file.txt 350 240 360<br>@endcode</p>
+<p><img src="/pics/sagrada_familia_input.jpg"></p>
+<p>The following picture shows the obtained camera motion in addition to the estimated sparse 3d reconstruction:</p>
+<p><img src="/pics/sagrada_familia_reconstruction.jpg"></p>
+<p>[1] <a href="http://vision.middlebury.edu/mview/data">http://vision.middlebury.edu/mview/data</a></p>
+<p>[2] Penate Sanchez, A. and Moreno-Noguer, F. and Andrade Cetto, J. and Fleuret, F. (2014). LETHA: Learning from High Quality Inputs for 3D Pose Estimation in Low Quality Images. Proceedings of the International Conference on 3D vision (3DV).<br><a href="http://www.iri.upc.edu/research/webprojects/pau/datasets/sagfam">URL</a></p>

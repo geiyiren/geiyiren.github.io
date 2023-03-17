@@ -1,0 +1,25 @@
+<h1 id="Classify-tutorial-feature-classification"><a href="#Classify-tutorial-feature-classification" class="headerlink" title="Classify {#tutorial_feature_classification}"></a>Classify {#tutorial_feature_classification}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to</p>
+<ul>
+<li>How to extract feature from an image</li>
+<li>How to extract features from images under a given root path</li>
+<li>How to make a prediction using reference images and target image</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@include cnn_3dobj&#x2F;samples&#x2F;classify.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>Here is the general structure of the program:</p>
+<ul>
+<li><p>Initialize a net work with Device.<br>@code{.cpp}<br>cv::cnn_3dobj::descriptorExtractor descriptor(device);<br>@endcode</p>
+</li>
+<li><p>Load net with the caffe trained net work parameter and structure.<br>@code{.cpp}<br>if (strcmp(mean_file.c_str(), “no”) &#x3D;&#x3D; 0)<br>descriptor.loadNet(network_forIMG, caffemodel);<br>else<br>descriptor.loadNet(network_forIMG, caffemodel, mean_file);<br>@endcode</p>
+</li>
+<li><p>List the file names under a given path.<br>@code{.cpp}<br>listDir(src_dir.c_str(), name_gallery, false);<br>for (unsigned int i &#x3D; 0; i &lt; name_gallery.size(); i++)<br>{<br>name_gallery[i] &#x3D; src_dir + name_gallery[i];<br>}<br>@endcode</p>
+</li>
+<li><p>Extract feature from a set of images.<br>@code{.cpp}<br>descriptor.extract(img_gallery, feature_reference, feature_blob);<br>@endcode</p>
+</li>
+<li><p>Initialize a matcher which using L2 distance.<br>@code{.cpp}<br>cv::BFMatcher matcher(NORM_L2);<br>std::vector&lt;std::vector<a href="cv::DMatch">cv::DMatch</a> &gt; matches;<br>@endcode</p>
+</li>
+<li><p>Have a KNN match on the target and reference images.<br>@code{.cpp}<br>matcher.knnMatch(feature_test, feature_reference, matches, num_candidate);<br>@endcode</p>
+</li>
+<li><p>Print features of the reference images.<br>@code{.cpp}std::cout &lt;&lt; std::endl &lt;&lt; “———- Features of target image: “ &lt;&lt; target_img &lt;&lt; “———-“ &lt;&lt; endl &lt;&lt; feature_test &lt;&lt; std::endl;<br>@endcode<br>Results</p>
+</li>
+</ul>
+<hr>

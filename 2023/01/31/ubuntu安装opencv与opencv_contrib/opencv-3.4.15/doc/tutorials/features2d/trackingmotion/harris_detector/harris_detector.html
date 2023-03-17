@@ -1,0 +1,71 @@
+<h1 id="Harris-corner-detector-tutorial-harris-detector"><a href="#Harris-corner-detector-tutorial-harris-detector" class="headerlink" title="Harris corner detector {#tutorial_harris_detector}"></a>Harris corner detector {#tutorial_harris_detector}</h1><p>@next_tutorial{tutorial_good_features_to_track}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn:</p>
+<ul>
+<li>What features are and why they are important</li>
+<li>Use the function @ref cv::cornerHarris to detect corners using the Harris-Stephens method.</li>
+</ul>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><h3 id="What-is-a-feature"><a href="#What-is-a-feature" class="headerlink" title="What is a feature?"></a>What is a feature?</h3><ul>
+<li>In computer vision, usually we need to find matching points between different frames of an<br>environment. Why? If we know how two images relate to each other, we can use <em>both</em> images to<br>extract information of them.</li>
+<li>When we say <strong>matching points</strong> we are referring, in a general sense, to <em>characteristics</em> in<br>the scene that we can recognize easily. We call these characteristics <strong>features</strong>.</li>
+<li><strong>So, what characteristics should a feature have?</strong><ul>
+<li>It must be <em>uniquely recognizable</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="Types-of-Image-Features"><a href="#Types-of-Image-Features" class="headerlink" title="Types of Image Features"></a>Types of Image Features</h3><p>To mention a few:</p>
+<ul>
+<li>Edges</li>
+<li><strong>Corners</strong> (also known as interest points)</li>
+<li>Blobs (also known as regions of interest )</li>
+</ul>
+<p>In this tutorial we will study the <em>corner</em> features, specifically.</p>
+<h3 id="Why-is-a-corner-so-special"><a href="#Why-is-a-corner-so-special" class="headerlink" title="Why is a corner so special?"></a>Why is a corner so special?</h3><ul>
+<li>Because, since it is the intersection of two edges, it represents a point in which the<br>directions of these two edges <em>change</em>. Hence, the gradient of the image (in both directions)<br>have a high variation, which can be used to detect it.</li>
+</ul>
+<h3 id="How-does-it-work"><a href="#How-does-it-work" class="headerlink" title="How does it work?"></a>How does it work?</h3><ul>
+<li><p>Let’s look for corners. Since corners represents a variation in the gradient in the image, we<br>will look for this “variation”.</p>
+</li>
+<li><p>Consider a grayscale image \f$I\f$. We are going to sweep a window \f$w(x,y)\f$ (with displacements \f$u\f$<br>in the x direction and \f$v\f$ in the y direction) \f$I\f$ and will calculate the variation of<br>intensity.</p>
+<p>\f[E(u,v) &#x3D; \sum _{x,y} w(x,y)[ I(x+u,y+v) - I(x,y)]^{2}\f]</p>
+<p>where:</p>
+<ul>
+<li>\f$w(x,y)\f$ is the window at position \f$(x,y)\f$</li>
+<li>\f$I(x,y)\f$ is the intensity at \f$(x,y)\f$</li>
+<li>\f$I(x+u,y+v)\f$ is the intensity at the moved window \f$(x+u,y+v)\f$</li>
+</ul>
+</li>
+<li><p>Since we are looking for windows with corners, we are looking for windows with a large variation<br>in intensity. Hence, we have to maximize the equation above, specifically the term:</p>
+<p>\f[\sum _{x,y}[ I(x+u,y+v) - I(x,y)]^{2}\f]</p>
+</li>
+<li><p>Using <em>Taylor expansion</em>:</p>
+<p>\f[E(u,v) \approx \sum <em>{x,y}[ I(x,y) + u I</em>{x} + vI_{y} - I(x,y)]^{2}\f]</p>
+</li>
+<li><p>Expanding the equation and cancelling properly:</p>
+<p>\f[E(u,v) \approx \sum <em>{x,y} u^{2}I</em>{x}^{2} + 2uvI_{x}I_{y} + v^{2}I_{y}^{2}\f]</p>
+</li>
+<li><p>Which can be expressed in a matrix form as:</p>
+<p>\f[E(u,v) \approx \begin{bmatrix}<br>            u &amp; v<br>           \end{bmatrix}<br>           \left (<br>   \displaystyle \sum_{x,y}<br>           w(x,y)<br>           \begin{bmatrix}<br>            I_x^{2} &amp; I_{x}I_{y} \<br>            I_xI_{y} &amp; I_{y}^{2}<br>   \end{bmatrix}<br>   \right )<br>   \begin{bmatrix}<br>            u \<br>v<br>           \end{bmatrix}\f]</p>
+</li>
+<li><p>Let’s denote:</p>
+<p>\f[M &#x3D; \displaystyle \sum_{x,y}<br>      w(x,y)<br>      \begin{bmatrix}<br>                I_x^{2} &amp; I_{x}I_{y} \<br>                I_xI_{y} &amp; I_{y}^{2}<br>           \end{bmatrix}\f]</p>
+</li>
+<li><p>So, our equation now is:</p>
+<p>\f[E(u,v) \approx \begin{bmatrix}<br>            u &amp; v<br>           \end{bmatrix}<br>   M<br>   \begin{bmatrix}<br>            u \<br>v<br>           \end{bmatrix}\f]</p>
+</li>
+<li><p>A score is calculated for each window, to determine if it can possibly contain a corner:</p>
+<p>\f[R &#x3D; det(M) - k(trace(M))^{2}\f]</p>
+<p>where:</p>
+<ul>
+<li>det(M) &#x3D; \f$\lambda_{1}\lambda_{2}\f$</li>
+<li>trace(M) &#x3D; \f$\lambda_{1}+\lambda_{2}\f$</li>
+</ul>
+<p>a window with a score \f$R\f$ greater than a certain value is considered a “corner”</p>
+</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>@add_toggle_cpp<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/TrackingMotion/cornerHarris_Demo.cpp">here</a><br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;TrackingMotion&#x2F;cornerHarris_Demo.cpp<br>@end_toggle</p>
+<p>@add_toggle_java<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/java/tutorial_code/TrackingMotion/harris_detector/CornerHarrisDemo.java">here</a><br>@include samples&#x2F;java&#x2F;tutorial_code&#x2F;TrackingMotion&#x2F;harris_detector&#x2F;CornerHarrisDemo.java<br>@end_toggle</p>
+<p>@add_toggle_python<br>This tutorial code’s is shown lines below. You can also download it from<br><a href="https://github.com/opencv/opencv/tree/3.4/samples/python/tutorial_code/TrackingMotion/harris_detector/cornerHarris_Demo.py">here</a><br>@include samples&#x2F;python&#x2F;tutorial_code&#x2F;TrackingMotion&#x2F;harris_detector&#x2F;cornerHarris_Demo.py<br>@end_toggle</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><h2 id="Result"><a href="#Result" class="headerlink" title="Result"></a>Result</h2><p>The original image:</p>
+<p><img src="/images/Harris_Detector_Original_Image.jpg"></p>
+<p>The detected corners are surrounded by a small black circle</p>
+<p><img src="/images/Harris_Detector_Result.jpg"></p>

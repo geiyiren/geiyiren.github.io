@@ -1,0 +1,86 @@
+<h1 id="Using-OpenCV-js-tutorial-js-usage"><a href="#Using-OpenCV-js-tutorial-js-usage" class="headerlink" title="Using OpenCV.js {#tutorial_js_usage}"></a>Using OpenCV.js {#tutorial_js_usage}</h1><h2 id="Steps"><a href="#Steps" class="headerlink" title="Steps"></a>Steps</h2><p>In this tutorial, you will learn how to include and start to use <code>opencv.js</code> inside a web page. You can get a copy of <code>opencv.js</code> from <code>opencv-{VERSION_NUMBER}-docs.zip</code> in each <a href="https://github.com/opencv/opencv/releases">release</a>, or simply download the prebuilt script from the online documentations at “<a href="https://docs.opencv.org/%7BVERSION_NUMBER%7D/opencv.js&quot;">https://docs.opencv.org/{VERSION_NUMBER}/opencv.js&quot;</a> (For example, <a href="https://docs.opencv.org/3.4.0/opencv.js">https://docs.opencv.org/3.4.0/opencv.js</a>. Use <code>master</code> if you want the latest build). You can also build your own copy by following the tutorial on Build Opencv.js.</p>
+<h3 id="Create-a-web-page"><a href="#Create-a-web-page" class="headerlink" title="Create a web page"></a>Create a web page</h3><p>First, let’s create a simple web page that is able to upload an image.</p>
+<p>@code{.js}<br><!DOCTYPE html></p>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello OpenCV.js</title>
+</head>
+<body>
+<h2>Hello OpenCV.js</h2>
+<div>
+  <div class="inputoutput">
+    <img id="imageSrc" alt="No Image" />
+    <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
+  </div>
+</div>
+<script type="text/javascript">
+let imgElement = document.getElementById("imageSrc")
+let inputElement = document.getElementById("fileInput");
+inputElement.addEventListener("change", (e) => {
+  imgElement.src = URL.createObjectURL(e.target.files[0]);
+}, false);
+</script>
+</body>
+</html>
+@endcode
+
+<p>To run this web page, copy the content above and save to a local index.html file. To run it, open it using your web browser.</p>
+<p>@note It is a better practice to use a local web server to host the index.html.</p>
+<h3 id="Include-OpenCV-js"><a href="#Include-OpenCV-js" class="headerlink" title="Include OpenCV.js"></a>Include OpenCV.js</h3><p>Set the URL of <code>opencv.js</code> to <code>src</code> attribute of &lt;script&gt; tag.</p>
+<p>@note For this tutorial, we host <code>opencv.js</code> at same folder as index.html. You can also choose to use the URL of the prebuilt <code>opencv.js</code> in our online documentation.</p>
+<p>Example for synchronous loading:<br>@code{.js}</p>
+<script src="opencv.js" type="text/javascript"></script>
+<p>@endcode</p>
+<p>You may want to load <code>opencv.js</code> asynchronously by <code>async</code> attribute in &lt;script&gt; tag. To be notified when <code>opencv.js</code> is ready, you can register a callback to <code>onload</code> attribute.</p>
+<p>Example for asynchronous loading<br>@code{.js}</p>
+<script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+<p>@endcode</p>
+<h3 id="Use-OpenCV-js"><a href="#Use-OpenCV-js" class="headerlink" title="Use OpenCV.js"></a>Use OpenCV.js</h3><p>Once <code>opencv.js</code> is ready, you can access OpenCV objects and functions through <code>cv</code> object.</p>
+<p>For example, you can create a cv.Mat from an image by cv.imread.</p>
+<p>@note Because image loading is asynchronous, you need to put cv.Mat creation inside the <code>onload</code> callback.</p>
+<p>@code{.js}<br>imgElement.onload &#x3D; function() {<br>  let mat &#x3D; cv.imread(imgElement);<br>}<br>@endcode</p>
+<p>Many OpenCV functions can be used to process cv.Mat. You can refer to other tutorials, such as @ref tutorial_js_table_of_contents_imgproc, for details.</p>
+<p>In this tutorial, we just show a cv.Mat on screen. To show a cv.Mat, you need a canvas element.</p>
+<p>@code{.js}<br><canvas id="outputCanvas"></canvas><br>@endcode</p>
+<p>You can use cv.imshow to show cv.Mat on the canvas.<br>@code{.js}<br>cv.imshow(“outputCanvas”, mat);<br>@endcode</p>
+<p>Putting all of the steps together, the final index.html is shown below.</p>
+<p>@code{.js}<br><!DOCTYPE html></p>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello OpenCV.js</title>
+</head>
+<body>
+<h2>Hello OpenCV.js</h2>
+<p id="status">OpenCV.js is loading...</p>
+<div>
+  <div class="inputoutput">
+    <img id="imageSrc" alt="No Image" />
+    <div class="caption">imageSrc <input type="file" id="fileInput" name="file" /></div>
+  </div>
+  <div class="inputoutput">
+    <canvas id="canvasOutput" ></canvas>
+    <div class="caption">canvasOutput</div>
+  </div>
+</div>
+<script type="text/javascript">
+let imgElement = document.getElementById('imageSrc');
+let inputElement = document.getElementById('fileInput');
+inputElement.addEventListener('change', (e) => {
+  imgElement.src = URL.createObjectURL(e.target.files[0]);
+}, false);
+
+<p>imgElement.onload &#x3D; function() {<br>  let mat &#x3D; cv.imread(imgElement);<br>  cv.imshow(‘canvasOutput’, mat);<br>  mat.delete();<br>};</p>
+<p>function onOpenCvReady() {<br>  document.getElementById(‘status’).innerHTML &#x3D; ‘OpenCV.js is ready.’;<br>}<br></script></p>
+<script async src="opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+</body>
+</html>
+@endcode
+
+<p>@note You have to call delete method of cv.Mat to free memory allocated in Emscripten’s heap. Please refer to <a href="https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html#memory-management">Memory management of Emscripten</a> for details.</p>
+<h2 id="Try-it"><a href="#Try-it" class="headerlink" title="Try it"></a>Try it</h2><p>\htmlonly</p>
+<iframe src="../../js_setup_usage.html" width="100%"
+        onload="this.style.height=this.contentDocument.body.scrollHeight +'px';">
+</iframe>
+\endhtmlonly

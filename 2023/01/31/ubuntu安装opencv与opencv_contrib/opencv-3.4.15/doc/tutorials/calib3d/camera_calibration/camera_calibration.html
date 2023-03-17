@@ -1,0 +1,126 @@
+<h1 id="Camera-calibration-With-OpenCV-tutorial-camera-calibration"><a href="#Camera-calibration-With-OpenCV-tutorial-camera-calibration" class="headerlink" title="Camera calibration With OpenCV {#tutorial_camera_calibration}"></a>Camera calibration With OpenCV {#tutorial_camera_calibration}</h1><p>@prev_tutorial{tutorial_camera_calibration_square_chess}<br>@next_tutorial{tutorial_real_time_pose}</p>
+<p>Cameras have been around for a long-long time. However, with the introduction of the cheap <em>pinhole</em><br>cameras in the late 20th century, they became a common occurrence in our everyday life.<br>Unfortunately, this cheapness comes with its price: significant distortion. Luckily, these are<br>constants and with a calibration and some remapping we can correct this. Furthermore, with<br>calibration you may also determine the relation between the camera’s natural units (pixels) and the<br>real world units (for example millimeters).</p>
+<h2 id="Theory"><a href="#Theory" class="headerlink" title="Theory"></a>Theory</h2><p>For the distortion OpenCV takes into account the radial and tangential factors. For the radial<br>factor one uses the following formula:</p>
+<p>\f[x_{distorted} &#x3D; x( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6) \<br>y_{distorted} &#x3D; y( 1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\f]</p>
+<p>So for an undistorted pixel point at \f$(x,y)\f$ coordinates, its position on the distorted image<br>will be \f$(x_{distorted} y_{distorted})\f$. The presence of the radial distortion manifests in form<br>of the “barrel” or “fish-eye” effect.</p>
+<p>Tangential distortion occurs because the image taking lenses are not perfectly parallel to the<br>imaging plane. It can be represented via the formulas:</p>
+<p>\f[x_{distorted} &#x3D; x + [ 2p_1xy + p_2(r^2+2x^2)] \<br>y_{distorted} &#x3D; y + [ p_1(r^2+ 2y^2)+ 2p_2xy]\f]</p>
+<p>So we have five distortion parameters which in OpenCV are presented as one row matrix with 5<br>columns:</p>
+<p>\f[distortion_coefficients&#x3D;(k_1 \hspace{10pt} k_2 \hspace{10pt} p_1 \hspace{10pt} p_2 \hspace{10pt} k_3)\f]</p>
+<p>Now for the unit conversion we use the following formula:</p>
+<p>\f[\left [  \begin{matrix}   x \   y \  w \end{matrix} \right ] &#x3D; \left [ \begin{matrix}   f_x &amp; 0 &amp; c_x \  0 &amp; f_y &amp; c_y \   0 &amp; 0 &amp; 1 \end{matrix} \right ] \left [ \begin{matrix}  X \  Y \   Z \end{matrix} \right ]\f]</p>
+<p>Here the presence of \f$w\f$ is explained by the use of homography coordinate system (and \f$w&#x3D;Z\f$). The<br>unknown parameters are \f$f_x\f$ and \f$f_y\f$ (camera focal lengths) and \f$(c_x, c_y)\f$ which are the optical<br>centers expressed in pixels coordinates. If for both axes a common focal length is used with a given<br>\f$a\f$ aspect ratio (usually 1), then \f$f_y&#x3D;f_x*a\f$ and in the upper formula we will have a single focal<br>length \f$f\f$. The matrix containing these four parameters is referred to as the <em>camera matrix</em>. While<br>the distortion coefficients are the same regardless of the camera resolutions used, these should be<br>scaled along with the current resolution from the calibrated resolution.</p>
+<p>The process of determining these two matrices is the calibration. Calculation of these parameters is<br>done through basic geometrical equations. The equations used depend on the chosen calibrating<br>objects. Currently OpenCV supports three types of objects for calibration:</p>
+<ul>
+<li>Classical black-white chessboard</li>
+<li>Symmetrical circle pattern</li>
+<li>Asymmetrical circle pattern</li>
+</ul>
+<p>Basically, you need to take snapshots of these patterns with your camera and let OpenCV find them.<br>Each found pattern results in a new equation. To solve the equation you need at least a<br>predetermined number of pattern snapshots to form a well-posed equation system. This number is<br>higher for the chessboard pattern and less for the circle ones. For example, in theory the<br>chessboard pattern requires at least two snapshots. However, in practice we have a good amount of<br>noise present in our input images, so for good results you will probably need at least 10 good<br>snapshots of the input pattern in different positions.</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>The sample application will:</p>
+<ul>
+<li>Determine the distortion matrix</li>
+<li>Determine the camera matrix</li>
+<li>Take input from Camera, Video and Image file list</li>
+<li>Read configuration from XML&#x2F;YAML file</li>
+<li>Save the results into XML&#x2F;YAML file</li>
+<li>Calculate re-projection error</li>
+</ul>
+<h2 id="Source-code"><a href="#Source-code" class="headerlink" title="Source code"></a>Source code</h2><p>You may also find the source code in the <code>samples/cpp/tutorial_code/calib3d/camera_calibration/</code><br>folder of the OpenCV source library or <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp">download it from here
+</a>. The program has a<br>single argument: the name of its configuration file. If none is given then it will try to open the<br>one named “default.xml”. <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/calib3d/camera_calibration/in_VID5.xml">Here’s a sample configuration file
+</a> in XML format. In the<br>configuration file you may choose to use camera as an input, a video file or an image list. If you<br>opt for the last one, you will need to create a configuration file where you enumerate the images to<br>use. Here’s <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/calib3d/camera_calibration/VID5.xml">an example of this </a>.<br>The important part to remember is that the images need to be specified using the absolute path or<br>the relative one from your application’s working directory. You may find all this in the samples<br>directory mentioned above.</p>
+<p>The application starts up with reading the settings from the configuration file. Although, this is<br>an important part of it, it has nothing to do with the subject of this tutorial: <em>camera<br>calibration</em>. Therefore, I’ve chosen not to post the code for that part here. Technical background<br>on how to do this you can find in the @ref tutorial_file_input_output_with_xml_yml tutorial.</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>-#  <strong>Read the settings</strong><br>    @snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;calib3d&#x2F;camera_calibration&#x2F;camera_calibration.cpp file_read</p>
+<pre><code>For this I&#39;ve used simple OpenCV class input operation. After reading the file I&#39;ve an
+additional post-processing function that checks validity of the input. Only if all inputs are
+good then *goodInput* variable will be true.
+</code></pre>
+<p>-#  <strong>Get next input, if it fails or we have enough of them - calibrate</strong></p>
+<pre><code>After this we have a big
+loop where we do the following operations: get the next image from the image list, camera or
+video file. If this fails or we have enough images then we run the calibration process. In case
+of image we step out of the loop and otherwise the remaining frames will be undistorted (if the
+option is set) via changing from *DETECTION* mode to the *CALIBRATED* one.
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp get_input
+For some cameras we may need to flip the input image. Here we do this too.
+</code></pre>
+<p>-#  <strong>Find the pattern in the current input</strong></p>
+<pre><code>The formation of the equations I mentioned above aims
+to finding major patterns in the input: in case of the chessboard this are corners of the
+squares and for the circles, well, the circles themselves. The position of these will form the
+result which will be written into the *pointBuf* vector.
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp find_pattern
+Depending on the type of the input pattern you use either the @ref cv::findChessboardCorners or
+the @ref cv::findCirclesGrid function. For both of them you pass the current image and the size
+of the board and you&#39;ll get the positions of the patterns. Furthermore, they return a boolean
+variable which states if the pattern was found in the input (we only need to take into account
+those images where this is true!).
+
+Then again in case of cameras we only take camera images when an input delay time is passed.
+This is done in order to allow user moving the chessboard around and getting different images.
+Similar images result in similar equations, and similar equations at the calibration step will
+form an ill-posed problem, so the calibration will fail. For square images the positions of the
+corners are only approximate. We may improve this by calling the @ref cv::cornerSubPix function.
+It will produce better calibration result. After this we add a valid inputs result to the
+*imagePoints* vector to collect all of the equations into a single container. Finally, for
+visualization feedback purposes we will draw the found points on the input image using @ref
+cv::findChessboardCorners function.
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp pattern_found
+</code></pre>
+<p>-#  <strong>Show state and result to the user, plus command line control of the application</strong></p>
+<pre><code>This part shows text output on the image.
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp output_text
+If we ran calibration and got camera&#39;s matrix with the distortion coefficients we may want to
+correct the image using @ref cv::undistort function:
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp output_undistorted
+Then we show the image and wait for an input key and if this is *u* we toggle the distortion removal,
+if it is *g* we start again the detection process, and finally for the *ESC* key we quit the application:
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp await_input
+</code></pre>
+<p>-#  <strong>Show the distortion removal for the images too</strong></p>
+<pre><code>When you work with an image list it is not
+possible to remove the distortion inside the loop. Therefore, you must do this after the loop.
+Taking advantage of this now I&#39;ll expand the @ref cv::undistort function, which is in fact first
+calls @ref cv::initUndistortRectifyMap to find transformation matrices and then performs
+transformation using @ref cv::remap function. Because, after successful calibration map
+calculation needs to be done only once, by using this expanded form you may speed up your
+application:
+@snippet samples/cpp/tutorial_code/calib3d/camera_calibration/camera_calibration.cpp show_results
+</code></pre>
+<h2 id="The-calibration-and-save"><a href="#The-calibration-and-save" class="headerlink" title="The calibration and save"></a>The calibration and save</h2><p>Because the calibration needs to be done only once per camera, it makes sense to save it after a<br>successful calibration. This way later on you can just load these values into your program. Due to<br>this we first make the calibration, and if it succeeds we save the result into an OpenCV style XML<br>or YAML file, depending on the extension you give in the configuration file.</p>
+<p>Therefore in the first function we just split up these two processes. Because we want to save many<br>of the calibration variables we’ll create these variables here and pass on both of them to the<br>calibration and saving function. Again, I’ll not show the saving part as that has little in common<br>with the calibration. Explore the source file in order to find out how and what:<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;calib3d&#x2F;camera_calibration&#x2F;camera_calibration.cpp run_and_save<br>We do the calibration with the help of the @ref cv::calibrateCamera function. It has the following<br>parameters:</p>
+<ul>
+<li>The object points. This is a vector of <em>Point3f</em> vector that for each input image describes how<br>should the pattern look. If we have a planar pattern (like a chessboard) then we can simply set<br>all Z coordinates to zero. This is a collection of the points where these important points are<br>present. Because, we use a single pattern for all the input images we can calculate this just<br>once and multiply it for all the other input views. We calculate the corner points with the<br><em>calcBoardCornerPositions</em> function as:<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;calib3d&#x2F;camera_calibration&#x2F;camera_calibration.cpp board_corners<br>And then multiply it as:<br>@code{.cpp}<br>vector&lt;vector<Point3f> &gt; objectPoints(1);<br>calcBoardCornerPositions(s.boardSize, s.squareSize, objectPoints[0], s.calibrationPattern);<br>objectPoints.resize(imagePoints.size(),objectPoints[0]);<br>@endcode</li>
+<li>The image points. This is a vector of <em>Point2f</em> vector which for each input image contains<br>coordinates of the important points (corners for chessboard and centers of the circles for the<br>circle pattern). We have already collected this from @ref cv::findChessboardCorners or @ref<br>cv::findCirclesGrid function. We just need to pass it on.</li>
+<li>The size of the image acquired from the camera, video file or the images.</li>
+<li>The camera matrix. If we used the fixed aspect ratio option we need to set \f$f_x\f$:<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;calib3d&#x2F;camera_calibration&#x2F;camera_calibration.cpp fixed_aspect</li>
+<li>The distortion coefficient matrix. Initialize with zero.<br>@code{.cpp}<br>distCoeffs &#x3D; Mat::zeros(8, 1, CV_64F);<br>@endcode</li>
+<li>For all the views the function will calculate rotation and translation vectors which transform<br>the object points (given in the model coordinate space) to the image points (given in the world<br>coordinate space). The 7-th and 8-th parameters are the output vector of matrices containing in<br>the i-th position the rotation and translation vector for the i-th object point to the i-th<br>image point.</li>
+<li>The final argument is the flag. You need to specify here options like fix the aspect ratio for<br>the focal length, assume zero tangential distortion or to fix the principal point.<br>@code{.cpp}<br>double rms &#x3D; calibrateCamera(objectPoints, imagePoints, imageSize, cameraMatrix,<br>                    distCoeffs, rvecs, tvecs, s.flag|CV_CALIB_FIX_K4|CV_CALIB_FIX_K5);<br>@endcode</li>
+<li>The function returns the average re-projection error. This number gives a good estimation of<br>precision of the found parameters. This should be as close to zero as possible. Given the<br>intrinsic, distortion, rotation and translation matrices we may calculate the error for one view<br>by using the @ref cv::projectPoints to first transform the object point to image point. Then we<br>calculate the absolute norm between what we got with our transformation and the corner&#x2F;circle<br>finding algorithm. To find the average error we calculate the arithmetical mean of the errors<br>calculated for all the calibration images.<br>@snippet samples&#x2F;cpp&#x2F;tutorial_code&#x2F;calib3d&#x2F;camera_calibration&#x2F;camera_calibration.cpp compute_errors</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Let there be <a href="pattern.png">this input chessboard pattern </a> which has a size of 9 X 6. I’ve used an<br>AXIS IP camera to create a couple of snapshots of the board and saved it into VID5 directory. I’ve<br>put this inside the <code>images/CameraCalibration</code> folder of my working directory and created the<br>following <code>VID5.XML</code> file that describes which images to use:<br>@code{.xml}<br><?xml version="1.0"?><br><opencv_storage><br><images><br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx1.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx2.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx3.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx4.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx5.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx6.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx7.jpg<br>images&#x2F;CameraCalibration&#x2F;VID5&#x2F;xx8.jpg<br></images><br></opencv_storage><br>@endcode<br>Then passed <code>images/CameraCalibration/VID5/VID5.XML</code> as an input in the configuration file. Here’s a<br>chessboard pattern found during the runtime of the application:</p>
+<p><img src="/images/fileListImage.jpg"></p>
+<p>After applying the distortion removal we get:</p>
+<p><img src="/images/fileListImageUnDist.jpg"></p>
+<p>The same works for <a href="acircles_pattern.png">this asymmetrical circle pattern </a> by setting the input<br>width to 4 and height to 11. This time I’ve used a live camera feed by specifying its ID (“1”) for<br>the input. Here’s, how a detected pattern should look:</p>
+<p><img src="/images/asymetricalPattern.jpg"></p>
+<p>In both cases in the specified output XML&#x2F;YAML file you’ll find the camera and distortion<br>coefficients matrices:<br>@code{.xml}<br><camera_matrix type_id="opencv-matrix"><br><rows>3</rows><br><cols>3</cols></p>
+<dt>d</dt>
+<data>
+ 6.5746697944293521e+002 0. 3.1950000000000000e+002 0.
+ 6.5746697944293521e+002 2.3950000000000000e+002 0. 0. 1.</data></camera_matrix>
+<distortion_coefficients type_id="opencv-matrix">
+<rows>5</rows>
+<cols>1</cols>
+<dt>d</dt>
+<data>
+ -4.1802327176423804e-001 5.0715244063187526e-001 0. 0.
+ -5.7843597214487474e-001</data></distortion_coefficients>
+@endcode
+Add these values as constants to your program, call the @ref cv::initUndistortRectifyMap and the
+@ref cv::remap function to remove distortion and enjoy distortion free inputs for cheap and low
+quality cameras.
+
+<p>You may observe a runtime instance of this on the <a href="https://www.youtube.com/watch?v=ViPN810E0SU">YouTube<br>here</a>.</p>
+<p>@youtube{ViPN810E0SU}</p>

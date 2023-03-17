@@ -1,0 +1,93 @@
+<h1 id="Using-OpenCV-js-In-Node-js-tutorial-js-nodejs"><a href="#Using-OpenCV-js-In-Node-js-tutorial-js-nodejs" class="headerlink" title="Using OpenCV.js In Node.js {#tutorial_js_nodejs}"></a>Using OpenCV.js In Node.js {#tutorial_js_nodejs}</h1><h2 id="Goals"><a href="#Goals" class="headerlink" title="Goals"></a>Goals</h2><p>In this tutorial, you will learn:</p>
+<ul>
+<li>Use OpenCV.js in a <a href="https://nodejs.org/">Node.js</a> application.</li>
+<li>Load images with <a href="https://www.npmjs.com/package/jimp">jimp</a> in order to use them with OpenCV.js.</li>
+<li>Using <a href="https://www.npmjs.com/package/canvas">jsdom</a> and <a href="https://www.npmjs.com/package/canvas">node-canvas</a> to support <code>cv.imread()</code>, <code>cv.imshow()</code></li>
+<li>The basics of <a href="https://emscripten.org/">emscripten</a> APIs, like <a href="https://emscripten.org/docs/api_reference/module.html">Module</a> and <a href="https://emscripten.org/docs/api_reference/Filesystem-API.html">File System</a> on which OpenCV.js is based.</li>
+<li>Learn Node.js basics. Although this tutorial assumes the user knows JavaScript, experience with Node.js is not required.</li>
+</ul>
+<p>@note Besides giving instructions to run OpenCV.js in Node.js, another objective of this tutorial is to introduce users to the basics of <a href="https://emscripten.org/">emscripten</a> APIs, like <a href="https://emscripten.org/docs/api_reference/module.html">Module</a> and <a href="https://emscripten.org/docs/api_reference/Filesystem-API.html">File System</a> and also Node.js.</p>
+<h2 id="Minimal-example"><a href="#Minimal-example" class="headerlink" title="Minimal example"></a>Minimal example</h2><p>Create a file <code>example1.js</code> with the following content:</p>
+<p>@code{.js}<br>&#x2F;&#x2F; Define a global variable ‘Module’ with a method ‘onRuntimeInitialized’:<br>Module &#x3D; {<br>  onRuntimeInitialized() {<br>    &#x2F;&#x2F; this is our application:<br>    console.log(cv.getBuildInformation())<br>  }<br>}<br>&#x2F;&#x2F; Load ‘opencv.js’ assigning the value to the global variable ‘cv’<br>cv &#x3D; require(‘.&#x2F;opencv.js’)<br>@endcode</p>
+<h3 id="Execute-it"><a href="#Execute-it" class="headerlink" title="Execute it"></a>Execute it</h3><ul>
+<li>Save the file as <code>example1.js</code>.</li>
+<li>Make sure the file <code>opencv.js</code> is in the same folder.</li>
+<li>Make sure <a href="https://nodejs.org/">Node.js</a> is installed on your system.</li>
+</ul>
+<p>The following command should print OpenCV build information:</p>
+<p>@code{.bash}<br>node example1.js<br>@endcode</p>
+<h3 id="What-just-happened"><a href="#What-just-happened" class="headerlink" title="What just happened?"></a>What just happened?</h3><ul>
+<li><strong>In the first statement</strong>:, by defining a global variable named ‘Module’, emscripten will call <code>Module.onRuntimeInitialized()</code> when the library is ready to use. Our program is in that method and uses the global variable <code>cv</code> just like in the browser.</li>
+<li>The statement <strong>“cv &#x3D; require(‘.&#x2F;opencv.js’)”</strong> requires the file <code>opencv.js</code> and assign the return value to the global variable <code>cv</code>.<br><code>require()</code> which is a Node.js API, is used to load modules and files.<br>In this case we load the file <code>opencv.js</code> form the current folder, and, as said previously emscripten will call <code>Module.onRuntimeInitialized()</code> when its ready.</li>
+<li>See <a href="https://emscripten.org/docs/api_reference/module.html">emscripten Module API</a> for more details.</li>
+</ul>
+<h2 id="Working-with-images"><a href="#Working-with-images" class="headerlink" title="Working with images"></a>Working with images</h2><p>OpenCV.js doesn’t support image formats so we can’t load png or jpeg images directly. In the browser it uses the HTML DOM (like HTMLCanvasElement and HTMLImageElement to decode and decode images). In node.js we will need to use a library for this.</p>
+<p>In this example we use <a href="https://www.npmjs.com/package/jimp">jimp</a>, which supports common image formats and is pretty easy to use.</p>
+<h3 id="Example-setup"><a href="#Example-setup" class="headerlink" title="Example setup"></a>Example setup</h3><p>Execute the following commands to create a new node.js package and install <a href="https://www.npmjs.com/package/jimp">jimp</a> dependency:</p>
+<p>@code{.bash}<br>mkdir project1<br>cd project1<br>npm init -y<br>npm install jimp<br>@endcode</p>
+<h3 id="The-example"><a href="#The-example" class="headerlink" title="The example"></a>The example</h3><p>@code{.js}<br>const Jimp &#x3D; require(‘jimp’);</p>
+<p>async function onRuntimeInitialized(){</p>
+<p>  &#x2F;&#x2F; load local image file with jimp. It supports jpg, png, bmp, tiff and gif:<br>  var jimpSrc &#x3D; await Jimp.read(‘.&#x2F;lena.jpg’);</p>
+<p>  &#x2F;&#x2F; <code>jimpImage.bitmap</code> property has the decoded ImageData that we can use to create a cv:Mat<br>  var src &#x3D; cv.matFromImageData(jimpSrc.bitmap);</p>
+<p>  &#x2F;&#x2F; following lines is copy&amp;paste of opencv.js dilate tutorial:<br>  let dst &#x3D; new cv.Mat();<br>  let M &#x3D; cv.Mat.ones(5, 5, cv.CV_8U);<br>  let anchor &#x3D; new cv.Point(-1, -1);<br>  cv.dilate(src, dst, M, anchor, 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());</p>
+<p>  &#x2F;&#x2F; Now that we are finish, we want to write <code>dst</code> to file <code>output.png</code>. For this we create a <code>Jimp</code><br>  &#x2F;&#x2F; image which accepts the image data as a <a href="https://nodejs.org/docs/latest-v10.x/api/buffer.html"><code>Buffer</code></a>.<br>  &#x2F;&#x2F; <code>write(&#39;output.png&#39;)</code> will write it to disk and Jimp infers the output format from given file name:<br>  new Jimp({<br>    width: dst.cols,<br>    height: dst.rows,<br>    data: Buffer.from(dst.data)<br>  })<br>  .write(‘output.png’);</p>
+<p>  src.delete();<br>  dst.delete();<br>}</p>
+<p>&#x2F;&#x2F; Finally, load the open.js as before. The function <code>onRuntimeInitialized</code> contains our program.<br>Module &#x3D; {<br>  onRuntimeInitialized<br>};<br>cv &#x3D; require(‘.&#x2F;opencv.js’);<br>@endcode</p>
+<h3 id="Execute-it-1"><a href="#Execute-it-1" class="headerlink" title="Execute it"></a>Execute it</h3><ul>
+<li>Save the file as <code>exampleNodeJimp.js</code>.</li>
+<li>Make sure a sample image <code>lena.jpg</code> exists in the current directory.</li>
+</ul>
+<p>The following command should generate the file <code>output.png</code>:</p>
+<p>@code{.bash}<br>node exampleNodeJimp.js<br>@endcode</p>
+<h2 id="Emulating-HTML-DOM-and-canvas"><a href="#Emulating-HTML-DOM-and-canvas" class="headerlink" title="Emulating HTML DOM and canvas"></a>Emulating HTML DOM and canvas</h2><p>As you might already seen, the rest of the examples use functions like <code>cv.imread()</code>, <code>cv.imshow()</code> to read and write images. Unfortunately as mentioned they won’t work on Node.js since there is no HTML DOM.</p>
+<p>In this section, you will learn how to use <a href="https://www.npmjs.com/package/canvas">jsdom</a> and <a href="https://www.npmjs.com/package/canvas">node-canvas</a>  to emulate the HTML DOM on Node.js so those functions work.</p>
+<h3 id="Example-setup-1"><a href="#Example-setup-1" class="headerlink" title="Example setup"></a>Example setup</h3><p>As before, we create a Node.js project and install the dependencies we need:</p>
+<p>@code{.bash}<br>mkdir project2<br>cd project2<br>npm init -y<br>npm install canvas jsdom<br>@endcode</p>
+<h3 id="The-example-1"><a href="#The-example-1" class="headerlink" title="The example"></a>The example</h3><p>@code{.js}<br>const { Canvas, createCanvas, Image, ImageData, loadImage } &#x3D; require(‘canvas’);<br>const { JSDOM } &#x3D; require(‘jsdom’);<br>const { writeFileSync, existsSync, mkdirSync } &#x3D; require(“fs”);</p>
+<p>&#x2F;&#x2F; This is our program. This time we use JavaScript async &#x2F; await and promises to handle asynchronicity.<br>(async () &#x3D;&gt; {</p>
+<p>  &#x2F;&#x2F; before loading opencv.js we emulate a minimal HTML DOM. See the function declaration below.<br>  installDOM();</p>
+<p>  await loadOpenCV();</p>
+<p>  &#x2F;&#x2F; using node-canvas, we an image file to an object compatible with HTML DOM Image and therefore with cv.imread()<br>  const image &#x3D; await loadImage(‘.&#x2F;lena.jpg’);</p>
+<p>  const src &#x3D; cv.imread(image);<br>  const dst &#x3D; new cv.Mat();<br>  const M &#x3D; cv.Mat.ones(5, 5, cv.CV_8U);<br>  const anchor &#x3D; new cv.Point(-1, -1);<br>  cv.dilate(src, dst, M, anchor, 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());</p>
+<p>  &#x2F;&#x2F; we create an object compatible HTMLCanvasElement<br>  const canvas &#x3D; createCanvas(300, 300);<br>  cv.imshow(canvas, dst);<br>  writeFileSync(‘output.jpg’, canvas.toBuffer(‘image&#x2F;jpeg’));<br>  src.delete();<br>  dst.delete();<br>})();</p>
+<p>&#x2F;&#x2F; Load opencv.js just like before but using Promise instead of callbacks:<br>function loadOpenCV() {<br>  return new Promise(resolve &#x3D;&gt; {<br>    global.Module &#x3D; {<br>      onRuntimeInitialized: resolve<br>    };<br>    global.cv &#x3D; require(‘.&#x2F;opencv.js’);<br>  });<br>}</p>
+<p>&#x2F;&#x2F; Using jsdom and node-canvas we define some global variables to emulate HTML DOM.<br>&#x2F;&#x2F; Although a complete emulation can be archived, here we only define those globals used<br>&#x2F;&#x2F; by cv.imread() and cv.imshow().<br>function installDOM() {<br>  const dom &#x3D; new JSDOM();<br>  global.document &#x3D; dom.window.document;</p>
+<p>  &#x2F;&#x2F; The rest enables DOM image and canvas and is provided by node-canvas<br>  global.Image &#x3D; Image;<br>  global.HTMLCanvasElement &#x3D; Canvas;<br>  global.ImageData &#x3D; ImageData;<br>  global.HTMLImageElement &#x3D; Image;<br>}<br>@endcode</p>
+<h3 id="Execute-it-2"><a href="#Execute-it-2" class="headerlink" title="Execute it"></a>Execute it</h3><ul>
+<li>Save the file as <code>exampleNodeCanvas.js</code>.</li>
+<li>Make sure a sample image <code>lena.jpg</code> exists in the current directory.</li>
+</ul>
+<p>The following command should generate the file <code>output.jpg</code>:</p>
+<p>@code{.bash}<br>node exampleNodeCanvas.js<br>@endcode</p>
+<h2 id="Dealing-with-files"><a href="#Dealing-with-files" class="headerlink" title="Dealing with files"></a>Dealing with files</h2><p>In this tutorial you will learn how to configure emscripten so it uses the local filesystem for file operations instead of using memory. Also it tries to describe how <a href="https://emscripten.org/docs/api_reference/Filesystem-API.html">files are supported by emscripten applications</a></p>
+<p>Accessing the emscripten filesystem is often needed in OpenCV applications for example to load machine learning models such as the ones used in @ref tutorial_dnn_googlenet and @ref tutorial_dnn_javascript.</p>
+<h3 id="Example-setup-2"><a href="#Example-setup-2" class="headerlink" title="Example setup"></a>Example setup</h3><p>Before the example, is worth consider first how files are handled in emscripten applications such as OpenCV.js. Remember that OpenCV library is written in C++ and the file opencv.js is just that C++ code being translated to JavaScript or WebAssembly by emscripten C++ compiler.</p>
+<p>These C++ sources use standard APIs to access the filesystem and the implementation often ends up in system calls that read a file in the hard drive. Since JavaScript applications in the browser don’t have access to the local filesystem, <a href="https://emscripten.org/docs/api_reference/Filesystem-API.html">emscripten emulates a standard filesystem</a> so compiled C++ code works out of the box.</p>
+<p>In the browser, this filesystem is emulated in memory while in Node.js there’s also the possibility of using the local filesystem directly. This is often preferable since there’s no need of copy file’s content in memory. This section is explains how to do do just that, this is, configuring emscripten so files are accessed directly from our local filesystem and relative paths match files relative to the current local directory as expected.</p>
+<h3 id="The-example-2"><a href="#The-example-2" class="headerlink" title="The example"></a>The example</h3><p>The following is an adaptation of @ref tutorial_js_face_detection.</p>
+<p>@code{.js}<br>const { Canvas, createCanvas, Image, ImageData, loadImage } &#x3D; require(‘canvas’);<br>const { JSDOM } &#x3D; require(‘jsdom’);<br>const { writeFileSync, readFileSync } &#x3D; require(‘fs’);</p>
+<p>(async () &#x3D;&gt; {<br>  await loadOpenCV();</p>
+<p>  const image &#x3D; await loadImage(‘lena.jpg’);<br>  const src &#x3D; cv.imread(image);<br>  let gray &#x3D; new cv.Mat();<br>  cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);<br>  let faces &#x3D; new cv.RectVector();<br>  let eyes &#x3D; new cv.RectVector();<br>  let faceCascade &#x3D; new cv.CascadeClassifier();<br>  let eyeCascade &#x3D; new cv.CascadeClassifier();</p>
+<p>  &#x2F;&#x2F; Load pre-trained classifier files. Notice how we reference local files using relative paths just<br>  &#x2F;&#x2F; like we normally would do<br>  faceCascade.load(‘.&#x2F;haarcascade_frontalface_default.xml’);<br>  eyeCascade.load(‘.&#x2F;haarcascade_eye.xml’);</p>
+<p>  let mSize &#x3D; new cv.Size(0, 0);<br>  faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, mSize, mSize);<br>  for (let i &#x3D; 0; i &lt; faces.size(); ++i) {<br>    let roiGray &#x3D; gray.roi(faces.get(i));<br>    let roiSrc &#x3D; src.roi(faces.get(i));<br>    let point1 &#x3D; new cv.Point(faces.get(i).x, faces.get(i).y);<br>    let point2 &#x3D; new cv.Point(faces.get(i).x + faces.get(i).width, faces.get(i).y + faces.get(i).height);<br>    cv.rectangle(src, point1, point2, [255, 0, 0, 255]);<br>    eyeCascade.detectMultiScale(roiGray, eyes);<br>    for (let j &#x3D; 0; j &lt; eyes.size(); ++j) {<br>      let point1 &#x3D; new cv.Point(eyes.get(j).x, eyes.get(j).y);<br>      let point2 &#x3D; new cv.Point(eyes.get(j).x + eyes.get(j).width, eyes.get(j).y + eyes.get(j).height);<br>      cv.rectangle(roiSrc, point1, point2, [0, 0, 255, 255]);<br>    }<br>    roiGray.delete();<br>    roiSrc.delete();<br>  }</p>
+<p>  const canvas &#x3D; createCanvas(image.width, image.height);<br>  cv.imshow(canvas, src);<br>  writeFileSync(‘output3.jpg’, canvas.toBuffer(‘image&#x2F;jpeg’));<br>  src.delete(); gray.delete(); faceCascade.delete(); eyeCascade.delete(); faces.delete(); eyes.delete()<br>})();</p>
+<p>&#x2F;**</p>
+<ul>
+<li>Loads opencv.js.</li>
+<li></li>
+<li>Installs HTML Canvas emulation to support <code>cv.imread()</code> and <code>cv.imshow</code></li>
+<li></li>
+<li>Mounts given local folder <code>localRootDir</code> in emscripten filesystem folder <code>rootDir</code>. By default it will mount the local current directory in emscripten <code>/work</code> directory. This means that <code>/work/foo.txt</code> will be resolved to the local file <code>./foo.txt</code></li>
+<li>@param {string} rootDir The directory in emscripten filesystem in which the local filesystem will be mount.</li>
+<li>@param {string} localRootDir The local directory to mount in emscripten filesystem.</li>
+<li>@returns {Promise} resolved when the library is ready to use.<br> *&#x2F;<br>function loadOpenCV(rootDir &#x3D; ‘&#x2F;work’, localRootDir &#x3D; process.cwd()) {<br>  if(global.Module &amp;&amp; global.Module.onRuntimeInitialized &amp;&amp; global.cv &amp;&amp; global.cv.imread) {<br> return Promise.resolve()<br>  }<br>  return new Promise(resolve &#x3D;&gt; {<br> installDOM()<br> global.Module &#x3D; {<br>   onRuntimeInitialized() {<br> &#x2F;&#x2F; We change emscripten current work directory to ‘rootDir’ so relative paths are resolved<br> &#x2F;&#x2F; relative to the current local folder, as expected<br> cv.FS.chdir(rootDir)<br> resolve()<br>   },<br>   preRun() {<br> &#x2F;&#x2F; preRun() is another callback like onRuntimeInitialized() but is called just before the<br> &#x2F;&#x2F; library code runs. Here we mount a local folder in emscripten filesystem and we want to<br> &#x2F;&#x2F; do this before the library is executed so the filesystem is accessible from the start<br> const FS &#x3D; global.Module.FS<br> &#x2F;&#x2F; create rootDir if it doesn’t exists<br> if(!FS.analyzePath(rootDir).exists) {<br>   FS.mkdir(rootDir);<br> }<br> &#x2F;&#x2F; create localRootFolder if it doesn’t exists<br> if(!existsSync(localRootDir)) {<br>   mkdirSync(localRootDir, { recursive: true});<br> }<br> &#x2F;&#x2F; FS.mount() is similar to Linux&#x2F;POSIX mount operation. It basically mounts an external<br> &#x2F;&#x2F; filesystem with given format, in given current filesystem directory.<br> FS.mount(FS.filesystems.NODEFS, { root: localRootDir}, rootDir);<br>   }<br> };<br> global.cv &#x3D; require(‘.&#x2F;opencv.js’)<br>  });<br>}</li>
+</ul>
+<p>function installDOM(){<br>  const dom &#x3D; new JSDOM();<br>  global.document &#x3D; dom.window.document;<br>  global.Image &#x3D; Image;<br>  global.HTMLCanvasElement &#x3D; Canvas;<br>  global.ImageData &#x3D; ImageData;<br>  global.HTMLImageElement &#x3D; Image;<br>}<br>@endcode</p>
+<h3 id="Execute-it-3"><a href="#Execute-it-3" class="headerlink" title="Execute it"></a>Execute it</h3><ul>
+<li>Save the file as <code>exampleNodeCanvasData.js</code>.</li>
+<li>Make sure the files <code>aarcascade_frontalface_default.xml</code> and <code>haarcascade_eye.xml</code> are present in project’s directory. They can be obtained from <a href="https://github.com/opencv/opencv/tree/master/data/haarcascades">OpenCV sources</a>.</li>
+<li>Make sure a sample image file <code>lena.jpg</code> exists in project’s directory. It should display people’s faces for this example to make sense. The following image is known to work:</li>
+</ul>
+<p><img src="/lena.jpg" alt="image"></p>
+<p>The following command should generate the file <code>output3.jpg</code>:</p>
+<p>@code{.bash}<br>node exampleNodeCanvasData.js<br>@endcode</p>

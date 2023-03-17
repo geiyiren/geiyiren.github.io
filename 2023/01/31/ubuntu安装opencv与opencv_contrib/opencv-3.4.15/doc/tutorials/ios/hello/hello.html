@@ -1,0 +1,26 @@
+<h1 id="OpenCV-iOS-Hello-tutorial-hello"><a href="#OpenCV-iOS-Hello-tutorial-hello" class="headerlink" title="OpenCV iOS Hello {#tutorial_hello}"></a>OpenCV iOS Hello {#tutorial_hello}</h1><p>@next_tutorial{tutorial_image_manipulation}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial we will learn how to:</p>
+<ul>
+<li>Link OpenCV framework with Xcode</li>
+<li>How to write simple Hello World application using OpenCV and Xcode.</li>
+</ul>
+<h2 id="Linking-OpenCV-iOS"><a href="#Linking-OpenCV-iOS" class="headerlink" title="Linking OpenCV iOS"></a>Linking OpenCV iOS</h2><p>Follow this step by step guide to link OpenCV to iOS.</p>
+<p>-#  Create a new XCode project.<br>-#  Now we need to link <em>opencv2.framework</em> with Xcode. Select the project Navigator in the left<br>    hand panel and click on project name.<br>-#  Under the TARGETS click on Build Phases. Expand Link Binary With Libraries option.<br>-#  Click on Add others and go to directory where <em>opencv2.framework</em> is located and click open<br>-#  Now you can start writing your application.</p>
+<p><img src="/images/linking_opencv_ios.png"></p>
+<h2 id="Hello-OpenCV-iOS-Application"><a href="#Hello-OpenCV-iOS-Application" class="headerlink" title="Hello OpenCV iOS Application"></a>Hello OpenCV iOS Application</h2><p>Now we will learn how to write a simple Hello World Application in Xcode using OpenCV.</p>
+<ul>
+<li><p>Link your project with OpenCV as shown in previous section.</p>
+</li>
+<li><p>Open the file named <em>NameOfProject-Prefix.pch</em> ( replace NameOfProject with name of your<br>project) and add the following lines of code.<br>@code{.m}<br>#ifdef __cplusplus<br>#import &lt;opencv2&#x2F;opencv.hpp&gt;<br>#endif<br>@endcode<br><img src="/images/header_directive.png"></p>
+</li>
+<li><p>Add the following lines of code to viewDidLoad method in ViewController.m.<br>@code{.m}<br>UIAlertView * alert &#x3D; [[UIAlertView alloc] initWithTitle:@”Hello!” message:@”Welcome to OpenCV” delegate:self cancelButtonTitle:@”Continue” otherButtonTitles:nil];<br>[alert show];<br>@endcode<br><img src="/images/view_did_load.png"></p>
+</li>
+<li><p>You are good to run the project.</p>
+</li>
+</ul>
+<h2 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h2><p><img src="/images/ios_hello_output.png"></p>
+<h2 id="Changes-for-XCode5-and-iOS8"><a href="#Changes-for-XCode5-and-iOS8" class="headerlink" title="Changes for XCode5+ and iOS8+"></a>Changes for XCode5+ and iOS8+</h2><p>With the newer XCode and iOS versions you need to watch out for some specific details</p>
+<ul>
+<li>The *.m file in your project should be renamed to *.mm.</li>
+<li>You have to manually include AssetsLibrary.framework into your project, which is not done anymore by default.</li>
+</ul>

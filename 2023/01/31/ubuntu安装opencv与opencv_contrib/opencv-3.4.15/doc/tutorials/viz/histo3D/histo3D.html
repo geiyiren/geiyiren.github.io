@@ -1,0 +1,18 @@
+<h1 id="Creating-a-3D-histogram-tutorial-histo3D"><a href="#Creating-a-3D-histogram-tutorial-histo3D" class="headerlink" title="Creating a 3D histogram {#tutorial_histo3D}"></a>Creating a 3D histogram {#tutorial_histo3D}</h1><p>@prev_tutorial{tutorial_creating_widgets}</p>
+<h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><p>In this tutorial you will learn how to</p>
+<ul>
+<li>Create your own callback keyboard function for viz window.</li>
+<li>Show your 3D histogram in a viz window.</li>
+</ul>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>You can download the code from <a href="https://github.com/opencv/opencv/tree/3.4/samples/cpp/tutorial_code/viz/histo3D.cpp">here </a>.<br>@include samples&#x2F;cpp&#x2F;tutorial_code&#x2F;viz&#x2F;histo3D.cpp</p>
+<h2 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h2><p>Here is the general structure of the program:</p>
+<ul>
+<li><p>You can give full path to an image in command line<br>@snippet histo3D.cpp command_line_parser</p>
+<p>or without path, a synthetic image is generated with pixel values are a gaussian distribution @ref cv::RNG::fill center(60+&#x2F;-10,40+&#x2F;-5,50+&#x2F;-20) in first quadrant,<br>(160+&#x2F;-20,10+&#x2F;-5,50+&#x2F;-10) in second quadrant, (90+&#x2F;-10,100+&#x2F;-20,50+&#x2F;-20) in third quadrant, (100+&#x2F;-10,10+&#x2F;-5,150+&#x2F;-40) in last quadrant.<br>@snippet histo3D.cpp synthetic_image<br>Image tridimensional histogram is calculated using opencv @ref cv::calcHist and @ref cv::normalize between 0 and 100.<br>@snippet histo3D.cpp calchist_for_histo3d<br>channel are 2, 1 and 0 to synchronise color with Viz axis color in objetc cv::viz::WCoordinateSystem.</p>
+<p>A slidebar is inserted in image window. Init slidebar value is 90, it means that only histogram cell greater than 9&#x2F;100000.0 (23 pixels for an 512X512 pixels) will be display.<br>@snippet histo3D.cpp slide_bar_for_thresh<br>We are ready to open a viz window with a callback function to capture keyboard event in viz window. Using @ref cv::viz::Viz3d::spinOnce enable keyboard event to be capture in @ref cv::imshow window too.<br>@snippet histo3D.cpp manage_viz_imshow_window<br>The function DrawHistogram3D processes histogram Mat to display it in a Viz window. Number of plan, row and column in [three dimensional Mat](@ref CVMat_Details ) can be found using  this code :<br>@snippet histo3D.cpp get_cube_size<br>To get histogram value at a specific location we use @ref cv::Mat::at(int i0,int i1, int i2)  method with three arguments k, i and j where k is plane number, i row number and j column number.<br>@snippet histo3D.cpp get_cube_values</p>
+</li>
+<li><p>Callback function<br>Principle are as mouse callback function. Key code pressed is in field code of class @ref cv::viz::KeyboardEvent.<br>@snippet histo3D.cpp viz_keyboard_callback</p>
+</li>
+</ul>
+<h2 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h2><p>Here is the result of the program with no argument and threshold equal to 50.</p>
+<p><img src="/images/histo50.png"></p>

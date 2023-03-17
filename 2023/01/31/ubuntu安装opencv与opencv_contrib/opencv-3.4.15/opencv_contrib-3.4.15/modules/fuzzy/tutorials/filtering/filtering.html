@@ -1,0 +1,29 @@
+<h1 id="Filtering-using-F-transform-tutorial-fuzzy-filtering"><a href="#Filtering-using-F-transform-tutorial-fuzzy-filtering" class="headerlink" title="Filtering using F-transform {#tutorial_fuzzy_filtering}"></a>Filtering using F-transform {#tutorial_fuzzy_filtering}</h1><h1 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h1><p>This tutorial demonstrates to you how to use F-transform for image filtering. You will see:</p>
+<ul>
+<li>basic theory behind,</li>
+<li>illustration of different settings.</li>
+</ul>
+<h1 id="Fuzzy-transform-application"><a href="#Fuzzy-transform-application" class="headerlink" title="Fuzzy transform application"></a>Fuzzy transform application</h1><p>As I shown in previous tutorial, F-transform is a tool of fuzzy mathematics highly usable in image processing. Let me rewrite the formula using kernel \f$g\f$ introduced before as well:</p>
+<p>\f[<br>    F^0_{kl}&#x3D;\frac{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} \iota_{kl}(x,y) g(x,y)}{\sum_{x&#x3D;0}^{2h+1}\sum_{y&#x3D;0}^{2h+1} g(x,y)},<br>\f]</p>
+<p>where \f$\iota_{kl} \subset I\f$ centered to pixel \f$(k \cdot h,l \cdot h)\f$ and \f$g\f$ is a kernel. More details can be found in related papers.</p>
+<h1 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h1><p>@include fuzzy&#x2F;samples&#x2F;fuzzy_filtering.cpp</p>
+<h1 id="Explanation"><a href="#Explanation" class="headerlink" title="Explanation"></a>Explanation</h1><p>Image filtering changes input in a defined way to enhance or simply change some concrete feature. Let me demonstrate some simple blur.</p>
+<p>As a first step, we load input image.</p>
+<p>@code{.cpp}<br>    &#x2F;&#x2F; Input image<br>    Mat I &#x3D; imread(“input.png”);<br>@endcode</p>
+<p>Following the F-transform formula, we must specify a kernel.</p>
+<p>@code{.cpp}<br>    &#x2F;&#x2F; Kernel cretion<br>    Mat kernel1, kernel2;</p>
+<pre><code>ft::createKernel(ft::LINEAR, 3, kernel1, 3);
+ft::createKernel(ft::LINEAR, 100, kernel2, 3);
+</code></pre>
+<p>@endcode</p>
+<blockquote>
+<p>So now, we have two kernels that differ in <code>radius</code>. Bigger radius leads to bigger blur.</p>
+</blockquote>
+<p>The filtering itself is applied as shown below.</p>
+<p>@code{.cpp}<br>    &#x2F;&#x2F; Filtering<br>    Mat output1, output2;</p>
+<pre><code>ft::filter(I, kernel1, output1);
+ft::filter(I, kernel2, output2);
+</code></pre>
+<p>@endcode</p>
+<p>Output images look as follows.</p>
+<p><img src="/images/fuzzy_filt_output.jpg" alt="input, output1 (radius 3), output2 (radius 100)"></p>

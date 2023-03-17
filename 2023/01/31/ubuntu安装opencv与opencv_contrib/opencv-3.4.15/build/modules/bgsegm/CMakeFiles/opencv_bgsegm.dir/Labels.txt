@@ -1,0 +1,35 @@
+# Target labels
+ Extra
+ opencv_bgsegm
+ Module
+# Source files and their labels
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/include/opencv2/bgsegm.hpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/bgfg_gaussmix.cpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/bgfg_gmg.cpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/bgfg_gsoc.cpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/bgfg_subcnt.cpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/synthetic_seq.cpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/opencv_contrib-3.4.15/modules/bgsegm/src/precomp.hpp
+ Extra
+ opencv_bgsegm
+ Module
+/home/geiyiren/library/opencv-3.4.15/build/cvconfig.h
+/home/geiyiren/library/opencv-3.4.15/build/opencv2/opencv_modules.hpp

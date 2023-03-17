@@ -1,0 +1,61 @@
+<h1 id="Getting-Started-with-Videos-tutorial-py-video-display"><a href="#Getting-Started-with-Videos-tutorial-py-video-display" class="headerlink" title="Getting Started with Videos {#tutorial_py_video_display}"></a>Getting Started with Videos {#tutorial_py_video_display}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>Learn to read video, display video, and save video.</li>
+<li>Learn to capture video from a camera and display it.</li>
+<li>You will learn these functions : <strong>cv.VideoCapture()</strong>, <strong>cv.VideoWriter()</strong></li>
+</ul>
+<h2 id="Capture-Video-from-Camera"><a href="#Capture-Video-from-Camera" class="headerlink" title="Capture Video from Camera"></a>Capture Video from Camera</h2><p>Often, we have to capture live stream with a camera. OpenCV provides a very simple interface to do this.<br>Let’s capture a video from the camera (I am using the built-in webcam on my laptop), convert it into<br>grayscale video and display it. Just a simple task to get started.</p>
+<p>To capture a video, you need to create a <strong>VideoCapture</strong> object. Its argument can be either the<br>device index or the name of a video file. A device index is just the number to specify which camera.<br>Normally one camera will be connected (as in my case). So I simply pass 0 (or -1). You can select<br>the second camera by passing 1 and so on. After that, you can capture frame-by-frame. But at the<br>end, don’t forget to release the capture.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>cap &#x3D; cv.VideoCapture(0)<br>if not cap.isOpened():<br>    print(“Cannot open camera”)<br>    exit()<br>while True:<br>    # Capture frame-by-frame<br>    ret, frame &#x3D; cap.read()</p>
+<pre><code># if frame is read correctly ret is True
+if not ret:
+    print(&quot;Can&#39;t receive frame (stream end?). Exiting ...&quot;)
+    break
+# Our operations on the frame come here
+gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+# Display the resulting frame
+cv.imshow(&#39;frame&#39;, gray)
+if cv.waitKey(1) == ord(&#39;q&#39;):
+    break
+</code></pre>
+<h1 id="When-everything-done-release-the-capture"><a href="#When-everything-done-release-the-capture" class="headerlink" title="When everything done, release the capture"></a>When everything done, release the capture</h1><p>cap.release()<br>cv.destroyAllWindows()@endcode<br><code>cap.read()</code> returns a bool (<code>True</code>&#x2F;<code>False</code>). If the frame is read correctly, it will be <code>True</code>. So you can<br>check for the end of the video by checking this returned value.</p>
+<p>Sometimes, cap may not have initialized the capture. In that case, this code shows an error. You can<br>check whether it is initialized or not by the method <strong>cap.isOpened()</strong>. If it is <code>True</code>, OK.<br>Otherwise open it using <strong>cap.open()</strong>.</p>
+<p>You can also access some of the features of this video using <strong>cap.get(propId)</strong> method where propId<br>is a number from 0 to 18. Each number denotes a property of the video (if it is applicable to that<br>video). Full details can be seen here: cv::VideoCapture::get().<br>Some of these values can be modified using <strong>cap.set(propId, value)</strong>. Value is the new value you<br>want.</p>
+<p>For example, I can check the frame width and height by <code>cap.get(cv.CAP_PROP_FRAME_WIDTH)</code> and <code>cap.get(cv.CAP_PROP_FRAME_HEIGHT)</code>. It gives me<br>640x480 by default. But I want to modify it to 320x240. Just use <code>ret = cap.set(cv.CAP_PROP_FRAME_WIDTH,320)</code> and<br><code>ret = cap.set(cv.CAP_PROP_FRAME_HEIGHT,240)</code>.</p>
+<p>@note If you are getting an error, make sure your camera is working fine using any other camera application<br>(like Cheese in Linux).</p>
+<h2 id="Playing-Video-from-file"><a href="#Playing-Video-from-file" class="headerlink" title="Playing Video from file"></a>Playing Video from file</h2><p>Playing video from file is the same as capturing it from camera, just change the camera index to a video file name. Also while<br>displaying the frame, use appropriate time for <code>cv.waitKey()</code>. If it is too less, video will be very<br>fast and if it is too high, video will be slow (Well, that is how you can display videos in slow<br>motion). 25 milliseconds will be OK in normal cases.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>cap &#x3D; cv.VideoCapture(‘vtest.avi’)</p>
+<p>while cap.isOpened():<br>    ret, frame &#x3D; cap.read()</p>
+<pre><code># if frame is read correctly ret is True
+if not ret:
+    print(&quot;Can&#39;t receive frame (stream end?). Exiting ...&quot;)
+    break
+gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+cv.imshow(&#39;frame&#39;, gray)
+if cv.waitKey(1) == ord(&#39;q&#39;):
+    break
+</code></pre>
+<p>cap.release()<br>cv.destroyAllWindows()<br>@endcode</p>
+<p>@note Make sure a proper version of ffmpeg or gstreamer is installed. Sometimes it is a headache to<br>work with video capture, mostly due to wrong installation of ffmpeg&#x2F;gstreamer.</p>
+<h2 id="Saving-a-Video"><a href="#Saving-a-Video" class="headerlink" title="Saving a Video"></a>Saving a Video</h2><p>So we capture a video and process it frame-by-frame, and we want to save that video. For images, it is<br>very simple: just use <code>cv.imwrite()</code>. Here, a little more work is required.</p>
+<p>This time we create a <strong>VideoWriter</strong> object. We should specify the output file name (eg:<br>output.avi). Then we should specify the <strong>FourCC</strong> code (details in next paragraph). Then number of<br>frames per second (fps) and frame size should be passed. And the last one is the <strong>isColor</strong> flag. If it is<br><code>True</code>, the encoder expect color frame, otherwise it works with grayscale frame.</p>
+<p><a href="http://en.wikipedia.org/wiki/FourCC">FourCC</a> is a 4-byte code used to specify the video codec. The<br>list of available codes can be found in <a href="http://www.fourcc.org/codecs.php">fourcc.org</a>. It is<br>platform dependent. The following codecs work fine for me.</p>
+<ul>
+<li>In Fedora: DIVX, XVID, MJPG, X264, WMV1, WMV2. (XVID is more preferable. MJPG results in high<br>size video. X264 gives very small size video)</li>
+<li>In Windows: DIVX (More to be tested and added)</li>
+<li>In OSX: MJPG (.mp4), DIVX (.avi), X264 (.mkv).</li>
+</ul>
+<p>FourCC code is passed as <code>cv.VideoWriter_fourcc(&#39;M&#39;,&#39;J&#39;,&#39;P&#39;,&#39;G&#39;)</code> or<br><code>cv.VideoWriter_fourcc(*&#39;MJPG&#39;)</code> for MJPG.</p>
+<p>The below code captures from a camera, flips every frame in the vertical direction, and saves the video.<br>@code{.py}<br>import numpy as np<br>import cv2 as cv</p>
+<p>cap &#x3D; cv.VideoCapture(0)</p>
+<h1 id="Define-the-codec-and-create-VideoWriter-object"><a href="#Define-the-codec-and-create-VideoWriter-object" class="headerlink" title="Define the codec and create VideoWriter object"></a>Define the codec and create VideoWriter object</h1><p>fourcc &#x3D; cv.VideoWriter_fourcc(*’XVID’)<br>out &#x3D; cv.VideoWriter(‘output.avi’, fourcc, 20.0, (640,  480))</p>
+<p>while cap.isOpened():<br>    ret, frame &#x3D; cap.read()<br>    if not ret:<br>        print(“Can’t receive frame (stream end?). Exiting …”)<br>        break<br>    frame &#x3D; cv.flip(frame, 0)</p>
+<pre><code># write the flipped frame
+out.write(frame)
+
+cv.imshow(&#39;frame&#39;, frame)
+if cv.waitKey(1) == ord(&#39;q&#39;):
+    break
+</code></pre>
+<h1 id="Release-everything-if-job-is-finished"><a href="#Release-everything-if-job-is-finished" class="headerlink" title="Release everything if job is finished"></a>Release everything if job is finished</h1><p>cap.release()<br>out.release()<br>cv.destroyAllWindows()<br>@endcode</p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2>

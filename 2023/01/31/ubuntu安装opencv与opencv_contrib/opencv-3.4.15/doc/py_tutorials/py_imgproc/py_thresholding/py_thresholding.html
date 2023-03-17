@@ -1,0 +1,65 @@
+<h1 id="Image-Thresholding-tutorial-py-thresholding"><a href="#Image-Thresholding-tutorial-py-thresholding" class="headerlink" title="Image Thresholding {#tutorial_py_thresholding}"></a>Image Thresholding {#tutorial_py_thresholding}</h1><h2 id="Goal"><a href="#Goal" class="headerlink" title="Goal"></a>Goal</h2><ul>
+<li>In this tutorial, you will learn simple thresholding, adaptive thresholding and Otsu’s thresholding.</li>
+<li>You will learn the functions <strong>cv.threshold</strong> and <strong>cv.adaptiveThreshold</strong>.</li>
+</ul>
+<h2 id="Simple-Thresholding"><a href="#Simple-Thresholding" class="headerlink" title="Simple Thresholding"></a>Simple Thresholding</h2><p>Here, the matter is straight-forward. For every pixel, the same threshold value is applied.<br>If the pixel value is smaller than the threshold, it is set to 0, otherwise it is set to a maximum value.<br>The function <strong>cv.threshold</strong> is used to apply the thresholding.<br>The first argument is the source image, which <strong>should be a grayscale image</strong>.<br>The second argument is the threshold value which is used to classify the pixel values.<br>The third argument is the maximum value which is assigned to pixel values exceeding the threshold.<br>OpenCV provides different types of thresholding which is given by the fourth parameter of the function.<br>Basic thresholding as described above is done by using the type cv.THRESH_BINARY.<br>All simple thresholding types are:</p>
+<ul>
+<li>cv.THRESH_BINARY</li>
+<li>cv.THRESH_BINARY_INV</li>
+<li>cv.THRESH_TRUNC</li>
+<li>cv.THRESH_TOZERO</li>
+<li>cv.THRESH_TOZERO_INV</li>
+</ul>
+<p>See the documentation of the types for the differences.</p>
+<p>The method returns two outputs.<br>The first is the threshold that was used and the second output is the <strong>thresholded image</strong>.</p>
+<p>This code compares the different simple thresholding types:<br>@code{.py}<br>import cv2 as cv<br>import numpy as np<br>from matplotlib import pyplot as plt</p>
+<p>img &#x3D; cv.imread(‘gradient.png’,0)<br>ret,thresh1 &#x3D; cv.threshold(img,127,255,cv.THRESH_BINARY)<br>ret,thresh2 &#x3D; cv.threshold(img,127,255,cv.THRESH_BINARY_INV)<br>ret,thresh3 &#x3D; cv.threshold(img,127,255,cv.THRESH_TRUNC)<br>ret,thresh4 &#x3D; cv.threshold(img,127,255,cv.THRESH_TOZERO)<br>ret,thresh5 &#x3D; cv.threshold(img,127,255,cv.THRESH_TOZERO_INV)</p>
+<p>titles &#x3D; [‘Original Image’,’BINARY’,’BINARY_INV’,’TRUNC’,’TOZERO’,’TOZERO_INV’]<br>images &#x3D; [img, thresh1, thresh2, thresh3, thresh4, thresh5]</p>
+<p>for i in range(6):<br>    plt.subplot(2,3,i+1),plt.imshow(images[i],’gray’,vmin&#x3D;0,vmax&#x3D;255)<br>    plt.title(titles[i])<br>    plt.xticks([]),plt.yticks([])</p>
+<p>plt.show()<br>@endcode<br>@note To plot multiple images, we have used the plt.subplot() function. Please checkout the matplotlib docs for more details.</p>
+<p>The code yields this result:</p>
+<p><img src="/images/threshold.jpg" alt="image"></p>
+<h2 id="Adaptive-Thresholding"><a href="#Adaptive-Thresholding" class="headerlink" title="Adaptive Thresholding"></a>Adaptive Thresholding</h2><p>In the previous section, we used one global value as a threshold.<br>But this might not be good in all cases, e.g. if an image has different lighting conditions in different areas.<br>In that case, adaptive thresholding can help.<br>Here, the algorithm determines the threshold for a pixel based on a small region around it.<br>So we get different thresholds for different regions of the same image which gives better results for images with varying illumination.</p>
+<p>In addition to the parameters described above, the method cv.adaptiveThreshold takes three input parameters:</p>
+<p>The <strong>adaptiveMethod</strong> decides how the threshold value is calculated:<br>    -   cv.ADAPTIVE_THRESH_MEAN_C: The threshold value is the mean of the neighbourhood area minus the constant <strong>C</strong>.<br>    -   cv.ADAPTIVE_THRESH_GAUSSIAN_C: The threshold value is a gaussian-weighted sum of the neighbourhood<br>        values minus the constant <strong>C</strong>.</p>
+<p>The <strong>blockSize</strong> determines the size of the neighbourhood area and <strong>C</strong> is a constant that is subtracted from the mean or weighted sum of the neighbourhood pixels.</p>
+<p>The code below compares global thresholding and adaptive thresholding for an image with varying<br>illumination:<br>@code{.py}<br>import cv2 as cv<br>import numpy as np<br>from matplotlib import pyplot as plt</p>
+<p>img &#x3D; cv.imread(‘sudoku.png’,0)<br>img &#x3D; cv.medianBlur(img,5)</p>
+<p>ret,th1 &#x3D; cv.threshold(img,127,255,cv.THRESH_BINARY)<br>th2 &#x3D; cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_MEAN_C,<br>            cv.THRESH_BINARY,11,2)<br>th3 &#x3D; cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,<br>            cv.THRESH_BINARY,11,2)</p>
+<p>titles &#x3D; [‘Original Image’, ‘Global Thresholding (v &#x3D; 127)’,<br>            ‘Adaptive Mean Thresholding’, ‘Adaptive Gaussian Thresholding’]<br>images &#x3D; [img, th1, th2, th3]</p>
+<p>for i in range(4):<br>    plt.subplot(2,2,i+1),plt.imshow(images[i],’gray’)<br>    plt.title(titles[i])<br>    plt.xticks([]),plt.yticks([])<br>plt.show()<br>@endcode<br>Result:</p>
+<p><img src="/images/ada_threshold.jpg" alt="image"></p>
+<h2 id="Otsu’s-Binarization"><a href="#Otsu’s-Binarization" class="headerlink" title="Otsu’s Binarization"></a>Otsu’s Binarization</h2><p>In global thresholding, we used an arbitrary chosen value as a threshold.<br>In contrast, Otsu’s method avoids having to choose a value and determines it automatically.</p>
+<p>Consider an image with only two distinct image values (<em>bimodal image</em>), where the histogram would only consist of two peaks.<br>A good threshold would be in the middle of those two values.<br>Similarly, Otsu’s method determines an optimal global threshold value from the image histogram.</p>
+<p>In order to do so, the cv.threshold() function is used, where cv.THRESH_OTSU is passed as an extra flag.<br>The threshold value can be chosen arbitrary.<br>The algorithm then finds the optimal threshold value which is returned as the first output.</p>
+<p>Check out the example below.<br>The input image is a noisy image.<br>In the first case, global thresholding with a value of 127 is applied.<br>In the second case, Otsu’s thresholding is applied directly.<br>In the third case, the image is first filtered with a 5x5 gaussian kernel to remove the noise, then Otsu thresholding is applied.<br>See how noise filtering improves the result.<br>@code{.py}<br>import cv2 as cv<br>import numpy as np<br>from matplotlib import pyplot as plt</p>
+<p>img &#x3D; cv.imread(‘noisy2.png’,0)</p>
+<h1 id="global-thresholding"><a href="#global-thresholding" class="headerlink" title="global thresholding"></a>global thresholding</h1><p>ret1,th1 &#x3D; cv.threshold(img,127,255,cv.THRESH_BINARY)</p>
+<h1 id="Otsu’s-thresholding"><a href="#Otsu’s-thresholding" class="headerlink" title="Otsu’s thresholding"></a>Otsu’s thresholding</h1><p>ret2,th2 &#x3D; cv.threshold(img,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)</p>
+<h1 id="Otsu’s-thresholding-after-Gaussian-filtering"><a href="#Otsu’s-thresholding-after-Gaussian-filtering" class="headerlink" title="Otsu’s thresholding after Gaussian filtering"></a>Otsu’s thresholding after Gaussian filtering</h1><p>blur &#x3D; cv.GaussianBlur(img,(5,5),0)<br>ret3,th3 &#x3D; cv.threshold(blur,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)</p>
+<h1 id="plot-all-the-images-and-their-histograms"><a href="#plot-all-the-images-and-their-histograms" class="headerlink" title="plot all the images and their histograms"></a>plot all the images and their histograms</h1><p>images &#x3D; [img, 0, th1,<br>          img, 0, th2,<br>          blur, 0, th3]<br>titles &#x3D; [‘Original Noisy Image’,’Histogram’,’Global Thresholding (v&#x3D;127)’,<br>          ‘Original Noisy Image’,’Histogram’,”Otsu’s Thresholding”,<br>          ‘Gaussian filtered Image’,’Histogram’,”Otsu’s Thresholding”]</p>
+<p>for i in range(3):<br>    plt.subplot(3,3,i<em>3+1),plt.imshow(images[i</em>3],’gray’)<br>    plt.title(titles[i<em>3]), plt.xticks([]), plt.yticks([])<br>    plt.subplot(3,3,i</em>3+2),plt.hist(images[i<em>3].ravel(),256)<br>    plt.title(titles[i</em>3+1]), plt.xticks([]), plt.yticks([])<br>    plt.subplot(3,3,i<em>3+3),plt.imshow(images[i</em>3+2],’gray’)<br>    plt.title(titles[i*3+2]), plt.xticks([]), plt.yticks([])<br>plt.show()<br>@endcode<br>Result:</p>
+<p><img src="/images/otsu.jpg" alt="image"></p>
+<h3 id="How-does-Otsu’s-Binarization-work"><a href="#How-does-Otsu’s-Binarization-work" class="headerlink" title="How does Otsu’s Binarization work?"></a>How does Otsu’s Binarization work?</h3><p>This section demonstrates a Python implementation of Otsu’s binarization to show how it actually<br>works. If you are not interested, you can skip this.</p>
+<p>Since we are working with bimodal images, Otsu’s algorithm tries to find a threshold value (t) which<br>minimizes the <strong>weighted within-class variance</strong> given by the relation:</p>
+<p>\f[\sigma_w^2(t) &#x3D; q_1(t)\sigma_1^2(t)+q_2(t)\sigma_2^2(t)\f]</p>
+<p>where</p>
+<p>\f[q_1(t) &#x3D; \sum_{i&#x3D;1}^{t} P(i) \quad &amp; \quad q_2(t) &#x3D; \sum_{i&#x3D;t+1}^{I} P(i)\f]\f[\mu_1(t) &#x3D; \sum_{i&#x3D;1}^{t} \frac{iP(i)}{q_1(t)} \quad &amp; \quad \mu_2(t) &#x3D; \sum_{i&#x3D;t+1}^{I} \frac{iP(i)}{q_2(t)}\f]\f[\sigma_1^2(t) &#x3D; \sum_{i&#x3D;1}^{t} [i-\mu_1(t)]^2 \frac{P(i)}{q_1(t)} \quad &amp; \quad \sigma_2^2(t) &#x3D; \sum_{i&#x3D;t+1}^{I} [i-\mu_2(t)]^2 \frac{P(i)}{q_2(t)}\f]</p>
+<p>It actually finds a value of t which lies in between two peaks such that variances to both classes<br>are minimal. It can be simply implemented in Python as follows:<br>@code{.py}<br>img &#x3D; cv.imread(‘noisy2.png’,0)<br>blur &#x3D; cv.GaussianBlur(img,(5,5),0)</p>
+<h1 id="find-normalized-histogram-and-its-cumulative-distribution-function"><a href="#find-normalized-histogram-and-its-cumulative-distribution-function" class="headerlink" title="find normalized_histogram, and its cumulative distribution function"></a>find normalized_histogram, and its cumulative distribution function</h1><p>hist &#x3D; cv.calcHist([blur],[0],None,[256],[0,256])<br>hist_norm &#x3D; hist.ravel()&#x2F;hist.sum()<br>Q &#x3D; hist_norm.cumsum()</p>
+<p>bins &#x3D; np.arange(256)</p>
+<p>fn_min &#x3D; np.inf<br>thresh &#x3D; -1</p>
+<p>for i in range(1,256):<br>    p1,p2 &#x3D; np.hsplit(hist_norm,[i]) # probabilities<br>    q1,q2 &#x3D; Q[i],Q[255]-Q[i] # cum sum of classes<br>    if q1 &lt; 1.e-6 or q2 &lt; 1.e-6:<br>        continue<br>    b1,b2 &#x3D; np.hsplit(bins,[i]) # weights</p>
+<pre><code># finding means and variances
+m1,m2 = np.sum(p1*b1)/q1, np.sum(p2*b2)/q2
+v1,v2 = np.sum(((b1-m1)**2)*p1)/q1,np.sum(((b2-m2)**2)*p2)/q2
+
+# calculates the minimization function
+fn = v1*q1 + v2*q2
+if fn &lt; fn_min:
+    fn_min = fn
+    thresh = i
+</code></pre>
+<h1 id="find-otsu’s-threshold-value-with-OpenCV-function"><a href="#find-otsu’s-threshold-value-with-OpenCV-function" class="headerlink" title="find otsu’s threshold value with OpenCV function"></a>find otsu’s threshold value with OpenCV function</h1><p>ret, otsu &#x3D; cv.threshold(blur,0,255,cv.THRESH_BINARY+cv.THRESH_OTSU)<br>print( “{} {}”.format(thresh,ret) )<br>@endcode</p>
+<h2 id="Additional-Resources"><a href="#Additional-Resources" class="headerlink" title="Additional Resources"></a>Additional Resources</h2><p>-#  Digital Image Processing, Rafael C. Gonzalez</p>
+<h2 id="Exercises"><a href="#Exercises" class="headerlink" title="Exercises"></a>Exercises</h2><p>-#  There are some optimizations available for Otsu’s binarization. You can search and implement it.</p>

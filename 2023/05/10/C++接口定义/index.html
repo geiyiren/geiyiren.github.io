@@ -440,10 +440,11 @@ public:
     virtual ~Testable() &#123;&#125;;   &#x2F;&#x2F; #3： 从C++11开始可以： virtual ~Testable() &#x3D; default;
 &#125;
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<p>#1.<br>如果成员变量，尤其是可变的成员变量，定义在接口中，等于是把实现细节暴露出来了，不符合接口定义的要求，所以一般不在接口中定义可变的成员变量。<br>而常量可以定义在接口中，因为有时接口需要返回状态，而这些状态可以定义成常量放在接口中。</p>
-<p>#2.<br>由于不能让接口类自身能够实例化，并且需要子类必须实现接口暴露的方法，所以接口方法都要声明成纯虚函数。<br>声明成纯虚函数意味着接口类自身不需要提供方法的定义，方法的定义需要由接口类的子类提供，并且接口类自身也因此变成了抽象类而不能被实例化。</p>
-<p>#3.<br>a). 在使用接口类的指针访问接口类的子类的实例时，当对接口类的指针做delete时，如果接口类的析构函数不是虚析构函数的话，将只会调用接口类的析构函数，接口类的子类的析构函数将不会被调用，内存泄露将会产生，所以接口类的析构函数必须定义成虚析构函数。<br>b). 如果接口类的析构函数不提供默认实现，即如果接口类的析构函数是纯虚析构函数的话，接口类的子类将被迫必须提供析构函数的实现，这样对接口类的子类不友好。<br>c). 在C++11中也可以用：  virtual ~Testable() &#x3D; default; 替代 virtual ~Testable() {};</p>
-<p>#4.<br>不要显式定义任何的构造函数，但也不要在接口中加入如下代码来禁止生成构造函数：</p>
+
+<p><code>#1.</code><br>如果成员变量，尤其是可变的成员变量，定义在接口中，等于是把实现细节暴露出来了，不符合接口定义的要求，所以一般不在接口中定义可变的成员变量。<br>而常量可以定义在接口中，因为有时接口需要返回状态，而这些状态可以定义成常量放在接口中。</p>
+<p><code>#2.</code><br>由于不能让接口类自身能够实例化，并且需要子类必须实现接口暴露的方法，所以接口方法都要声明成纯虚函数。<br>声明成纯虚函数意味着接口类自身不需要提供方法的定义，方法的定义需要由接口类的子类提供，并且接口类自身也因此变成了抽象类而不能被实例化。</p>
+<p><code>#3.</code><br>a). 在使用接口类的指针访问接口类的子类的实例时，当对接口类的指针做delete时，如果接口类的析构函数不是虚析构函数的话，将只会调用接口类的析构函数，接口类的子类的析构函数将不会被调用，内存泄露将会产生，所以接口类的析构函数必须定义成虚析构函数。<br>b). 如果接口类的析构函数不提供默认实现，即如果接口类的析构函数是纯虚析构函数的话，接口类的子类将被迫必须提供析构函数的实现，这样对接口类的子类不友好。<br>c). 在C++11中也可以用：  virtual ~Testable() &#x3D; default; 替代 virtual ~Testable() {};</p>
+<p><code>#4.</code><br>不要显式定义任何的构造函数，但也不要在接口中加入如下代码来禁止生成构造函数：</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">Testable() &#x3D; delete;
 Testable(const Testable&amp;) &#x3D; delete;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
@@ -454,7 +455,7 @@ Testable(const Testable&amp;) &#x3D; delete;<span aria-hidden="true" class="line
 public:
     virtual ~Testable() &#x3D; 0 &#123;&#125;; &#x2F;&#x2F; #5
 &#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<p>#5.<br>只要对纯虚析构函数提供一个默认实现就可以了。这种对纯虚函数提供实现的写法看似很奇怪，但C++的确是支持的。</p>
+<p><code>#5.</code><br>只要对纯虚析构函数提供一个默认实现就可以了。这种对纯虚函数提供实现的写法看似很奇怪，但C++的确是支持的。</p>
 <h1 id="如何正确的使用接口类"><a href="#如何正确的使用接口类" class="headerlink" title="如何正确的使用接口类"></a>如何正确的使用接口类</h1><p>提供接口与实现<br>首先，声明一个接口：</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle.h
 &#x2F;&#x2F; 圆的接口类
@@ -532,10 +533,15 @@ void CircleManager::destroy(Circle* circlePtr) &#123;
 
 <p>其中inc目录用于存放Circle接口类和Circle管理类的声明，src目录中存放Circle实现类CircleImpl的声明和定义、Circle管理类CircleManager的定义。</p>
 <p>然后，可以将以上代码编译成静态库circle.lib，并和inc目录中的头文件一起提供给外部调用：</p>
-<p>如何使用静态库？<br>外部使用者编译时，需要做如下配置：</p>
-<p>1). 把inc目录添加到“附加包含目录”中。</p>
-<p>2). “附加依赖项”中添加circle.lib。</p>
-<p>3). 把circle.lib所在目录的路径添加到“附加库目录”中。</p>
+<p><code>如何使用静态库？</code><br>外部使用者编译时，需要做如下配置：</p>
+<ul>
+<li><p>1 把inc目录添加到“附加包含目录”中。</p>
+</li>
+<li><p>2 “附加依赖项”中添加circle.lib。</p>
+</li>
+<li><p>3 把circle.lib所在目录的路径添加到“附加库目录”中。</p>
+</li>
+</ul>
 <p>外部使用者的代码如下：</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; main.cpp
 #include &lt;iostream&gt;
@@ -554,7 +560,7 @@ int main()
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>以上代码只提供给外部circle的接口，circle的实现完全被隐藏了起来，外部将无从知晓，外部使用者只能通过circle管理类生成circle的派生类的实例。外部使用者得到circle派生类的实例后，除了能调用接口暴露的方法area()外，其它什么也做不了，这样就完全达到了使用接口的最终目标。</p>
-<p>如何编译成动态库？<br>首先，添加一个新的头文件：</p>
+<p><code>如何编译成动态库？</code><br>首先，添加一个新的头文件：</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; dll_export.h 
 &#x2F;&#x2F; if windows .dll 
 #ifdef _WINDLL 
@@ -571,9 +577,10 @@ int main()
 #endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>添加此头文件后，代码可以在windows、Linux下都可编译生成动态库，只需在编译时设置不同参数就行了。</p>
-<p>windows： &#x2F;D “DLL_API_EXPORTS” &#x2F;D “_WINDLL”</p>
-<p>Linux： 不用配置额外参数</p>
-<p>circle.h和circle_manager.h也要做相应改动：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">windows： /D <span class="token string">"DLL_API_EXPORTS"</span> /D <span class="token string">"_WINDLL"</span>
+Linux： 不用配置额外参数
+circle.h和circle_manager.h也要做相应改动：<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle.h 
 #pragma once 
 #include &quot;dll_export.h&quot; 
@@ -617,7 +624,7 @@ public:
            <span class="token operator">|</span>-circle.lib
            <span class="token operator">|</span>-circlr.dll<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>如何使用动态库？<br>外部使用者编译时，需要做如下配置：</p>
+<p><code>如何使用动态库？</code><br>外部使用者编译时，需要做如下配置：</p>
 <ul>
 <li><p>1 代码中添加#pragma comment(lib,”circle.lib”)， 这里是circle.lib，不是circle.dll。</p>
 </li>
@@ -647,13 +654,13 @@ int main()
     return 0; 
 &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>总结<br>这里有几点需要说明一下：</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里有几点需要说明一下：</p>
 <p>1、为什么CircleManager类即在提供创建实例的方法又要提供销毁实例的方法？</p>
 <p>由于编译器的实现方式不同，dll的堆空间可能跟调用方的堆空间不同，它可能是由dll自己单独管理的，所以从dll中创建的实例，最好还是在dll中销毁。</p>
 <p>2、对动态库的调用本文是通过隐式调用的方式完成的，对动态库的调用也可以使用显式调用的方式，但由于windows和Linux在使用显式调用时的API是不同的，不好提供统一的代码，所以本文没有举例，以后有机会再单独行文介绍。</p>
 <hr>
 <blockquote>
-<p>版权声明：本文为CSDN博主「netyeaxi」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/netyeaxi/article/details/80887646">https://blog.csdn.net/netyeaxi/article/details/80887646</a><br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/netyeaxi/article/details/80724557">https://blog.csdn.net/netyeaxi/article/details/80724557</a></p>
+<p>版权声明：本文为CSDN博主「netyeaxi」的原创文章，遵循CC4.0BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/netyeaxi/article/details/80887646">https://blog.csdn.net/netyeaxi/article/details/80887646</a><br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/netyeaxi/article/details/80724557">https://blog.csdn.net/netyeaxi/article/details/80724557</a></p>
 </blockquote>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 

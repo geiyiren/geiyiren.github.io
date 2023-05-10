@@ -4,8 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="安卓OpenGL渲染画面闪烁原因分析, geiyiren">
-    <meta name="description" content="安卓常见屏幕闪烁问题分析">
+    <meta name="keywords" content="geiyiren">
+    <meta name="description" content="类的封装位置src&amp;#x2F;adas_proc&amp;#x2F;adas_app&amp;#x2F;adas_app.cpp —&amp;gt; 629行
+定义using AdasProcWrapper &amp;#x3D; ac::ObjWrapper&amp;lt;ac:">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +18,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>安卓OpenGL渲染画面闪烁原因分析 | geiyiren</title>
+    <title>geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -325,12 +326,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">安卓OpenGL渲染画面闪烁原因分析</h1>
+                    <h1 class="description center-align post-title"></h1>
                 </div>
             </div>
         </div>
@@ -350,33 +351,12 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                    <div class="article-tag">
-                        
-                            <a href="/tags/android/">
-                                <span class="chip bg-color">android</span>
-                            </a>
-                        
-                            <a href="/tags/opengl/">
-                                <span class="chip bg-color">opengl</span>
-                            </a>
-                        
-                            <a href="/tags/%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81/">
-                                <span class="chip bg-color">画面闪烁</span>
-                            </a>
-                        
-                    </div>
+                          <div class="article-tag">
+                            <span class="chip bg-color">无标签</span>
+                          </div>
                     
                 </div>
                 <div class="col s5 right-align">
-                    
-                    <div class="post-cate">
-                        <i class="fas fa-bookmark fa-fw icon-category"></i>
-                        
-                            <a href="/categories/%E5%BE%85%E6%95%B4%E7%90%86android/" class="post-category">
-                                待整理android
-                            </a>
-                        
-                    </div>
                     
                 </div>
             </div>
@@ -385,7 +365,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-03-16
+                    2023-05-10
                 </div>
                 
 
@@ -399,7 +379,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    60
+                    1.2k
                 </div>
                 
 
@@ -424,7 +404,136 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>1.硬件接触不良<br>2.opengl双缓存未开启<br>3.opengl双缓存开启但离屏数据为更新<br>4.相机数据被覆盖<br>4.1相机数据格式不对<br>4.2申请内存与访问内存越界问题</p>
+                <h1 id="类的封装"><a href="#类的封装" class="headerlink" title="类的封装"></a>类的封装</h1><h2 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h2><p>src&#x2F;adas_proc&#x2F;adas_app&#x2F;adas_app.cpp —&gt; 629行</p>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">using AdasProcWrapper &#x3D; ac::ObjWrapper&lt;ac::AdasProcInterface, HAC_CreateAdasProc, HAC_DestroyAdasProc&gt;;
+AdasProcWrapper                        adas_proc_;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li><code>AdasProcWrapper</code> 是一个类型别名（using 声明），用于定义 <code>adas_proc_</code>对象。它是由 <code>ac::ObjWrapper</code> 模板类实例化而来。  </li>
+<li><code>ac::ObjWrapper</code> 是一个模板类，接受三个模板参数：<code>ac::AdasProcInterface、HAC_CreateAdasProc 和 HAC_DestroyAdasProc</code>。</li>
+</ul>
+<p>ObjWrapper模板类的定义如下:</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;**
+ * @brief 一个简单的wrapper
+ *&#x2F;
+using ObjCreateType  &#x3D; HAC_Handle(*)(const char *);
+using ObjDestroyType &#x3D; void(*)(HAC_Handle);
+template&lt;typename T, ObjCreateType Create, ObjDestroyType Destroy&gt;
+class ObjWrapper final
+&#123;
+public:
+    explicit ObjWrapper(const char *config)
+    &#123;
+        obj_ &#x3D; reinterpret_cast&lt;T *&gt;(Create(config));
+        if (obj_ &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: Create obj failed.&quot;));
+        &#125;
+    &#125;
+    ObjWrapper()
+    &#123;
+
+    &#125;
+    ~ObjWrapper()
+    &#123;
+        Destroy(reinterpret_cast&lt;HAC_Handle&gt;(obj_));
+    &#125;
+
+    T *operator-&gt;()
+    &#123;
+        if (obj_ &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: obj is nullptr.&quot;));
+        &#125;
+        return obj_;
+    &#125;
+    T *Get()
+    &#123;
+        return obj_;
+    &#125;
+    void Reset(const char *config)
+    &#123;
+        auto obj &#x3D; reinterpret_cast&lt;T *&gt;(Create(config));
+        if (obj &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: Create obj failed.&quot;));
+        &#125;
+        Destroy(reinterpret_cast&lt;HAC_Handle&gt;(obj_));
+        obj_ &#x3D; obj;
+    &#125;
+    ObjWrapper(const ObjWrapper &amp;) &#x3D; delete;
+    ObjWrapper&amp; operator&#x3D;(const ObjWrapper &amp;) &#x3D; delete;
+private:
+    T *obj_ &#x3D; nullptr;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>由模板类的定义可知，该模板类有三个模板参数：</p>
+<ul>
+<li><code>typename T</code>：这是一个类型参数，用于指定被包装的对象的类型。</li>
+<li><code>ObjCreateType Create</code>：这是一个函数指针类型，用于指定创建对象的函数。</li>
+<li><code>ObjDestroyType Destroy</code>：这是一个函数指针类型，用于指定销毁对象的函数。</li>
+</ul>
+<p>因此，<code>AdasProcWrapper</code> 类型的 <code>adas_proc_</code> 对象是一个使用 <code>ac::ObjWrapper</code> 封装的 ADAS 处理实例。这个封装提供了一种方便的方式来创建和销毁 ADAS 处理实例，并提供了 ADAS 处理接口的访问。<code>adas_proc_</code>为封装类<code>ac::ObjWrapper</code>实例化后的对象。</p>
+<h2 id="封装类的使用1"><a href="#封装类的使用1" class="headerlink" title="封装类的使用1"></a>封装类的使用1</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">adas_proc_.Reset(json_config_str.c_str());<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>封装类对象adas_proc_调用了模板类<code>ac::ObjWrapper</code>中的<code>Reset</code>函数，该函数调用了模板类创建时传入的参数2：<code>HAC_CreateAdasProc</code>,该参数是一个函数指针类型，用于指定创建对象的函数。该函数的定义如下所示：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;**
+ * @brief 创造对象
+ * @param config json字符串，参考，assets目录下的配置文件,会从中读取各种配置信息，
+ *               包括摄像头信息，模型文件路径,以及其他配置信息等等
+ * @note 当句柄不为NULL时候，最后一定要调用HAC_DestroyAdasProc进行销毁，
+ *       如果为NULL，调用或者不调用HAC_DestroyAdasProc都可以。
+ * @return HAC_Handle 句柄,需要判断返回值是否是NULL
+ *&#x2F;
+extern &quot;C&quot; HQ_FLAG_DLL_API HAC_Handle HAC_CreateAdasProc(const char *config)
+&#123;
+    return reinterpret_cast&lt;HAC_Handle&gt;(new ac::AdasProcImpl(config));
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="封装类的使用2"><a href="#封装类的使用2" class="headerlink" title="封装类的使用2"></a>封装类的使用2</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">adas_proc_-&gt;SetAdasInfoEvent(std::bind(&amp;Impl::OnAdasInfo,
+            this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>其中，<code>SetAdasInfoEvent</code>函数的定义如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">void AdasProcImpl::SetAdasInfoEvent(const AdasInfoEvent &amp;event)
+&#123;
+    on_adas_info_ &#x3D; event;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中，<code>OnAdasInfo</code>函数的定义如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int OnAdasInfo(const uint8_t *buffer, uint32_t size, int64_t tickcount)
+&#123; 
+    **************
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里就有点绕了，模板类中并没有SetAdasInfoEvent函数，这里怎么能使用呢？其实这个函数的定义在<code>ac::AdasProcInterface</code>类中，由于在模板类中重载了<code>-&gt;</code>运算符，因此<code>adas_proc_-&gt;SetAdasInfoEvent</code>中的<code>-&gt;</code>是被重载后的运算符，<code>adas_proc_-&gt;</code>等同于<code>adas_proc_.obj_</code>,故<code>adas_proc_-&gt;SetAdasInfoEvent</code>等同于<code>adas_proc_.obj_.SetAdasInfoEvent</code>。</p>
+<p>这里封装类重载了<code>-&gt;</code>运算符，因此看起来封装后的类可以直接访问模板参数1指向类<code>ac::AdasProcInterface</code>的成员函数。</p>
+<p>到此为止，可以基本了解封装类的定义和使用示例。</p>
+<h1 id="函数的绑定"><a href="#函数的绑定" class="headerlink" title="函数的绑定"></a>函数的绑定</h1><p>紧接上文，在调用<code>SetAdasInfoEvent</code>函数时使用了<code>std::bind</code>进行了函数的绑定。<code>std::bind</code> 是 C++ 标准库中的一个函数模板，它允许你创建一个函数对象，将参数绑定到可调用对象上。它位于 <code>&lt;functional&gt;</code> 头文件中，用于泛化函数调用。</p>
+<p>std::bind 函数可以将一个可调用对象和一些参数绑定在一起，生成一个新的函数对象。这个新的函数对象可以延迟执行或者在需要时进行调用，而且可以自定义绑定的参数。</p>
+<p>因此,这里是将<code>Impl::OnAdasInfo</code>与其参数进行绑定后生成一个新的可调用对象，同时将其作为函数<code>SetAdasInfoEvent</code>的参数传递给<code>on_adas_info_</code>,也就是说<code>on_adas_info_=std::bind(&amp;Impl::OnAdasInfo, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)</code>。这样<code>on_adas_info_</code>就可以在使用时传递参数并执行<code>OnAdasInfo</code>函数。</p>
+<p><code>on_adas_info_</code>的调用场景如下：</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">void AdasProcImpl::OnAlarmInfo(const uint8_t *buffer, uint32_t size, int64_t tickcount)
+&#123;
+    &#x2F;&#x2F; 设置输出信息到buffer中
+    &#x2F;&#x2F; 把决策模块会掉出来的内容添加到out_buffer_中，然后回调到外面
+    if (on_adas_info_ !&#x3D; nullptr)
+    &#123;
+        decltype(out_buffer_)  tmp;
+        &#123;
+            
+            std::lock_guard&lt;std::mutex&gt; lck(buf_mutex_);
+            &#x2F;&#x2F; 把buffer中内容放入out_buffer中
+            const auto out_buffer_length &#x3D; out_buffer_.size();
+            out_buffer_.resize(out_buffer_length + size);
+            std::memcpy(out_buffer_.data() + out_buffer_length, buffer, size);
+            tmp &#x3D; out_buffer_;
+            out_buffer_.resize(0);
+        &#125;
+
+        on_adas_info_(tmp.data(), tmp.size(), tickcount);
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>到此为止，可以基本了解函数绑定的定义和使用示例。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
@@ -451,7 +560,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/03/16/%E5%AE%89%E5%8D%93OpenGL%E6%B8%B2%E6%9F%93%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/">http://example.com/2023/03/16/%E5%AE%89%E5%8D%93OpenGL%E6%B8%B2%E6%9F%93%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/</a>
+                    <a href="http://example.com/2023/05/10/%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85%E5%92%8C%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A%E7%9A%84%E7%94%A8%E6%B3%95%E8%A7%A3%E6%9E%90/">http://example.com/2023/05/10/%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85%E5%92%8C%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A%E7%9A%84%E7%94%A8%E6%B3%95%E8%A7%A3%E6%9E%90/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -488,19 +597,7 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            
-                                <a href="/tags/android/">
-                                    <span class="chip bg-color">android</span>
-                                </a>
-                            
-                                <a href="/tags/opengl/">
-                                    <span class="chip bg-color">opengl</span>
-                                </a>
-                            
-                                <a href="/tags/%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81/">
-                                    <span class="chip bg-color">画面闪烁</span>
-                                </a>
-                            
+                            <span class="chip bg-color">无标签</span>
                         </div>
                     
                 </div>
@@ -577,9 +674,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2023/05/10/%E7%A8%8B%E5%BA%8F%E4%B8%AD%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85%E5%92%8C%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A%E7%9A%84%E7%94%A8%E6%B3%95%E8%A7%A3%E6%9E%90/">
                     <div class="card-image">
@@ -597,9 +695,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-05-10
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-05-10
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -608,6 +706,7 @@
                         </span>
                     </div>
                 </div>
+
                 
             </div>
         </div>
@@ -618,31 +717,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/02/28/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/">
+                <a href="/2023/03/16/%E5%AE%89%E5%8D%93OpenGL%E6%B8%B2%E6%9F%93%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81%E5%8E%9F%E5%9B%A0%E5%88%86%E6%9E%90/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="git使用指南">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="安卓OpenGL渲染画面闪烁原因分析">
                         
-                        <span class="card-title">git使用指南</span>
+                        <span class="card-title">安卓OpenGL渲染画面闪烁原因分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            git常用命令与解释
+                            安卓常见屏幕闪烁问题分析
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-02-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-03-16
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/git/" class="post-category">
-                                    git
+                            <a href="/categories/%E5%BE%85%E6%95%B4%E7%90%86android/" class="post-category">
+                                    待整理android
                                 </a>
                             
                             
@@ -652,12 +751,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/git/">
-                        <span class="chip bg-color">git</span>
+                    <a href="/tags/android/">
+                        <span class="chip bg-color">android</span>
                     </a>
                     
-                    <a href="/tags/gitlab/">
-                        <span class="chip bg-color">gitlab</span>
+                    <a href="/tags/opengl/">
+                        <span class="chip bg-color">opengl</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%94%BB%E9%9D%A2%E9%97%AA%E7%83%81/">
+                        <span class="chip bg-color">画面闪烁</span>
                     </a>
                     
                 </div>

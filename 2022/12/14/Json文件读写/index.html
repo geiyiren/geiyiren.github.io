@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="java读写Json文件, geiyiren">
-    <meta name="description" content="java读写Json文件示例">
+    <meta name="keywords" content="Json文件读写, geiyiren">
+    <meta name="description" content="java、c++读写Json文件示例">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>java读写Json文件 | geiyiren</title>
+    <title>Json文件读写 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
 
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">java读写Json文件</h1>
+                    <h1 class="description center-align post-title">Json文件读写</h1>
                 </div>
             </div>
         </div>
@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    683
+                    906
                 </div>
                 
 
@@ -420,7 +420,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="json格式介绍"><a href="#json格式介绍" class="headerlink" title="json格式介绍"></a>json格式介绍</h1><p>json与xml相比, 对数据的描述性比XML较差,但是数据体积小,传递速度更快.  </p>
+                <h1 id="java读写Json文件"><a href="#java读写Json文件" class="headerlink" title="java读写Json文件"></a>java读写Json文件</h1><h2 id="json格式介绍"><a href="#json格式介绍" class="headerlink" title="json格式介绍"></a>json格式介绍</h2><p>json与xml相比, 对数据的描述性比XML较差,但是数据体积小,传递速度更快.  </p>
 <p>json数据的书写格式是”名称:值对”,比如:</p>
 <pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token property">"Name"</span> <span class="token operator">:</span> <span class="token string">"John"</span>                        <span class="token comment">//name为名称,值对为"john"字符串</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>值对类型共分为:  </p>
@@ -439,7 +439,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 表示”employees”对象中有3个对象数组(每个对象数组表示一条员工信息),其中并列的数据都必须用逗号”,”隔开.</li>
 </ul>
-<h1 id="json文件读写示例"><a href="#json文件读写示例" class="headerlink" title="json文件读写示例"></a>json文件读写示例</h1><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>fibocom<span class="token punctuation">.</span>multicamera</span><span class="token punctuation">;</span>
+<h2 id="json文件读写示例"><a href="#json文件读写示例" class="headerlink" title="json文件读写示例"></a>json文件读写示例</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>fibocom<span class="token punctuation">.</span>multicamera</span><span class="token punctuation">;</span>
 
 <span class="token keyword">import</span> <span class="token import"><span class="token namespace">android<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Log</span></span><span class="token punctuation">;</span>
 
@@ -539,6 +539,49 @@
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="c-读写Json文件"><a href="#c-读写Json文件" class="headerlink" title="c++读写Json文件"></a>c++读写Json文件</h1><ul>
+<li><p>模板函数定义</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;**
+ * @brief 从文本中加载json
+ * @tparam R json类型
+ * @tparam T 自动推断的字符串类型
+ * @param config json字符串
+ * @return R
+ *&#x2F;
+template&lt;typename R, typename T&gt;
+inline R LoadJsonFromText(const T &amp;config)
+&#123;
+    &#x2F;&#x2F; static_assert(JsonHasParse&lt;R&gt;::value,
+    &#x2F;&#x2F;               &quot;error: the type must has static method [parse].&quot;);
+    &#x2F;&#x2F; nlohmann json
+    return R::parse(config, nullptr, true, true);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>使用</p>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++"># include&quot;json.hpp&quot;
+using nlohmann::json;
+std::string config&#x3D; &quot;example.jsonc&quot;;
+auto json_config &#x3D; LoadJsonFromText&lt;json&gt;(config);
+
+const auto &amp;vs_config &#x3D; json_config[&quot;video_source&quot;];
+
+const auto width  &#x3D; vs_config[&quot;width&quot;].get&lt;int&gt;();
+const auto height &#x3D; vs_config[&quot;height&quot;].get&lt;int&gt;();
+
+const auto width1  &#x3D; json_config[&quot;video_source&quot;][&quot;width&quot;].get&lt;int&gt;();
+const auto height1 &#x3D; json_config[&quot;video_source&quot;][&quot;height&quot;].get&lt;int&gt;();
+
+json_config[&quot;video_source&quot;][&quot;width&quot;]  &#x3D; 720;
+json_config[&quot;video_source&quot;][&quot;height&quot;] &#x3D; 480;
+
+&#x2F;&#x2F; 将jsonc文件转换为string
+const auto &amp;json_config_str &#x3D; json_config.dump();
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p><code>json.hpp</code><br><img src="/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/json.hpp" alt="json.hpp"></p>
+</li>
+</ul>
 <blockquote>
 <p>参考连接： <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1556944">https://cloud.tencent.com/developer/article/1556944</a></p>
 </blockquote>
@@ -568,7 +611,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2022/12/14/java%E8%AF%BB%E5%86%99Json%E6%96%87%E4%BB%B6/">http://example.com/2022/12/14/java%E8%AF%BB%E5%86%99Json%E6%96%87%E4%BB%B6/</a>
+                    <a href="http://example.com/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/">http://example.com/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/</a>
                 </span>
             </div>
             <div class="reprint__notice">

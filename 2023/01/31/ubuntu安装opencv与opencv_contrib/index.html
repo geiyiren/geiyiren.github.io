@@ -408,7 +408,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    737
+                    744
                 </div>
                 
 
@@ -476,7 +476,7 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> <span class="token parameter variable">-j8</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题"><a href="#终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题" class="headerlink" title="终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题"></a>终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题</h2><p>卡在这里的原因是因为在cmake编译的时候没有下载成功，这里使用手动下载与替换进行补救</p>
-<h2 id="手动下载缺少文件-1"><a href="#手动下载缺少文件-1" class="headerlink" title="手动下载缺少文件"></a>手动下载缺少文件</h2><p><a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/tree/main/source/_posts/ubuntu%E5%AE%89%E8%A3%85opencv%E4%B8%8Eopencv_contrib/.cache">.cache</a></p>
+<h2 id="手动下载缺少文件-1"><a href="#手动下载缺少文件-1" class="headerlink" title="手动下载缺少文件"></a>手动下载缺少文件</h2><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1OrfTdsNczKlNvJPg_gD0VA?pwd=1633">百度网盘:ubuntu安装opencv与opencv_contrib</a></p>
 <h2 id="替换本地文件"><a href="#替换本地文件" class="headerlink" title="替换本地文件"></a>替换本地文件</h2><p>在<code>opencv源文件目录</code>下找到隐藏文件夹<code>.cache</code>，然后分别替换其中的文件。注意下载的文件中每个对应文件的开头字符串为临时校验码，需要以自己本次安装时生成的校验码为准。例如<code>7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz</code>中<code>7421de0095c7a39162ae13a6098782f9</code>为安装校验码，这个在替换文件时候需要改为本次安装自动生成的校验码。</p>
 <h2 id="cache文件目录"><a href="#cache文件目录" class="headerlink" title=".cache文件目录"></a>.cache文件目录</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">.cache
 ├── data

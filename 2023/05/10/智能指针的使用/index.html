@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="C++多线程常用案例, geiyiren">
-    <meta name="description" content="C++多线程常用案例">
+    <meta name="keywords" content="智能指针的使用, geiyiren">
+    <meta name="description" content="智能指针的使用方法与常见问题">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>C++多线程常用案例 | geiyiren</title>
+    <title>智能指针的使用 | geiyiren</title>
     <link rel="icon" type="image/png" href="/favicon.png">
     
     <style>
@@ -334,12 +334,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">C++多线程常用案例</h1>
+                    <h1 class="description center-align post-title">智能指针的使用</h1>
                 </div>
             </div>
         </div>
@@ -365,8 +365,8 @@
                                 <span class="chip bg-color">C++</span>
                             </a>
                         
-                            <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
-                                <span class="chip bg-color">多线程</span>
+                            <a href="/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">
+                                <span class="chip bg-color">智能指针</span>
                             </a>
                         
                     </div>
@@ -404,7 +404,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    371
+                    1.2k
                 </div>
                 
 
@@ -429,50 +429,144 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>使用C++11 std库中的线程和条件变量实现notify_one的一个简单例子。在这个例子中，我们有一个线程向一个队列中添加元素，另一个线程从队列中删除元素。线程通过条件变量进行同步。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
-#include &lt;thread&gt;
-#include &lt;queue&gt;
-#include &lt;mutex&gt;
-#include &lt;condition_variable&gt;
+                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>在 C++ 中，智能指针是一种对象，它处理内存管理的问题，使程序员更加专注于业务逻辑而不是内存管理。C++ 标准库中提供了几种类型的智能指针，包括：</p>
+<ul>
+<li><p><code>std::unique_ptr</code>: 它代表独占所有权的概念。一个 <code>std::unique_ptr</code> 对象在任何时间都拥有它所指向的对象。当 <code>std::unique_ptr</code> 被销毁（例如，当离开其作用域时），它所指向的对象也会被销毁（即调用其析构函数）。</p>
+</li>
+<li><p><code>std::shared_ptr</code>: 它代表共享所有权的概念。多个 <code>std::shared_ptr</code> 对象可以拥有同一个对象。当最后一个拥有该对象的 <code>std::shared_ptr</code> 被销毁时，它所指向的对象也会被销毁。</p>
+</li>
+<li><p><code>std::weak_ptr</code>: 它是为了配合 <code>std::shared_ptr</code> 而存在的，它提供了一种方式访问 <code>std::shared_ptr</code> 所管理的对象，但是不增加引用计数。这对于解决 <code>std::shared_ptr</code> 循环引用的问题（即，两个 <code>std::shared_ptr</code> 相互引用，导致它们都不会被销毁）是很有用的。</p>
+</li>
+</ul>
+<p>智能指针的使用可以极大地简化内存管理，避免内存泄漏和其他与生命周期管理相关的错误。然而，它们并不能解决所有的内存管理问题，仍然需要程序员小心谨慎地设计他们的代码。</p>
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="std-unique-ptr示例"><a href="#std-unique-ptr示例" class="headerlink" title="std::unique_ptr示例"></a><code>std::unique_ptr</code>示例</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
 
-std::queue&lt;int&gt; queue;
-std::mutex mtx;
-std::condition_variable cv;
+struct Foo &#123;
+    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
+    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
+    void bar() &#123; std::cout &lt;&lt; &quot;Foo::bar\n&quot;; &#125;
+&#125;;
 
-void producer(int value) &#123;
-    for (int i &#x3D; 0; i &lt; value; ++i) &#123;
-        std::this_thread::sleep_for(std::chrono::seconds(1)); &#x2F;&#x2F; 模拟生产
-        std::lock_guard&lt;std::mutex&gt; lock(mtx);
-        queue.push(i);
-        std::cout &lt;&lt; &quot;Produced: &quot; &lt;&lt; i &lt;&lt; std::endl;
-        cv.notify_one(); &#x2F;&#x2F; 通知消费者
-    &#125;
-&#125;
-
-void consumer() &#123;
-    while(true) &#123;
-        std::unique_lock&lt;std::mutex&gt; lock(mtx);
-        cv.wait(lock, []&#123; return !queue.empty(); &#125;); &#x2F;&#x2F; 等待直到队列不为空
-        int value &#x3D; queue.front();
-        queue.pop();
-        std::cout &lt;&lt; &quot;Consumed: &quot; &lt;&lt; value &lt;&lt; std::endl;
-    &#125;
+void f(const Foo &amp;) &#123;
+    std::cout &lt;&lt; &quot;f(const Foo&amp;)\n&quot;;
 &#125;
 
 int main() &#123;
-    std::thread t1(producer, 10);
-    std::thread t2(consumer);
+    std::unique_ptr&lt;Foo&gt; p1(new Foo);  &#x2F;&#x2F; p1 独占 Foo
 
-    t1.join();
-    t2.join();
+    p1-&gt;bar();  &#x2F;&#x2F; 输出 &quot;Foo::bar&quot;
 
-    return 0;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    &#123;
+        std::unique_ptr&lt;Foo&gt; p2(std::move(p1));  &#x2F;&#x2F; 现在 p2 独占 Foo
+        f(*p2);
+        p1 &#x3D; std::move(p2);  &#x2F;&#x2F; 现在 p1 独占 Foo
+    &#125;
 
-<p>在这个例子中，生产者线程在每次添加一个元素到队列后都会调用notify_one()来通知消费者线程。消费者线程在wait()函数中等待，直到收到通知并且队列不为空才会继续执行。</p>
-<p>需要注意的是，虽然在上述代码中我们的消费者线程是一个无限循环，但在实际的程序中，你需要有一种机制来结束这个线程。</p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+    p1-&gt;bar();  &#x2F;&#x2F; 输出 &quot;Foo::bar&quot;
+
+    &#x2F;&#x2F; Foo 的析构器在这里被调用，因为 p1 被销毁
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="std-shared-ptr示例"><a href="#std-shared-ptr示例" class="headerlink" title="std::shared_ptr示例"></a><code>std::shared_ptr</code>示例</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
+
+struct Foo &#123;
+    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
+    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
+    void bar() &#123; std::cout &lt;&lt; &quot;Foo::bar\n&quot;; &#125;
+&#125;;
+
+int main() &#123;
+    std::shared_ptr&lt;Foo&gt; p1 &#x3D; std::make_shared&lt;Foo&gt;();
+    &#x2F;&#x2F; 这里，我们不再需要使用 new。std::make_shared 是一个更安全，更高效的方式来分配共享对象。
+    
+    p1-&gt;bar();  &#x2F;&#x2F; 输出 &quot;Foo::bar&quot;
+
+    &#123;
+        std::shared_ptr&lt;Foo&gt; p2 &#x3D; p1;
+        p2-&gt;bar();  &#x2F;&#x2F; 输出 &quot;Foo::bar&quot;
+        &#x2F;&#x2F; Foo 的实例仍未被删除，因为 p1 和 p2 都还在作用域内
+    &#125;
+    
+    p1-&gt;bar();  &#x2F;&#x2F; 输出 &quot;Foo::bar&quot;
+    
+    &#x2F;&#x2F; Foo 的析构器在这里被调用，因为 p1 离开了作用域
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="std-weak-ptr示例"><a href="#std-weak-ptr示例" class="headerlink" title="std::weak_ptr示例"></a><code>std::weak_ptr</code>示例</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
+
+struct Foo &#123;
+    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
+    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
+&#125;;
+
+int main() &#123;
+    std::weak_ptr&lt;Foo&gt; weak;
+    &#123;
+        std::shared_ptr&lt;Foo&gt; shared &#x3D; std::make_shared&lt;Foo&gt;();
+        weak &#x3D; shared;
+        &#x2F;&#x2F; 在 shared 存在的时候，我们可以使用 weak 来获取一个新的 shared_ptr 实例
+        auto p &#x3D; weak.lock();
+        if (p) &#123;
+            std::cout &lt;&lt; &quot;Object has not been deleted\n&quot;;
+        &#125;
+    &#125;
+
+    &#x2F;&#x2F; 这里，shared 被销毁，因此 Foo 被删除
+
+    &#x2F;&#x2F; 因为 Foo 已经被删除，所以我们不能再从 weak 中获取一个 shared_ptr
+    auto p &#x3D; weak.lock();
+    if (!p) &#123;
+        std::cout &lt;&lt; &quot;Object has been deleted\n&quot;;
+    &#125;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h1><h2 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h2><p>智能指针的 reset 方法是用于释放智能指针当前拥有的对象，并可能接管新的对象。</p>
+<p>以下是 std::unique_ptr 和 std::shared_ptr 的 reset 方法的使用：</p>
+<ul>
+<li><code>std::unique_ptr</code> 的 <code>reset</code> 方法</li>
+</ul>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
+
+struct Foo &#123;
+    Foo(int val) : value(val) &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; constructed.\n&quot;; &#125;
+    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; destructed.\n&quot;; &#125;
+    int value;
+&#125;;
+
+int main() &#123;
+    std::unique_ptr&lt;Foo&gt; p(new Foo(1));  &#x2F;&#x2F; p 现在指向一个新的 Foo 对象
+
+    p.reset(new Foo(2));  &#x2F;&#x2F; p 释放旧的 Foo 对象并指向一个新的 Foo 对象
+    &#x2F;&#x2F; 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><code>std::shared_ptr</code> 的 <code>reset</code> 方法</li>
+</ul>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
+
+struct Foo &#123;
+    Foo(int val) : value(val) &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; constructed.\n&quot;; &#125;
+    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; destructed.\n&quot;; &#125;
+    int value;
+&#125;;
+
+int main() &#123;
+    std::shared_ptr&lt;Foo&gt; p1 &#x3D; std::make_shared&lt;Foo&gt;(1);  &#x2F;&#x2F; p1 现在指向一个新的 Foo 对象
+
+    std::shared_ptr&lt;Foo&gt; p2 &#x3D; p1;  &#x2F;&#x2F; p2 也指向同一个 Foo 对象
+
+    p1.reset(new Foo(2));  &#x2F;&#x2F; p1 释放旧的 Foo 对象并指向一个新的 Foo 对象
+    &#x2F;&#x2F; 但是，&quot;Foo 1 destructed.&quot; 并未被打印到控制台，因为 p2 仍然拥有它
+
+    p2.reset();  &#x2F;&#x2F; p2 释放它的 Foo 对象
+    &#x2F;&#x2F; 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>
@@ -498,7 +592,7 @@ int main() &#123;
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://example.com/2023/05/10/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%A1%88%E4%BE%8B/">http://example.com/2023/05/10/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%A1%88%E4%BE%8B/</a>
+                    <a href="http://example.com/2023/05/10/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%9A%84%E4%BD%BF%E7%94%A8/">http://example.com/2023/05/10/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%9A%84%E4%BD%BF%E7%94%A8/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -540,8 +634,8 @@ int main() &#123;
                                     <span class="chip bg-color">C++</span>
                                 </a>
                             
-                                <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
-                                    <span class="chip bg-color">多线程</span>
+                                <a href="/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">
+                                    <span class="chip bg-color">智能指针</span>
                                 </a>
                             
                         </div>
@@ -624,31 +718,31 @@ int main() &#123;
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/05/19/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+                <a href="/2023/05/10/C++%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%A1%88%E4%BE%8B/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="单例模式">
+                        <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="C++多线程常用案例">
                         
-                        <span class="card-title">单例模式</span>
+                        <span class="card-title">C++多线程常用案例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            单例模式
+                            C++多线程常用案例
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-05-19
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-05-10
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
-                                    设计模式
+                            <a href="/categories/C/" class="post-category">
+                                    C++
                                 </a>
                             
                             
@@ -658,12 +752,12 @@ int main() &#123;
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-                        <span class="chip bg-color">设计模式</span>
+                    <a href="/tags/C/">
+                        <span class="chip bg-color">C++</span>
                     </a>
                     
-                    <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-                        <span class="chip bg-color">单例模式</span>
+                    <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+                        <span class="chip bg-color">多线程</span>
                     </a>
                     
                 </div>
@@ -677,19 +771,19 @@ int main() &#123;
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/05/10/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E7%9A%84%E4%BD%BF%E7%94%A8/">
+                <a href="/2023/05/10/%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85%E4%B8%8E%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A%E7%94%A8%E6%B3%95%E8%A7%A3%E6%9E%90/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="智能指针的使用">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="类的封装与函数绑定用法解析">
                         
-                        <span class="card-title">智能指针的使用</span>
+                        <span class="card-title">类的封装与函数绑定用法解析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            智能指针的使用方法与常见问题
+                            类的封装与函数绑定用法解析
                         
                     </div>
                     <div class="publish-info">
@@ -715,8 +809,12 @@ int main() &#123;
                         <span class="chip bg-color">C++</span>
                     </a>
                     
-                    <a href="/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/">
-                        <span class="chip bg-color">智能指针</span>
+                    <a href="/tags/%E7%B1%BB%E7%9A%84%E5%B0%81%E8%A3%85/">
+                        <span class="chip bg-color">类的封装</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%87%BD%E6%95%B0%E7%BB%91%E5%AE%9A/">
+                        <span class="chip bg-color">函数绑定</span>
                     </a>
                     
                 </div>

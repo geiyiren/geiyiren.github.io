@@ -1,0 +1,21 @@
+{
+    // 当前配置文件的版本，此版本用于兼容性处理
+    "version": "1.0.0.0",
+    "camera_id": "camera_1",
+
+    "video_source": {
+        "width" : 1280,                        // 需要设置为平台相应的分辨率
+        "height": 720,
+        "format": "kRGB888",                  // 内部自行生成, 这里实际上无效
+        "device": "/dev/video0",
+        "fps"   : 20,
+        "connect": true,                      // true：把回调的图像送入算法； false：不给算法送入图像。
+                                              // 这个选项对假视频源依然有效
+        "fake": {
+            "enable": false,                  // true表示启用假视频源
+            "img": "assets/ssd_test_img.jpg", // 使用这张图片来冒充，注意仅支持jpg格式图片，且最好是720或1080P图像
+            "out_fmt": "kYUV422SP"            // 假视频源的输出格式（模拟输出的视频格式）
+        }
+    },
+
+}

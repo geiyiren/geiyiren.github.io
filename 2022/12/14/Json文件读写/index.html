@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    906
+                    990
                 </div>
                 
 
@@ -556,7 +556,27 @@ inline R LoadJsonFromText(const T &amp;config)
     &#x2F;&#x2F;               &quot;error: the type must has static method [parse].&quot;);
     &#x2F;&#x2F; nlohmann json
     return R::parse(config, nullptr, true, true);
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;
+
+&#x2F;**
+ * @brief 通用类型
+ * @tparam R
+ * @tparam T
+ * @tparam U
+ * @param config
+ * @param key
+ * @param val
+ * @return R
+ *&#x2F;
+template&lt;typename R, typename T, typename U&gt;
+inline R OptionalContain(const T &amp;config, const U &amp;key, const R &amp;val, JsonGenericType)
+&#123;
+    if (config.count(key) &gt; 0)
+    &#123;
+        return config.at(key);
+    &#125;
+    return val;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p>使用</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++"># include&quot;json.hpp&quot;
@@ -577,9 +597,14 @@ json_config[&quot;video_source&quot;][&quot;height&quot;] &#x3D; 480;
 
 &#x2F;&#x2F; 将jsonc文件转换为string
 const auto &amp;json_config_str &#x3D; json_config.dump();
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+const auto &amp;fake_config &#x3D; vs_config[&quot;fake&quot;];
+const auto fake_enable &#x3D; ac::OptionalContain(fake_config, &quot;enable&quot;, false);
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p><code>json.hpp</code><br><img src="/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/json.hpp" alt="json.hpp"></p>
+</li>
+<li><p><code>example.jsonc</code><br><img src="/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/example.jsonc" alt="example.jsonc"></p>
 </li>
 </ul>
 <blockquote>

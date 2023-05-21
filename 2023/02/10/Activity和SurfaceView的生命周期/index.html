@@ -443,16 +443,7 @@
 </ul>
 <h1 id="Activity-生命周期概念"><a href="#Activity-生命周期概念" class="headerlink" title="Activity 生命周期概念"></a>Activity 生命周期概念</h1><p>为了在 Activity 生命周期的各个阶段之间导航转换，Activity 类提供六个核心回调：onCreate()、onStart()、onResume()、onPause()、onStop() 和 onDestroy()。当 Activity 进入新状态时，系统会调用其中每个回调。</p>
 <p>下图是对此范例的直观展现。</p>
-<object data="https://github.com/geiyiren/MyBlogFile1/blob/image/" type="image/png">
-  <img src="activity_surfaceView.png" alt="Activity的生命周期">
-</object>
-
-<hr>
-<object data="https://github.com/geiyiren/MyBlogFile1/blob/image/" type="image/png">
-  <iframe  src="https://github.com/geiyiren/MyBlogFile1/blob/image/activity_surfaceView.png" alt="Activity的生命周期">
-</object>
------
-<iframe  src="https://github.com/geiyiren/MyBlogFile1/blob/image/activity_surfaceView.png" alt="Activity的生命周期">
+<img src="https://raw.githubusercontent.com/geiyiren/MyBlogFile1/image/activity_surfaceView.png?token=A3QJ3GLCOTNNI7OTF4JYKIDENHQQY"/>
 
 
 <p>当用户开始离开 Activity 时，系统会调用方法来销毁该 Activity。在某些情况下，此销毁只是部分销毁；Activity 仍然驻留在内存中（例如当用户切换至另一应用时），并且仍然可以返回到前台。如果用户返回到该 Activity，Activity 会从用户离开时的位置继续运行。除了少数例外，应用在后台运行时会受到限制，无法启动 Activity。</p>

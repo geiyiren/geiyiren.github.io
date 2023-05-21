@@ -404,7 +404,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    990
+                    1.2k
                 </div>
                 
 
@@ -611,10 +611,31 @@ const auto &amp;fake_config &#x3D; vs_config[&quot;fake&quot;];
 const auto fake_enable &#x3D; ac::OptionalContain(fake_config, &quot;enable&quot;, false);
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
-<li><p><code>json.hpp</code><br><img src="/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/json.hpp" alt="json.hpp"></p>
+<li><p><code>json.hpp</code><br><img src="https://github.com/geiyiren/MyBlogFile1/blob/other/json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/json.hpp" alt="json.hpp"></p>
 </li>
-<li><p><code>example.jsonc</code><br><img src="/2022/12/14/Json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/example.jsonc" alt="example.jsonc"></p>
-</li>
+<li><p><code>example.jsonc</code></p>
+<pre class="line-numbers language-jsonc" data-language="jsonc"><code class="language-jsonc">&#123;
+    &#x2F;&#x2F; 当前配置文件的版本，此版本用于兼容性处理
+    &quot;version&quot;: &quot;1.0.0.0&quot;,
+    &quot;camera_id&quot;: &quot;camera_1&quot;,
+
+    &quot;video_source&quot;: &#123;
+        &quot;width&quot; : 1280,                        &#x2F;&#x2F; 需要设置为平台相应的分辨率
+        &quot;height&quot;: 720,
+        &quot;format&quot;: &quot;kRGB888&quot;,                  &#x2F;&#x2F; 内部自行生成, 这里实际上无效
+        &quot;device&quot;: &quot;&#x2F;dev&#x2F;video0&quot;,
+        &quot;fps&quot;   : 20,
+        &quot;connect&quot;: true,                      &#x2F;&#x2F; true：把回调的图像送入算法； false：不给算法送入图像。
+                                              &#x2F;&#x2F; 这个选项对假视频源依然有效
+        &quot;fake&quot;: &#123;
+            &quot;enable&quot;: false,                  &#x2F;&#x2F; true表示启用假视频源
+            &quot;img&quot;: &quot;assets&#x2F;ssd_test_img.jpg&quot;, &#x2F;&#x2F; 使用这张图片来冒充，注意仅支持jpg格式图片，且最好是720或1080P图像
+            &quot;out_fmt&quot;: &quot;kYUV422SP&quot;            &#x2F;&#x2F; 假视频源的输出格式（模拟输出的视频格式）
+        &#125;
+    &#125;,
+
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
 <blockquote>
 <p>参考连接： <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1556944">https://cloud.tencent.com/developer/article/1556944</a></p>

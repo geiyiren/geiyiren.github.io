@@ -442,7 +442,7 @@
 <li>当屏幕在横向和纵向之间旋转时，崩溃或丢失用户的进度。</li>
 </ul>
 <h1 id="Activity-生命周期概念"><a href="#Activity-生命周期概念" class="headerlink" title="Activity 生命周期概念"></a>Activity 生命周期概念</h1><p>为了在 Activity 生命周期的各个阶段之间导航转换，Activity 类提供六个核心回调：onCreate()、onStart()、onResume()、onPause()、onStop() 和 onDestroy()。当 Activity 进入新状态时，系统会调用其中每个回调。</p>
-<p>下图是对此范例的直观展现。<br><img src="https://github.com/geiyiren/MyBlogFile1/blob/image/activity_surfaceView.png" alt="Activity的生命周期"></p>
+<p>下图是对此范例的直观展现。<br><img src="(https://github.com/geiyiren/MyBlogFile1/blob/image/activity_surfaceView.png" alt="Activity的生命周期"></p>
 <p>当用户开始离开 Activity 时，系统会调用方法来销毁该 Activity。在某些情况下，此销毁只是部分销毁；Activity 仍然驻留在内存中（例如当用户切换至另一应用时），并且仍然可以返回到前台。如果用户返回到该 Activity，Activity 会从用户离开时的位置继续运行。除了少数例外，应用在后台运行时会受到限制，无法启动 Activity。</p>
 <p>系统终止给定进程及其中 Activity 的可能性取决于当时 Activity 的状态。Activity 状态和从内存中弹出 会更详细地介绍状态与弹出漏洞之间的关系。</p>
 <p>根据 Activity 的复杂程度，您可能不需要实现所有生命周期方法。但是，请务必了解每个方法，并实现能够确保应用按用户预期方式运行的方法，这非常重要。</p>

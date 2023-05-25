@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    2.5k
                 </div>
                 
 
@@ -421,449 +421,449 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="功能描述"><a href="#功能描述" class="headerlink" title="功能描述"></a>功能描述</h1><p>点击主界面的一个按钮，然后跳转另一个设置界面，进行参数设置，包括：参数输入、开关按钮、保存、退出等功能。界面的布局采用表格布局，平均分布各个行列。示例代码如下所示。</p>
-<h1 id="MainActivity-java示例"><a href="#MainActivity-java示例" class="headerlink" title="MainActivity.java示例"></a>MainActivity.java示例</h1><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 主界面按钮定义</span>
-<span class="token keyword">private</span> <span class="token class-name">ImageButton</span> mImage_set_btn<span class="token punctuation">;</span>
+<h1 id="MainActivity-java示例"><a href="#MainActivity-java示例" class="headerlink" title="MainActivity.java示例"></a>MainActivity.java示例</h1><pre class="line-numbers language-java" data-language="java"><code class="language-java">&#x2F;&#x2F; 主界面按钮定义
+private ImageButton mImage_set_btn;
 
-<span class="token annotation punctuation">@Override</span>
-<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+@Override
+protected void onCreate(Bundle savedInstanceState) &#123;
+	super.onCreate(savedInstanceState);
 
-	<span class="token comment">// 主界面按钮事件</span>
-	<span class="token comment">// R.id.image_set_btn为主界面按钮ID</span>
-	mImage_set_btn <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ImageButton</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>image_set_btn<span class="token punctuation">)</span><span class="token punctuation">;</span>
-	mImage_set_btn<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token annotation punctuation">@Override</span>
-	<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> view<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">final</span> <span class="token class-name">LayoutInflater</span> layoutInflater <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">LayoutInflater</span><span class="token punctuation">)</span><span class="token function">getBaseContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getSystemService</span><span class="token punctuation">(</span><span class="token constant">LAYOUT_INFLATER_SERVICE</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//R.id.avm_parm_view为跳转界面ID（android:id="@+id/avm_parm_view"）</span>
-		<span class="token class-name">View</span> popupView <span class="token operator">=</span> layoutInflater<span class="token punctuation">.</span><span class="token function">inflate</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>layout_avm_parm<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token class-name">ViewGroup</span><span class="token punctuation">)</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>avm_parm_view<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		mPopupWindow_register <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PopupWindow</span><span class="token punctuation">(</span>popupView<span class="token punctuation">,</span> <span class="token class-name">WindowManager<span class="token punctuation">.</span>LayoutParams</span><span class="token punctuation">.</span><span class="token constant">MATCH_PARENT</span><span class="token punctuation">,</span> <span class="token class-name">WindowManager<span class="token punctuation">.</span>LayoutParams</span><span class="token punctuation">.</span><span class="token constant">MATCH_PARENT</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		mPopupWindow_register<span class="token punctuation">.</span><span class="token function">setTouchable</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		mPopupWindow_register<span class="token punctuation">.</span><span class="token function">setOutsideTouchable</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		mPopupWindow_register<span class="token punctuation">.</span><span class="token function">setBackgroundDrawable</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">BitmapDrawable</span><span class="token punctuation">(</span><span class="token function">getResources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token class-name">Bitmap</span><span class="token punctuation">)</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		mPopupWindow_register<span class="token punctuation">.</span><span class="token function">showAsDropDown</span><span class="token punctuation">(</span>view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	&#x2F;&#x2F; 主界面按钮事件
+	&#x2F;&#x2F; R.id.image_set_btn为主界面按钮ID
+	mImage_set_btn &#x3D; (ImageButton) findViewById(R.id.image_set_btn);
+	mImage_set_btn.setOnClickListener(new View.OnClickListener() &#123;
+	@Override
+	public void onClick(View view) &#123;
+		final LayoutInflater layoutInflater &#x3D; (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+		&#x2F;&#x2F;R.id.avm_parm_view为跳转界面ID（android:id&#x3D;&quot;@+id&#x2F;avm_parm_view&quot;）
+		View popupView &#x3D; layoutInflater.inflate(R.layout.layout_avm_parm, (ViewGroup)findViewById(R.id.avm_parm_view));
+		mPopupWindow_register &#x3D; new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT, true);
+		mPopupWindow_register.setTouchable(true);
+		mPopupWindow_register.setOutsideTouchable(true);
+		mPopupWindow_register.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+		mPopupWindow_register.showAsDropDown(view);
 
-		<span class="token comment">//------ 获取输入控件的输入内容 ------</span>
-		<span class="token comment">//车长</span>
-		editText_car_length <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">EditText</span><span class="token punctuation">)</span> mPopupWindow_register<span class="token punctuation">.</span><span class="token function">getContentView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>EditText_car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//车宽</span>
-		editText_car_width <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">EditText</span><span class="token punctuation">)</span> mPopupWindow_register<span class="token punctuation">.</span><span class="token function">getContentView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>EditText_car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//前悬</span>
-		editText_suspension_front <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">EditText</span><span class="token punctuation">)</span> mPopupWindow_register<span class="token punctuation">.</span><span class="token function">getContentView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>EditText_suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//后悬</span>
-		editText_suspension_back <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">EditText</span><span class="token punctuation">)</span> mPopupWindow_register<span class="token punctuation">.</span><span class="token function">getContentView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>EditText_suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//保存按钮</span>
-		delok_btn <span class="token operator">=</span> popupView<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>avm_parameter_save<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//返回按钮</span>
-		delcancel_btn <span class="token operator">=</span> popupView<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>avm_parameter_return<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//车道线开关</span>
-		mTrajectory_Switch<span class="token operator">=</span>popupView<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>TrajectoryLine_Switch<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//BSD开关</span>
-		mBSD_Switch<span class="token operator">=</span>popupView<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>BSD_Switch<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//亮度均衡开关</span>
-		mBE_Switch<span class="token operator">=</span>popupView<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>BE_Switch<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">// 获取默认开关参数</span>
-		carParameter carParm_history <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">carParameter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-			carParm_history<span class="token operator">=</span>avmSetParm<span class="token punctuation">.</span><span class="token function">readJson</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token punctuation">&#125;</span>
-		<span class="token comment">//------ 设置输入控件的显示历史数据 ------</span>
-		editText_car_length<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>car_length<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		editText_car_width<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>car_width<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		editText_suspension_front<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		editText_suspension_back<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token keyword">switch</span> <span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>on_TrajectoryLine<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-			<span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
-				mTrajectory_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-			<span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
-				mTrajectory_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-		<span class="token punctuation">&#125;</span>
-		<span class="token keyword">switch</span> <span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>on_BSD<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-			<span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
-				mBSD_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-			<span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
-				mBSD_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-		<span class="token punctuation">&#125;</span>
-		<span class="token keyword">switch</span> <span class="token punctuation">(</span>carParm_history<span class="token punctuation">.</span>on_Bright<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-			<span class="token keyword">case</span> <span class="token number">0</span><span class="token operator">:</span>
-				mBE_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-			<span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
-				mBE_Switch<span class="token punctuation">.</span><span class="token function">setChecked</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">break</span><span class="token punctuation">;</span>
-		<span class="token punctuation">&#125;</span>
+		&#x2F;&#x2F;------ 获取输入控件的输入内容 ------
+		&#x2F;&#x2F;车长
+		editText_car_length &#x3D; (EditText) mPopupWindow_register.getContentView().findViewById(R.id.EditText_car_length);
+		&#x2F;&#x2F;车宽
+		editText_car_width &#x3D; (EditText) mPopupWindow_register.getContentView().findViewById(R.id.EditText_car_width);
+		&#x2F;&#x2F;前悬
+		editText_suspension_front &#x3D; (EditText) mPopupWindow_register.getContentView().findViewById(R.id.EditText_suspension_front);
+		&#x2F;&#x2F;后悬
+		editText_suspension_back &#x3D; (EditText) mPopupWindow_register.getContentView().findViewById(R.id.EditText_suspension_back);
+		&#x2F;&#x2F;保存按钮
+		delok_btn &#x3D; popupView.findViewById(R.id.avm_parameter_save);
+		&#x2F;&#x2F;返回按钮
+		delcancel_btn &#x3D; popupView.findViewById(R.id.avm_parameter_return);
+		&#x2F;&#x2F;车道线开关
+		mTrajectory_Switch&#x3D;popupView.findViewById(R.id.TrajectoryLine_Switch);
+		&#x2F;&#x2F;BSD开关
+		mBSD_Switch&#x3D;popupView.findViewById(R.id.BSD_Switch);
+		&#x2F;&#x2F;亮度均衡开关
+		mBE_Switch&#x3D;popupView.findViewById(R.id.BE_Switch);
+		&#x2F;&#x2F; 获取默认开关参数
+		carParameter carParm_history &#x3D; new carParameter();
+		try &#123;
+			carParm_history&#x3D;avmSetParm.readJson();
+		&#125; catch (Exception e) &#123;
+			e.printStackTrace();
+		&#125;
+		&#x2F;&#x2F;------ 设置输入控件的显示历史数据 ------
+		editText_car_length.setText(String.valueOf(carParm_history.car_length));
+		editText_car_width.setText(String.valueOf(carParm_history.car_width));
+		editText_suspension_front.setText(String.valueOf(carParm_history.suspension_front));
+		editText_suspension_back.setText(String.valueOf(carParm_history.suspension_back));
+		switch (carParm_history.on_TrajectoryLine)&#123;
+			case 0:
+				mTrajectory_Switch.setChecked(false);
+				break;
+			case 1:
+				mTrajectory_Switch.setChecked(true);
+				break;
+		&#125;
+		switch (carParm_history.on_BSD)&#123;
+			case 0:
+				mBSD_Switch.setChecked(false);
+				break;
+			case 1:
+				mBSD_Switch.setChecked(true);
+				break;
+		&#125;
+		switch (carParm_history.on_Bright)&#123;
+			case 0:
+				mBE_Switch.setChecked(false);
+				break;
+			case 1:
+				mBE_Switch.setChecked(true);
+				break;
+		&#125;
 
-		<span class="token comment">//------ 设置保存按钮触发事件 ------</span>
-		delok_btn<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-				<span class="token class-name">String</span> car_length <span class="token operator">=</span> editText_car_length<span class="token punctuation">.</span><span class="token function">getEditableText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">String</span> car_width <span class="token operator">=</span> editText_car_width<span class="token punctuation">.</span><span class="token function">getEditableText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">String</span> suspension_front <span class="token operator">=</span> editText_suspension_front<span class="token punctuation">.</span><span class="token function">getEditableText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">String</span> suspension_back <span class="token operator">=</span> editText_suspension_back<span class="token punctuation">.</span><span class="token function">getEditableText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-
-				carParameter carParm <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">carParameter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"filename_avm_set_json"</span><span class="token punctuation">,</span><span class="token string">"filename_avm_set_json"</span><span class="token operator">+</span>avmSetParm<span class="token punctuation">.</span>jsonFileName<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>car_length<span class="token operator">=</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>car_width<span class="token operator">=</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>suspension_front<span class="token operator">=</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>suspension_back<span class="token operator">=</span><span class="token class-name">Integer</span><span class="token punctuation">.</span><span class="token function">parseInt</span><span class="token punctuation">(</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>on_BSD<span class="token operator">=</span>mView<span class="token punctuation">.</span>mBSDViewID<span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>on_Bright<span class="token operator">=</span>mView<span class="token punctuation">.</span>mBrightID<span class="token punctuation">;</span>
-				carParm<span class="token punctuation">.</span>on_TrajectoryLine<span class="token operator">=</span>mView<span class="token punctuation">.</span>mTrajectoryLineViewID<span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"car_length"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"car_width"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"suspension_front"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"suspension_back"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"on_BSD"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_BSD<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"on_Bright"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_Bright<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token constant">TAG</span><span class="token punctuation">,</span> <span class="token string">"on_TrajectoryLine"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_TrajectoryLine<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-					avmSetParm<span class="token punctuation">.</span><span class="token function">writeJson</span><span class="token punctuation">(</span>carParm<span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-					e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span>
-				mPopupWindow_register<span class="token punctuation">.</span><span class="token function">dismiss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-		<span class="token comment">//------ 设置按钮触发事件 ------</span>
-		<span class="token comment">//车道线</span>
-		mTrajectory_Switch<span class="token punctuation">.</span><span class="token function">setOnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CompoundButton<span class="token punctuation">.</span>OnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			<span class="token annotation punctuation">@Override</span>
-			<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCheckedChanged</span><span class="token punctuation">(</span><span class="token class-name">CompoundButton</span> buttonView<span class="token punctuation">,</span> <span class="token keyword">boolean</span> isChecked<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-				<span class="token keyword">if</span> <span class="token punctuation">(</span>buttonView<span class="token punctuation">.</span><span class="token function">isChecked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mTrajectoryLineViewID<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span><span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mTrajectoryLineViewID<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span>
-				mView<span class="token punctuation">.</span><span class="token function">avmTrajectoryLineView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-		<span class="token comment">//BSD</span>
-		mBSD_Switch<span class="token punctuation">.</span><span class="token function">setOnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CompoundButton<span class="token punctuation">.</span>OnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			<span class="token annotation punctuation">@Override</span>
-			<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCheckedChanged</span><span class="token punctuation">(</span><span class="token class-name">CompoundButton</span> buttonView<span class="token punctuation">,</span> <span class="token keyword">boolean</span> isChecked<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-				<span class="token keyword">if</span> <span class="token punctuation">(</span>buttonView<span class="token punctuation">.</span><span class="token function">isChecked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mBSDViewID<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-					<span class="token function">avmStartBSD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span><span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mBSDViewID<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-					<span class="token function">avmStopBSD</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span>
-				mView<span class="token punctuation">.</span><span class="token function">avmBSDView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//亮度均衡</span>
-		mBE_Switch<span class="token punctuation">.</span><span class="token function">setOnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">CompoundButton<span class="token punctuation">.</span>OnCheckedChangeListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			<span class="token annotation punctuation">@Override</span>
-			<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCheckedChanged</span><span class="token punctuation">(</span><span class="token class-name">CompoundButton</span> buttonView<span class="token punctuation">,</span> <span class="token keyword">boolean</span> isChecked<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-				<span class="token keyword">if</span> <span class="token punctuation">(</span>buttonView<span class="token punctuation">.</span><span class="token function">isChecked</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mBrightID<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span><span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-					mView<span class="token punctuation">.</span>mBrightID<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
-				<span class="token punctuation">&#125;</span>
-				mView<span class="token punctuation">.</span><span class="token function">avmBrightView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token comment">//返回</span>
-		delcancel_btn<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-			<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-				mPopupWindow_register<span class="token punctuation">.</span><span class="token function">dismiss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h1 id="主界面xml文件"><a href="#主界面xml文件" class="headerlink" title="主界面xml文件"></a>主界面xml文件</h1><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>FrameLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>tools</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/tools<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">tools:</span>context</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>.MainActivity<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>androidx.drawerlayout.widget.DrawerLayout</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/drawer_layout<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/layout_root<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@android:color/black<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/tv_no_camera<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@string/no_camera_info<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#FFFF0000<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>36sp<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>visibility</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>gone<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>include</span> <span class="token attr-name">layout</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@layout/settings_layout<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>include</span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>androidx.drawerlayout.widget.DrawerLayout</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>SurfaceView</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/surface_view<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fill_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>fill_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginRight</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginTop</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1dp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_set_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>420dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_set<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_3d_360_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>60dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_360_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_front_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>120dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_front_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_back_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>180dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_back_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-    <span class="token comment">&lt;!--       android:visibility="gone" /> --></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_left_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>240dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_left_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_right_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_right_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_narrow_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_marginLeft</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>360dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_narrow_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ImageButton</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/image_3d_normal_btn<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>55dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>bottom|left<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/btn_bg_round<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/icon_3d_normal<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>FrameLayout</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h1 id="跳转界面xml文件"><a href="#跳转界面xml文件" class="headerlink" title="跳转界面xml文件"></a>跳转界面xml文件</h1><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>tools</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/tools<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/avm_parm_view<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">tools:</span>visibility</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>visible<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>>
-
-    <span class="token comment">&lt;!-- 表格1 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TableLayout</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#2B2B2B<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>stretchColumns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1,3<span class="token punctuation">"</span></span> <span class="token punctuation">></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TableRow</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_car_width<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  车辆宽度:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EditText</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/EditText_car_width<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#CCCFD1<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>毫米/mm<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>inputType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>selectAllOnFocus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_suspension_front<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  车前悬挂:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EditText</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/EditText_suspension_front<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#CCCFD1<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>毫米/mm<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>inputType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>selectAllOnFocus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TableRow</span><span class="token punctuation">></span></span>
-
-        <span class="token comment">&lt;!-- 分割线 --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>View</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10dp<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#000000<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TableRow</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_car_length<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  车辆长度:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EditText</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/EditText_car_length<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#CCCFD1<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>毫米/mm<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>inputType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>selectAllOnFocus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_suspension_back<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  车后悬挂:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>EditText</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/EditText_suspension_back<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_column</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#CCCFD1<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>hint</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>毫米/mm<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>inputType</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>selectAllOnFocus</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TableRow</span><span class="token punctuation">></span></span>
-        <span class="token comment">&lt;!-- 分割线 --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>View</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10dp<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#000000<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TableRow</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_BE_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  亮度均衡:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Switch</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/BE_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_BSD_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  BSD开关:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Switch</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/BSD_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TableRow</span><span class="token punctuation">></span></span>
-        <span class="token comment">&lt;!-- 分割线 --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>View</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10dp<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>#000000<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TableRow</span><span class="token punctuation">></span></span>
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/Text_TrajectoryLine_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>  动态辅助线:  <span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/color_ffffff<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>18sp<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Switch</span>
-                <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/TrajectoryLine_Switch<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-                <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TableRow</span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Button</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/avm_parameter_save<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>保存<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Button</span>
-            <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/avm_parameter_return<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-            <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>返回<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>TableLayout</span><span class="token punctuation">></span></span>
+		&#x2F;&#x2F;------ 设置保存按钮触发事件 ------
+		delok_btn.setOnClickListener(new View.OnClickListener() &#123;
+			public void onClick(View v) &#123;
+				String car_length &#x3D; editText_car_length.getEditableText().toString();
+				String car_width &#x3D; editText_car_width.getEditableText().toString();
+				String suspension_front &#x3D; editText_suspension_front.getEditableText().toString();
+				String suspension_back &#x3D; editText_suspension_back.getEditableText().toString();
 
 
+				carParameter carParm &#x3D; new carParameter();
 
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+				Log.d(&quot;filename_avm_set_json&quot;,&quot;filename_avm_set_json&quot;+avmSetParm.jsonFileName);
+				carParm.car_length&#x3D;Integer.parseInt(car_length);
+				carParm.car_width&#x3D;Integer.parseInt(car_width);
+				carParm.suspension_front&#x3D;Integer.parseInt(suspension_front);
+				carParm.suspension_back&#x3D;Integer.parseInt(suspension_back);
+				carParm.on_BSD&#x3D;mView.mBSDViewID;
+				carParm.on_Bright&#x3D;mView.mBrightID;
+				carParm.on_TrajectoryLine&#x3D;mView.mTrajectoryLineViewID;
+				Log.d(TAG, &quot;car_length&quot;+carParm.car_length);
+				Log.d(TAG, &quot;car_width&quot;+carParm.car_width);
+				Log.d(TAG, &quot;suspension_front&quot;+carParm.suspension_front);
+				Log.d(TAG, &quot;suspension_back&quot;+carParm.suspension_back);
+				Log.d(TAG, &quot;on_BSD&quot;+carParm.on_BSD);
+				Log.d(TAG, &quot;on_Bright&quot;+carParm.on_Bright);
+				Log.d(TAG, &quot;on_TrajectoryLine&quot;+carParm.on_TrajectoryLine);
+				try &#123;
+					avmSetParm.writeJson(carParm);
+				&#125; catch (Exception e) &#123;
+					e.printStackTrace();
+				&#125;
+				mPopupWindow_register.dismiss();
+			&#125;
+		&#125;);
+
+		&#x2F;&#x2F;------ 设置按钮触发事件 ------
+		&#x2F;&#x2F;车道线
+		mTrajectory_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() &#123;
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) &#123;
+				if (buttonView.isChecked())&#123;
+					mView.mTrajectoryLineViewID&#x3D;1;
+				&#125;else &#123;
+					mView.mTrajectoryLineViewID&#x3D;0;
+				&#125;
+				mView.avmTrajectoryLineView();
+			&#125;
+		&#125;);
+
+		&#x2F;&#x2F;BSD
+		mBSD_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() &#123;
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) &#123;
+				if (buttonView.isChecked())&#123;
+					mView.mBSDViewID&#x3D;1;
+					avmStartBSD();
+				&#125;else &#123;
+					mView.mBSDViewID&#x3D;0;
+					avmStopBSD();
+				&#125;
+				mView.avmBSDView();
+			&#125;
+		&#125;);
+		&#x2F;&#x2F;亮度均衡
+		mBE_Switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() &#123;
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) &#123;
+				if (buttonView.isChecked())&#123;
+					mView.mBrightID&#x3D;1;
+				&#125;else &#123;
+					mView.mBrightID&#x3D;0;
+				&#125;
+				mView.avmBrightView();
+			&#125;
+		&#125;);
+		&#x2F;&#x2F;返回
+		delcancel_btn.setOnClickListener(new View.OnClickListener() &#123;
+			public void onClick(View v) &#123;
+				mPopupWindow_register.dismiss();
+			&#125;
+		&#125;);
+	&#125;
+&#125;);
+
+&#125;</code></pre>
+<h1 id="主界面xml文件"><a href="#主界面xml文件" class="headerlink" title="主界面xml文件"></a>主界面xml文件</h1><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;
+&lt;FrameLayout xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;
+    xmlns:tools&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;tools&quot;
+    android:layout_width&#x3D;&quot;match_parent&quot;
+    android:layout_height&#x3D;&quot;match_parent&quot;
+    tools:context&#x3D;&quot;.MainActivity&quot;&gt;
+    &lt;androidx.drawerlayout.widget.DrawerLayout
+        android:id&#x3D;&quot;@+id&#x2F;drawer_layout&quot;
+        android:layout_width&#x3D;&quot;match_parent&quot;
+        android:layout_height&#x3D;&quot;match_parent&quot;&gt;
+
+    &lt;LinearLayout
+        android:id&#x3D;&quot;@+id&#x2F;layout_root&quot;
+        android:layout_width&#x3D;&quot;match_parent&quot;
+        android:layout_height&#x3D;&quot;match_parent&quot;
+        android:background&#x3D;&quot;@android:color&#x2F;black&quot;
+        android:orientation&#x3D;&quot;vertical&quot;&gt;
+
+        &lt;TextView
+            android:id&#x3D;&quot;@+id&#x2F;tv_no_camera&quot;
+            android:layout_width&#x3D;&quot;match_parent&quot;
+            android:layout_height&#x3D;&quot;match_parent&quot;
+            android:layout_gravity&#x3D;&quot;center&quot;
+            android:gravity&#x3D;&quot;center&quot;
+            android:text&#x3D;&quot;@string&#x2F;no_camera_info&quot;
+            android:textColor&#x3D;&quot;#FFFF0000&quot;
+            android:textSize&#x3D;&quot;36sp&quot;
+            android:visibility&#x3D;&quot;gone&quot; &#x2F;&gt;
+
+        &lt;&#x2F;LinearLayout&gt;
+        &lt;include layout&#x3D;&quot;@layout&#x2F;settings_layout&quot;&gt;&lt;&#x2F;include&gt;
+
+    &lt;&#x2F;androidx.drawerlayout.widget.DrawerLayout&gt;
+    &lt;SurfaceView
+        android:id&#x3D;&quot;@+id&#x2F;surface_view&quot;
+        android:layout_width&#x3D;&quot;fill_parent&quot;
+        android:layout_height&#x3D;&quot;fill_parent&quot;
+        android:layout_marginLeft&#x3D;&quot;1dp&quot;
+        android:layout_marginRight&#x3D;&quot;1dp&quot;
+        android:layout_marginTop&#x3D;&quot;1dp&quot; &#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_set_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;420dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_set&quot; &#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_3d_360_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;60dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_360_normal&quot;&#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_front_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;120dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_front_normal&quot;&#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_back_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;180dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_back_normal&quot;&#x2F;&gt;
+    &lt;!--       android:visibility&#x3D;&quot;gone&quot; &#x2F;&gt; --&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_left_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;240dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_left_normal&quot;&#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_right_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;300dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_right_normal&quot;&#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_narrow_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:layout_marginLeft&#x3D;&quot;360dp&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_narrow_normal&quot;&#x2F;&gt;
+
+    &lt;ImageButton
+        android:id&#x3D;&quot;@+id&#x2F;image_3d_normal_btn&quot;
+        android:layout_width&#x3D;&quot;55dp&quot;
+        android:layout_height&#x3D;&quot;55dp&quot;
+        android:layout_gravity&#x3D;&quot;bottom|left&quot;
+        android:background&#x3D;&quot;@drawable&#x2F;btn_bg_round&quot;
+        android:src&#x3D;&quot;@drawable&#x2F;icon_3d_normal&quot;&#x2F;&gt;
+&lt;&#x2F;FrameLayout&gt;</code></pre>
+<h1 id="跳转界面xml文件"><a href="#跳转界面xml文件" class="headerlink" title="跳转界面xml文件"></a>跳转界面xml文件</h1><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;utf-8&quot;?&gt;
+&lt;LinearLayout xmlns:android&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;apk&#x2F;res&#x2F;android&quot;
+    xmlns:tools&#x3D;&quot;http:&#x2F;&#x2F;schemas.android.com&#x2F;tools&quot;
+    android:id&#x3D;&quot;@+id&#x2F;avm_parm_view&quot;
+    android:layout_width&#x3D;&quot;match_parent&quot;
+    android:layout_height&#x3D;&quot;match_parent&quot;
+    android:orientation&#x3D;&quot;vertical&quot;
+    tools:visibility&#x3D;&quot;visible&quot;&gt;&gt;
+
+    &lt;!-- 表格1 --&gt;
+    &lt;TableLayout
+        android:layout_width&#x3D;&quot;match_parent&quot;
+        android:layout_height&#x3D;&quot;match_parent&quot;
+        android:background&#x3D;&quot;#2B2B2B&quot;
+        android:stretchColumns&#x3D;&quot;1,3&quot; &gt;
+
+        &lt;TableRow&gt;
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_car_width&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  车辆宽度:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;EditText
+                android:id&#x3D;&quot;@+id&#x2F;EditText_car_width&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:layout_column&#x3D;&quot;0&quot;
+                android:background&#x3D;&quot;#CCCFD1&quot;
+                android:hint&#x3D;&quot;毫米&#x2F;mm&quot;
+                android:gravity&#x3D;&quot;center&quot;
+                android:inputType&#x3D;&quot;number&quot;
+                android:selectAllOnFocus&#x3D;&quot;true&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_suspension_front&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  车前悬挂:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;EditText
+                android:id&#x3D;&quot;@+id&#x2F;EditText_suspension_front&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:layout_column&#x3D;&quot;0&quot;
+                android:background&#x3D;&quot;#CCCFD1&quot;
+                android:hint&#x3D;&quot;毫米&#x2F;mm&quot;
+                android:gravity&#x3D;&quot;center&quot;
+                android:inputType&#x3D;&quot;number&quot;
+                android:selectAllOnFocus&#x3D;&quot;true&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+
+        &lt;&#x2F;TableRow&gt;
+
+        &lt;!-- 分割线 --&gt;
+        &lt;View
+            android:layout_width&#x3D;&quot;match_parent&quot;
+            android:layout_height&#x3D;&quot;10dp&quot;
+            android:background&#x3D;&quot;#000000&quot; &#x2F;&gt;
+
+        &lt;TableRow&gt;
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_car_length&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  车辆长度:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;EditText
+                android:id&#x3D;&quot;@+id&#x2F;EditText_car_length&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:layout_column&#x3D;&quot;0&quot;
+                android:background&#x3D;&quot;#CCCFD1&quot;
+                android:hint&#x3D;&quot;毫米&#x2F;mm&quot;
+                android:gravity&#x3D;&quot;center&quot;
+                android:inputType&#x3D;&quot;number&quot;
+                android:selectAllOnFocus&#x3D;&quot;true&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_suspension_back&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  车后悬挂:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;EditText
+                android:id&#x3D;&quot;@+id&#x2F;EditText_suspension_back&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:layout_column&#x3D;&quot;0&quot;
+                android:background&#x3D;&quot;#CCCFD1&quot;
+                android:hint&#x3D;&quot;毫米&#x2F;mm&quot;
+                android:gravity&#x3D;&quot;center&quot;
+                android:inputType&#x3D;&quot;number&quot;
+                android:selectAllOnFocus&#x3D;&quot;true&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+        &lt;&#x2F;TableRow&gt;
+        &lt;!-- 分割线 --&gt;
+        &lt;View
+            android:layout_width&#x3D;&quot;match_parent&quot;
+            android:layout_height&#x3D;&quot;10dp&quot;
+            android:background&#x3D;&quot;#000000&quot; &#x2F;&gt;
+
+        &lt;TableRow&gt;
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_BE_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  亮度均衡:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+            &lt;Switch
+                android:id&#x3D;&quot;@+id&#x2F;BE_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;&#x2F;&gt;
+
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_BSD_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  BSD开关:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+
+            &lt;Switch
+                android:id&#x3D;&quot;@+id&#x2F;BSD_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;&#x2F;&gt;
+        &lt;&#x2F;TableRow&gt;
+        &lt;!-- 分割线 --&gt;
+        &lt;View
+            android:layout_width&#x3D;&quot;match_parent&quot;
+            android:layout_height&#x3D;&quot;10dp&quot;
+            android:background&#x3D;&quot;#000000&quot; &#x2F;&gt;
+        &lt;TableRow&gt;
+            &lt;TextView
+                android:id&#x3D;&quot;@+id&#x2F;Text_TrajectoryLine_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;
+                android:text&#x3D;&quot;  动态辅助线:  &quot;
+                android:textColor&#x3D;&quot;@color&#x2F;color_ffffff&quot;
+                android:textSize&#x3D;&quot;18sp&quot; &#x2F;&gt;
+
+            &lt;Switch
+                android:id&#x3D;&quot;@+id&#x2F;TrajectoryLine_Switch&quot;
+                android:layout_width&#x3D;&quot;wrap_content&quot;
+                android:layout_height&#x3D;&quot;wrap_content&quot;&#x2F;&gt;
+        &lt;&#x2F;TableRow&gt;
+        &lt;Button
+            android:id&#x3D;&quot;@+id&#x2F;avm_parameter_save&quot;
+            android:layout_width&#x3D;&quot;wrap_content&quot;
+            android:layout_height&#x3D;&quot;wrap_content&quot;
+            android:text&#x3D;&quot;保存&quot; &#x2F;&gt;
+        &lt;Button
+            android:id&#x3D;&quot;@+id&#x2F;avm_parameter_return&quot;
+            android:layout_width&#x3D;&quot;wrap_content&quot;
+            android:layout_height&#x3D;&quot;wrap_content&quot;
+            android:text&#x3D;&quot;返回&quot; &#x2F;&gt;
+    &lt;&#x2F;TableLayout&gt;
+
+
+
+&lt;&#x2F;LinearLayout&gt;</code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>

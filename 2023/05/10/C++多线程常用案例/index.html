@@ -459,7 +459,7 @@ int main() &#123;
     t2.join();
 
     return 0;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;</code></pre>
 
 <p>在这个例子中，生产者线程在每次添加一个元素到队列后都会调用notify_one()来通知消费者线程。消费者线程在wait()函数中等待，直到收到通知并且队列不为空才会继续执行。</p>
 <p>需要注意的是，虽然在上述代码中我们的消费者线程是一个无限循环，但在实际的程序中，你需要有一种机制来结束这个线程。</p>

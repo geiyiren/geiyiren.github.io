@@ -449,7 +449,7 @@ public:
 &#125;;
 
 #endif
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 <h3 id="ParametersInit-cpp"><a href="#ParametersInit-cpp" class="headerlink" title="ParametersInit.cpp"></a>ParametersInit.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;..&#x2F;inc&#x2F;ParametersInit.h&quot;
 
 &#x2F;&#x2F; 静态成员函数必须初始化后使用
@@ -483,18 +483,18 @@ void ParametersInit::camParametersInit(int in_test)
 int ParametersInit::getTest()
 &#123;
     return m_test;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;</code></pre>
 
 <h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="init-cpp"><a href="#init-cpp" class="headerlink" title="init.cpp"></a>init.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
 
 ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
-m_Instance-&gt;camParametersInit(100);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+m_Instance-&gt;camParametersInit(100);</code></pre>
 
 <h3 id="use1-cpp"><a href="#use1-cpp" class="headerlink" title="use1.cpp"></a>use1.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
 
 ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
 &#x2F;&#x2F; 这里可以直接使用init.cpp初始化的参数ParametersInit::m_test
-int m_test &#x3D; m_Instance-&gt;getTest();&#x2F;&#x2F;m_test&#x3D;100<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+int m_test &#x3D; m_Instance-&gt;getTest();&#x2F;&#x2F;m_test&#x3D;100</code></pre>
 
 <blockquote>
 <p>参考网站: <a target="_blank" rel="noopener" href="https://blog.csdn.net/CoderAldrich/article/details/83114881">https://blog.csdn.net/CoderAldrich/article/details/83114881</a></p>

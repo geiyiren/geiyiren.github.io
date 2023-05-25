@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    1.4k
                 </div>
                 
 
@@ -422,7 +422,7 @@
             <div id="articleContent">
                 <h1 id="java读写Json文件"><a href="#java读写Json文件" class="headerlink" title="java读写Json文件"></a>java读写Json文件</h1><h2 id="json格式介绍"><a href="#json格式介绍" class="headerlink" title="json格式介绍"></a>json格式介绍</h2><p>json与xml相比, 对数据的描述性比XML较差,但是数据体积小,传递速度更快.  </p>
 <p>json数据的书写格式是”名称:值对”,比如:</p>
-<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token property">"Name"</span> <span class="token operator">:</span> <span class="token string">"John"</span>                        <span class="token comment">//name为名称,值对为"john"字符串</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json">&quot;Name&quot; : &quot;John&quot;                        &#x2F;&#x2F;name为名称,值对为&quot;john&quot;字符串</code></pre>
 <p>值对类型共分为:  </p>
 <ul>
 <li>数字（整数或浮点数）</li>
@@ -430,115 +430,115 @@
 <li>逻辑值（true 或 false）</li>
 <li>数组（在方括号[]中）</li>
 <li>对象（在花括号{}中）</li>
-<li>null<br>当然数组也可以包含多对象:  <pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-    <span class="token property">"employees"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
-        <span class="token punctuation">&#123;</span> <span class="token property">"Name"</span><span class="token operator">:</span><span class="token string">"John"</span> <span class="token punctuation">,</span> <span class="token property">"Age"</span><span class="token operator">:</span><span class="token number">19</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        <span class="token punctuation">&#123;</span> <span class="token property">"Name"</span><span class="token operator">:</span><span class="token string">"Anna"</span> <span class="token punctuation">,</span> <span class="token property">"Age"</span><span class="token operator">:</span><span class="token number">22</span> <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-        <span class="token punctuation">&#123;</span> <span class="token property">"Name"</span><span class="token operator">:</span><span class="token string">"Peter"</span><span class="token punctuation">,</span> <span class="token property">"Age"</span><span class="token operator">:</span><span class="token number">23</span> <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">]</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<li>null<br>当然数组也可以包含多对象:  <pre class="line-numbers language-json" data-language="json"><code class="language-json">&#123;
+    &quot;employees&quot;: [
+        &#123; &quot;Name&quot;:&quot;John&quot; , &quot;Age&quot;:19 &#125;,
+        &#123; &quot;Name&quot;:&quot;Anna&quot; , &quot;Age&quot;:22 &#125;,
+        &#123; &quot;Name&quot;:&quot;Peter&quot;, &quot;Age&quot;:23 &#125;
+    ]
+&#125;</code></pre>
 表示”employees”对象中有3个对象数组(每个对象数组表示一条员工信息),其中并列的数据都必须用逗号”,”隔开.</li>
 </ul>
-<h2 id="json文件读写示例"><a href="#json文件读写示例" class="headerlink" title="json文件读写示例"></a>json文件读写示例</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">com<span class="token punctuation">.</span>fibocom<span class="token punctuation">.</span>multicamera</span><span class="token punctuation">;</span>
+<h2 id="json文件读写示例"><a href="#json文件读写示例" class="headerlink" title="json文件读写示例"></a>json文件读写示例</h2><pre class="line-numbers language-java" data-language="java"><code class="language-java">package com.fibocom.multicamera;
 
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">android<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Log</span></span><span class="token punctuation">;</span>
+import android.util.Log;
 
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>json<span class="token punctuation">.</span></span><span class="token class-name">JSONArray</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>json<span class="token punctuation">.</span></span><span class="token class-name">JSONException</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">org<span class="token punctuation">.</span>json<span class="token punctuation">.</span></span><span class="token class-name">JSONObject</span></span><span class="token punctuation">;</span>
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">File</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileInputStream</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileNotFoundException</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">FileOutputStream</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">InputStreamReader</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">OutputStreamWriter</span></span><span class="token punctuation">;</span>
-<span class="token keyword">import</span> <span class="token import"><span class="token namespace">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span></span><span class="token class-name">UnsupportedEncodingException</span></span><span class="token punctuation">;</span>
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 
-<span class="token keyword">class</span> carParameter  <span class="token keyword">extends</span> <span class="token class-name">Object</span><span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> on_TrajectoryLine<span class="token punctuation">;</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> on_BSD<span class="token punctuation">;</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> on_Bright<span class="token punctuation">;</span>
-    <span class="token keyword">public</span> <span class="token keyword">double</span> scale_size<span class="token punctuation">;</span> <span class="token comment">// 缩放</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> car_length<span class="token punctuation">;</span><span class="token comment">//车辆长度</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> car_width<span class="token punctuation">;</span><span class="token comment">//车辆宽度</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> suspension_front<span class="token punctuation">;</span><span class="token comment">//前悬挂</span>
-    <span class="token keyword">public</span> <span class="token keyword">int</span> suspension_back<span class="token punctuation">;</span><span class="token comment">//后悬挂</span>
-<span class="token punctuation">&#125;</span>
+class carParameter  extends Object&#123;
+    public int on_TrajectoryLine;
+    public int on_BSD;
+    public int on_Bright;
+    public double scale_size; &#x2F;&#x2F; 缩放
+    public int car_length;&#x2F;&#x2F;车辆长度
+    public int car_width;&#x2F;&#x2F;车辆宽度
+    public int suspension_front;&#x2F;&#x2F;前悬挂
+    public int suspension_back;&#x2F;&#x2F;后悬挂
+&#125;
 
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AvmSetParm</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token class-name">String</span> jsonFileName<span class="token punctuation">;</span>
-    <span class="token keyword">public</span> carParameter <span class="token function">readJson</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
-            carParameter carParm<span class="token operator">=</span><span class="token keyword">new</span> <span class="token function">carParameter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">char</span> cbuf<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-            <span class="token class-name">InputStreamReader</span> input <span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span>jsonFileName<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">int</span> len <span class="token operator">=</span>input<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>cbuf<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">String</span> text <span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>cbuf<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token comment">//1.构造一个json对象</span>
-            <span class="token class-name">JSONObject</span> obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span>text<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>text<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"&#123;"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//过滤读出的utf-8前三个标签字节,从&#123;开始读取</span>
+public class AvmSetParm &#123;
+    public String jsonFileName;
+    public carParameter readJson() throws Exception &#123;
+            carParameter carParm&#x3D;new carParameter();
+            char cbuf[] &#x3D; new char[10000];
+            InputStreamReader input &#x3D;new InputStreamReader(new FileInputStream(new File(jsonFileName)),&quot;UTF-8&quot;);
+            int len &#x3D;input.read(cbuf);
+            String text &#x3D;new String(cbuf,0,len);
+            &#x2F;&#x2F;1.构造一个json对象
+            JSONObject obj &#x3D; new JSONObject(text.substring(text.indexOf(&quot;&#123;&quot;)));   &#x2F;&#x2F;过滤读出的utf-8前三个标签字节,从&#123;开始读取
 
-            <span class="token comment">//获取数组</span>
-            <span class="token class-name">JSONArray</span> dataArr <span class="token operator">=</span> obj<span class="token punctuation">.</span><span class="token function">getJSONArray</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">JSONObject</span> carParameterObj <span class="token operator">=</span>dataArr<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">JSONObject</span> carParameter<span class="token operator">=</span>carParameterObj<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token string">"carParameter"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            &#x2F;&#x2F;获取数组
+            JSONArray dataArr &#x3D; obj.getJSONArray(&quot;data&quot;);
+            JSONObject carParameterObj &#x3D;dataArr.getJSONObject(3);
+            JSONObject carParameter&#x3D;carParameterObj.getJSONObject(&quot;carParameter&quot;);
 
-            carParm<span class="token punctuation">.</span>car_length<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"car_length"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>car_width<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"car_width"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>suspension_front<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"suspension_front"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>suspension_back<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"suspension_back"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>scale_size<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getDouble</span><span class="token punctuation">(</span><span class="token string">"scale_size"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>on_Bright<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"BE_Switch"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>on_BSD<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"BSD_Switch"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            carParm<span class="token punctuation">.</span>on_TrajectoryLine<span class="token operator">=</span>carParameter<span class="token punctuation">.</span><span class="token function">getInt</span><span class="token punctuation">(</span><span class="token string">"TrajectoryLine_Switch"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            input<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            carParm.car_length&#x3D;carParameter.getInt(&quot;car_length&quot;);
+            carParm.car_width&#x3D;carParameter.getInt(&quot;car_width&quot;);
+            carParm.suspension_front&#x3D;carParameter.getInt(&quot;suspension_front&quot;);
+            carParm.suspension_back&#x3D;carParameter.getInt(&quot;suspension_back&quot;);
+            carParm.scale_size&#x3D;carParameter.getDouble(&quot;scale_size&quot;);
+            carParm.on_Bright&#x3D;carParameter.getInt(&quot;BE_Switch&quot;);
+            carParm.on_BSD&#x3D;carParameter.getInt(&quot;BSD_Switch&quot;);
+            carParm.on_TrajectoryLine&#x3D;carParameter.getInt(&quot;TrajectoryLine_Switch&quot;);
+            input.close();
 
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span><span class="token string">"car_length:"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span><span class="token string">"car_width:"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span><span class="token string">"suspension_front:"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span><span class="token string">"suspension_back:"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span><span class="token string">"scale_size:"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>scale_size<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">return</span> carParm<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">writeJson</span><span class="token punctuation">(</span>carParameter carParm<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">Exception</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">char</span> cbuf<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token keyword">char</span><span class="token punctuation">[</span><span class="token number">10000</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-        <span class="token class-name">InputStreamReader</span> input <span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span>jsonFileName<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            Log.d(&quot;AvmSetParm&quot;,&quot;car_length:&quot;+carParm.car_length);
+            Log.d(&quot;AvmSetParm&quot;,&quot;car_width:&quot;+carParm.car_width);
+            Log.d(&quot;AvmSetParm&quot;,&quot;suspension_front:&quot;+carParm.suspension_front);
+            Log.d(&quot;AvmSetParm&quot;,&quot;suspension_back:&quot;+carParm.suspension_back);
+            Log.d(&quot;AvmSetParm&quot;,&quot;scale_size:&quot;+carParm.scale_size);
+            return carParm;
+    &#125;
+    public void writeJson(carParameter carParm) throws Exception &#123;
+        char cbuf[] &#x3D; new char[10000];
+        InputStreamReader input &#x3D;new InputStreamReader(new FileInputStream(new File(jsonFileName)),&quot;UTF-8&quot;);
 
-        <span class="token keyword">int</span> len <span class="token operator">=</span>input<span class="token punctuation">.</span><span class="token function">read</span><span class="token punctuation">(</span>cbuf<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">String</span> text <span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span>cbuf<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>len<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">//1.构造一个json对象</span>
-        <span class="token class-name">JSONObject</span> obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span>text<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>text<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span><span class="token string">"&#123;"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//过滤读出的utf-8前三个标签字节,从&#123;开始读取</span>
+        int len &#x3D;input.read(cbuf);
+        String text &#x3D;new String(cbuf,0,len);
+        &#x2F;&#x2F;1.构造一个json对象
+        JSONObject obj &#x3D; new JSONObject(text.substring(text.indexOf(&quot;&#123;&quot;)));   &#x2F;&#x2F;过滤读出的utf-8前三个标签字节,从&#123;开始读取
 
-        <span class="token comment">//获取数组</span>
-        <span class="token class-name">JSONArray</span> data <span class="token operator">=</span> obj<span class="token punctuation">.</span><span class="token function">getJSONArray</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">JSONObject</span> carParameterObj <span class="token operator">=</span>data<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">JSONObject</span> carParameter<span class="token operator">=</span>carParameterObj<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token string">"carParameter"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        &#x2F;&#x2F;获取数组
+        JSONArray data &#x3D; obj.getJSONArray(&quot;data&quot;);
+        JSONObject carParameterObj &#x3D;data.getJSONObject(3);
+        JSONObject carParameter&#x3D;carParameterObj.getJSONObject(&quot;carParameter&quot;);
 
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"car_length"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"car_width"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"suspension_front"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"suspension_back"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"BE_Switch"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>on_Bright<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"BSD_Switch"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>on_BSD<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        carParameter<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"TrajectoryLine_Switch"</span><span class="token punctuation">,</span>carParm<span class="token punctuation">.</span>on_TrajectoryLine<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"car_length"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_length<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"car_width"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>car_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"suspension_front"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_front<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"suspension_back"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>suspension_back<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"BE_Switch"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_Bright<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"BSD_Switch"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_BSD<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"AvmSetParm"</span><span class="token punctuation">,</span> <span class="token string">"TrajectoryLine_Switch"</span><span class="token operator">+</span>carParm<span class="token punctuation">.</span>on_TrajectoryLine<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        carParameter.put(&quot;car_length&quot;,carParm.car_length);
+        carParameter.put(&quot;car_width&quot;,carParm.car_width);
+        carParameter.put(&quot;suspension_front&quot;,carParm.suspension_front);
+        carParameter.put(&quot;suspension_back&quot;,carParm.suspension_back);
+        carParameter.put(&quot;BE_Switch&quot;,carParm.on_Bright);
+        carParameter.put(&quot;BSD_Switch&quot;,carParm.on_BSD);
+        carParameter.put(&quot;TrajectoryLine_Switch&quot;,carParm.on_TrajectoryLine);
+        Log.d(&quot;AvmSetParm&quot;, &quot;car_length&quot;+carParm.car_length);
+        Log.d(&quot;AvmSetParm&quot;, &quot;car_width&quot;+carParm.car_width);
+        Log.d(&quot;AvmSetParm&quot;, &quot;suspension_front&quot;+carParm.suspension_front);
+        Log.d(&quot;AvmSetParm&quot;, &quot;suspension_back&quot;+carParm.suspension_back);
+        Log.d(&quot;AvmSetParm&quot;, &quot;BE_Switch&quot;+carParm.on_Bright);
+        Log.d(&quot;AvmSetParm&quot;, &quot;BSD_Switch&quot;+carParm.on_BSD);
+        Log.d(&quot;AvmSetParm&quot;, &quot;TrajectoryLine_Switch&quot;+carParm.on_TrajectoryLine);
 
-        carParameterObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"carParameter"</span><span class="token punctuation">,</span>carParameter<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        data<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span>carParameterObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        obj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        carParameterObj.put(&quot;carParameter&quot;,carParameter);
+        data.put(3,carParameterObj);
+        obj.put(&quot;data&quot;,data);
 
-        <span class="token class-name">OutputStreamWriter</span> osw <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">OutputStreamWriter</span><span class="token punctuation">(</span> <span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span>jsonFileName<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        osw<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span>obj<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        osw<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//清空缓冲区，强制输出数据</span>
-        osw<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment">//关闭输出流</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        OutputStreamWriter osw &#x3D; new OutputStreamWriter( new FileOutputStream(jsonFileName),&quot;UTF-8&quot;);
+        osw.write(obj.toString(4));
+        osw.flush();&#x2F;&#x2F;清空缓冲区，强制输出数据
+        osw.close();&#x2F;&#x2F;关闭输出流
+    &#125;
+&#125;
+</code></pre>
 
 <h1 id="c-读写Json文件"><a href="#c-读写Json文件" class="headerlink" title="c++读写Json文件"></a>c++读写Json文件</h1><ul>
 <li><p>模板函数定义</p>
@@ -576,7 +576,7 @@ inline R OptionalContain(const T &amp;config, const U &amp;key, const R &amp;val
         return config.at(key);
     &#125;
     return val;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;</code></pre>
 </li>
 <li><p>使用</p>
 <pre class="line-numbers language-c++" data-language="c++"><code class="language-c++"># include&quot;json.hpp&quot;
@@ -600,7 +600,7 @@ const auto &amp;json_config_str &#x3D; json_config.dump();
 
 const auto &amp;fake_config &#x3D; vs_config[&quot;fake&quot;];
 const auto fake_enable &#x3D; ac::OptionalContain(fake_config, &quot;enable&quot;, false);
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 </li>
 <li><p><code>json.hpp</code><br><img src="https://github.com/geiyiren/MyBlogFile1/blob/other/json%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99/json.hpp" alt="json.hpp"></p>
 </li>
@@ -626,7 +626,7 @@ const auto fake_enable &#x3D; ac::OptionalContain(fake_config, &quot;enable&quot
     &#125;,
 
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</code></pre></li>
 </ul>
 <blockquote>
 <p>参考连接： <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1556944">https://cloud.tencent.com/developer/article/1556944</a></p>

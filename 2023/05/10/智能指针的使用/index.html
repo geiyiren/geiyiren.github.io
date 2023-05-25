@@ -457,7 +457,7 @@ int main() &#123;
 
     &#x2F;&#x2F; Foo 的析构器在这里被调用，因为 p1 被销毁
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 
 <h2 id="std-shared-ptr示例"><a href="#std-shared-ptr示例" class="headerlink" title="std::shared_ptr示例"></a><code>std::shared_ptr</code>示例</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
 
@@ -483,7 +483,7 @@ int main() &#123;
     
     &#x2F;&#x2F; Foo 的析构器在这里被调用，因为 p1 离开了作用域
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 
 <h2 id="std-weak-ptr示例"><a href="#std-weak-ptr示例" class="headerlink" title="std::weak_ptr示例"></a><code>std::weak_ptr</code>示例</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;memory&gt;
 
@@ -512,7 +512,7 @@ int main() &#123;
         std::cout &lt;&lt; &quot;Object has been deleted\n&quot;;
     &#125;
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 
 <h1 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h1><h2 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h2><p>智能指针的 reset 方法是用于释放智能指针当前拥有的对象，并可能接管新的对象。</p>
 <p>以下是 std::unique_ptr 和 std::shared_ptr 的 reset 方法的使用：</p>
@@ -533,7 +533,7 @@ int main() &#123;
     p.reset(new Foo(2));  &#x2F;&#x2F; p 释放旧的 Foo 对象并指向一个新的 Foo 对象
     &#x2F;&#x2F; 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 
 <ul>
 <li><code>std::shared_ptr</code> 的 <code>reset</code> 方法</li>
@@ -557,7 +557,7 @@ int main() &#123;
     p2.reset();  &#x2F;&#x2F; p2 释放它的 Foo 对象
     &#x2F;&#x2F; 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+</code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>

@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.3k
+                    3.4k
                 </div>
                 
 
@@ -411,6 +411,9 @@
         </div>
         <hr class="clearfix">
 
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
         
 
         
@@ -428,51 +431,125 @@
 <li>4.不要声明构造函数</li>
 </ul>
 <p>如下就是一个最简单的例子：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Testable</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> START = <span class="number">1</span>;  <span class="comment">// #1</span></span><br><span class="line">    <span class="type">static</span> <span class="type">const</span> <span class="type">int</span> STOP = <span class="number">2</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">test</span><span class="params">()</span> </span>= <span class="number">0</span>;  <span class="comment">// #2： 接口方法</span></span><br><span class="line"> </span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Testable</span>() &#123;&#125;;   <span class="comment">// #3： 从C++11开始可以： virtual ~Testable() = default;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">class Testable
+&#123;
+public:
+    static const int START &#x3D; 1;  &#x2F;&#x2F; #1
+    static const int STOP &#x3D; 2;
+ 
+    virtual void test() &#x3D; 0;  &#x2F;&#x2F; #2： 接口方法
+ 
+    virtual ~Testable() &#123;&#125;;   &#x2F;&#x2F; #3： 从C++11开始可以： virtual ~Testable() &#x3D; default;
+&#125;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>#1.</code><br>如果成员变量，尤其是可变的成员变量，定义在接口中，等于是把实现细节暴露出来了，不符合接口定义的要求，所以一般不在接口中定义可变的成员变量。<br>而常量可以定义在接口中，因为有时接口需要返回状态，而这些状态可以定义成常量放在接口中。</p>
 <p><code>#2.</code><br>由于不能让接口类自身能够实例化，并且需要子类必须实现接口暴露的方法，所以接口方法都要声明成纯虚函数。<br>声明成纯虚函数意味着接口类自身不需要提供方法的定义，方法的定义需要由接口类的子类提供，并且接口类自身也因此变成了抽象类而不能被实例化。</p>
 <p><code>#3.</code><br>a). 在使用接口类的指针访问接口类的子类的实例时，当对接口类的指针做delete时，如果接口类的析构函数不是虚析构函数的话，将只会调用接口类的析构函数，接口类的子类的析构函数将不会被调用，内存泄露将会产生，所以接口类的析构函数必须定义成虚析构函数。<br>b). 如果接口类的析构函数不提供默认实现，即如果接口类的析构函数是纯虚析构函数的话，接口类的子类将被迫必须提供析构函数的实现，这样对接口类的子类不友好。<br>c). 在C++11中也可以用：  virtual ~Testable() &#x3D; default; 替代 virtual ~Testable() {};</p>
 <p><code>#4.</code><br>不要显式定义任何的构造函数，但也不要在接口中加入如下代码来禁止生成构造函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Testable</span>() = <span class="keyword">delete</span>;</span><br><span class="line"><span class="built_in">Testable</span>(<span class="type">const</span> Testable&amp;) = <span class="keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">Testable() &#x3D; delete;
+Testable(const Testable&amp;) &#x3D; delete;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>因为C++的调用机制要求子类的构造函数调用时一定会先调用父类的构造函数，如果禁止生成构造函数，代码编译时会报错。如果程序员不显式的提供构造函数，编译器也会隐式的加上构造函数的，虽然这些构造函数对于接口类来说实际没有什么意义。</p>
 <p>C++中如何定义标识接口（marker interface）类?<br>标识接口是没有任何方法和属性的接口。这种接口在java中出现的较多，比如：java.io.Serializable、java.rmi.Remote、java.util.EventListener、java.util.RandomAccess</p>
 <p>实现代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Testable</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Testable</span>() = <span class="number">0</span> &#123;&#125;; <span class="comment">// #5</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">class Testable &#123;
+public:
+    virtual ~Testable() &#x3D; 0 &#123;&#125;; &#x2F;&#x2F; #5
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p><code>#5.</code><br>只要对纯虚析构函数提供一个默认实现就可以了。这种对纯虚函数提供实现的写法看似很奇怪，但C++的确是支持的。</p>
 <h3 id="如何正确的使用接口类"><a href="#如何正确的使用接口类" class="headerlink" title="如何正确的使用接口类"></a>如何正确的使用接口类</h3><p>提供接口与实现<br>首先，声明一个接口：</p>
 <ul>
 <li><code>circle.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// circle.h</span></span><br><span class="line"><span class="comment">// 圆的接口类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Circle</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="keyword">virtual</span> ~<span class="built_in">Circle</span>() &#123;&#125;;</span><br><span class="line"> </span><br><span class="line">	<span class="comment">// 接口方法：面积</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">double</span> <span class="title">area</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle.h
+&#x2F;&#x2F; 圆的接口类
+class Circle &#123;
+public:
+	virtual ~Circle() &#123;&#125;;
+ 
+	&#x2F;&#x2F; 接口方法：面积
+	virtual double area() &#x3D; 0;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>通过继承的方式实现这个接口：</p>
 <ul>
 <li><code>circle_impl.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// circle_impl.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 圆的具体实现类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CircleImpl</span> : <span class="keyword">public</span> Circle &#123;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="type">double</span> radius;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="built_in">CircleImpl</span>(<span class="type">double</span> radius);</span><br><span class="line">	<span class="function"><span class="type">double</span> <span class="title">area</span><span class="params">()</span> <span class="keyword">override</span></span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle_impl.h
+#include &quot;circle.h&quot;
+ 
+&#x2F;&#x2F; 圆的具体实现类
+class CircleImpl : public Circle &#123;
+ 
+private:
+	double radius;
+public:
+	CircleImpl(double radius);
+	double area() override;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>circle_impl.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// circle_impl.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle_impl.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">double</span> <span class="title">pi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> std::<span class="built_in">atan</span>(<span class="number">1</span>) * <span class="number">4</span>;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">CircleImpl::<span class="built_in">CircleImpl</span>(<span class="type">double</span> _radius) : <span class="built_in">radius</span>(_radius) &#123;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">double</span> <span class="title">CircleImpl::area</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">pi</span>() * radius * radius;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle_impl.cpp
+#include &lt;cmath&gt;
+#include &quot;circle_impl.h&quot;
+ 
+inline double pi() &#123;
+	return std::atan(1) * 4;
+&#125;;
+ 
+CircleImpl::CircleImpl(double _radius) : radius(_radius) &#123;
+&#125;;
+ 
+double CircleImpl::area() &#123;
+	return pi() * radius * radius;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>最后，通过管理类创建接口派生类的实例，或者销毁接口派生类的实例：</p>
 <ul>
 <li><code>circle_manager.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// circle_manager.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// 圆的创建工厂类</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CircleManager</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">static</span> Circle* <span class="title">create</span><span class="params">(<span class="type">double</span> radius)</span></span>;     <span class="comment">// 创建circle实例</span></span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">destroy</span><span class="params">(Circle* circlePtr)</span></span>;   <span class="comment">// 销毁circle实例</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle_manager.h
+#include &quot;circle.h&quot;
+ 
+&#x2F;&#x2F; 圆的创建工厂类
+class CircleManager &#123;
+public:
+    static Circle* create(double radius);     &#x2F;&#x2F; 创建circle实例
+    static void destroy(Circle* circlePtr);   &#x2F;&#x2F; 销毁circle实例
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>circle_manager.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// circle_manager.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle_manager.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle_impl.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function">Circle* <span class="title">CircleManager::create</span><span class="params">(<span class="type">double</span> radius)</span> </span>&#123;</span><br><span class="line">    Circle* circlePtr = <span class="keyword">new</span> <span class="built_in">CircleImpl</span>(radius);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> circlePtr;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">CircleManager::destroy</span><span class="params">(Circle* circlePtr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">delete</span> circlePtr;</span><br><span class="line">&#125;; </span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; circle_manager.cpp
+#include &quot;circle_manager.h&quot;
+#include &quot;circle_impl.h&quot;
+ 
+Circle* CircleManager::create(double radius) &#123;
+    Circle* circlePtr &#x3D; new CircleImpl(radius);
+ 
+    return circlePtr;
+&#125;;
+ 
+void CircleManager::destroy(Circle* circlePtr) &#123;
+    delete circlePtr;
+&#125;; <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li>代码目录结构</li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">proj-+</span><br><span class="line">     |-inc-+</span><br><span class="line">     |     |-circle.h</span><br><span class="line">     |     |-circle_manager.h</span><br><span class="line">     |</span><br><span class="line">     |-src-+</span><br><span class="line">           |-circle_impl.h</span><br><span class="line">           |-circle_impl.cpp</span><br><span class="line">           |-circle_manager.cpp</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">proj-+
+     <span class="token operator">|</span>-inc-+
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle.h
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle_manager.h
+     <span class="token operator">|</span>
+     <span class="token operator">|</span>-src-+
+           <span class="token operator">|</span>-circle_impl.h
+           <span class="token operator">|</span>-circle_impl.cpp
+           <span class="token operator">|</span>-circle_manager.cpp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>其中inc目录用于存放Circle接口类和Circle管理类的声明，src目录中存放Circle实现类CircleImpl的声明和定义、Circle管理类CircleManager的定义。</p>
 <p>然后，可以将以上代码编译成静态库circle.lib，并和inc目录中的头文件一起提供给外部调用：</p>
@@ -493,17 +570,58 @@
 <ul>
 <li><code>main.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle_manager.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;circle.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Circle* circlePtr = CircleManager::<span class="built_in">create</span>(<span class="number">3</span>);</span><br><span class="line">    cout &lt;&lt; circlePtr-&gt;<span class="built_in">area</span>() &lt;&lt;endl;</span><br><span class="line">    CircleManager::<span class="built_in">destroy</span>(circlePtr);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; main.cpp
+#include &lt;iostream&gt;
+#include &quot;circle_manager.h&quot;
+#include &quot;circle.h&quot;
+ 
+int main() 
+&#123;
+    Circle* circlePtr &#x3D; CircleManager::create(3);
+    cout &lt;&lt; circlePtr-&gt;area() &lt;&lt;endl;
+    CircleManager::destroy(circlePtr);
+    
+    system(&quot;pause&quot;);
+ 
+    return 0;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>以上代码只提供给外部circle的接口，circle的实现完全被隐藏了起来，外部将无从知晓，外部使用者只能通过circle管理类生成circle的派生类的实例。外部使用者得到circle派生类的实例后，除了能调用接口暴露的方法area()外，其它什么也做不了，这样就完全达到了使用接口的最终目标。</p>
 <p><code>如何编译成动态库？</code><br>首先，添加一个新的头文件：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// dll_export.h </span></span><br><span class="line"><span class="comment">// if windows .dll </span></span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> _WINDLL </span></span><br><span class="line"> </span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> DLL_API_EXPORTS </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DLL_API __declspec(dllexport) </span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DLL_API __declspec(dllimport) </span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> </span></span><br><span class="line"> </span><br><span class="line"><span class="comment">// else if Linux or macOS .so </span></span><br><span class="line"><span class="meta">#<span class="keyword">else</span> </span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DLL_API </span></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;&#x2F; dll_export.h 
+&#x2F;&#x2F; if windows .dll 
+#ifdef _WINDLL 
+ 
+#ifdef DLL_API_EXPORTS 
+#define DLL_API __declspec(dllexport) 
+#else 
+#define DLL_API __declspec(dllimport) 
+#endif 
+ 
+&#x2F;&#x2F; else if Linux or macOS .so 
+#else 
+#define DLL_API 
+#endif<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>添加此头文件后，代码可以在windows、Linux下都可编译生成动态库，只需在编译时设置不同参数就行了。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">windows： /D <span class="string">&quot;DLL_API_EXPORTS&quot;</span> /D <span class="string">&quot;_WINDLL&quot;</span></span><br><span class="line">Linux： 不用配置额外参数</span><br><span class="line">circle.h和circle_manager.h也要做相应改动：</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">windows： /D <span class="token string">"DLL_API_EXPORTS"</span> /D <span class="token string">"_WINDLL"</span>
+Linux： 不用配置额外参数
+circle.h和circle_manager.h也要做相应改动：<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>编译完成后将生成”circle.lib“和”circle.dll“文件：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">proj-+</span><br><span class="line">     |-inc-+</span><br><span class="line">     |     |-circle.h</span><br><span class="line">     |     |-circle_manager.h</span><br><span class="line">     |</span><br><span class="line">     |-src-+</span><br><span class="line">     |     |-circle_impl.h</span><br><span class="line">     |     |-circle_impl.cpp</span><br><span class="line">     |     |-circle_manager.cpp</span><br><span class="line">     |</span><br><span class="line">     |-bin-+</span><br><span class="line">           |-circle.lib</span><br><span class="line">           |-circlr.dll</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">proj-+
+     <span class="token operator">|</span>-inc-+
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle.h
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle_manager.h
+     <span class="token operator">|</span>
+     <span class="token operator">|</span>-src-+
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle_impl.h
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle_impl.cpp
+     <span class="token operator">|</span>     <span class="token operator">|</span>-circle_manager.cpp
+     <span class="token operator">|</span>
+     <span class="token operator">|</span>-bin-+
+           <span class="token operator">|</span>-circle.lib
+           <span class="token operator">|</span>-circlr.dll<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>如何使用动态库？</code><br>外部使用者编译时，需要做如下配置：</p>
 <ul>
@@ -523,55 +641,305 @@
 <h2 id="示例2"><a href="#示例2" class="headerlink" title="示例2"></a>示例2</h2><ul>
 <li><code>Animal.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Animal</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Animal</span>()&#123;&#125;;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Animal</span>()&#123;&#125;;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> string&amp; <span class="title">getName</span><span class="params">()</span> <span class="type">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">setName</span><span class="params">(string&amp; name)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">getAge</span><span class="params">()</span> <span class="type">const</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">setAge</span><span class="params">(<span class="type">int</span> age)</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function">Animal* <span class="title">creat</span><span class="params">(string&amp; name, <span class="type">int</span> age)</span></span>;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;string&gt;
+using namespace std;
+ 
+class Animal
+&#123;
+public:
+    Animal()&#123;&#125;;
+    virtual ~Animal()&#123;&#125;;
+ 
+    virtual string&amp; getName() const &#x3D; 0;
+    virtual void setName(string&amp; name) &#x3D; 0;
+    virtual int getAge() const &#x3D; 0;
+    virtual void setAge(int age) &#x3D; 0;
+&#125;;
+ 
+Animal* creat(string&amp; name, int age);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>RealAnimal.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Animal.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RealAnimal</span>: <span class="keyword">public</span> Animal </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">RealAnimal</span>(string&amp; name, <span class="type">int</span> age);</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">RealAnimal</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="function">string&amp; <span class="title">getName</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setName</span><span class="params">(string&amp; name)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getAge</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setAge</span><span class="params">(<span class="type">int</span> age)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="function"><span class="keyword">friend</span> Animal* <span class="title">creat</span><span class="params">(string&amp; name, <span class="type">int</span> age)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    string&amp; mName;</span><br><span class="line">    <span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &quot;Animal.h&quot;
+ 
+class RealAnimal: public Animal 
+&#123;
+public:
+    RealAnimal(string&amp; name, int age);
+    virtual ~RealAnimal();
+ 
+    string&amp; getName() const;
+    void setName(string&amp; name);
+    int getAge() const;
+    void setAge(int age);
+ 
+private:
+    friend Animal* creat(string&amp; name, int age);
+ 
+private:
+    string&amp; mName;
+    int mAge;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
-<li><code>RealAnimal.cpp</code><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;RealAnimal.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line">RealAnimal::<span class="built_in">RealAnimal</span>(string&amp; name, <span class="type">int</span> age):</span><br><span class="line">    <span class="built_in">mName</span>(name),</span><br><span class="line">    <span class="built_in">mAge</span>(age)</span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">RealAnimal::~<span class="built_in">RealAnimal</span>()</span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function">string&amp; <span class="title">RealAnimal::getName</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mName;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">RealAnimal::setName</span><span class="params">(string&amp; name)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mName = name;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">RealAnimal::getAge</span><span class="params">()</span> <span class="type">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mAge;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">RealAnimal::setAge</span><span class="params">(<span class="type">int</span> age)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mAge = age;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function">Animal* <span class="title">creat</span><span class="params">(string&amp; name, <span class="type">int</span> age)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">RealAnimal</span>(name, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><code>RealAnimal.cpp</code><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &quot;RealAnimal.h&quot;
+ 
+RealAnimal::RealAnimal(string&amp; name, int age):
+    mName(name),
+    mAge(age)
+&#123;
+ 
+&#125;
+ 
+RealAnimal::~RealAnimal()
+&#123;
+ 
+&#125;
+ 
+string&amp; RealAnimal::getName() const 
+&#123;
+    return mName;
+&#125;
+ 
+void RealAnimal::setName(string&amp; name)
+&#123;
+    mName &#x3D; name;
+&#125;
+ 
+int RealAnimal::getAge() const
+&#123;
+    return mAge;
+&#125;
+ 
+void RealAnimal::setAge(int age)
+&#123;
+    mAge &#x3D; age;
+&#125;
+ 
+Animal* creat(string&amp; name, int age) 
+&#123;
+    return new RealAnimal(name, age);
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
 <p>如前面所说，Animal* creat(string&amp; name, int age)确实只是实例化一个RealAnimal对象，返回的却是Animal接口对象，所以必须将类Animal 的析构函数声明为虚函数，不然会造成内存泄漏。</p>
 <h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><p>对象接口的形式就是定义一个接口类，类内函数为纯虚函数(继承者必须实现)，放在一个接口头文件中，对外开放；然后定义一个实现上述接口的类，这个类继承了接口类，必须对类内的函数进行实现。这个外部只能看到接口头文件中内容，可以使用接口中定义的方法，但是无法修改和访问方法实现的细节。</p>
 <h1 id="“指针实现”方式"><a href="#“指针实现”方式" class="headerlink" title="“指针实现”方式"></a>“指针实现”方式</h1><h2 id="示例1-1"><a href="#示例1-1" class="headerlink" title="示例1"></a>示例1</h2><ul>
 <li><code>personImpl.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PersonImpl</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">PersonImpl</span>(string&amp; name, <span class="type">int</span> age);</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">PersonImpl</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="function">string&amp; <span class="title">getName</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setName</span><span class="params">(string&amp; name)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getAge</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setAge</span><span class="params">(<span class="type">int</span> age)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    string&amp; mName;</span><br><span class="line">    <span class="type">int</span> mAge;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;string&gt;
+#include &lt;iostream&gt;
+using namespace std;
+ 
+class PersonImpl 
+&#123;
+public:
+    PersonImpl(string&amp; name, int age);
+    virtual ~PersonImpl();
+ 
+    string&amp; getName() const;
+    void setName(string&amp; name);
+    int getAge() const;
+    void setAge(int age);
+ 
+private:
+    string&amp; mName;
+    int mAge;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>personImpl.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;personImpl.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line">PersonImpl::<span class="built_in">PersonImpl</span>(string&amp; name, <span class="type">int</span> age):<span class="built_in">mName</span>(name),<span class="built_in">mAge</span>(age)</span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">PersonImpl::~<span class="built_in">PersonImpl</span>() </span><br><span class="line">&#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function">string&amp; <span class="title">PersonImpl::getName</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mName;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PersonImpl::setName</span><span class="params">(string&amp; name)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mName = name;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">PersonImpl::getAge</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mAge;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">PersonImpl::setAge</span><span class="params">(<span class="type">int</span> age)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mAge = age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &quot;personImpl.h&quot;
+ 
+PersonImpl::PersonImpl(string&amp; name, int age):mName(name),mAge(age)
+&#123;
+ 
+&#125;
+ 
+PersonImpl::~PersonImpl() 
+&#123;
+ 
+&#125;
+ 
+string&amp; PersonImpl::getName() const 
+&#123;
+    return mName;
+&#125;
+ 
+void PersonImpl::setName(string&amp; name) 
+&#123;
+    mName &#x3D; name;
+&#125;
+ 
+int PersonImpl::getAge() const 
+&#123;
+    return mAge;
+&#125;
+ 
+void PersonImpl::setAge(int age) 
+&#123;
+    mAge &#x3D; age;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 <ul>
 <li><code>person.h</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PersonImpl</span>;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Person</span> </span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Person</span>(string&amp; name, <span class="type">int</span> age);</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Person</span>();</span><br><span class="line"> </span><br><span class="line">    <span class="function">string&amp; <span class="title">getName</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setName</span><span class="params">(string&amp; name)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getAge</span><span class="params">()</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">setAge</span><span class="params">(<span class="type">int</span> age)</span></span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function">PersonImpl * <span class="title">getImp</span><span class="params">()</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    PersonImpl *mPersonImpl;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include&lt;string&gt;
+class PersonImpl;
+using namespace std;
+ 
+class Person 
+&#123;
+public:
+    Person(string&amp; name, int age);
+    virtual ~Person();
+ 
+    string&amp; getName() const;
+    void setName(string&amp; name);
+    int getAge() const;
+    void setAge(int age);
+ 
+    PersonImpl * getImp();
+ 
+private:
+    PersonImpl *mPersonImpl;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>person.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;person.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;personImpl.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line">Person::<span class="built_in">Person</span>(string&amp; name, <span class="type">int</span> age):<span class="built_in">mPersonImpl</span>(<span class="keyword">new</span> <span class="built_in">PersonImpl</span>(name, age))</span><br><span class="line">&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;construct Person&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">Person::~<span class="built_in">Person</span>() </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> mPersonImpl;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;deconstruct Person&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function">string&amp; <span class="title">Person::getName</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mPersonImpl-&gt;<span class="built_in">getName</span>();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Person::setName</span><span class="params">(string&amp; name)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mPersonImpl-&gt;<span class="built_in">setName</span>(name);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">Person::getAge</span><span class="params">()</span> <span class="type">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> mPersonImpl-&gt;<span class="built_in">getAge</span>();</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Person::setAge</span><span class="params">(<span class="type">int</span> age)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    mPersonImpl-&gt;<span class="built_in">setAge</span>(age);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">PersonImpl* Person:: <span class="built_in">getImp</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> mPersonImpl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;person.h&quot;
+#include &quot;personImpl.h&quot;
+ 
+Person::Person(string&amp; name, int age):mPersonImpl(new PersonImpl(name, age))
+&#123;
+    std::cout &lt;&lt; &quot;construct Person&quot; &lt;&lt; std::endl;
+&#125;
+ 
+Person::~Person() 
+&#123;
+    delete mPersonImpl;
+    std::cout &lt;&lt; &quot;deconstruct Person&quot; &lt;&lt; std::endl;
+&#125;
+ 
+string&amp; Person::getName() const 
+&#123;
+    return mPersonImpl-&gt;getName();
+&#125;
+ 
+void Person::setName(string&amp; name) 
+&#123;
+    mPersonImpl-&gt;setName(name);
+&#125;
+ 
+int Person::getAge() const 
+&#123;
+    return mPersonImpl-&gt;getAge();
+&#125;
+ 
+void Person::setAge(int age) 
+&#123;
+    mPersonImpl-&gt;setAge(age);
+&#125;
+ 
+PersonImpl* Person:: getImp()
+&#123;
+    return mPersonImpl;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 <ul>
 <li><code>main.cpp</code></li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span><span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;person.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;personImpl.h&quot;</span></span></span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;    </span><br><span class="line">    string str= <span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">    <span class="function">Person <span class="title">person</span><span class="params">(str,<span class="number">30</span>)</span></span>;</span><br><span class="line"> </span><br><span class="line">    PersonImpl *personImp = person.<span class="built_in">getImp</span>();</span><br><span class="line"> </span><br><span class="line">    string name = personImp-&gt;<span class="built_in">getName</span>();</span><br><span class="line">    <span class="type">int</span> age =personImp-&gt;<span class="built_in">getAge</span>();</span><br><span class="line">    cout&lt;&lt;name.<span class="built_in">c_str</span>()&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;age&lt;&lt;endl;</span><br><span class="line"> </span><br><span class="line">    <span class="built_in">system</span>(<span class="string">&quot;pause&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;stdio.h&gt;
+#include &lt;iostream&gt;
+#include&lt;string&gt;
+#include &quot;person.h&quot;
+#include &quot;personImpl.h&quot;
+ 
+ 
+int main()
+&#123;    
+    string str&#x3D; &quot;abcdefg&quot;;
+    Person person(str,30);
+ 
+    PersonImpl *personImp &#x3D; person.getImp();
+ 
+    string name &#x3D; personImp-&gt;getName();
+    int age &#x3D;personImp-&gt;getAge();
+    cout&lt;&lt;name.c_str()&lt;&lt;endl;
+    cout&lt;&lt;age&lt;&lt;endl;
+ 
+    system(&quot;pause&quot;);
+    return 0;
+&#125;
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="示例2-1"><a href="#示例2-1" class="headerlink" title="示例2"></a>示例2</h2><ul>
 <li><p><code>adas_app.h</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AdasApp</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// json字符串</span></span><br><span class="line">    <span class="built_in">AdasApp</span>(<span class="type">const</span> std::string &amp;config);</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">AdasApp</span>();</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">Impl</span>;</span><br><span class="line">    std::unique_ptr&lt;Impl&gt; impl_<span class="comment">/* = nullptr*/</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">class AdasApp
+&#123;
+public:
+    &#x2F;&#x2F; json字符串
+    AdasApp(const std::string &amp;config);
+    virtual ~AdasApp();
+private:
+    class Impl;
+    std::unique_ptr&lt;Impl&gt; impl_&#x2F;* &#x3D; nullptr*&#x2F;;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p><code>adas_app.cpp</code></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">AdasApp</span>::Impl <span class="keyword">final</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @brief 解析得到前向目标</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">std::vector&lt;ac::ObstacleInfo&gt; <span class="title">DecodeObjects</span><span class="params">(<span class="type">const</span> <span class="type">uint8_t</span> *buffer, <span class="type">uint32_t</span> size)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ...具体实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * @brief 解析得到车道线</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">std::vector&lt;ac::CurveInfo&gt; <span class="title">DecodeCurves</span><span class="params">(<span class="type">const</span> <span class="type">uint8_t</span> *buffer, <span class="type">uint32_t</span> size)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        ...具体实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">Impl</span>(<span class="type">const</span> std::string &amp;config)</span><br><span class="line">    &#123;</span><br><span class="line">        ...具体实现...</span><br><span class="line">        <span class="built_in">DecodeObjects</span>();</span><br><span class="line">        <span class="built_in">DecodeCurves</span>();</span><br><span class="line">    &#125;</span><br><span class="line">      ~<span class="built_in">Impl</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        ...具体实现...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">AdasApp</span>(<span class="type">const</span> std::string &amp;config)</span><br><span class="line">    : <span class="built_in">impl_</span>(<span class="keyword">new</span> <span class="built_in">Impl</span>(config))</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">AdasApp</span>()</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">class AdasApp::Impl final
+&#123;
+public:
+
+    &#x2F;**
+     * @brief 解析得到前向目标
+     *&#x2F;
+    std::vector&lt;ac::ObstacleInfo&gt; DecodeObjects(const uint8_t *buffer, uint32_t size)
+    &#123;
+        ...具体实现...
+    &#125;
+
+    &#x2F;**
+     * @brief 解析得到车道线
+     *&#x2F;
+    std::vector&lt;ac::CurveInfo&gt; DecodeCurves(const uint8_t *buffer, uint32_t size)
+    &#123;
+        ...具体实现...
+    &#125;
+
+    Impl(const std::string &amp;config)
+    &#123;
+        ...具体实现...
+        DecodeObjects();
+        DecodeCurves();
+    &#125;
+      ~Impl()
+    &#123;
+        ...具体实现...
+    &#125;
+
+    AdasApp(const std::string &amp;config)
+    : impl_(new Impl(config))
+    &#123;
+
+    &#125;
+
+    ~AdasApp()
+    &#123;
+
+    &#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p><code>main.cpp</code></p>
 </li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="function">AdasApp <span class="title">obj</span><span class="params">(ac::LoadTextFile(config))</span></span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int main()
+&#123;
+   AdasApp obj(ac::LoadTextFile(config)); 
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这个例子使用了智能指针实现adad的实现类<code>class Impl;</code> <code>std::unique_ptr&lt;Impl&gt; impl_/* = nullptr*/;</code>在adas_app.h中看不到真正的实现，但实际声明了一个智能指针<code>impl_</code>，在adas_app.cpp中将该指针指针指向了一个new对象<code>impl_(new Impl(config)</code>，并将其new对象的构造函数<code>Impl&#123;&#125;</code>进行了真正的实现。</p>
 <hr>
@@ -848,6 +1216,9 @@
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

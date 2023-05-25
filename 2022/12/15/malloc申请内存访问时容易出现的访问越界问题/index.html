@@ -468,8 +468,8 @@ void dist2undist()
             &#125;
         &#125;
     &#125;
-&#125;</code></pre>
-如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));</code></pre>
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
 <hr>

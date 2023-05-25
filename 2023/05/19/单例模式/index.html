@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    314
+                    289
                 </div>
                 
 
@@ -412,9 +412,6 @@
         <hr class="clearfix">
 
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="/libs/prism/prism.css">
-        
 
         
 
@@ -425,76 +422,12 @@
 <li>可实现一次初始化，多文件多次使用</li>
 <li>例如 ：相机的内参和外参一般只初始化一次，然后直接使用。</li>
 </ul>
-<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><h1 id="声明与定义"><a href="#声明与定义" class="headerlink" title="声明与定义"></a>声明与定义</h1><h3 id="ParametersInit-h"><a href="#ParametersInit-h" class="headerlink" title="ParametersInit.h"></a>ParametersInit.h</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#ifndef __PARAMETERS_INIT_H__
-#define __PARAMETERS_INIT_H__
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><h1 id="声明与定义"><a href="#声明与定义" class="headerlink" title="声明与定义"></a>声明与定义</h1><h3 id="ParametersInit-h"><a href="#ParametersInit-h" class="headerlink" title="ParametersInit.h"></a>ParametersInit.h</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __PARAMETERS_INIT_H__</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> __PARAMETERS_INIT_H__</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// for thread-safe singleton</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ParametersInit</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">static</span> ParametersInit *m_instance;</span><br><span class="line">    <span class="type">static</span> <span class="type">pthread_once_t</span> _once;</span><br><span class="line">    <span class="type">int</span> m_test;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">ParametersInit</span>(<span class="comment">/* args */</span>);</span><br><span class="line">    ~<span class="built_in">ParametersInit</span>();</span><br><span class="line">    <span class="comment">//使用pthread_once保证init()只调用一次</span></span><br><span class="line">    <span class="function"><span class="type">static</span> ParametersInit *<span class="title">GetInstance</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">init</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">camParametersInit</span><span class="params">(<span class="type">int</span> in_test)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">getTest</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="ParametersInit-cpp"><a href="#ParametersInit-cpp" class="headerlink" title="ParametersInit.cpp"></a>ParametersInit.cpp</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;../inc/ParametersInit.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 静态成员函数必须初始化后使用</span></span><br><span class="line"><span class="type">pthread_once_t</span> ParametersInit::_once = <span class="number">0</span>;</span><br><span class="line">ParametersInit *ParametersInit::m_instance=<span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">ParametersInit::<span class="built_in">ParametersInit</span>(<span class="comment">/* args */</span>)</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ParametersInit::~<span class="built_in">ParametersInit</span>()</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ParametersInit::init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (!m_instance)</span><br><span class="line">    &#123;</span><br><span class="line">        m_instance = <span class="keyword">new</span> <span class="built_in">ParametersInit</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">ParametersInit *<span class="title">ParametersInit::GetInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">pthread_once</span>(&amp;_once, ParametersInit::init);</span><br><span class="line">    <span class="keyword">return</span> m_instance;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ParametersInit::camParametersInit</span><span class="params">(<span class="type">int</span> in_test)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    m_test = in_test;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">ParametersInit::getTest</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m_test;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-&#x2F;&#x2F; for thread-safe singleton
-#include &lt;pthread.h&gt;
-#include &lt;iostream&gt;
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="init-cpp"><a href="#init-cpp" class="headerlink" title="init.cpp"></a>init.cpp</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ParametersInit.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ParametersInit *m_Instance = ParametersInit::<span class="built_in">GetInstance</span>();</span><br><span class="line">m_Instance-&gt;<span class="built_in">camParametersInit</span>(<span class="number">100</span>);</span><br></pre></td></tr></table></figure>
 
-class ParametersInit
-&#123;
-private:
-    static ParametersInit *m_instance;
-    static pthread_once_t _once;
-    int m_test;
-public:
-    ParametersInit(&#x2F;* args *&#x2F;);
-    ~ParametersInit();
-    &#x2F;&#x2F;使用pthread_once保证init()只调用一次
-    static ParametersInit *GetInstance();
-    static void init();
-    void camParametersInit(int in_test);
-    int getTest();
-&#125;;
-
-#endif
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="ParametersInit-cpp"><a href="#ParametersInit-cpp" class="headerlink" title="ParametersInit.cpp"></a>ParametersInit.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;..&#x2F;inc&#x2F;ParametersInit.h&quot;
-
-&#x2F;&#x2F; 静态成员函数必须初始化后使用
-pthread_once_t ParametersInit::_once &#x3D; 0;
-ParametersInit *ParametersInit::m_instance&#x3D;NULL;
-
-ParametersInit::ParametersInit(&#x2F;* args *&#x2F;)
-&#123;
-&#125;
-
-ParametersInit::~ParametersInit()
-&#123;
-&#125;
-void ParametersInit::init()
-&#123;
-    while (!m_instance)
-    &#123;
-        m_instance &#x3D; new ParametersInit();
-    &#125;
-&#125;
-
-ParametersInit *ParametersInit::GetInstance()
-&#123;
-    pthread_once(&amp;_once, ParametersInit::init);
-    return m_instance;
-&#125;
-void ParametersInit::camParametersInit(int in_test)
-&#123;
-    m_test &#x3D; in_test;
-&#125;
-int ParametersInit::getTest()
-&#123;
-    return m_test;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="init-cpp"><a href="#init-cpp" class="headerlink" title="init.cpp"></a>init.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
-
-ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
-m_Instance-&gt;camParametersInit(100);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="use1-cpp"><a href="#use1-cpp" class="headerlink" title="use1.cpp"></a>use1.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
-
-ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
-&#x2F;&#x2F; 这里可以直接使用init.cpp初始化的参数ParametersInit::m_test
-int m_test &#x3D; m_Instance-&gt;getTest();&#x2F;&#x2F;m_test&#x3D;100<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="use1-cpp"><a href="#use1-cpp" class="headerlink" title="use1.cpp"></a>use1.cpp</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ParametersInit.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">ParametersInit *m_Instance = ParametersInit::<span class="built_in">GetInstance</span>();</span><br><span class="line"><span class="comment">// 这里可以直接使用init.cpp初始化的参数ParametersInit::m_test</span></span><br><span class="line"><span class="type">int</span> m_test = m_Instance-&gt;<span class="built_in">getTest</span>();<span class="comment">//m_test=100</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>参考网站: <a target="_blank" rel="noopener" href="https://blog.csdn.net/CoderAldrich/article/details/83114881">https://blog.csdn.net/CoderAldrich/article/details/83114881</a></p>
@@ -763,9 +696,6 @@ int m_test &#x3D; m_Instance-&gt;getTest();&#x2F;&#x2F;m_test&#x3D;100<span aria
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
-
-  <!-- 是否加载使用自带的 prismjs. -->
-  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

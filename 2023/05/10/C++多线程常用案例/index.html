@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    371
+                    363
                 </div>
                 
 
@@ -412,16 +412,13 @@
         <hr class="clearfix">
 
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="/libs/prism/prism.css">
-        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>使用C++11 std库中的线程和条件变量实现notify_one的一个简单例子。在这个例子中，我们有一个线程向一个队列中添加元素，另一个线程从队列中删除元素。线程通过条件变量进行同步。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="c++">#include &lt;iostream&gt;
 #include &lt;thread&gt;
 #include &lt;queue&gt;
 #include &lt;mutex&gt;
@@ -432,20 +429,20 @@ std::mutex mtx;
 std::condition_variable cv;
 
 void producer(int value) &#123;
-    for (int i &#x3D; 0; i &lt; value; ++i) &#123;
-        std::this_thread::sleep_for(std::chrono::seconds(1)); &#x2F;&#x2F; 模拟生产
+    for (int i = 0; i &lt; value; ++i) &#123;
+        std::this_thread::sleep_for(std::chrono::seconds(1)); // 模拟生产
         std::lock_guard&lt;std::mutex&gt; lock(mtx);
         queue.push(i);
         std::cout &lt;&lt; &quot;Produced: &quot; &lt;&lt; i &lt;&lt; std::endl;
-        cv.notify_one(); &#x2F;&#x2F; 通知消费者
+        cv.notify_one(); // 通知消费者
     &#125;
 &#125;
 
 void consumer() &#123;
     while(true) &#123;
         std::unique_lock&lt;std::mutex&gt; lock(mtx);
-        cv.wait(lock, []&#123; return !queue.empty(); &#125;); &#x2F;&#x2F; 等待直到队列不为空
-        int value &#x3D; queue.front();
+        cv.wait(lock, []&#123; return !queue.empty(); &#125;); // 等待直到队列不为空
+        int value = queue.front();
         queue.pop();
         std::cout &lt;&lt; &quot;Consumed: &quot; &lt;&lt; value &lt;&lt; std::endl;
     &#125;
@@ -459,8 +456,8 @@ int main() &#123;
     t2.join();
 
     return 0;
-&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+&#125;
+</code></pre>
 <p>在这个例子中，生产者线程在每次添加一个元素到队列后都会调用notify_one()来通知消费者线程。消费者线程在wait()函数中等待，直到收到通知并且队列不为空才会继续执行。</p>
 <p>需要注意的是，虽然在上述代码中我们的消费者线程是一个无限循环，但在实际的程序中，你需要有一种机制来结束这个线程。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
@@ -725,9 +722,6 @@ int main() &#123;
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
-
-  <!-- 是否加载使用自带的 prismjs. -->
-  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

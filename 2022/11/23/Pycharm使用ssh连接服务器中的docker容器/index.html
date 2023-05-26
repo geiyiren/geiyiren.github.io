@@ -420,18 +420,15 @@
         <hr class="clearfix">
 
         
-        <!-- 是否加载使用自带的 prismjs. -->
-        <link rel="stylesheet" href="/libs/prism/prism.css">
-        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="1-拉取cuda、cudnn的docker镜像"><a href="#1-拉取cuda、cudnn的docker镜像" class="headerlink" title="1.拉取cuda、cudnn的docker镜像"></a>1.拉取cuda、cudnn的docker镜像</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="2-新建并启动交互式容器"><a href="#2-新建并启动交互式容器" class="headerlink" title="2.新建并启动交互式容器"></a>2.新建并启动交互式容器</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> run <span class="token parameter variable">-it</span> <span class="token parameter variable">--name</span> tensorflow1.2.1-gpu <span class="token parameter variable">-v</span> /home/docker_share/:/home/ <span class="token parameter variable">-p</span> <span class="token number">2201</span>:22 <span class="token parameter variable">--gpus</span> all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
+                <h2 id="1-拉取cuda、cudnn的docker镜像"><a href="#1-拉取cuda、cudnn的docker镜像" class="headerlink" title="1.拉取cuda、cudnn的docker镜像"></a>1.拉取cuda、cudnn的docker镜像</h2><pre><code class="bash">docker pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04
+</code></pre>
+<h2 id="2-新建并启动交互式容器"><a href="#2-新建并启动交互式容器" class="headerlink" title="2.新建并启动交互式容器"></a>2.新建并启动交互式容器</h2><pre><code class="bash">docker run -it --name tensorflow1.2.1-gpu -v /home/docker_share/:/home/ -p 2201:22 --gpus all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash
+</code></pre>
 <p>解释：</p>
 <p>–name ：设置新容器的名称为tensorflow1.2.1-gpu</p>
 <p>-v ：设置文件映射，将宿主机的文件&#x2F;home&#x2F;docker_share&#x2F;映射到该容器的&#x2F;home&#x2F;目录下</p>
@@ -441,94 +438,88 @@
 <p>&#x2F;bin&#x2F;bash：指定在容器内部运行的进程，该进程是通过docker container run命令来通知容器运行的</p>
 <p>注释：</p>
 <p>为了构建有序且规范的端口映射关系，这里设置一个默认规则用于设置容器的端口与宿主机的端口映射：主机端口固定，容器端口以主机端口为起始位依次排开</p>
-<pre class="line-numbers language-none"><code class="language-none">容器端口	主机端口
+<pre><code>容器端口	主机端口
 2201		22
-2202		22<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h2 id="3-进入容器后修改容器的root密码"><a href="#3-进入容器后修改容器的root密码" class="headerlink" title="3.进入容器后修改容器的root密码"></a>3.进入容器后修改容器的root密码</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 设置用户名为root,密码为passwd(将其该为自己想要的密码)</span>
-<span class="token builtin class-name">echo</span> <span class="token string">'root:passwd'</span> <span class="token operator">|</span> chpasswd<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<h2 id="4-安装openssh-server并启动"><a href="#4-安装openssh-server并启动" class="headerlink" title="4.安装openssh-server并启动"></a>4.安装openssh-server并启动</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#更新源</span>
-<span class="token function">apt-get</span> update
-<span class="token comment">#或</span>
-<span class="token function">apt-get</span> <span class="token parameter variable">-y</span> update
-<span class="token comment"># 安装openssh-server</span>
-<span class="token function">apt-get</span> <span class="token function">install</span> openssh-server
-<span class="token comment"># 启动之前需手动创建/var/run/sshd，不然启动sshd的时候会报错</span>
-<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> /var/run/sshd
-<span class="token comment"># sshd以守护进程运行</span>
-/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span>
-<span class="token comment"># 安装netstat，查看sshd是否监听22端口</span>
-<span class="token function">apt-get</span> <span class="token function">install</span> net-tools
-<span class="token function">netstat</span> <span class="token parameter variable">-apn</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span>
-<span class="token comment"># 显示如下</span>
-<span class="token comment"># root@a78aa2e72670:/# netstat -apn | grep ssh</span>
-<span class="token comment"># tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1266/sshd</span>
-<span class="token comment"># tcp6       0      0 :::22                   :::*                    LISTEN      1266/sshd</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h2 id="5-ssh登录设置"><a href="#5-ssh登录设置" class="headerlink" title="5.ssh登录设置"></a>5.ssh登录设置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 生成ssh key</span>
-ssh-keygen <span class="token parameter variable">-t</span> rsa 
-<span class="token comment"># 然后提示的设置用默认设置，一直回车即可</span>
-<span class="token comment"># 修改sshd-config允许root登陆</span>
-<span class="token function">vim</span> /etc/ssh/sshd_config<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+2202		22
+</code></pre>
+<h2 id="3-进入容器后修改容器的root密码"><a href="#3-进入容器后修改容器的root密码" class="headerlink" title="3.进入容器后修改容器的root密码"></a>3.进入容器后修改容器的root密码</h2><pre><code class="bash"># 设置用户名为root,密码为passwd(将其该为自己想要的密码)
+echo &#39;root:passwd&#39; | chpasswd
+</code></pre>
+<h2 id="4-安装openssh-server并启动"><a href="#4-安装openssh-server并启动" class="headerlink" title="4.安装openssh-server并启动"></a>4.安装openssh-server并启动</h2><pre><code class="bash">#更新源
+apt-get update
+#或
+apt-get -y update
+# 安装openssh-server
+apt-get install openssh-server
+# 启动之前需手动创建/var/run/sshd，不然启动sshd的时候会报错
+mkdir -p /var/run/sshd
+# sshd以守护进程运行
+/usr/sbin/sshd -D &amp;
+# 安装netstat，查看sshd是否监听22端口
+apt-get install net-tools
+netstat -apn | grep ssh
+# 显示如下
+# root@a78aa2e72670:/# netstat -apn | grep ssh
+# tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1266/sshd
+# tcp6       0      0 :::22                   :::*                    LISTEN      1266/sshd
+</code></pre>
+<h2 id="5-ssh登录设置"><a href="#5-ssh登录设置" class="headerlink" title="5.ssh登录设置"></a>5.ssh登录设置</h2><pre><code class="bash"># 生成ssh key
+ssh-keygen -t rsa 
+# 然后提示的设置用默认设置，一直回车即可
+# 修改sshd-config允许root登陆
+vim /etc/ssh/sshd_config
+</code></pre>
 <p>检查下面的命令是否被注释，会后面的参数是否为yes，若没有该命令需要在文件尾部新增该命令以允许root用户使用ssh登录：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">PermitRootLogin <span class="token function">yes</span> <span class="token comment"># 约在28行：将PermitRootLogin prohibit-password改为PermitRootLogin yes</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
+<pre><code class="bash">PermitRootLogin yes # 约在28行：将PermitRootLogin prohibit-password改为PermitRootLogin yes
+</code></pre>
 <p>修改完sshd-config之后需要重启sshd服务:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 找到sshd的进程pid</span>
-<span class="token function">ps</span> <span class="token parameter variable">-aux</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span>
-<span class="token comment"># 杀掉sshd的进程pid</span>
-<span class="token function">kill</span> <span class="token parameter variable">-9</span> sshd的进程pid号
-<span class="token comment"># 重启</span>
-/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span>
-<span class="token comment"># 再次查看</span>
-<span class="token function">ps</span> <span class="token parameter variable">-aux</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<pre><code class="bash"># 找到sshd的进程pid
+ps -aux | grep ssh
+# 杀掉sshd的进程pid
+kill -9 sshd的进程pid号
+# 重启
+/usr/sbin/sshd -D &amp;
+# 再次查看
+ps -aux | grep ssh
+</code></pre>
 <p>示例:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@a78aa2e72670:/<span class="token comment"># ps -aux | grep ssh</span>
-root      <span class="token number">1266</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5468</span> pts/0    S    01:14   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
-root      <span class="token number">1301</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">932</span> pts/0    S+   01:18   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span>
-root@a78aa2e72670:/<span class="token comment"># kill -9 1266</span>
-root@a78aa2e72670:/<span class="token comment"># /usr/sbin/sshd -D &amp;</span>
-<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token number">1302</span>
-<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>   Killed                  /usr/sbin/sshd <span class="token parameter variable">-D</span>
-root@a78aa2e72670:/<span class="token comment"># ps -aux | grep ssh</span>
-root      <span class="token number">1302</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5756</span> pts/0    S    01:19   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
-root      <span class="token number">1304</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">944</span> pts/0    S+   01:19   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
-<h2 id="6-退出容器，但不要停止容器，并进行连接测试"><a href="#6-退出容器，但不要停止容器，并进行连接测试" class="headerlink" title="6.退出容器，但不要停止容器，并进行连接测试"></a>6.退出容器，但不要停止容器，并进行连接测试</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 在主机登录，需要输入的root密码为前面设置的root密码</span>
-<span class="token function">ssh</span> root@localhost <span class="token parameter variable">-p</span> <span class="token number">8080</span> <span class="token comment"># 8080为刚开始创建容器时候设置的主机端口映射，与容器的22端口形成映射</span>
-<span class="token comment"># 在其他机器上可以使用以下命令登陆，假设宿主机ip为10.12.11.xx</span>
-<span class="token function">ssh</span> root@10.12.11.xx <span class="token parameter variable">-p</span> <span class="token number">8080</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
+<pre><code class="bash">root@a78aa2e72670:/# ps -aux | grep ssh
+root      1266  0.0  0.0  65512  5468 pts/0    S    01:14   0:00 /usr/sbin/sshd -D
+root      1301  0.0  0.0  11284   932 pts/0    S+   01:18   0:00 grep --color=auto ssh
+root@a78aa2e72670:/# kill -9 1266
+root@a78aa2e72670:/# /usr/sbin/sshd -D &amp;
+[2] 1302
+[1]   Killed                  /usr/sbin/sshd -D
+root@a78aa2e72670:/# ps -aux | grep ssh
+root      1302  0.0  0.0  65512  5756 pts/0    S    01:19   0:00 /usr/sbin/sshd -D
+root      1304  0.0  0.0  11284   944 pts/0    S+   01:19   0:00 grep --color=auto ssh
+</code></pre>
+<h2 id="6-退出容器，但不要停止容器，并进行连接测试"><a href="#6-退出容器，但不要停止容器，并进行连接测试" class="headerlink" title="6.退出容器，但不要停止容器，并进行连接测试"></a>6.退出容器，但不要停止容器，并进行连接测试</h2><pre><code class="bash"># 在主机登录，需要输入的root密码为前面设置的root密码
+ssh root@localhost -p 8080 # 8080为刚开始创建容器时候设置的主机端口映射，与容器的22端口形成映射
+# 在其他机器上可以使用以下命令登陆，假设宿主机ip为10.12.11.xx
+ssh root@10.12.11.xx -p 8080
+</code></pre>
 <p>这里如果提示：ssh_exchange_identification: read: Connection reset by peer</p>
 <p>则：可能是容器的 sshd服务未开启，再次进入容器重启sshd服务即可：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/usr/sbin/sshd <span class="token parameter variable">-D</span> <span class="token operator">&amp;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
+<pre><code class="bash"> /usr/sbin/sshd -D &amp;
+</code></pre>
 <p>示例：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@dc627a3adc4d:/<span class="token comment"># ps -aux | grep ssh</span>
-root        <span class="token number">32</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">932</span> pts/1    S+   03:43   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span>
-root@dc627a3adc4d:/<span class="token comment"># /usr/sbin/sshd -D &amp;</span>
-<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token number">33</span>
-root@dc627a3adc4d:/<span class="token comment"># ps -aux | grep ssh</span>
-root        <span class="token number">33</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">65512</span>  <span class="token number">5420</span> pts/1    S    03:43   <span class="token number">0</span>:00 /usr/sbin/sshd <span class="token parameter variable">-D</span>
-root        <span class="token number">35</span>  <span class="token number">0.0</span>  <span class="token number">0.0</span>  <span class="token number">11284</span>   <span class="token number">936</span> pts/1    S+   03:43   <span class="token number">0</span>:00 <span class="token function">grep</span> <span class="token parameter variable">--color</span><span class="token operator">=</span>auto <span class="token function">ssh</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<pre><code class="bash">root@dc627a3adc4d:/# ps -aux | grep ssh
+root        32  0.0  0.0  11284   932 pts/1    S+   03:43   0:00 grep --color=auto ssh
+root@dc627a3adc4d:/# /usr/sbin/sshd -D &amp;
+[1] 33
+root@dc627a3adc4d:/# ps -aux | grep ssh
+root        33  0.0  0.0  65512  5420 pts/1    S    03:43   0:00 /usr/sbin/sshd -D
+root        35  0.0  0.0  11284   936 pts/1    S+   03:43   0:00 grep --color=auto ssh
+</code></pre>
 <p>注释：配置完成后可以将容器保存为镜像</p>
 <p>docker commit -a “提交的镜像作者名称” -m “提交时的说明文字” 容器ID或容器名称  保存镜像名称:标签</p>
 <p>示例:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@dc627a3adc4d:/<span class="token comment"># docker commit -a "runoob.com" -m "my apache" a404c6c174a2  mymysql:v1</span>
-root@dc627a3adc4d:/<span class="token comment"># docker images mymysql:v1</span>
+<pre><code class="bash">root@dc627a3adc4d:/# docker commit -a &quot;runoob.com&quot; -m &quot;my apache&quot; a404c6c174a2  mymysql:v1
+root@dc627a3adc4d:/# docker images mymysql:v1
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-mymysql             v1                  37af1236adef        <span class="token number">15</span> seconds ago      <span class="token number">329</span> MB<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-
-
+mymysql             v1                  37af1236adef        15 seconds ago      329 MB
+</code></pre>
 <h2 id="7-配置pycharm并连接docker容器"><a href="#7-配置pycharm并连接docker容器" class="headerlink" title="7.配置pycharm并连接docker容器"></a>7.配置pycharm并连接docker容器</h2><p>参考网址：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Thanours/article/details/109265315">点我查看</a></p>
 <p>在 Tools &gt;&gt;&gt; Deployment &gt;&gt;&gt; Configuration选项中新建 SFTP 连接：</p>
 <p><img src="https://i.loli.net/2021/05/21/YMm8PE6Hd9ySQ2h.png"></p>
@@ -833,9 +824,6 @@ mymysql             v1                  37af1236adef        <span class="token n
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
-
-  <!-- 是否加载使用自带的 prismjs. -->
-  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

@@ -392,7 +392,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-25
+                    2023-05-26
                 </div>
                 
 
@@ -416,49 +416,79 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="依赖包安装"><a href="#依赖包安装" class="headerlink" title="依赖包安装"></a>依赖包安装</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential  </span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install cmake git libgtk2<span class="number">.0</span>-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev  </span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394<span class="number">-22</span>-dev  </span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install build-essential qt5-<span class="keyword">default</span> ccache libv4l-dev libavresample-dev  libgphoto2-dev libopenblas-base libopenblas-dev doxygen  openjdk<span class="number">-8</span>-jdk pylint libvtk6-dev</span><br></pre></td></tr></table></figure>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install pkg-config</span><br></pre></td></tr></table></figure>
+                <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="依赖包安装"><a href="#依赖包安装" class="headerlink" title="依赖包安装"></a>依赖包安装</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo apt-get install build-essential  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo apt-get install cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo apt-get install python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo apt-get install build-essential qt5-default ccache libv4l-dev libavresample-dev  libgphoto2-dev libopenblas-base libopenblas-dev doxygen  openjdk-8-jdk pylint libvtk6-dev<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">sudo apt-get install pkg-config<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="下载源文件"><a href="#下载源文件" class="headerlink" title="下载源文件"></a>下载源文件</h2><p><a target="_blank" rel="noopener" href="https://github.com/opencv/opencv">opencv</a><br><a target="_blank" rel="noopener" href="https://github.com/opencv/opencv_contrib">opencv_contrib</a></p>
-<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip opencv-x.x.x.zip</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip opencv_contrib-x.x.x.zip</span><br></pre></td></tr></table></figure>
+<h2 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">unzip</span> opencv-x.x.x.zip<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">unzip</span> opencv_contrib-x.x.x.zip<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h2 id="将opencv-contrib移动到opencv目录下，同时在该目录下新建一个文件夹build"><a href="#将opencv-contrib移动到opencv目录下，同时在该目录下新建一个文件夹build" class="headerlink" title="将opencv_contrib移动到opencv目录下，同时在该目录下新建一个文件夹build"></a>将opencv_contrib移动到opencv目录下，同时在该目录下新建一个文件夹build</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r opencv_contrib-x.x.x opencv-x.x.x  </span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> opencv-x.x.x</span><br><span class="line"><span class="built_in">mkdir</span> build                             </span><br></pre></td></tr></table></figure>
+<h2 id="将opencv-contrib移动到opencv目录下，同时在该目录下新建一个文件夹build"><a href="#将opencv-contrib移动到opencv目录下，同时在该目录下新建一个文件夹build" class="headerlink" title="将opencv_contrib移动到opencv目录下，同时在该目录下新建一个文件夹build"></a>将opencv_contrib移动到opencv目录下，同时在该目录下新建一个文件夹build</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">cp</span> <span class="token parameter variable">-r</span> opencv_contrib-x.x.x opencv-x.x.x  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> opencv-x.x.x
+<span class="token function">mkdir</span> build                             <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<h2 id="现在进入到opencv-x-x-x目录下，查看文件结构"><a href="#现在进入到opencv-x-x-x目录下，查看文件结构" class="headerlink" title="现在进入到opencv-x.x.x目录下，查看文件结构"></a>现在进入到opencv-x.x.x目录下，查看文件结构</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+<h2 id="现在进入到opencv-x-x-x目录下，查看文件结构"><a href="#现在进入到opencv-x-x-x目录下，查看文件结构" class="headerlink" title="现在进入到opencv-x.x.x目录下，查看文件结构"></a>现在进入到opencv-x.x.x目录下，查看文件结构</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ls</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <blockquote>
 <p>3rdparty cmake data LICENSE platforms apps CMakeLists.txt doc modules README.md build CONTRIBUTING.md include pencv_contrib-x.x.x samples</p>
 </blockquote>
-<h2 id="进入build目录，并且执行cmake生成makefile文件"><a href="#进入build目录，并且执行cmake生成makefile文件" class="headerlink" title="进入build目录，并且执行cmake生成makefile文件"></a>进入build目录，并且执行cmake生成makefile文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> build  </span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local -D OPENCV_EXTRA_MODULES_PATH=/home/files/opencv-x.x.x/opencv_contrib-x.x.x/modules/ .. </span><br></pre></td></tr></table></figure>
+<h2 id="进入build目录，并且执行cmake生成makefile文件"><a href="#进入build目录，并且执行cmake生成makefile文件" class="headerlink" title="进入build目录，并且执行cmake生成makefile文件"></a>进入build目录，并且执行cmake生成makefile文件</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> build  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cmake <span class="token parameter variable">-D</span> <span class="token assign-left variable">CMAKE_BUILD_TYPE</span><span class="token operator">=</span>Release <span class="token parameter variable">-D</span> <span class="token assign-left variable">CMAKE_INSTALL_PREFIX</span><span class="token operator">=</span>/usr/local <span class="token parameter variable">-D</span> <span class="token assign-left variable">OPENCV_EXTRA_MODULES_PATH</span><span class="token operator">=</span>/home/files/opencv-x.x.x/opencv_contrib-x.x.x/modules/ <span class="token punctuation">..</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <blockquote>
 <p>注意：OPENCV_EXTRA_MODULES_PATH就是你 opencv_contrib-3.3.1下面的modules目录，请按照自己的实际目录修改地址。<br>接下来就是漫长的等待了…<br>生成完毕提示：</p>
 </blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--   Install path:                  /usr/local</span><br><span class="line">-- </span><br><span class="line">--   cvconfig.h is <span class="keyword">in</span>:              /home/files/opencv-x.x.x/build</span><br><span class="line">-- -----------------------------------------------------------------</span><br><span class="line">-- </span><br><span class="line">-- Configuring <span class="keyword">done</span></span><br><span class="line">-- Generating <span class="keyword">done</span></span><br><span class="line">-- Build files have been written to: /home/files/opencv-x.x.x/build</span><br></pre></td></tr></table></figure>
-<h2 id="在cmake成功之后，就可以在build文件下make了"><a href="#在cmake成功之后，就可以在build文件下make了" class="headerlink" title="在cmake成功之后，就可以在build文件下make了"></a>在cmake成功之后，就可以在build文件下make了</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">--   Install path:                  /usr/local
+-- 
+--   cvconfig.h is in:              /home/files/opencv-x.x.x/build
+-- -----------------------------------------------------------------
+-- 
+-- Configuring <span class="token keyword">done</span>
+-- Generating <span class="token keyword">done</span>
+-- Build files have been written to: /home/files/opencv-x.x.x/build<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="在cmake成功之后，就可以在build文件下make了"><a href="#在cmake成功之后，就可以在build文件下make了" class="headerlink" title="在cmake成功之后，就可以在build文件下make了"></a>在cmake成功之后，就可以在build文件下make了</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> <span class="token parameter variable">-j8</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>接下来就是更漫长的等待 … 具体时间因人而异</p>
 <h2 id="链接库共享"><a href="#链接库共享" class="headerlink" title="链接库共享"></a>链接库共享</h2><p>编译安装完毕之后，为了让你的链接库被系统共享，让编译器发现，需要执行管理命令ldconfig：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ldconfig -v  </span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> ldconfig <span class="token parameter variable">-v</span>  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="bug解决"><a href="#bug解决" class="headerlink" title="bug解决"></a>bug解决</h1><h2 id="解决编译opencv时，卡在IPPICV"><a href="#解决编译opencv时，卡在IPPICV" class="headerlink" title="解决编译opencv时，卡在IPPICV"></a>解决编译opencv时，卡在IPPICV</h2><h3 id="手动下载缺少文件"><a href="#手动下载缺少文件" class="headerlink" title="手动下载缺少文件"></a>手动下载缺少文件</h3><p><a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlog/blob/main/source/_posts/ubuntu%E5%AE%89%E8%A3%85opencv%E4%B8%8Eopencv_contrib/.cache/ippicv/7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz">ippicv_2020_lnx_intel64_20191018_general.tgz</a></p>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit opencv-x.x.x/3rdparty/ippicv.cmake</span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit opencv-x.x.x/3rdparty/ippicv.cmake<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>找到<code>&quot;https://raw.githubusercontent.com/opencv/opencv_3rdparty/$&#123;IPPICV_COMMIT&#125;/ippicv/&quot;</code></p>
 <p>将其改为ippicv_2020_lnx_intel64_20191018_general.tgz保存的目录。比如：<code>&quot;file:///home/downloads/&quot;</code>,格式为<code>&quot;file://路径&quot;</code><br>最后重新执行编译命令即可：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -j8</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> <span class="token parameter variable">-j8</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题"><a href="#终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题" class="headerlink" title="终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题"></a>终极方法：解决编译opencv时，卡在IPPICV、boostdesc、vgg等文件下载问题</h2><p>卡在这里的原因是因为在cmake编译的时候没有下载成功，这里使用手动下载与替换进行补救</p>
 <h2 id="手动下载缺少文件-1"><a href="#手动下载缺少文件-1" class="headerlink" title="手动下载缺少文件"></a>手动下载缺少文件</h2><p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1OrfTdsNczKlNvJPg_gD0VA?pwd=1633">百度网盘:ubuntu安装opencv与opencv_contrib</a></p>
 <h2 id="替换本地文件"><a href="#替换本地文件" class="headerlink" title="替换本地文件"></a>替换本地文件</h2><p>在<code>opencv源文件目录</code>下找到隐藏文件夹<code>.cache</code>，然后分别替换其中的文件。注意下载的文件中每个对应文件的开头字符串为临时校验码，需要以自己本次安装时生成的校验码为准。例如<code>7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz</code>中<code>7421de0095c7a39162ae13a6098782f9</code>为安装校验码，这个在替换文件时候需要改为本次安装自动生成的校验码。</p>
-<h2 id="cache文件目录"><a href="#cache文件目录" class="headerlink" title=".cache文件目录"></a>.cache文件目录</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">.cache</span><br><span class="line">├── data</span><br><span class="line">│   └── 7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat</span><br><span class="line">├── ippicv</span><br><span class="line">│   └── 7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz</span><br><span class="line">└── xfeatures2d</span><br><span class="line">    ├── boostdesc</span><br><span class="line">    │   ├── 0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i</span><br><span class="line">    │   ├── 0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i</span><br><span class="line">    │   ├── 202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i</span><br><span class="line">    │   ├── 232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i</span><br><span class="line">    │   ├── 324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i</span><br><span class="line">    │   ├── 98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i</span><br><span class="line">    │   └── e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i</span><br><span class="line">    └── vgg</span><br><span class="line">        ├── 151805e03568c9f490a5e3a872777b75-vgg_generated_120.i</span><br><span class="line">        ├── 7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i</span><br><span class="line">        ├── 7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i</span><br><span class="line">        └── e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="cache文件目录"><a href="#cache文件目录" class="headerlink" title=".cache文件目录"></a>.cache文件目录</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">.cache
+├── data
+│   └── 7505c44ca4eb54b4ab1e4777cb96ac05-face_landmark_model.dat
+├── ippicv
+│   └── 7421de0095c7a39162ae13a6098782f9-ippicv_2020_lnx_intel64_20191018_general.tgz
+└── xfeatures2d
+    ├── boostdesc
+    │   ├── 0ae0675534aa318d9668f2a179c2a052-boostdesc_lbgm.i
+    │   ├── 0ea90e7a8f3f7876d450e4149c97c74f-boostdesc_bgm.i
+    │   ├── 202e1b3e9fec871b04da31f7f016679f-boostdesc_binboost_064.i
+    │   ├── 232c966b13651bd0e46a1497b0852191-boostdesc_bgm_bi.i
+    │   ├── 324426a24fa56ad9c5b8e3e0b3e5303e-boostdesc_bgm_hd.i
+    │   ├── 98ea99d399965c03d555cef3ea502a0b-boostdesc_binboost_128.i
+    │   └── e6dcfa9f647779eb1ce446a8d759b6ea-boostdesc_binboost_256.i
+    └── vgg
+        ├── 151805e03568c9f490a5e3a872777b75-vgg_generated_120.i
+        ├── 7126a5d9a8884ebca5aea5d63d677225-vgg_generated_64.i
+        ├── 7cd47228edec52b6d82f46511af325c5-vgg_generated_80.i
+        └── e8d0dcd54d1bcfdc29203d011a797179-vgg_generated_48.i
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39936818/article/details/104951448">一次性解决opencv源码安装文件下载问题：ippicv_2017u3_lnx, face_landmark_model.dat, tiny-dnn</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45846977/article/details/112396739">ubuntu安装opencv问题解决——缺少boostdesc_bgm.i文件</a></p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
@@ -726,6 +756,9 @@
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

@@ -392,7 +392,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-25
+                    2023-05-26
                 </div>
                 
 
@@ -416,20 +416,76 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="类的封装"><a href="#类的封装" class="headerlink" title="类的封装"></a>类的封装</h1><h2 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h2><p>src&#x2F;adas_proc&#x2F;adas_app&#x2F;adas_app.cpp —&gt; 629行</p>
-<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> AdasProcWrapper = ac::ObjWrapper&lt;ac::AdasProcInterface, HAC_CreateAdasProc, HAC_DestroyAdasProc&gt;;</span><br><span class="line">AdasProcWrapper                        adas_proc_;</span><br></pre></td></tr></table></figure>
+<h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">using AdasProcWrapper &#x3D; ac::ObjWrapper&lt;ac::AdasProcInterface, HAC_CreateAdasProc, HAC_DestroyAdasProc&gt;;
+AdasProcWrapper                        adas_proc_;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <ul>
 <li><code>AdasProcWrapper</code> 是一个类型别名（using 声明），用于定义 <code>adas_proc_</code>对象。它是由 <code>ac::ObjWrapper</code> 模板类实例化而来。  </li>
 <li><code>ac::ObjWrapper</code> 是一个模板类，接受三个模板参数：<code>ac::AdasProcInterface、HAC_CreateAdasProc 和 HAC_DestroyAdasProc</code>。</li>
 </ul>
 <p>ObjWrapper模板类的定义如下:</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 一个简单的wrapper</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">using</span> ObjCreateType  = <span class="built_in">HAC_Handle</span>(*)(<span class="type">const</span> <span class="type">char</span> *);</span><br><span class="line"><span class="keyword">using</span> ObjDestroyType = <span class="built_in">void</span>(*)(HAC_Handle);</span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, ObjCreateType Create, ObjDestroyType Destroy&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ObjWrapper</span> <span class="keyword">final</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">ObjWrapper</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *config)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        obj_ = <span class="built_in">reinterpret_cast</span>&lt;T *&gt;(<span class="built_in">Create</span>(config));</span><br><span class="line">        <span class="keyword">if</span> (obj_ == <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">StringException</span>(<span class="built_in">StringFormatWithPrefix</span>(<span class="string">&quot;error: Create obj failed.&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">ObjWrapper</span>()</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">ObjWrapper</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">Destroy</span>(<span class="built_in">reinterpret_cast</span>&lt;HAC_Handle&gt;(obj_));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    T *<span class="keyword">operator</span>-&gt;()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj_ == <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">StringException</span>(<span class="built_in">StringFormatWithPrefix</span>(<span class="string">&quot;error: obj is nullptr.&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> obj_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">T *<span class="title">Get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> obj_;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">Reset</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *config)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> obj = <span class="built_in">reinterpret_cast</span>&lt;T *&gt;(<span class="built_in">Create</span>(config));</span><br><span class="line">        <span class="keyword">if</span> (obj == <span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="built_in">StringException</span>(<span class="built_in">StringFormatWithPrefix</span>(<span class="string">&quot;error: Create obj failed.&quot;</span>));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">Destroy</span>(<span class="built_in">reinterpret_cast</span>&lt;HAC_Handle&gt;(obj_));</span><br><span class="line">        obj_ = obj;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">ObjWrapper</span>(<span class="type">const</span> ObjWrapper &amp;) = <span class="keyword">delete</span>;</span><br><span class="line">    ObjWrapper&amp; <span class="keyword">operator</span>=(<span class="type">const</span> ObjWrapper &amp;) = <span class="keyword">delete</span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T *obj_ = <span class="literal">nullptr</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;**
+ * @brief 一个简单的wrapper
+ *&#x2F;
+using ObjCreateType  &#x3D; HAC_Handle(*)(const char *);
+using ObjDestroyType &#x3D; void(*)(HAC_Handle);
+template&lt;typename T, ObjCreateType Create, ObjDestroyType Destroy&gt;
+class ObjWrapper final
+&#123;
+public:
+    explicit ObjWrapper(const char *config)
+    &#123;
+        obj_ &#x3D; reinterpret_cast&lt;T *&gt;(Create(config));
+        if (obj_ &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: Create obj failed.&quot;));
+        &#125;
+    &#125;
+    ObjWrapper()
+    &#123;
+
+    &#125;
+    ~ObjWrapper()
+    &#123;
+        Destroy(reinterpret_cast&lt;HAC_Handle&gt;(obj_));
+    &#125;
+
+    T *operator-&gt;()
+    &#123;
+        if (obj_ &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: obj is nullptr.&quot;));
+        &#125;
+        return obj_;
+    &#125;
+    T *Get()
+    &#123;
+        return obj_;
+    &#125;
+    void Reset(const char *config)
+    &#123;
+        auto obj &#x3D; reinterpret_cast&lt;T *&gt;(Create(config));
+        if (obj &#x3D;&#x3D; nullptr)
+        &#123;
+            throw StringException(StringFormatWithPrefix(&quot;error: Create obj failed.&quot;));
+        &#125;
+        Destroy(reinterpret_cast&lt;HAC_Handle&gt;(obj_));
+        obj_ &#x3D; obj;
+    &#125;
+    ObjWrapper(const ObjWrapper &amp;) &#x3D; delete;
+    ObjWrapper&amp; operator&#x3D;(const ObjWrapper &amp;) &#x3D; delete;
+private:
+    T *obj_ &#x3D; nullptr;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>由模板类的定义可知，该模板类有三个模板参数：</p>
 <ul>
 <li><code>typename T</code>：这是一个类型参数，用于指定被包装的对象的类型。</li>
@@ -437,18 +493,36 @@
 <li><code>ObjDestroyType Destroy</code>：这是一个函数指针类型，用于指定销毁对象的函数。</li>
 </ul>
 <p>因此，<code>AdasProcWrapper</code> 类型的 <code>adas_proc_</code> 对象是一个使用 <code>ac::ObjWrapper</code> 封装的 ADAS 处理实例。这个封装提供了一种方便的方式来创建和销毁 ADAS 处理实例，并提供了 ADAS 处理接口的访问。<code>adas_proc_</code>为封装类<code>ac::ObjWrapper</code>实例化后的对象。</p>
-<h2 id="封装类的使用1"><a href="#封装类的使用1" class="headerlink" title="封装类的使用1"></a>封装类的使用1</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adas_proc_.<span class="built_in">Reset</span>(json_config_str.<span class="built_in">c_str</span>());</span><br></pre></td></tr></table></figure>
+<h2 id="封装类的使用1"><a href="#封装类的使用1" class="headerlink" title="封装类的使用1"></a>封装类的使用1</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">adas_proc_.Reset(json_config_str.c_str());<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>封装类对象adas_proc_调用了模板类<code>ac::ObjWrapper</code>中的<code>Reset</code>函数，该函数调用了模板类创建时传入的参数2：<code>HAC_CreateAdasProc</code>,该参数是一个函数指针类型，用于指定创建对象的函数。该函数的定义如下所示：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief 创造对象</span></span><br><span class="line"><span class="comment"> * @param config json字符串，参考，assets目录下的配置文件,会从中读取各种配置信息，</span></span><br><span class="line"><span class="comment"> *               包括摄像头信息，模型文件路径,以及其他配置信息等等</span></span><br><span class="line"><span class="comment"> * @note 当句柄不为NULL时候，最后一定要调用HAC_DestroyAdasProc进行销毁，</span></span><br><span class="line"><span class="comment"> *       如果为NULL，调用或者不调用HAC_DestroyAdasProc都可以。</span></span><br><span class="line"><span class="comment"> * @return HAC_Handle 句柄,需要判断返回值是否是NULL</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">HQ_FLAG_DLL_API HAC_Handle <span class="title">HAC_CreateAdasProc</span><span class="params">(<span class="type">const</span> <span class="type">char</span> *config)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">reinterpret_cast</span>&lt;HAC_Handle&gt;(<span class="keyword">new</span> ac::<span class="built_in">AdasProcImpl</span>(config));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">&#x2F;**
+ * @brief 创造对象
+ * @param config json字符串，参考，assets目录下的配置文件,会从中读取各种配置信息，
+ *               包括摄像头信息，模型文件路径,以及其他配置信息等等
+ * @note 当句柄不为NULL时候，最后一定要调用HAC_DestroyAdasProc进行销毁，
+ *       如果为NULL，调用或者不调用HAC_DestroyAdasProc都可以。
+ * @return HAC_Handle 句柄,需要判断返回值是否是NULL
+ *&#x2F;
+extern &quot;C&quot; HQ_FLAG_DLL_API HAC_Handle HAC_CreateAdasProc(const char *config)
+&#123;
+    return reinterpret_cast&lt;HAC_Handle&gt;(new ac::AdasProcImpl(config));
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="封装类的使用2"><a href="#封装类的使用2" class="headerlink" title="封装类的使用2"></a>封装类的使用2</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adas_proc_-&gt;<span class="built_in">SetAdasInfoEvent</span>(std::<span class="built_in">bind</span>(&amp;Impl::OnAdasInfo,</span><br><span class="line">            <span class="keyword">this</span>, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));</span><br></pre></td></tr></table></figure>
+<h2 id="封装类的使用2"><a href="#封装类的使用2" class="headerlink" title="封装类的使用2"></a>封装类的使用2</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">adas_proc_-&gt;SetAdasInfoEvent(std::bind(&amp;Impl::OnAdasInfo,
+            this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <p>其中，<code>SetAdasInfoEvent</code>函数的定义如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AdasProcImpl::SetAdasInfoEvent</span><span class="params">(<span class="type">const</span> AdasInfoEvent &amp;event)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    on_adas_info_ = event;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">void AdasProcImpl::SetAdasInfoEvent(const AdasInfoEvent &amp;event)
+&#123;
+    on_adas_info_ &#x3D; event;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>其中，<code>OnAdasInfo</code>函数的定义如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">OnAdasInfo</span><span class="params">(<span class="type">const</span> <span class="type">uint8_t</span> *buffer, <span class="type">uint32_t</span> size, <span class="type">int64_t</span> tickcount)</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    **************</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">int OnAdasInfo(const uint8_t *buffer, uint32_t size, int64_t tickcount)
+&#123; 
+    **************
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这里就有点绕了，模板类中并没有SetAdasInfoEvent函数，这里怎么能使用呢？其实这个函数的定义在<code>ac::AdasProcInterface</code>类中，由于在模板类中重载了<code>-&gt;</code>运算符，因此<code>adas_proc_-&gt;SetAdasInfoEvent</code>中的<code>-&gt;</code>是被重载后的运算符，<code>adas_proc_-&gt;</code>等同于<code>adas_proc_.obj_</code>,故<code>adas_proc_-&gt;SetAdasInfoEvent</code>等同于<code>adas_proc_.obj_.SetAdasInfoEvent</code>。</p>
 <p>这里封装类重载了<code>-&gt;</code>运算符，因此看起来封装后的类可以直接访问模板参数1指向类<code>ac::AdasProcInterface</code>的成员函数。</p>
@@ -457,7 +531,27 @@
 <p>std::bind 函数可以将一个可调用对象和一些参数绑定在一起，生成一个新的函数对象。这个新的函数对象可以延迟执行或者在需要时进行调用，而且可以自定义绑定的参数。</p>
 <p>因此,这里是将<code>Impl::OnAdasInfo</code>与其参数进行绑定后生成一个新的可调用对象，同时将其作为函数<code>SetAdasInfoEvent</code>的参数传递给<code>on_adas_info_</code>,也就是说<code>on_adas_info_=std::bind(&amp;Impl::OnAdasInfo, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)</code>。这样<code>on_adas_info_</code>就可以在使用时传递参数并执行<code>OnAdasInfo</code>函数。</p>
 <p><code>on_adas_info_</code>的调用场景如下：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">AdasProcImpl::OnAlarmInfo</span><span class="params">(<span class="type">const</span> <span class="type">uint8_t</span> *buffer, <span class="type">uint32_t</span> size, <span class="type">int64_t</span> tickcount)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 设置输出信息到buffer中</span></span><br><span class="line">    <span class="comment">// 把决策模块会掉出来的内容添加到out_buffer_中，然后回调到外面</span></span><br><span class="line">    <span class="keyword">if</span> (on_adas_info_ != <span class="literal">nullptr</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">decltype</span>(out_buffer_)  tmp;</span><br><span class="line">        &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lck</span><span class="params">(buf_mutex_)</span></span>;</span><br><span class="line">            <span class="comment">// 把buffer中内容放入out_buffer中</span></span><br><span class="line">            <span class="type">const</span> <span class="keyword">auto</span> out_buffer_length = out_buffer_.<span class="built_in">size</span>();</span><br><span class="line">            out_buffer_.<span class="built_in">resize</span>(out_buffer_length + size);</span><br><span class="line">            std::<span class="built_in">memcpy</span>(out_buffer_.<span class="built_in">data</span>() + out_buffer_length, buffer, size);</span><br><span class="line">            tmp = out_buffer_;</span><br><span class="line">            out_buffer_.<span class="built_in">resize</span>(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">on_adas_info_</span>(tmp.<span class="built_in">data</span>(), tmp.<span class="built_in">size</span>(), tickcount);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">void AdasProcImpl::OnAlarmInfo(const uint8_t *buffer, uint32_t size, int64_t tickcount)
+&#123;
+    &#x2F;&#x2F; 设置输出信息到buffer中
+    &#x2F;&#x2F; 把决策模块会掉出来的内容添加到out_buffer_中，然后回调到外面
+    if (on_adas_info_ !&#x3D; nullptr)
+    &#123;
+        decltype(out_buffer_)  tmp;
+        &#123;
+            
+            std::lock_guard&lt;std::mutex&gt; lck(buf_mutex_);
+            &#x2F;&#x2F; 把buffer中内容放入out_buffer中
+            const auto out_buffer_length &#x3D; out_buffer_.size();
+            out_buffer_.resize(out_buffer_length + size);
+            std::memcpy(out_buffer_.data() + out_buffer_length, buffer, size);
+            tmp &#x3D; out_buffer_;
+            out_buffer_.resize(0);
+        &#125;
+
+        on_adas_info_(tmp.data(), tmp.size(), tickcount);
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>到此为止，可以基本了解函数绑定的定义和使用示例。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
@@ -726,6 +820,9 @@
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

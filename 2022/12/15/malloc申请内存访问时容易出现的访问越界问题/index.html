@@ -396,14 +396,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-25
+                    2023-05-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    485
+                    521
                 </div>
                 
 
@@ -420,6 +420,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -427,8 +430,46 @@
             <div id="articleContent">
                 <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
 <li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
-<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//构建4路YUV鱼眼图像去畸变映射关系</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dist2undist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">float</span> point_u_tmp[<span class="number">2</span>], point_d_tmp[<span class="number">2</span>];</span><br><span class="line">    <span class="type">float</span> sf = <span class="number">1.5</span>;</span><br><span class="line">    <span class="type">int</span> img_out_height = <span class="number">720</span> * img_out_h_scale;</span><br><span class="line">    <span class="type">int</span> img_out_width = <span class="number">1280</span> * img_out_w_scale;</span><br><span class="line">    <span class="built_in">LOGI</span>(<span class="number">1</span>, <span class="string">&quot;dist2undist begin !,img_out size(%d,%d)&quot;</span>, img_out_height, img_out_width);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> index = <span class="number">0</span>; index &lt; NUM_CAMERAS; index++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 这里就是bug所在</span></span><br><span class="line">        undist_map[index] = (<span class="type">float</span> *)<span class="built_in">malloc</span>(undistView_width * undistView_height * <span class="number">3</span> / <span class="number">2</span> * <span class="number">2</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (undist_map[index] == <span class="literal">NULL</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">LOGI</span>(<span class="number">1</span>, <span class="string">&quot;undist_map malloc failed!&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; img_out_height; i += <span class="number">1</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; img_out_width; j += <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                point_u_tmp[<span class="number">0</span>] = j / img_out_w_scale;</span><br><span class="line">                point_u_tmp[<span class="number">1</span>] = i / img_out_h_scale;</span><br><span class="line">                <span class="built_in">LDC_UndistToDistExt</span>(&amp;ldc[<span class="number">0</span>], point_u_tmp, point_d_tmp, sf);</span><br><span class="line"></span><br><span class="line">                undist_map[index][(i * img_out_width + j) * <span class="number">2</span>] = point_d_tmp[<span class="number">0</span>] * img_in_w_scale;</span><br><span class="line">                undist_map[index][(i * img_out_width + j) * <span class="number">2</span> + <span class="number">1</span>] = point_d_tmp[<span class="number">1</span>] * img_in_h_scale;</span><br><span class="line">                <span class="keyword">if</span> (!<span class="built_in">int</span>(j % <span class="number">2</span>))</span><br><span class="line">                &#123;</span><br><span class="line">                    undist_map[index][(i / <span class="number">2</span> * img_out_width + j + img_out_width * img_out_height) * <span class="number">2</span>] = <span class="built_in">int</span>(point_d_tmp[<span class="number">0</span>] * img_in_w_scale / <span class="number">2</span>) * <span class="number">2</span>;</span><br><span class="line">                    undist_map[index][(i / <span class="number">2</span> * img_out_width + j + img_out_width * img_out_height) * <span class="number">2</span> + <span class="number">1</span>] = <span class="built_in">int</span>(point_d_tmp[<span class="number">1</span>] * img_in_h_scale / <span class="number">2</span>) + <span class="number">720</span> * img_in_h_scale;</span><br><span class="line">                    undist_map[index][(i / <span class="number">2</span> * img_out_width + j + img_out_width * img_out_height + <span class="number">1</span>) * <span class="number">2</span>] = <span class="built_in">int</span>(point_d_tmp[<span class="number">0</span>] * img_in_w_scale / <span class="number">2</span>) * <span class="number">2</span> + <span class="number">1</span>;</span><br><span class="line">                    undist_map[index][(i / <span class="number">2</span> * img_out_width + j + img_out_width * img_out_height + <span class="number">1</span>) * <span class="number">2</span> + <span class="number">1</span>] = <span class="built_in">int</span>(point_d_tmp[<span class="number">1</span>] * img_in_h_scale / <span class="number">2</span>) + <span class="number">720</span> * img_in_h_scale;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-如果 #18 行中申请内存为:<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">undist_map[index] = (<span class="type">float</span> *)<span class="built_in">malloc</span>(undistView_width * undistView_height * <span class="number">3</span> / <span class="number">2</span> * <span class="built_in">sizeof</span>(<span class="type">float</span>));</span><br></pre></td></tr></table></figure>
+<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">&#x2F;&#x2F;构建4路YUV鱼眼图像去畸变映射关系
+void dist2undist()
+&#123;
+    float point_u_tmp[2], point_d_tmp[2];
+    float sf &#x3D; 1.5;
+    int img_out_height &#x3D; 720 * img_out_h_scale;
+    int img_out_width &#x3D; 1280 * img_out_w_scale;
+    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
+
+    for (int index &#x3D; 0; index &lt; NUM_CAMERAS; index++)
+    &#123;
+        &#x2F;&#x2F; 这里就是bug所在
+        undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * 2 * sizeof(float));
+
+        if (undist_map[index] &#x3D;&#x3D; NULL)
+        &#123;
+            LOGI(1, &quot;undist_map malloc failed!&quot;);
+        &#125;
+        for (int i &#x3D; 0; i &lt; img_out_height; i +&#x3D; 1)
+        &#123;
+            for (int j &#x3D; 0; j &lt; img_out_width; j +&#x3D; 1)
+            &#123;
+                point_u_tmp[0] &#x3D; j &#x2F; img_out_w_scale;
+                point_u_tmp[1] &#x3D; i &#x2F; img_out_h_scale;
+                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
+
+                undist_map[index][(i * img_out_width + j) * 2] &#x3D; point_d_tmp[0] * img_in_w_scale;
+                undist_map[index][(i * img_out_width + j) * 2 + 1] &#x3D; point_d_tmp[1] * img_in_h_scale;
+                if (!int(j % 2))
+                &#123;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2 + 1;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+如果 #18 行中申请内存为:<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
 <hr>
@@ -695,6 +736,9 @@
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

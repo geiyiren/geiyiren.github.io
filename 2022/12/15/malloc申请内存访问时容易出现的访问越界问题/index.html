@@ -52,8 +52,7 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
@@ -404,7 +403,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    477
+                    485
                 </div>
                 
 
@@ -430,31 +429,31 @@
 <li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
 <li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。</li>
 </ul>
-<pre class="line-numbers language-C++"><code class="language-C++">//构建4路YUV鱼眼图像去畸变映射关系
+<pre><code class="C++">//构建4路YUV鱼眼图像去畸变映射关系
 void dist2undist()
 &#123;
     float point_u_tmp[2], point_d_tmp[2];
     float sf = 1.5;
     int img_out_height = 720 * img_out_h_scale;
     int img_out_width = 1280 * img_out_w_scale;
-    LOGI(1, "dist2undist begin !,img_out size(%d,%d)", img_out_height, img_out_width);
+    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
 
-    for (int index = 0; index < NUM_CAMERAS; index++)
+    for (int index = 0; index &lt; NUM_CAMERAS; index++)
     &#123;
         // 这里就是bug所在
         undist_map[index] = (float *)malloc(undistView_width * undistView_height * 3 / 2 * 2 * sizeof(float));
 
         if (undist_map[index] == NULL)
         &#123;
-            LOGI(1, "undist_map malloc failed!");
+            LOGI(1, &quot;undist_map malloc failed!&quot;);
         &#125;
-        for (int i = 0; i < img_out_height; i += 1)
+        for (int i = 0; i &lt; img_out_height; i += 1)
         &#123;
-            for (int j = 0; j < img_out_width; j += 1)
+            for (int j = 0; j &lt; img_out_width; j += 1)
             &#123;
                 point_u_tmp[0] = j / img_out_w_scale;
                 point_u_tmp[1] = i / img_out_h_scale;
-                LDC_UndistToDistExt(&ldc[0], point_u_tmp, point_d_tmp, sf);
+                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
 
                 undist_map[index][(i * img_out_width + j) * 2] = point_d_tmp[0] * img_in_w_scale;
                 undist_map[index][(i * img_out_width + j) * 2 + 1] = point_d_tmp[1] * img_in_h_scale;
@@ -469,10 +468,10 @@ void dist2undist()
         &#125;
     &#125;
 &#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</code></pre>
 <p>如果 #18 行中申请内存为:</p>
-<pre class="line-numbers language-C++"><code class="language-C++">undist_map[index] = (float *)malloc(undistView_width * undistView_height * 3 / 2 * sizeof(float));
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="C++">undist_map[index] = (float *)malloc(undistView_width * undistView_height * 3 / 2 * sizeof(float));
+</code></pre>
 <p>那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。  </p>
 <hr>
 <p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>

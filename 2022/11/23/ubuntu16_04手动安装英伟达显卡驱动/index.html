@@ -52,8 +52,7 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
@@ -419,15 +418,15 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">sudo gedit /etc/modprobe.d/blacklist.conf
+</code></pre>
 <p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">blacklist nouveau 
-options nouveau modeset<span class="token operator">=</span>0
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre><code class="bash">blacklist nouveau 
+options nouveau modeset=0
+</code></pre>
 <p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs -u
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">sudo update-initramfs -u
+</code></pre>
 <p>可能会出现如下警告，忽略即可：</p>
 <img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
 
@@ -444,28 +443,28 @@ options nouveau modeset<span class="token operator">=</span>0
 <img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
 
 <h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cd</span> /home/用户名
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">cd /home/用户名
+</code></pre>
 <p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">sudo service lightdm stop
+</code></pre>
 <p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> sh NVIDIA-Linux-x86_64-xxx.run -no-opengl-files
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre><code class="bash">sudo chmod a+x NVIDIA-Linux-x86_64-xxx.run 
+sudo sh NVIDIA-Linux-x86_64-xxx.run -no-opengl-files
+</code></pre>
 <p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
 <ul>
 <li>提示”dkms”安装时，需要安装。</li>
 <li>会提示有”32”字样，选择”OK”继续即可。</li>
 </ul>
 <p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">sudo service lightdm start
+</code></pre>
 <h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
 <p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
 <p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash"><code class="language-bash">nvidia-smi
-<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre><code class="bash">nvidia-smi
+</code></pre>
 <p>出现如下所示信息，即为安装成功:</p>
 <img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">

@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>C++对象优化</title>
+      <link href="/2023/05/29/c++%E5%AF%B9%E8%B1%A1%E4%BC%98%E5%8C%96/"/>
+      <url>/2023/05/29/c++%E5%AF%B9%E8%B1%A1%E4%BC%98%E5%8C%96/</url>
+      
+        <content type="html"><![CDATA[<h1 id="对象使用过程中背后调用了哪些方法"><a href="#对象使用过程中背后调用了哪些方法" class="headerlink" title="对象使用过程中背后调用了哪些方法"></a>对象使用过程中背后调用了哪些方法</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>using namespace std;class Test&#123;public:    Test(int a=10):ma(a)    &#123;        cout<<"Test(int)"<<endl;    &#125;    ~Test()    &#123;        cout<<"~Test()"<<endl;    &#125;    Test (const Test &t):ma(t.ma)    &#123;        cout<<"Test (const Test &t)"<<endl;    &#125;    Test& operator=(const Test &t)    &#123;        cout<<"operator="<<endl;        ma = t.ma;        return *this;    &#125;private:    int ma;&#125;;int main()&#123;    cout<<"--- 1 ---"<<endl;    Test t1;    cout<<"--- 2 ---"<<endl;    Test t2(t1);    cout<<"--- 3 ---"<<endl;    Test t3 = t1;    cout<<"--- 4 ---"<<endl;    Test t4 = Test(20);    cout<<"--- 5 ---"<<endl;    t4 = t2;    cout<<"--- 6 ---"<<endl;    t4 = Test(30);    cout<<"--- 7 ---"<<endl;    t4 = (Test)30;    cout<<"--- 8 ---"<<endl;    t4 = 30;    cout<<"--- 9 ---"<<endl;    //Test *p = &Test(40;)    cout<<"--- 10 ---"<<endl;    const Test &ref = Test(50);&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash"><code class="language-bash">--- 1 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>--- 2 ---Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>--- 3 ---Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>--- 4 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>--- 5 ---operator<span class="token operator">=</span>--- 6 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>operator<span class="token operator">=</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>--- 7 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>operator<span class="token operator">=</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>--- 8 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>operator<span class="token operator">=</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>--- 9 ------ 10 ---Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><ul><li>1<br>正常使用构造函数生成t1，传入参数有默认值</li><li>2<br>常见的拷贝构造</li><li>3<br>拷贝构造</li><li>4<br>C++编译器对于对象构造的优化，用临时对象生成新对象的时候，临时对象就不产生了，直接构造新对象，因此这里等价于直接调用常规构造函数，不调用拷贝构造<br>Test(20)显式生成临时对象，生存周期为所在语句<br>因此这里的Test t4 &#x3D; Test(20);等价于Test t4(20);</li><li>5<br>调用了赋值运算符重载函数</li><li>6<br>使用临时对象为已经存在的对象赋值，这时临时对象需要生成，要不无法赋值，显式生成临时对象</li><li>7<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，显式生成临时对象</li><li>8<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，隐式生成临时对象</li><li>9<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li><li>10<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li></ul><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      
+      
+      <categories>
+          
+          <category> C++ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> C++ </tag>
+            
+            <tag> 对象优化 </tag>
+            
+            <tag> c++课程 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>单例模式</title>
       <link href="/2023/05/19/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/"/>
       <url>/2023/05/19/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</url>

@@ -52,7 +52,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -388,14 +389,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-26
+                    2023-05-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    314
+                    310
                 </div>
                 
 
@@ -420,31 +421,31 @@
                 <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="git-config-设置用户名称和邮件地址"><a href="#git-config-设置用户名称和邮件地址" class="headerlink" title="git config 设置用户名称和邮件地址"></a><code>git config</code> 设置用户名称和邮件地址</h2><ul>
 <li>设置用户名称</li>
 </ul>
-<pre><code class="bash">git config --global user.name &quot;goto456&quot;
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> config --global user.name <span class="token string">"goto456"</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>设置邮件地址</li>
 </ul>
-<pre><code class="bash">git config --global user.email &quot;goto456@126.com&quot; 
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> config --global user.email <span class="token string">"goto456@126.com"</span> 
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>列出当前Git所有的配置信息</li>
 </ul>
-<pre><code class="bash">git config --list 
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> config --list 
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="git-init-初始化本地仓库"><a href="#git-init-初始化本地仓库" class="headerlink" title="git init 初始化本地仓库"></a><code>git init</code> 初始化本地仓库</h2><p>获取一个 Git 仓库有两种方法：<br>1.本地初始化一个仓库<br>2.从远程克隆一个仓库到本地<br>对于第1种方式，如果想对本地现有的一个项目用 Git 来管理，可以直接进入该项目的目录下执行如下命令，就可以将其初始化成一个 Git 仓库了。  </p>
-<pre><code class="bash">git init
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> init
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="git-clone-克隆远程仓库到本地"><a href="#git-clone-克隆远程仓库到本地" class="headerlink" title="git clone 克隆远程仓库到本地"></a><code>git clone</code> 克隆远程仓库到本地</h2><ul>
 <li>通过ssh方式克隆</li>
 </ul>
-<pre><code class="bash">git clone git@github.com:goto456/leetcode.git
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone git@github.com:goto456/leetcode.git
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>通过https方式克隆</li>
 </ul>
-<pre><code class="bash">git clone https://github.com/goto456/leetcode.git 
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/goto456/leetcode.git 
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <blockquote>
 <p>https方式：不管是谁，只要拿到该项目的 url 可以随便 clone，但是在 push 到远程的时候需要验证用户名和密码；<br>ssh方式：需要现将你电脑的SSH key（SSH公钥）添加到GitHub（或者其他代码托管网站）上，这样在 clone 项目和 push 项目到远程时都不需要输入用户名和密码。</p>
 </blockquote>

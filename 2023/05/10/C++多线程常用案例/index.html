@@ -52,7 +52,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -388,14 +389,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-26
+                    2023-05-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    363
+                    148
                 </div>
                 
 
@@ -418,33 +419,33 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>使用C++11 std库中的线程和条件变量实现notify_one的一个简单例子。在这个例子中，我们有一个线程向一个队列中添加元素，另一个线程从队列中删除元素。线程通过条件变量进行同步。</p>
-<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code class="c++">#include &lt;iostream&gt;
-#include &lt;thread&gt;
-#include &lt;queue&gt;
-#include &lt;mutex&gt;
-#include &lt;condition_variable&gt;
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
 
-std::queue&lt;int&gt; queue;
+std::queue<int> queue;
 std::mutex mtx;
 std::condition_variable cv;
 
 void producer(int value) &#123;
-    for (int i = 0; i &lt; value; ++i) &#123;
+    for (int i = 0; i < value; ++i) &#123;
         std::this_thread::sleep_for(std::chrono::seconds(1)); // 模拟生产
-        std::lock_guard&lt;std::mutex&gt; lock(mtx);
+        std::lock_guard<std::mutex> lock(mtx);
         queue.push(i);
-        std::cout &lt;&lt; &quot;Produced: &quot; &lt;&lt; i &lt;&lt; std::endl;
+        std::cout << "Produced: " << i << std::endl;
         cv.notify_one(); // 通知消费者
     &#125;
 &#125;
 
 void consumer() &#123;
     while(true) &#123;
-        std::unique_lock&lt;std::mutex&gt; lock(mtx);
+        std::unique_lock<std::mutex> lock(mtx);
         cv.wait(lock, []&#123; return !queue.empty(); &#125;); // 等待直到队列不为空
         int value = queue.front();
         queue.pop();
-        std::cout &lt;&lt; &quot;Consumed: &quot; &lt;&lt; value &lt;&lt; std::endl;
+        std::cout << "Consumed: " << value << std::endl;
     &#125;
 &#125;
 
@@ -457,7 +458,7 @@ int main() &#123;
 
     return 0;
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>在这个例子中，生产者线程在每次添加一个元素到队列后都会调用notify_one()来通知消费者线程。消费者线程在wait()函数中等待，直到收到通知并且队列不为空才会继续执行。</p>
 <p>需要注意的是，虽然在上述代码中我们的消费者线程是一个无限循环，但在实际的程序中，你需要有一种机制来结束这个线程。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">

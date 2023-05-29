@@ -52,7 +52,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -388,14 +389,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-26
+                    2023-05-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    816
                 </div>
                 
 
@@ -417,67 +418,67 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h1><pre><code class="bash">find 位置 -name &#39;名称&#39;
-</code></pre>
-<h1 id="aiApp执行命令"><a href="#aiApp执行命令" class="headerlink" title="aiApp执行命令"></a>aiApp执行命令</h1><h2 id="打印"><a href="#打印" class="headerlink" title="打印"></a>打印</h2><pre><code class="bash">tail -F /mnt/data/log/ylog | grep aiApp
-</code></pre>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre><code class="bash">/data/hq/bin/hqsetprop ctl.start aiApp
-</code></pre>
-<h2 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h2><pre><code class="bash">/data/hq/bin/hqsetprop ctl.stop aiApp
-</code></pre>
-<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre><code class="bash">/data/hq/bin/hqsetprop ctl.restart aiApp
-</code></pre>
-<h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><pre><code class="bash">ffplay -pixel_format nv12 -f rawvideo -video_size 240x576 stitch_view.yuv
-</code></pre>
-<pre><code class="bash">ffmpeg -pix_fmt nv12 -video_size 1280x720 -i src_1.yuv -y src_1.jpg
-</code></pre>
-<h1 id="ubuntu终端查看历史命令"><a href="#ubuntu终端查看历史命令" class="headerlink" title="ubuntu终端查看历史命令"></a>ubuntu终端查看历史命令</h1><pre><code class="bash">history | grep some_command
-</code></pre>
-<h1 id="查看cup限制"><a href="#查看cup限制" class="headerlink" title="查看cup限制"></a>查看cup限制</h1><pre><code class="bash">ps | grep limit 
-</code></pre>
-<h1 id="1126关闭DNS验证"><a href="#1126关闭DNS验证" class="headerlink" title="1126关闭DNS验证"></a>1126关闭DNS验证</h1><pre><code class="bash">vi /etc/nsswitch.conf
-</code></pre>
+                <h1 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">find</span> 位置 -name <span class="token string">'名称'</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="aiApp执行命令"><a href="#aiApp执行命令" class="headerlink" title="aiApp执行命令"></a>aiApp执行命令</h1><h2 id="打印"><a href="#打印" class="headerlink" title="打印"></a>打印</h2><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">tail</span> -F /mnt/data/log/ylog <span class="token operator">|</span> <span class="token function">grep</span> aiApp
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre class="line-numbers language-bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.start aiApp
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h2><pre class="line-numbers language-bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.stop aiApp
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre class="line-numbers language-bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.restart aiApp
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><pre class="line-numbers language-bash"><code class="language-bash">ffplay -pixel_format nv12 -f rawvideo -video_size 240x576 stitch_view.yuv
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">ffmpeg -pix_fmt nv12 -video_size 1280x720 -i src_1.yuv -y src_1.jpg
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="ubuntu终端查看历史命令"><a href="#ubuntu终端查看历史命令" class="headerlink" title="ubuntu终端查看历史命令"></a>ubuntu终端查看历史命令</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">history</span> <span class="token operator">|</span> <span class="token function">grep</span> some_command
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="查看cup限制"><a href="#查看cup限制" class="headerlink" title="查看cup限制"></a>查看cup限制</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">ps</span> <span class="token operator">|</span> <span class="token function">grep</span> limit 
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="1126关闭DNS验证"><a href="#1126关闭DNS验证" class="headerlink" title="1126关闭DNS验证"></a>1126关闭DNS验证</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">vi</span> /etc/nsswitch.conf
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>或者直接替换对应字段</p>
-<pre><code class="bash">sed -i &quot;s/dns/#dns/g&quot; `grep &quot;dns&quot; -rl /etc/nsswitch.conf`
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sed</span> -i <span class="token string">"s/dns/#dns/g"</span> `grep <span class="token string">"dns"</span> -rl /etc/nsswitch.conf`
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>注释 dns选项，如下所示：<blockquote>
 <p>hosts:          files #dns<br>networks:       files #dns</p>
 </blockquote>
 </li>
 </ul>
-<h1 id="强制关闭窗口"><a href="#强制关闭窗口" class="headerlink" title="强制关闭窗口"></a>强制关闭窗口</h1><pre><code class="bash">xkill
-</code></pre>
+<h1 id="强制关闭窗口"><a href="#强制关闭窗口" class="headerlink" title="强制关闭窗口"></a>强制关闭窗口</h1><pre class="line-numbers language-bash"><code class="language-bash">xkill
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>然后移动鼠标点击需要关闭的窗口即可</li>
 </ul>
-<h1 id="修改aiapp的cpu限制"><a href="#修改aiapp的cpu限制" class="headerlink" title="修改aiapp的cpu限制"></a>修改aiapp的cpu限制</h1><pre><code class="bash">vi /exapp/sh/run.sh
-</code></pre>
+<h1 id="修改aiapp的cpu限制"><a href="#修改aiapp的cpu限制" class="headerlink" title="修改aiapp的cpu限制"></a>修改aiapp的cpu限制</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">vi</span> /exapp/sh/run.sh
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>修改允许aiapp使用的cpu百分比 XX<blockquote>
 <p>#……………aiApp…CPU………<br>&#x2F;data&#x2F;hq&#x2F;bin&#x2F;cpulimit -l XX -e aiApp &amp;</p>
 </blockquote>
 </li>
 </ul>
-<h1 id="本地gitlab库添加远程库信任"><a href="#本地gitlab库添加远程库信任" class="headerlink" title="本地gitlab库添加远程库信任"></a>本地gitlab库添加远程库信任</h1><pre><code class="bash">git config --global --add safe.directory /media/geiyiren/MyCode/AVM/avm_2d/master/avm_cpu_algo
-</code></pre>
-<h1 id="保存yuv-buf图像"><a href="#保存yuv-buf图像" class="headerlink" title="保存yuv buf图像"></a>保存yuv buf图像</h1><pre><code class="C++">FILE *fp_dump = fopen(&quot;bsd_1.yuv&quot;, &quot;wb+&quot;);
+<h1 id="本地gitlab库添加远程库信任"><a href="#本地gitlab库添加远程库信任" class="headerlink" title="本地gitlab库添加远程库信任"></a>本地gitlab库添加远程库信任</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">git</span> config --global --add safe.directory /media/geiyiren/MyCode/AVM/avm_2d/master/avm_cpu_algo
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="保存yuv-buf图像"><a href="#保存yuv-buf图像" class="headerlink" title="保存yuv buf图像"></a>保存yuv buf图像</h1><pre class="line-numbers language-C++"><code class="language-C++">FILE *fp_dump = fopen("bsd_1.yuv", "wb+");
 if (fp_dump == NULL)
 &#123;
-    printf(&quot;fp_dump open fail\n&quot;);
+    printf("fp_dump open fail\n");
 &#125;
 else
 &#123;
-    printf(&quot;fp_dump cam  yuv open success\n&quot;);
+    printf("fp_dump cam  yuv open success\n");
 &#125;
 size_t bytes_write = fwrite(p_yuv_buf[1], width * height * 3 / 2 , 1, fp_dump);
 
-if (bytes_write &lt;= 0)
+if (bytes_write <= 0)
 &#123;
-    printf(&quot;write raw_stream fail !!!\n&quot;);
+    printf("write raw_stream fail !!!\n");
 &#125;
 fclose(fp_dump);
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="批量将jpg转换为yuv"><a href="#批量将jpg转换为yuv" class="headerlink" title="批量将jpg转换为yuv"></a>批量将jpg转换为yuv</h1><pre><code>#! /bin/bash
 files=$(ls $folder)
 yuv=&quot;yuv&quot;
@@ -489,92 +490,92 @@ do
   ffmpeg -i $file -s 1280*720 -pix_fmt nv12 $str
 done
 </code></pre>
-<h1 id="abd-常用命令"><a href="#abd-常用命令" class="headerlink" title="abd 常用命令"></a>abd 常用命令</h1><h2 id="打开调试端口"><a href="#打开调试端口" class="headerlink" title="打开调试端口"></a>打开调试端口</h2><pre><code class="bash">adb tcpip 5555
-</code></pre>
-<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><pre><code class="bash">adb connect 10.10.200.140
-</code></pre>
-<h2 id="进入远程终端"><a href="#进入远程终端" class="headerlink" title="进入远程终端"></a>进入远程终端</h2><pre><code class="bash">adb shell
-</code></pre>
-<h2 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h2><pre><code class="bash">adb kill-server
-</code></pre>
-<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre><code class="bash">adb start-server
-</code></pre>
-<h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre><code class="bash">adb remount
-</code></pre>
-<h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre><code class="bash">adb root
-</code></pre>
-<h2 id="安卓录制屏幕"><a href="#安卓录制屏幕" class="headerlink" title="安卓录制屏幕"></a>安卓录制屏幕</h2><pre><code class="bash">adb shell screenrecord  --time-limit 12 /sdcard/name.mp4
-</code></pre>
-<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre><code class="bash">setprop persist.otg.mode device
-</code></pre>
+<h1 id="abd-常用命令"><a href="#abd-常用命令" class="headerlink" title="abd 常用命令"></a>abd 常用命令</h1><h2 id="打开调试端口"><a href="#打开调试端口" class="headerlink" title="打开调试端口"></a>打开调试端口</h2><pre class="line-numbers language-bash"><code class="language-bash">adb tcpip 5555
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><pre class="line-numbers language-bash"><code class="language-bash">adb connect 10.10.200.140
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="进入远程终端"><a href="#进入远程终端" class="headerlink" title="进入远程终端"></a>进入远程终端</h2><pre class="line-numbers language-bash"><code class="language-bash">adb shell
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h2><pre class="line-numbers language-bash"><code class="language-bash">adb kill-server
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre class="line-numbers language-bash"><code class="language-bash">adb start-server
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre class="line-numbers language-bash"><code class="language-bash">adb remount
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre class="line-numbers language-bash"><code class="language-bash">adb root
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="安卓录制屏幕"><a href="#安卓录制屏幕" class="headerlink" title="安卓录制屏幕"></a>安卓录制屏幕</h2><pre class="line-numbers language-bash"><code class="language-bash">adb shell screenrecord  --time-limit 12 /sdcard/name.mp4
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre class="line-numbers language-bash"><code class="language-bash">setprop persist.otg.mode device
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>远程登录后使用上述命令</li>
 </ul>
-<h1 id="远程为安卓设备安装软件"><a href="#远程为安卓设备安装软件" class="headerlink" title="远程为安卓设备安装软件"></a>远程为安卓设备安装软件</h1><pre><code class="bash">adb install Launcher3.apk
-</code></pre>
+<h1 id="远程为安卓设备安装软件"><a href="#远程为安卓设备安装软件" class="headerlink" title="远程为安卓设备安装软件"></a>远程为安卓设备安装软件</h1><pre class="line-numbers language-bash"><code class="language-bash">adb <span class="token function">install</span> Launcher3.apk
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>在本地执行上述命令</li>
 </ul>
-<h1 id="查看当前文件下所有文件大小"><a href="#查看当前文件下所有文件大小" class="headerlink" title="查看当前文件下所有文件大小"></a>查看当前文件下所有文件大小</h1><pre><code class="bash">#以M为单位查看当前文件下所有文件的大小，包含隐藏文件
-du -sm .[!.]* * | sort -hr
-</code></pre>
-<h1 id="查看磁盘剩余空间"><a href="#查看磁盘剩余空间" class="headerlink" title="查看磁盘剩余空间"></a>查看磁盘剩余空间</h1><pre><code class="bash">df -hl
-</code></pre>
-<h1 id="github访问加速"><a href="#github访问加速" class="headerlink" title="github访问加速"></a>github访问加速</h1><h2 id="查询IP"><a href="#查询IP" class="headerlink" title="查询IP"></a>查询IP</h2><pre><code class="bash">#github.global.ssl.fastly.net 网站IP
-nslookup github.global.ssl.fastly.net
-#github.com 网站IP
-nslookup github.com
-</code></pre>
-<h2 id="更改host文件"><a href="#更改host文件" class="headerlink" title="更改host文件"></a>更改host文件</h2><pre><code class="bash">sudo gedit /etc/hosts
-</code></pre>
+<h1 id="查看当前文件下所有文件大小"><a href="#查看当前文件下所有文件大小" class="headerlink" title="查看当前文件下所有文件大小"></a>查看当前文件下所有文件大小</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#以M为单位查看当前文件下所有文件的大小，包含隐藏文件</span>
+<span class="token function">du</span> -sm .<span class="token punctuation">[</span><span class="token operator">!</span>.<span class="token punctuation">]</span>* * <span class="token operator">|</span> <span class="token function">sort</span> -hr
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h1 id="查看磁盘剩余空间"><a href="#查看磁盘剩余空间" class="headerlink" title="查看磁盘剩余空间"></a>查看磁盘剩余空间</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">df</span> -hl
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="github访问加速"><a href="#github访问加速" class="headerlink" title="github访问加速"></a>github访问加速</h1><h2 id="查询IP"><a href="#查询IP" class="headerlink" title="查询IP"></a>查询IP</h2><pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#github.global.ssl.fastly.net 网站IP</span>
+<span class="token function">nslookup</span> github.global.ssl.fastly.net
+<span class="token comment" spellcheck="true">#github.com 网站IP</span>
+<span class="token function">nslookup</span> github.com
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="更改host文件"><a href="#更改host文件" class="headerlink" title="更改host文件"></a>更改host文件</h2><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/hosts
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>将上述查询到的IP复制到对应位置</li>
 </ul>
-<h2 id="更新host文件"><a href="#更新host文件" class="headerlink" title="更新host文件"></a>更新host文件</h2><pre><code class="bash">sudo /etc/init.d/network-manager restart
-</code></pre>
-<h1 id="BSD测试程序运行命令"><a href="#BSD测试程序运行命令" class="headerlink" title="BSD测试程序运行命令"></a>BSD测试程序运行命令</h1><pre><code class="bash">#801-s(rv1126)测试BSD程序运行命令
-cd /exapp/app
+<h2 id="更新host文件"><a href="#更新host文件" class="headerlink" title="更新host文件"></a>更新host文件</h2><pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">sudo</span> /etc/init.d/network-manager restart
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="BSD测试程序运行命令"><a href="#BSD测试程序运行命令" class="headerlink" title="BSD测试程序运行命令"></a>BSD测试程序运行命令</h1><pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#801-s(rv1126)测试BSD程序运行命令</span>
+<span class="token function">cd</span> /exapp/app
 ./bsd_proc_test -d /dev/video0 -w 1280 -h 720
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 <h1 id="鸿鹄"><a href="#鸿鹄" class="headerlink" title="鸿鹄"></a>鸿鹄</h1><h2 id="鸿鹄设备常用命令"><a href="#鸿鹄设备常用命令" class="headerlink" title="鸿鹄设备常用命令"></a>鸿鹄设备常用命令</h2><ul>
 <li>以root身份挂载</li>
 </ul>
-<pre><code class="bash">adb root &amp;&amp; adb remount
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">adb root <span class="token operator">&amp;&amp;</span> adb remount
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>推送apk</li>
 </ul>
-<pre><code class="bash">cd /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/MultiCameraDemo/avm_gpu_algo/app/build/outputs/apk/debug
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/MultiCameraDemo/avm_gpu_algo/app/build/outputs/apk/debug
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre><code>adb push MultiCameraDemo.apk /system/priv-app/MultiCameraDemo/
 </code></pre>
 <ul>
 <li>推送库文件</li>
 </ul>
-<pre><code class="bash">cd /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/AVM_BSD_honghu/avm_gpu_algo/libs/arm64-v8a
-</code></pre>
-<pre><code class="bash">adb push libavmjni.so /system/priv-app/MultiCameraDemo/lib/arm64/
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash"><span class="token function">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/AVM_BSD_honghu/avm_gpu_algo/libs/arm64-v8a
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">adb push libavmjni.so /system/priv-app/MultiCameraDemo/lib/arm64/
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>查看log日志</li>
 </ul>
-<pre><code class="bash">adb shell logcat &gt; log.txt
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">adb shell logcat <span class="token operator">></span> log.txt
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>保存NATIVE_LOG日志(cpp端打印信息)</li>
 </ul>
-<pre><code class="bash">adb shell logcat -s NATIVE_LOG &gt; log.txt
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">adb shell logcat -s NATIVE_LOG <span class="token operator">></span> log.txt
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>保存程序运行严重错误日志(一般程序异常退出时打印该log)</li>
 </ul>
-<pre><code class="bash">adb shell logcat *:F &gt; log.txt
-</code></pre>
-<h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><pre><code class="bash"> data
+<pre class="line-numbers language-bash"><code class="language-bash">adb shell logcat *:F <span class="token operator">></span> log.txt
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><pre class="line-numbers language-bash"><code class="language-bash"> data
  └── gpu0------------
      ├── calibrate
-     │   ├── **CALMAT.BIN**
-     │   └── **LENS.BIN**
+     │   ├── **CALMAT.BIN**
+     │   └── **LENS.BIN**
      └── shader
          ├── **avm_3d_blend_lut.bin**
          ├── **avm_3d_indices.bin**
@@ -583,7 +584,7 @@ cd /exapp/app
          ├── car_model_line.vs
          ├── car_model_test.fs
          ├── car_model_test.vs
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="鸿鹄Bug查询关键字"><a href="#鸿鹄Bug查询关键字" class="headerlink" title="鸿鹄Bug查询关键字"></a>鸿鹄Bug查询关键字</h2><table>
 <thead>
 <tr>
@@ -604,29 +605,29 @@ cd /exapp/app
 <td align="left">AVM cpp端的打印</td>
 </tr>
 </tbody></table>
-<h2 id="鸿鹄CPU占用与GPU占用查看"><a href="#鸿鹄CPU占用与GPU占用查看" class="headerlink" title="鸿鹄CPU占用与GPU占用查看"></a>鸿鹄CPU占用与GPU占用查看</h2><pre><code class="bash"># adb登录后执行如下命令:
-## GPU
-cat /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
-watch -n 1 cat /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
-## CPU
-top
-</code></pre>
+<h2 id="鸿鹄CPU占用与GPU占用查看"><a href="#鸿鹄CPU占用与GPU占用查看" class="headerlink" title="鸿鹄CPU占用与GPU占用查看"></a>鸿鹄CPU占用与GPU占用查看</h2><pre class="line-numbers language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># adb登录后执行如下命令:</span>
+<span class="token comment" spellcheck="true">## GPU</span>
+<span class="token function">cat</span> /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
+<span class="token function">watch</span> -n 1 <span class="token function">cat</span> /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
+<span class="token comment" spellcheck="true">## CPU</span>
+<span class="token function">top</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <blockquote>
 <p>更加详细的资源查看可参照：软件snapdragonprofiler_external_linux</p>
 <p>Snapdragon Profiler是高通开发的用于调试分析高通Adreno GPU的一款桌面应用，支持Windows、MacOS 和 Linux 。在调试opengles应用程序上能发挥非常重要的作用。该工具能够捕捉CPU、GPU、DSP、内存、功率、网络连接和设备运行时的发热数据等，具有Realtime、Trace Capture、Snapshot Capture 三种模式。实时(Realtime)模式用于实时跟踪数据，跟踪(Trace Capture)模式用于跟踪事件和数据，默认最大值是10秒。快照(Snapshot Capture)模式用于捕获OpenGL ES应用程序的当前帧并可以进行调试，包括单步调试绘制指令，查看和编辑着色器、程序、纹理以及查看像素历史的能力。着色器代码是通过反编译得到，得到的代码跟原glsl代码基本一致，并且可以在截图后修改glsl进行调试。</p>
 <p>作者：cain_huang<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d8d1a231dada">https://www.jianshu.com/p/d8d1a231dada</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
 </blockquote>
 <h1 id="ssh相关"><a href="#ssh相关" class="headerlink" title="ssh相关"></a>ssh相关</h1><h2 id="主机A免密登录主机B"><a href="#主机A免密登录主机B" class="headerlink" title="主机A免密登录主机B"></a>主机A免密登录主机B</h2><p>在主机A执行如下命令</p>
-<pre><code class="bash">ssh-copy-id 主机B的用户名@主机B的IP地址
-</code></pre>
+<pre class="line-numbers language-bash"><code class="language-bash">ssh-copy-id 主机B的用户名@主机B的IP地址
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="NEON优化相关函数"><a href="#NEON优化相关函数" class="headerlink" title="NEON优化相关函数"></a>NEON优化相关函数</h1><h2 id="internal-prefetch"><a href="#internal-prefetch" class="headerlink" title="internal::prefetch()"></a>internal::prefetch()</h2><p>作用：将数据放在缓存中</p>
 <h2 id="vld1q"><a href="#vld1q" class="headerlink" title="vld1q()"></a>vld1q()</h2><p>作用：加载数据</p>
 <p>例如：</p>
-<pre><code class="C++">float32x4_t q0 = vld1q_f32(d0); // 加载 d0 地址起始的 4 个 float 数据到 q0
-</code></pre>
+<pre class="line-numbers language-C++"><code class="language-C++">float32x4_t q0 = vld1q_f32(d0); // 加载 d0 地址起始的 4 个 float 数据到 q0
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="internal-getRowPtr"><a href="#internal-getRowPtr" class="headerlink" title="internal::getRowPtr()"></a>internal::getRowPtr()</h2><p>例如：</p>
-<pre><code class="C++">internal::getRowPtr(src0Base, src0Stride, y);  //返回src0Base+src0Stride*y的地址
-</code></pre>
+<pre class="line-numbers language-C++"><code class="language-C++">internal::getRowPtr(src0Base, src0Stride, y);  //返回src0Base+src0Stride*y的地址
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>

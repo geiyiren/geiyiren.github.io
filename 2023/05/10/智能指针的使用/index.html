@@ -52,7 +52,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
@@ -395,7 +396,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    398
                 </div>
                 
 
@@ -427,75 +428,75 @@
 </li>
 </ul>
 <p>智能指针的使用可以极大地简化内存管理，避免内存泄漏和其他与生命周期管理相关的错误。然而，它们并不能解决所有的内存管理问题，仍然需要程序员小心谨慎地设计他们的代码。</p>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="std-unique-ptr示例"><a href="#std-unique-ptr示例" class="headerlink" title="std::unique_ptr示例"></a><code>std::unique_ptr</code>示例</h2><pre><code class="c++">#include &lt;memory&gt;
+<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><h2 id="std-unique-ptr示例"><a href="#std-unique-ptr示例" class="headerlink" title="std::unique_ptr示例"></a><code>std::unique_ptr</code>示例</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <memory>
 
 struct Foo &#123;
-    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
-    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
-    void bar() &#123; std::cout &lt;&lt; &quot;Foo::bar\n&quot;; &#125;
+    Foo() &#123; std::cout << "Foo::Foo\n"; &#125;
+    ~Foo() &#123; std::cout << "Foo::~Foo\n"; &#125;
+    void bar() &#123; std::cout << "Foo::bar\n"; &#125;
 &#125;;
 
-void f(const Foo &amp;) &#123;
-    std::cout &lt;&lt; &quot;f(const Foo&amp;)\n&quot;;
+void f(const Foo &) &#123;
+    std::cout << "f(const Foo&)\n";
 &#125;
 
 int main() &#123;
-    std::unique_ptr&lt;Foo&gt; p1(new Foo);  // p1 独占 Foo
+    std::unique_ptr<Foo> p1(new Foo);  // p1 独占 Foo
 
-    p1-&gt;bar();  // 输出 &quot;Foo::bar&quot;
+    p1->bar();  // 输出 "Foo::bar"
 
     &#123;
-        std::unique_ptr&lt;Foo&gt; p2(std::move(p1));  // 现在 p2 独占 Foo
+        std::unique_ptr<Foo> p2(std::move(p1));  // 现在 p2 独占 Foo
         f(*p2);
         p1 = std::move(p2);  // 现在 p1 独占 Foo
     &#125;
 
-    p1-&gt;bar();  // 输出 &quot;Foo::bar&quot;
+    p1->bar();  // 输出 "Foo::bar"
 
     // Foo 的析构器在这里被调用，因为 p1 被销毁
 &#125;
-</code></pre>
-<h2 id="std-shared-ptr示例"><a href="#std-shared-ptr示例" class="headerlink" title="std::shared_ptr示例"></a><code>std::shared_ptr</code>示例</h2><pre><code class="c++">#include &lt;memory&gt;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="std-shared-ptr示例"><a href="#std-shared-ptr示例" class="headerlink" title="std::shared_ptr示例"></a><code>std::shared_ptr</code>示例</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <memory>
 
 struct Foo &#123;
-    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
-    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
-    void bar() &#123; std::cout &lt;&lt; &quot;Foo::bar\n&quot;; &#125;
+    Foo() &#123; std::cout << "Foo::Foo\n"; &#125;
+    ~Foo() &#123; std::cout << "Foo::~Foo\n"; &#125;
+    void bar() &#123; std::cout << "Foo::bar\n"; &#125;
 &#125;;
 
 int main() &#123;
-    std::shared_ptr&lt;Foo&gt; p1 = std::make_shared&lt;Foo&gt;();
+    std::shared_ptr<Foo> p1 = std::make_shared<Foo>();
     // 这里，我们不再需要使用 new。std::make_shared 是一个更安全，更高效的方式来分配共享对象。
     
-    p1-&gt;bar();  // 输出 &quot;Foo::bar&quot;
+    p1->bar();  // 输出 "Foo::bar"
 
     &#123;
-        std::shared_ptr&lt;Foo&gt; p2 = p1;
-        p2-&gt;bar();  // 输出 &quot;Foo::bar&quot;
+        std::shared_ptr<Foo> p2 = p1;
+        p2->bar();  // 输出 "Foo::bar"
         // Foo 的实例仍未被删除，因为 p1 和 p2 都还在作用域内
     &#125;
     
-    p1-&gt;bar();  // 输出 &quot;Foo::bar&quot;
+    p1->bar();  // 输出 "Foo::bar"
     
     // Foo 的析构器在这里被调用，因为 p1 离开了作用域
 &#125;
-</code></pre>
-<h2 id="std-weak-ptr示例"><a href="#std-weak-ptr示例" class="headerlink" title="std::weak_ptr示例"></a><code>std::weak_ptr</code>示例</h2><pre><code class="c++">#include &lt;memory&gt;
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="std-weak-ptr示例"><a href="#std-weak-ptr示例" class="headerlink" title="std::weak_ptr示例"></a><code>std::weak_ptr</code>示例</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <memory>
 
 struct Foo &#123;
-    Foo() &#123; std::cout &lt;&lt; &quot;Foo::Foo\n&quot;; &#125;
-    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo::~Foo\n&quot;; &#125;
+    Foo() &#123; std::cout << "Foo::Foo\n"; &#125;
+    ~Foo() &#123; std::cout << "Foo::~Foo\n"; &#125;
 &#125;;
 
 int main() &#123;
-    std::weak_ptr&lt;Foo&gt; weak;
+    std::weak_ptr<Foo> weak;
     &#123;
-        std::shared_ptr&lt;Foo&gt; shared = std::make_shared&lt;Foo&gt;();
+        std::shared_ptr<Foo> shared = std::make_shared<Foo>();
         weak = shared;
         // 在 shared 存在的时候，我们可以使用 weak 来获取一个新的 shared_ptr 实例
         auto p = weak.lock();
         if (p) &#123;
-            std::cout &lt;&lt; &quot;Object has not been deleted\n&quot;;
+            std::cout << "Object has not been deleted\n";
         &#125;
     &#125;
 
@@ -504,53 +505,53 @@ int main() &#123;
     // 因为 Foo 已经被删除，所以我们不能再从 weak 中获取一个 shared_ptr
     auto p = weak.lock();
     if (!p) &#123;
-        std::cout &lt;&lt; &quot;Object has been deleted\n&quot;;
+        std::cout << "Object has been deleted\n";
     &#125;
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h1><h2 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h2><p>智能指针的 reset 方法是用于释放智能指针当前拥有的对象，并可能接管新的对象。</p>
 <p>以下是 std::unique_ptr 和 std::shared_ptr 的 reset 方法的使用：</p>
 <ul>
 <li><code>std::unique_ptr</code> 的 <code>reset</code> 方法</li>
 </ul>
-<pre><code class="c++">#include &lt;memory&gt;
+<pre class="line-numbers language-c++"><code class="language-c++">#include <memory>
 
 struct Foo &#123;
-    Foo(int val) : value(val) &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; constructed.\n&quot;; &#125;
-    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; destructed.\n&quot;; &#125;
+    Foo(int val) : value(val) &#123; std::cout << "Foo " << value << " constructed.\n"; &#125;
+    ~Foo() &#123; std::cout << "Foo " << value << " destructed.\n"; &#125;
     int value;
 &#125;;
 
 int main() &#123;
-    std::unique_ptr&lt;Foo&gt; p(new Foo(1));  // p 现在指向一个新的 Foo 对象
+    std::unique_ptr<Foo> p(new Foo(1));  // p 现在指向一个新的 Foo 对象
 
     p.reset(new Foo(2));  // p 释放旧的 Foo 对象并指向一个新的 Foo 对象
-    // 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
+    // 在这一步，"Foo 1 destructed." 被打印到控制台
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <ul>
 <li><code>std::shared_ptr</code> 的 <code>reset</code> 方法</li>
 </ul>
-<pre><code class="c++">#include &lt;memory&gt;
+<pre class="line-numbers language-c++"><code class="language-c++">#include <memory>
 
 struct Foo &#123;
-    Foo(int val) : value(val) &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; constructed.\n&quot;; &#125;
-    ~Foo() &#123; std::cout &lt;&lt; &quot;Foo &quot; &lt;&lt; value &lt;&lt; &quot; destructed.\n&quot;; &#125;
+    Foo(int val) : value(val) &#123; std::cout << "Foo " << value << " constructed.\n"; &#125;
+    ~Foo() &#123; std::cout << "Foo " << value << " destructed.\n"; &#125;
     int value;
 &#125;;
 
 int main() &#123;
-    std::shared_ptr&lt;Foo&gt; p1 = std::make_shared&lt;Foo&gt;(1);  // p1 现在指向一个新的 Foo 对象
+    std::shared_ptr<Foo> p1 = std::make_shared<Foo>(1);  // p1 现在指向一个新的 Foo 对象
 
-    std::shared_ptr&lt;Foo&gt; p2 = p1;  // p2 也指向同一个 Foo 对象
+    std::shared_ptr<Foo> p2 = p1;  // p2 也指向同一个 Foo 对象
 
     p1.reset(new Foo(2));  // p1 释放旧的 Foo 对象并指向一个新的 Foo 对象
-    // 但是，&quot;Foo 1 destructed.&quot; 并未被打印到控制台，因为 p2 仍然拥有它
+    // 但是，"Foo 1 destructed." 并未被打印到控制台，因为 p2 仍然拥有它
 
     p2.reset();  // p2 释放它的 Foo 对象
-    // 在这一步，&quot;Foo 1 destructed.&quot; 被打印到控制台
+    // 在这一步，"Foo 1 destructed." 被打印到控制台
 &#125;
-</code></pre>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>

@@ -3,7 +3,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="keywords" content="C++对象优化, geiyiren">
     <meta name="description" content="C++接口定义">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,12 +52,12 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
+<meta name="generator" content="Hexo 6.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
 <link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
 
 
 <body>
-    <header class="navbar-fixed">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -393,7 +393,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-29
+                    2023-05-30
                 </div>
                 
 
@@ -529,6 +529,79 @@ Test<span class="token punctuation">(</span>int<span class="token punctuation">)
 <li>9<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li>
 <li>10<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li>
 </ul>
+<pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
+using namespace std;
+class Test
+&#123;
+public:
+    Test(int a=5, int b = 5) : ma(a),mb(b)
+    &#123;
+        cout<<"Test(int, int)"<<endl;
+    &#125;
+
+    ~Test()
+    &#123;
+        cout<<"~Test()"<<endl;
+    &#125;
+
+    Test(const Test &src) : ma(src.ma), mb(src.mb)
+    &#123;
+        cout<<"Test(const Test &)"<<endl;
+    &#125;
+
+    Test operator = (const Test &src)
+    &#123;
+        ma = src.ma;
+        mb = src.mb;
+        cout<<"operator = "<<endl;
+    &#125;
+private:
+    int ma;
+    int mb;
+&#125;;
+
+cout<<"--- 1 ---"<<endl;
+Test t1(10,10);
+
+int main()
+&#123;
+    cout<<"--- 3 ---"<<endl;
+    Test t2(20,20);
+
+    cout<<"--- 4 ---"<<endl;
+    Test t3 = t2;
+
+    cout<<"--- 5 ---"<<endl;
+    static Test t4 = Test(30,30);
+
+    cout<<"--- 6 ---"<<endl;
+    t2 = Test(40,40);
+
+    cout<<"--- 7 ---"<<endl;
+    t2 = (Test)(50,50);
+
+    cout<<"--- 8 ---"<<endl;
+    t2 = 60;
+
+    cout<<"--- 9 ---"<<endl;
+    Test *p1 = new Test(70,70);
+
+    cout<<"--- 10 ---"<<endl;
+    Test *p2 = new Test[2];
+
+    cout<<"--- 11 ---"<<endl;
+    Test *p3 = &Test(80,80);
+
+    cout<<"--- 12 ---"<<endl;
+    const Test &p4 = Test(90,90);
+    
+    delete p1;
+    delete &#123;&#125; p2;
+&#125;
+
+cout<<"--- 2 ---"<<endl;
+Test t5(100,100);
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
@@ -1191,7 +1264,7 @@ $(function () {
     
 
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 
 </body>

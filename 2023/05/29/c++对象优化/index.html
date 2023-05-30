@@ -3,7 +3,7 @@
 
 
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="keywords" content="C++对象优化, geiyiren">
     <meta name="description" content="C++接口定义">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,12 +52,11 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -400,7 +399,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    34
+                    1k
                 </div>
                 
 
@@ -417,106 +416,109 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="对象使用过程中背后调用了哪些方法"><a href="#对象使用过程中背后调用了哪些方法" class="headerlink" title="对象使用过程中背后调用了哪些方法"></a>对象使用过程中背后调用了哪些方法</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
+                <h1 id="对象使用过程中背后调用了哪些方法"><a href="#对象使用过程中背后调用了哪些方法" class="headerlink" title="对象使用过程中背后调用了哪些方法"></a>对象使用过程中背后调用了哪些方法</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
 using namespace std;
 class Test
 &#123;
 public:
-    Test(int a=10):ma(a)
-    &#123;
-        cout<<"Test(int)"<<endl;
-    &#125;
+	Test(int a&#x3D;10):ma(a)
+	&#123;
+		cout&lt;&lt;&quot;Test(int)&quot;&lt;&lt;endl;
+	&#125;
 
-    ~Test()
-    &#123;
-        cout<<"~Test()"<<endl;
-    &#125;
+	~Test()
+	&#123;
+		cout&lt;&lt;&quot;~Test()&quot;&lt;&lt;endl;
+	&#125;
 
-    Test (const Test &t):ma(t.ma)
-    &#123;
-        cout<<"Test (const Test &t)"<<endl;
-    &#125;
+	Test (const Test &amp;t):ma(t.ma)
+	&#123;
+		cout&lt;&lt;&quot;Test (const Test &amp;t)&quot;&lt;&lt;endl;
+	&#125;
 
-    Test& operator=(const Test &t)
-    &#123;
-        cout<<"operator="<<endl;
-        ma = t.ma;
-        return *this;
-    &#125;
+	Test&amp; operator&#x3D;(const Test &amp;t)
+	&#123;
+		cout&lt;&lt;&quot;operator&#x3D;&quot;&lt;&lt;endl;
+		ma &#x3D; t.ma;
+		return *this;
+	&#125;
 private:
-    int ma;
+	int ma;
 &#125;;
 
 int main()
 &#123;
-    cout<<"--- 1 ---"<<endl;
-    Test t1;
+	cout&lt;&lt;&quot;--- 1 ---&quot;&lt;&lt;endl;
+	Test t1;
 
-    cout<<"--- 2 ---"<<endl;
-    Test t2(t1);
+	cout&lt;&lt;&quot;--- 2 ---&quot;&lt;&lt;endl;
+	Test t2(t1);
 
-    cout<<"--- 3 ---"<<endl;
-    Test t3 = t1;
+	cout&lt;&lt;&quot;--- 3 ---&quot;&lt;&lt;endl;
+	Test t3 &#x3D; t1;
 
-    cout<<"--- 4 ---"<<endl;
-    Test t4 = Test(20);
+	cout&lt;&lt;&quot;--- 4 ---&quot;&lt;&lt;endl;
+	Test t4 &#x3D; Test(20);
 
-    cout<<"--- 5 ---"<<endl;
-    t4 = t2;
+	cout&lt;&lt;&quot;--- 5 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; t2;
 
-    cout<<"--- 6 ---"<<endl;
-    t4 = Test(30);
+	cout&lt;&lt;&quot;--- 6 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; Test(30);
 
-    cout<<"--- 7 ---"<<endl;
-    t4 = (Test)30;
+	cout&lt;&lt;&quot;--- 7 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; (Test)30;
 
-    cout<<"--- 8 ---"<<endl;
-    t4 = 30;
+	cout&lt;&lt;&quot;--- 8 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; 30;
 
-    cout<<"--- 9 ---"<<endl;
-    //Test *p = &Test(40;)
+	cout&lt;&lt;&quot;--- 9 ---&quot;&lt;&lt;endl;
+	&#x2F;&#x2F;Test *p &#x3D; &amp;Test(40;)
 
-    cout<<"--- 10 ---"<<endl;
-    const Test &ref = Test(50);
+	cout&lt;&lt;&quot;--- 10 ---&quot;&lt;&lt;endl;
+	const Test &amp;ref &#x3D; Test(50);
 
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash"><code class="language-bash">--- 1 ---
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">--- <span class="token number">1</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
---- 2 ---
+--- <span class="token number">2</span> ---
 Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
---- 3 ---
+--- <span class="token number">3</span> ---
 Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
---- 4 ---
+--- <span class="token number">4</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
---- 5 ---
-operator<span class="token operator">=</span>
---- 6 ---
+--- <span class="token number">5</span> ---
+<span class="token assign-left variable">operator</span><span class="token operator">=</span>
+--- <span class="token number">6</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-operator<span class="token operator">=</span>
+<span class="token assign-left variable">operator</span><span class="token operator">=</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- 7 ---
+--- <span class="token number">7</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-operator<span class="token operator">=</span>
+<span class="token assign-left variable">operator</span><span class="token operator">=</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- 8 ---
+--- <span class="token number">8</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-operator<span class="token operator">=</span>
+<span class="token assign-left variable">operator</span><span class="token operator">=</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- 9 ---
---- 10 ---
+--- <span class="token number">9</span> ---
+--- <span class="token number">10</span> ---
 Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><ul>
 <li>1<br>正常使用构造函数生成t1，传入参数有默认值</li>
 <li>2<br>常见的拷贝构造</li>
@@ -529,80 +531,78 @@ Test<span class="token punctuation">(</span>int<span class="token punctuation">)
 <li>9<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li>
 <li>10<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li>
 </ul>
-<pre class="line-numbers language-c++"><code class="language-c++">#include <iostream>
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &lt;iostream&gt;
 using namespace std;
 class Test
 &#123;
 public:
-    Test(int a=5, int b = 5) : ma(a),mb(b)
-    &#123;
-        cout<<"Test(int, int)"<<endl;
-    &#125;
+	Test(int a&#x3D;5, int b &#x3D; 5) : ma(a),mb(b)
+	&#123;
+		cout&lt;&lt;&quot;Test(int, int)&quot;&lt;&lt;endl;
+	&#125;
 
-    ~Test()
-    &#123;
-        cout<<"~Test()"<<endl;
-    &#125;
+	~Test()
+	&#123;
+		cout&lt;&lt;&quot;~Test()&quot;&lt;&lt;endl;
+	&#125;
 
-    Test(const Test &src) : ma(src.ma), mb(src.mb)
-    &#123;
-        cout<<"Test(const Test &)"<<endl;
-    &#125;
+	Test(const Test &amp;src) : ma(src.ma), mb(src.mb)
+	&#123;
+		cout&lt;&lt;&quot;Test(const Test &amp;)&quot;&lt;&lt;endl;
+	&#125;
 
-    Test operator = (const Test &src)
-    &#123;
-        ma = src.ma;
-        mb = src.mb;
-        cout<<"operator = "<<endl;
-    &#125;
+	Test operator &#x3D; (const Test &amp;src)
+	&#123;
+		ma &#x3D; src.ma;
+		mb &#x3D; src.mb;
+		cout&lt;&lt;&quot;operator &#x3D; &quot;&lt;&lt;endl;
+	&#125;
 private:
-    int ma;
-    int mb;
+	int ma;
+	int mb;
 &#125;;
 
-cout<<"--- 1 ---"<<endl;
+cout&lt;&lt;&quot;--- 1 ---&quot;&lt;&lt;endl;
 Test t1(10,10);
 
 int main()
 &#123;
-    cout<<"--- 3 ---"<<endl;
-    Test t2(20,20);
+	cout&lt;&lt;&quot;--- 3 ---&quot;&lt;&lt;endl;
+	Test t2(20,20);
 
-    cout<<"--- 4 ---"<<endl;
-    Test t3 = t2;
+	cout&lt;&lt;&quot;--- 4 ---&quot;&lt;&lt;endl;
+	Test t3 &#x3D; t2;
 
-    cout<<"--- 5 ---"<<endl;
-    static Test t4 = Test(30,30);
+	cout&lt;&lt;&quot;--- 5 ---&quot;&lt;&lt;endl;
+	static Test t4 &#x3D; Test(30,30);
 
-    cout<<"--- 6 ---"<<endl;
-    t2 = Test(40,40);
+	cout&lt;&lt;&quot;--- 6 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; Test(40,40);
 
-    cout<<"--- 7 ---"<<endl;
-    t2 = (Test)(50,50);
+	cout&lt;&lt;&quot;--- 7 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; (Test)(50,50);
 
-    cout<<"--- 8 ---"<<endl;
-    t2 = 60;
+	cout&lt;&lt;&quot;--- 8 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; 60;
 
-    cout<<"--- 9 ---"<<endl;
-    Test *p1 = new Test(70,70);
+	cout&lt;&lt;&quot;--- 9 ---&quot;&lt;&lt;endl;
+	Test *p1 &#x3D; new Test(70,70);
 
-    cout<<"--- 10 ---"<<endl;
-    Test *p2 = new Test[2];
+	cout&lt;&lt;&quot;--- 10 ---&quot;&lt;&lt;endl;
+	Test *p2 &#x3D; new Test[2];
 
-    cout<<"--- 11 ---"<<endl;
-    Test *p3 = &Test(80,80);
+	cout&lt;&lt;&quot;--- 11 ---&quot;&lt;&lt;endl;
+	Test *p3 &#x3D; &amp;Test(80,80);
 
-    cout<<"--- 12 ---"<<endl;
-    const Test &p4 = Test(90,90);
-    
-    delete p1;
-    delete &#123;&#125; p2;
+	cout&lt;&lt;&quot;--- 12 ---&quot;&lt;&lt;endl;
+	const Test &amp;p4 &#x3D; Test(90,90);
+	
+	delete p1;
+	delete &#123;&#125; p2;
 &#125;
 
-cout<<"--- 2 ---"<<endl;
-Test t5(100,100);
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+cout&lt;&lt;&quot;--- 2 ---&quot;&lt;&lt;endl;
+Test t5(100,100);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>
@@ -874,6 +874,9 @@ Test t5(100,100);
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->
@@ -1264,7 +1267,7 @@ $(function () {
     
 
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
 </body>

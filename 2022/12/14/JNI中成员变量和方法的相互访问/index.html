@@ -3,7 +3,7 @@
 
 
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="keywords" content="JNI中成员变量和方法的相互访问, geiyiren">
     <meta name="description" content="JNI中成员变量和方法的相互访问">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,12 +52,11 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -396,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.4k
+                    1.7k
                 </div>
                 
 
@@ -412,6 +411,9 @@
         </div>
         <hr class="clearfix">
 
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
         
 
         
@@ -447,166 +449,163 @@
 </ul>
 <h1 id="涉及数据类型对照表"><a href="#涉及数据类型对照表" class="headerlink" title="涉及数据类型对照表"></a>涉及数据类型对照表</h1><h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/JNI%E4%B8%AD%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E7%9B%B8%E4%BA%92%E8%AE%BF%E9%97%AE/1.png"> </p>
 <h2 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/JNI%E4%B8%AD%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E7%9B%B8%E4%BA%92%E8%AE%BF%E9%97%AE/2.png"> </p>
-<h1 id="java访问C-的变量"><a href="#java访问C-的变量" class="headerlink" title="java访问C++的变量"></a><code>java</code>访问<code>C++</code>的变量</h1><pre class="line-numbers language-c++"><code class="language-c++">JNIEXPORT jint JNICALL
+<h1 id="java访问C-的变量"><a href="#java访问C-的变量" class="headerlink" title="java访问C++的变量"></a><code>java</code>访问<code>C++</code>的变量</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">JNIEXPORT jint JNICALL
 Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeGetViewInfo(JNIEnv *env,
                                                                                     jclass type,
                                                                                     jint cmd,
                                                                                     jobject output)
 &#123;
-    jclass objectClass = env->GetObjectClass(output);
+    jclass objectClass &#x3D; env-&gt;GetObjectClass(output);
 
-    // 通过GetFieldID方法得到这个对象的dist属性
-    jfieldID m3DBtnOn = env->GetFieldID(objectClass, "m3DBtnOn", "I");
-    jfieldID viewID = env->GetFieldID(objectClass, "viewID", "I");
-    jfieldID wheelViewID = env->GetFieldID(objectClass, "wheelViewID", "I");
-    jfieldID trajectoryLineViewID = env->GetFieldID(objectClass, "trajectoryLineViewID", "I");
-    jfieldID bsdViewID = env->GetFieldID(objectClass, "bsdViewID", "I");
-    jfieldID brightID = env->GetFieldID(objectClass, "brightID", "I");
-    //
-    jfieldID dist_l = env->GetFieldID(objectClass, "dist_l", "F");
-    jfieldID dist_r = env->GetFieldID(objectClass, "dist_r", "F");
-    jfieldID upon = env->GetFieldID(objectClass, "upon", "F");
-    jfieldID angle = env->GetFieldID(objectClass, "angle", "F");
-    jfieldID viewPointX = env->GetFieldID(objectClass, "viewPointX", "F");
-    jfieldID viewPointY = env->GetFieldID(objectClass, "viewPointY", "F");
+    &#x2F;&#x2F; 通过GetFieldID方法得到这个对象的dist属性
+    jfieldID m3DBtnOn &#x3D; env-&gt;GetFieldID(objectClass, &quot;m3DBtnOn&quot;, &quot;I&quot;);
+    jfieldID viewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewID&quot;, &quot;I&quot;);
+    jfieldID wheelViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;wheelViewID&quot;, &quot;I&quot;);
+    jfieldID trajectoryLineViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;trajectoryLineViewID&quot;, &quot;I&quot;);
+    jfieldID bsdViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;bsdViewID&quot;, &quot;I&quot;);
+    jfieldID brightID &#x3D; env-&gt;GetFieldID(objectClass, &quot;brightID&quot;, &quot;I&quot;);
+    &#x2F;&#x2F;
+    jfieldID dist_l &#x3D; env-&gt;GetFieldID(objectClass, &quot;dist_l&quot;, &quot;F&quot;);
+    jfieldID dist_r &#x3D; env-&gt;GetFieldID(objectClass, &quot;dist_r&quot;, &quot;F&quot;);
+    jfieldID upon &#x3D; env-&gt;GetFieldID(objectClass, &quot;upon&quot;, &quot;F&quot;);
+    jfieldID angle &#x3D; env-&gt;GetFieldID(objectClass, &quot;angle&quot;, &quot;F&quot;);
+    jfieldID viewPointX &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewPointX&quot;, &quot;F&quot;);
+    jfieldID viewPointY &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewPointY&quot;, &quot;F&quot;);
 
-    ParametersInit *m_Instance = ParametersInit::GetInstance();
+    ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
     avmmanager::TAvmViewTag m_view_info;
-    m_Instance->getViewInfo(m_view_info);
+    m_Instance-&gt;getViewInfo(m_view_info);
 
-    env->SetIntField(output, m3DBtnOn, m_view_info.m3DBtnOn);
-    env->SetIntField(output, viewID, m_view_info.viewID);
-    env->SetIntField(output, wheelViewID, m_view_info.wheelViewID);
-    env->SetIntField(output, trajectoryLineViewID, m_view_info.trajectoryLineViewID);
-    env->SetIntField(output, bsdViewID, m_view_info.bsdViewID);
-    env->SetIntField(output, brightID, m_view_info.brightID);
-    //
-    env->SetFloatField(output, dist_l, m_view_info.dist_l);
-    env->SetFloatField(output, dist_r, m_view_info.dist_r);
-    env->SetFloatField(output, upon, m_view_info.upon);
-    env->SetFloatField(output, angle, m_view_info.angle);
-    env->SetFloatField(output, viewPointX, m_view_info.viewPointX);
-    env->SetFloatField(output, viewPointY, m_view_info.viewPointY);
+    env-&gt;SetIntField(output, m3DBtnOn, m_view_info.m3DBtnOn);
+    env-&gt;SetIntField(output, viewID, m_view_info.viewID);
+    env-&gt;SetIntField(output, wheelViewID, m_view_info.wheelViewID);
+    env-&gt;SetIntField(output, trajectoryLineViewID, m_view_info.trajectoryLineViewID);
+    env-&gt;SetIntField(output, bsdViewID, m_view_info.bsdViewID);
+    env-&gt;SetIntField(output, brightID, m_view_info.brightID);
+    &#x2F;&#x2F;
+    env-&gt;SetFloatField(output, dist_l, m_view_info.dist_l);
+    env-&gt;SetFloatField(output, dist_r, m_view_info.dist_r);
+    env-&gt;SetFloatField(output, upon, m_view_info.upon);
+    env-&gt;SetFloatField(output, angle, m_view_info.angle);
+    env-&gt;SetFloatField(output, viewPointX, m_view_info.viewPointX);
+    env-&gt;SetFloatField(output, viewPointY, m_view_info.viewPointY);
     return 0;
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h1 id="C-访问java的变量"><a href="#C-访问java的变量" class="headerlink" title="C++访问java的变量"></a><code>C++</code>访问<code>java</code>的变量</h1><pre class="line-numbers language-c++"><code class="language-c++">
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="C-访问java的变量"><a href="#C-访问java的变量" class="headerlink" title="C++访问java的变量"></a><code>C++</code>访问<code>java</code>的变量</h1><pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">
 JNIEXPORT jint JNICALL
 Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeBSDInfo(JNIEnv *env,
                                                                 jobject obj, 
                                                                 jobjectArray objectArray)
 &#123;
-    jint ret = 0;
-    // 1. 获取数组的长度
-    jsize length = env->GetArrayLength(objectArray);
-    // XXX:数据长度永远为7，目前测试暂时支取第一个结果
+    jint ret &#x3D; 0;
+    &#x2F;&#x2F; 1. 获取数组的长度
+    jsize length &#x3D; env-&gt;GetArrayLength(objectArray);
+    &#x2F;&#x2F; XXX:数据长度永远为7，目前测试暂时支取第一个结果
     if (length)
-        length = 1;
+        length &#x3D; 1;
 
-    // 2. 获取Person类的Class对象
-    jclass class_Rect = env->FindClass("com/fibocom/aidl/Rect");
-    if (class_Rect == NULL)
+    &#x2F;&#x2F; 2. 获取Person类的Class对象
+    jclass class_Rect &#x3D; env-&gt;FindClass(&quot;com&#x2F;fibocom&#x2F;aidl&#x2F;Rect&quot;);
+    if (class_Rect &#x3D;&#x3D; NULL)
     &#123;
         return ret;
     &#125;
     else
     &#123;
-        LOGI(1, "====FindClass success===== \n");
+        LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;FindClass success&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; \n&quot;);
     &#125;
 
-    // 3. 获取Person的sayHello方法字段
-    jmethodID getX1 = env->GetMethodID(class_Rect, "getX1", "()I"); //(A)B---A为输入参数，B为输出参数
-    if (getX1 == nullptr)
+    &#x2F;&#x2F; 3. 获取Person的sayHello方法字段
+    jmethodID getX1 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getX1&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getX1 &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
-    jmethodID getX2 = env->GetMethodID(class_Rect, "getX2", "()I"); //(A)B---A为输入参数，B为输出参数
-    if (getX2 == nullptr)
+    jmethodID getX2 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getX2&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getX2 &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
-    jmethodID getY1 = env->GetMethodID(class_Rect, "getY1", "()I"); //(A)B---A为输入参数，B为输出参数
-    if (getY1 == nullptr)
+    jmethodID getY1 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getY1&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getY1 &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
-    jmethodID getY2 = env->GetMethodID(class_Rect, "getY2", "()I"); //(A)B---A为输入参数，B为输出参数
-    if (getY2 == nullptr)
+    jmethodID getY2 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getY2&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getY2 &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
-    jmethodID getCamID = env->GetMethodID(class_Rect, "getCamID", "()I"); //(A)B---A为输入参数，B为输出参数
-    if (getCamID == nullptr)
+    jmethodID getCamID &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getCamID&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getCamID &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
-    jmethodID getTimestamp = env->GetMethodID(class_Rect, "getTimestamp", "()J"); //(A)B---A为输入参数，B为输出参数
-    if (getTimestamp == nullptr)
+    jmethodID getTimestamp &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getTimestamp&quot;, &quot;()J&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
+    if (getTimestamp &#x3D;&#x3D; nullptr)
     &#123;
         return ret;
     &#125;
 
-    // 4. 循环调用每个方法
-    jint aaa=0;
-    avmmanager::TBsdBox *avm_bsd = new avmmanager::TBsdBox[length];
-    for (int i = 0; i < length; i++)
+    &#x2F;&#x2F; 4. 循环调用每个方法
+    jint aaa&#x3D;0;
+    avmmanager::TBsdBox *avm_bsd &#x3D; new avmmanager::TBsdBox[length];
+    for (int i &#x3D; 0; i &lt; length; i++)
     &#123;
-        // 获取引用类型数组的对象
-        jobject element = env->GetObjectArrayElement(objectArray, i);
-        // 判断数组元素是否是Person类对象
-        LOGI(1, "====nativeBSDInfo==== [%d] ===== \n", i);
-        if (element != nullptr)
+        &#x2F;&#x2F; 获取引用类型数组的对象
+        jobject element &#x3D; env-&gt;GetObjectArrayElement(objectArray, i);
+        &#x2F;&#x2F; 判断数组元素是否是Person类对象
+        LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; [%d] &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; \n&quot;, i);
+        if (element !&#x3D; nullptr)
         &#123;
-            // 调用Person对象的sayHello()方法
-            avm_bsd[i].left = env->CallIntMethod(element, getX1);
-            avm_bsd[i].right = env->CallIntMethod(element, getX2);
-            avm_bsd[i].top = env->CallIntMethod(element, getY1);
-            avm_bsd[i].bottom = env->CallIntMethod(element, getY2);
+            &#x2F;&#x2F; 调用Person对象的sayHello()方法
+            avm_bsd[i].left &#x3D; env-&gt;CallIntMethod(element, getX1);
+            avm_bsd[i].right &#x3D; env-&gt;CallIntMethod(element, getX2);
+            avm_bsd[i].top &#x3D; env-&gt;CallIntMethod(element, getY1);
+            avm_bsd[i].bottom &#x3D; env-&gt;CallIntMethod(element, getY2);
 
-            int camID = env->CallIntMethod(element, getCamID);
-            LOGI(1, "CallIntMethod %d \n", camID);
+            int camID &#x3D; env-&gt;CallIntMethod(element, getCamID);
+            LOGI(1, &quot;CallIntMethod %d \n&quot;, camID);
             switch (camID)
             &#123;
             case 7:
-                avm_bsd[i].cam_index = 0;
+                avm_bsd[i].cam_index &#x3D; 0;
                 break;
             case 4:
-                avm_bsd[i].cam_index = 1;
+                avm_bsd[i].cam_index &#x3D; 1;
                 break;
             case 6:
-                avm_bsd[i].cam_index = 2;
+                avm_bsd[i].cam_index &#x3D; 2;
                 break;
             case 5:
-                avm_bsd[i].cam_index = 3;
+                avm_bsd[i].cam_index &#x3D; 3;
                 break;
             default:
-                LOGI(1, "nativeBSDInfo cam_index %d \n", camID);
-                avm_bsd[i].cam_index = camID;
+                LOGI(1, &quot;nativeBSDInfo cam_index %d \n&quot;, camID);
+                avm_bsd[i].cam_index &#x3D; camID;
                 break;
             &#125;
 
-            avm_bsd[i].timestamp = env->CallLongMethod(element, getTimestamp);
-            avm_bsd[i].size = length;
-            LOGI(1, "====nativeBSDInfo==== X1[%d] %d  \n", i, avm_bsd[i].left);
-            LOGI(1, "====nativeBSDInfo==== X2[%d] %d  \n", i, avm_bsd[i].right);
-            LOGI(1, "====nativeBSDInfo==== Y1[%d] %d  \n", i, avm_bsd[i].top);
-            LOGI(1, "====nativeBSDInfo==== Y2[%d] %d  \n", i, avm_bsd[i].bottom);
-            LOGI(1, "====nativeBSDInfo==== id[%d] %d  \n", i, avm_bsd[i].cam_index);
-            LOGI(1, "====nativeBSDInfo==== timestamp[%d] %ld  \n", i, avm_bsd[i].timestamp);
-            LOGI(1, "====nativeBSDInfo==== size[%d] %d  \n", i, avm_bsd[i].size);
+            avm_bsd[i].timestamp &#x3D; env-&gt;CallLongMethod(element, getTimestamp);
+            avm_bsd[i].size &#x3D; length;
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; X1[%d] %d  \n&quot;, i, avm_bsd[i].left);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; X2[%d] %d  \n&quot;, i, avm_bsd[i].right);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; Y1[%d] %d  \n&quot;, i, avm_bsd[i].top);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; Y2[%d] %d  \n&quot;, i, avm_bsd[i].bottom);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; id[%d] %d  \n&quot;, i, avm_bsd[i].cam_index);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; timestamp[%d] %ld  \n&quot;, i, avm_bsd[i].timestamp);
+            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; size[%d] %d  \n&quot;, i, avm_bsd[i].size);
         &#125;
     &#125;
 
-    EventSystem::Instance()->SendEvent("avm_get_bsd_info", avm_bsd, [](void *ptr_event)
+    EventSystem::Instance()-&gt;SendEvent(&quot;avm_get_bsd_info&quot;, avm_bsd, [](void *ptr_event)
                                        &#123;
-        Event *event = (Event *) ptr_event;
-        bool *buf = (bool *) event->Parameter();
+        Event *event &#x3D; (Event *) ptr_event;
+        bool *buf &#x3D; (bool *) event-&gt;Parameter();
         delete buf;
         delete event; &#125;);
     return ret;
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>
@@ -868,6 +867,9 @@ Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeBSDInfo(JNIEnv *env,
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->
@@ -1258,7 +1260,7 @@ $(function () {
     
 
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
 </body>

@@ -3,7 +3,7 @@
 
 
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="keywords" content="编码规范, geiyiren">
     <meta name="description" content="C++、C、Java、C#等的编码规范">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,12 +52,11 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -404,7 +403,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    287
+                    317
                 </div>
                 
 
@@ -421,44 +420,47 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="C-编码规范"><a href="#C-编码规范" class="headerlink" title="C++编码规范"></a>C++编码规范</h1><p>&#x2F;&#x2F; 文件: 单词小写, 单词之间使用下划线</p>
-<pre class="line-numbers language-c++"><code class="language-c++">#include "a.h"
+<pre class="line-numbers language-c++" data-language="c++"><code class="language-c++">#include &quot;a.h&quot;
 
-// 命名空间: 小写字母
+&#x2F;&#x2F; 命名空间: 小写字母
 namespace mynamespace &#123;
-    // 常量: k开头, 每个单词首字母大写
-    const int kDaysInAWeek = 7;
+	&#x2F;&#x2F; 常量: k开头, 每个单词首字母大写
+	const int kDaysInAWeek &#x3D; 7;
 
-    // 类型定义
-    typedef hash_map<TUrlTableProperties *, string> TPropertiesMap;
-    using PropertiesMap = hash_map<TUrlTableProperties *, string>;
+	&#x2F;&#x2F; 类型定义
+	typedef hash_map&lt;TUrlTableProperties *, string&gt; TPropertiesMap;
+	using PropertiesMap &#x3D; hash_map&lt;TUrlTableProperties *, string&gt;;
 
-    // 全局变量、局部变量: 单词小写, 单词之间使用下划线
-    int my_name;
+	&#x2F;&#x2F; 全局变量、局部变量: 单词小写, 单词之间使用下划线
+	int my_name;
 
-    // 类: T开头, 每个单词首字母大写
-    class TMyClass &#123;
-    public:
-        // 结构体: T开头, 每个单词首字母大写
-        struct TMyStruct &#123;
-            // 普通变量: 单词小写, 单词之间使用下划线
-            int my_name;
-        &#125;;
+	&#x2F;&#x2F; 类: T开头, 每个单词首字母大写
+	class TMyClass &#123;
+	public:
+		&#x2F;&#x2F; 结构体: T开头, 每个单词首字母大写
+		struct TMyStruct &#123;
+			&#x2F;&#x2F; 普通变量: 单词小写, 单词之间使用下划线
+			int my_name;
+		&#125;;
 
-        // 函数: 每个单词首字母大写, 函数名首字母大写
-        MyExcitingFunction();
-    private:
-        // 类成员变量: 单词小写, 单词之间使用下划线, 最后以下划线结束
-        int my_name_;
+		&#x2F;&#x2F; 函数: 每个单词首字母大写, 函数名首字母大写
+		MyExcitingFunction();
+	private:
+		&#x2F;&#x2F; 类成员变量: 单词小写, 单词之间使用下划线, 最后以下划线结束
+		int my_name_;
 
-    &#125;;
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+	&#125;;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p><a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/blob/pdf/%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83/C%2B%2B%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83.pdf">C++编码规范</a></p>
 <blockquote>
 <p>C++编码规范.pdf的升级版本</p>
@@ -747,6 +749,9 @@ namespace mynamespace &#123;
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->
@@ -1137,7 +1142,7 @@ $(function () {
     
 
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
 </body>

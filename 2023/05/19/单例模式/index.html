@@ -3,7 +3,7 @@
 
 
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="keywords" content="单例模式, geiyiren">
     <meta name="description" content="单例模式">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -52,12 +52,11 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 6.3.0"><!-- hexo-inject:begin --><!-- hexo-inject:end --><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css">
-<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="navbar-fixed">
+    <header class="navbar-fixed">
     <nav id="headNav" class="bg-color nav-transparent">
         <div id="navContainer" class="nav-wrapper container">
             <div class="brand-logo">
@@ -396,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    274
+                    314
                 </div>
                 
 
@@ -413,6 +412,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -423,12 +425,12 @@
 <li>可实现一次初始化，多文件多次使用</li>
 <li>例如 ：相机的内参和外参一般只初始化一次，然后直接使用。</li>
 </ul>
-<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><h1 id="声明与定义"><a href="#声明与定义" class="headerlink" title="声明与定义"></a>声明与定义</h1><h3 id="ParametersInit-h"><a href="#ParametersInit-h" class="headerlink" title="ParametersInit.h"></a>ParametersInit.h</h3><pre class="line-numbers language-C++"><code class="language-C++">#ifndef __PARAMETERS_INIT_H__
+<h1 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h1><h1 id="声明与定义"><a href="#声明与定义" class="headerlink" title="声明与定义"></a>声明与定义</h1><h3 id="ParametersInit-h"><a href="#ParametersInit-h" class="headerlink" title="ParametersInit.h"></a>ParametersInit.h</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#ifndef __PARAMETERS_INIT_H__
 #define __PARAMETERS_INIT_H__
 
-// for thread-safe singleton
-#include <pthread.h>
-#include <iostream>
+&#x2F;&#x2F; for thread-safe singleton
+#include &lt;pthread.h&gt;
+#include &lt;iostream&gt;
 
 class ParametersInit
 &#123;
@@ -437,9 +439,9 @@ private:
     static pthread_once_t _once;
     int m_test;
 public:
-    ParametersInit(/* args */);
+    ParametersInit(&#x2F;* args *&#x2F;);
     ~ParametersInit();
-    //使用pthread_once保证init()只调用一次
+    &#x2F;&#x2F;使用pthread_once保证init()只调用一次
     static ParametersInit *GetInstance();
     static void init();
     void camParametersInit(int in_test);
@@ -448,13 +450,13 @@ public:
 
 #endif
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="ParametersInit-cpp"><a href="#ParametersInit-cpp" class="headerlink" title="ParametersInit.cpp"></a>ParametersInit.cpp</h3><pre class="line-numbers language-C++"><code class="language-C++">#include "../inc/ParametersInit.h"
+<h3 id="ParametersInit-cpp"><a href="#ParametersInit-cpp" class="headerlink" title="ParametersInit.cpp"></a>ParametersInit.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;..&#x2F;inc&#x2F;ParametersInit.h&quot;
 
-// 静态成员函数必须初始化后使用
-pthread_once_t ParametersInit::_once = 0;
-ParametersInit *ParametersInit::m_instance=NULL;
+&#x2F;&#x2F; 静态成员函数必须初始化后使用
+pthread_once_t ParametersInit::_once &#x3D; 0;
+ParametersInit *ParametersInit::m_instance&#x3D;NULL;
 
-ParametersInit::ParametersInit(/* args */)
+ParametersInit::ParametersInit(&#x2F;* args *&#x2F;)
 &#123;
 &#125;
 
@@ -465,35 +467,35 @@ void ParametersInit::init()
 &#123;
     while (!m_instance)
     &#123;
-        m_instance = new ParametersInit();
+        m_instance &#x3D; new ParametersInit();
     &#125;
 &#125;
 
 ParametersInit *ParametersInit::GetInstance()
 &#123;
-    pthread_once(&_once, ParametersInit::init);
+    pthread_once(&amp;_once, ParametersInit::init);
     return m_instance;
 &#125;
 void ParametersInit::camParametersInit(int in_test)
 &#123;
-    m_test = in_test;
+    m_test &#x3D; in_test;
 &#125;
 int ParametersInit::getTest()
 &#123;
     return m_test;
-&#125;
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="init-cpp"><a href="#init-cpp" class="headerlink" title="init.cpp"></a>init.cpp</h3><pre class="line-numbers language-C++"><code class="language-C++">#include "ParametersInit.h"
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-ParametersInit *m_Instance = ParametersInit::GetInstance();
-m_Instance->camParametersInit(100);
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-<h3 id="use1-cpp"><a href="#use1-cpp" class="headerlink" title="use1.cpp"></a>use1.cpp</h3><pre class="line-numbers language-C++"><code class="language-C++">#include "ParametersInit.h"
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="init-cpp"><a href="#init-cpp" class="headerlink" title="init.cpp"></a>init.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
 
-ParametersInit *m_Instance = ParametersInit::GetInstance();
-// 这里可以直接使用init.cpp初始化的参数ParametersInit::m_test
-int m_test = m_Instance->getTest();//m_test=100
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
+m_Instance-&gt;camParametersInit(100);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="use1-cpp"><a href="#use1-cpp" class="headerlink" title="use1.cpp"></a>use1.cpp</h3><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">#include &quot;ParametersInit.h&quot;
+
+ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
+&#x2F;&#x2F; 这里可以直接使用init.cpp初始化的参数ParametersInit::m_test
+int m_test &#x3D; m_Instance-&gt;getTest();&#x2F;&#x2F;m_test&#x3D;100<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <blockquote>
 <p>参考网站: <a target="_blank" rel="noopener" href="https://blog.csdn.net/CoderAldrich/article/details/83114881">https://blog.csdn.net/CoderAldrich/article/details/83114881</a></p>
 </blockquote>
@@ -763,6 +765,9 @@ int m_test = m_Instance->getTest();//m_test=100
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->
@@ -1153,7 +1158,7 @@ $(function () {
     
 
     
-    <script src="/libs/instantpage/instantpage.js" type="module"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
 </body>

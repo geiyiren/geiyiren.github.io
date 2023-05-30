@@ -451,22 +451,22 @@
 </ul>
 <h1 id="本地gitlab库添加远程库信任"><a href="#本地gitlab库添加远程库信任" class="headerlink" title="本地gitlab库添加远程库信任"></a>本地gitlab库添加远程库信任</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> <span class="token parameter variable">--add</span> safe.directory /media/geiyiren/MyCode/AVM/avm_2d/master/avm_cpu_algo<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h1 id="保存yuv-buf图像"><a href="#保存yuv-buf图像" class="headerlink" title="保存yuv buf图像"></a>保存yuv buf图像</h1><pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">FILE *fp_dump &#x3D; fopen(&quot;bsd_1.yuv&quot;, &quot;wb+&quot;);
-if (fp_dump &#x3D;&#x3D; NULL)
-&#123;
-	printf(&quot;fp_dump open fail\n&quot;);
-&#125;
-else
-&#123;
-	printf(&quot;fp_dump cam  yuv open success\n&quot;);
-&#125;
-size_t bytes_write &#x3D; fwrite(p_yuv_buf[1], width * height * 3 &#x2F; 2 , 1, fp_dump);
+<h1 id="保存yuv-buf图像"><a href="#保存yuv-buf图像" class="headerlink" title="保存yuv buf图像"></a>保存yuv buf图像</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">FILE <span class="token operator">*</span>fp_dump <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"bsd_1.yuv"</span><span class="token punctuation">,</span> <span class="token string">"wb+"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>fp_dump <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"fp_dump open fail\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">else</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"fp_dump cam  yuv open success\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+size_t bytes_write <span class="token operator">=</span> <span class="token function">fwrite</span><span class="token punctuation">(</span>p_yuv_buf<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> width <span class="token operator">*</span> height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> fp_dump<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-if (bytes_write &lt;&#x3D; 0)
-&#123;
-	printf(&quot;write raw_stream fail !!!\n&quot;);
-&#125;
-fclose(fp_dump);<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>bytes_write <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"write raw_stream fail !!!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">fclose</span><span class="token punctuation">(</span>fp_dump<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h1 id="批量将jpg转换为yuv"><a href="#批量将jpg转换为yuv" class="headerlink" title="批量将jpg转换为yuv"></a>批量将jpg转换为yuv</h1><pre><code>#! /bin/bash
 files=$(ls $folder)
@@ -576,10 +576,10 @@ done
 <h1 id="NEON优化相关函数"><a href="#NEON优化相关函数" class="headerlink" title="NEON优化相关函数"></a>NEON优化相关函数</h1><h2 id="internal-prefetch"><a href="#internal-prefetch" class="headerlink" title="internal::prefetch()"></a>internal::prefetch()</h2><p>作用：将数据放在缓存中</p>
 <h2 id="vld1q"><a href="#vld1q" class="headerlink" title="vld1q()"></a>vld1q()</h2><p>作用：加载数据</p>
 <p>例如：</p>
-<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">float32x4_t q0 &#x3D; vld1q_f32(d0); &#x2F;&#x2F; 加载 d0 地址起始的 4 个 float 数据到 q0<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">float32x4_t q0 <span class="token operator">=</span> <span class="token function">vld1q_f32</span><span class="token punctuation">(</span>d0<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 加载 d0 地址起始的 4 个 float 数据到 q0</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="internal-getRowPtr"><a href="#internal-getRowPtr" class="headerlink" title="internal::getRowPtr()"></a>internal::getRowPtr()</h2><p>例如：</p>
-<pre class="line-numbers language-C++" data-language="C++"><code class="language-C++">internal::getRowPtr(src0Base, src0Stride, y);  &#x2F;&#x2F;返回src0Base+src0Stride*y的地址<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">internal<span class="token double-colon punctuation">::</span><span class="token function">getRowPtr</span><span class="token punctuation">(</span>src0Base<span class="token punctuation">,</span> src0Stride<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//返回src0Base+src0Stride*y的地址</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 
 

@@ -392,14 +392,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-05-30
+                    2023-06-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    913
+                    1.1k
                 </div>
                 
 
@@ -520,16 +520,16 @@ Test<span class="token punctuation">(</span>int<span class="token punctuation">)
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><ul>
-<li>1<br>正常使用构造函数生成t1，传入参数有默认值</li>
-<li>2<br>常见的拷贝构造</li>
-<li>3<br>拷贝构造</li>
-<li>4<br>C++编译器对于对象构造的优化，用临时对象生成新对象的时候，临时对象就不产生了，直接构造新对象，因此这里等价于直接调用常规构造函数，不调用拷贝构造		<br>Test(20)显式生成临时对象，生存周期为所在语句		<br>因此这里的Test t4 &#x3D; Test(20);等价于Test t4(20);		</li>
-<li>5<br>调用了赋值运算符重载函数</li>
-<li>6<br>使用临时对象为已经存在的对象赋值，这时临时对象需要生成，要不无法赋值，显式生成临时对象</li>
-<li>7<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，显式生成临时对象</li>
-<li>8<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，隐式生成临时对象</li>
-<li>9<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li>
-<li>10<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li>
+<li>1	<br>正常使用构造函数生成t1，传入参数有默认值</li>
+<li>2	<br>常见的拷贝构造</li>
+<li>3	<br>拷贝构造</li>
+<li>4	<br>C++编译器对于对象构造的优化，用临时对象生成新对象的时候，临时对象就不产生了，直接构造新对象，因此这里等价于直接调用常规构造函数，不调用拷贝构造		<br>Test(20)显式生成临时对象，生存周期为所在语句		<br>因此这里的Test t4 &#x3D; Test(20);等价于Test t4(20);		</li>
+<li>5	<br>调用了赋值运算符重载函数</li>
+<li>6		<br>使用临时对象为已经存在的对象赋值，这时临时对象需要生成，要不无法赋值，显式生成临时对象</li>
+<li>7		<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，显式生成临时对象</li>
+<li>8	<br>把30强制转换为Test，然后将int 转换为 Test(int)，这时就要看这个类有没有输入为int的构造函数，进而调用。这时临时对象需要生成，要不无法赋值，隐式生成临时对象</li>
+<li>9	<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li>
+<li>10	<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li>
 </ul>
 <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
 <span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
@@ -562,7 +562,6 @@ Test<span class="token punctuation">(</span>int<span class="token punctuation">)
 	<span class="token keyword">int</span> mb<span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
 
-cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 1 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
 Test <span class="token function">t1</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -592,17 +591,65 @@ Test <span class="token function">t1</span><span class="token punctuation">(</sp
 	Test <span class="token operator">*</span>p2 <span class="token operator">=</span> <span class="token keyword">new</span> Test<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
 	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 11 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test <span class="token operator">*</span>p3 <span class="token operator">=</span> <span class="token operator">&amp;</span><span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">80</span><span class="token punctuation">,</span><span class="token number">80</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token comment">// Test *p3 = &amp;Test(80,80);</span>
 
 	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 12 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
 	<span class="token keyword">const</span> Test <span class="token operator">&amp;</span>p4 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">90</span><span class="token punctuation">,</span><span class="token number">90</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 	<span class="token keyword">delete</span> p1<span class="token punctuation">;</span>
-	<span class="token keyword">delete</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span> p2<span class="token punctuation">;</span>
+	<span class="token keyword">delete</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> p2<span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span>
 
-cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 2 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-Test <span class="token function">t5</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+Test <span class="token function">t5</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+--- <span class="token number">3</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+--- <span class="token number">4</span> ---
+Test<span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span><span class="token punctuation">)</span>
+--- <span class="token number">5</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+--- <span class="token number">6</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+operator <span class="token operator">=</span> 
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+--- <span class="token number">7</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+operator <span class="token operator">=</span> 
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+--- <span class="token number">8</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+operator <span class="token operator">=</span> 
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+--- <span class="token number">9</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+--- <span class="token number">10</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+--- <span class="token number">11</span> ---
+--- <span class="token number">12</span> ---
+Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
+~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h1><ul>
+<li>5<br>使用临时构造同类型新对象的时候，临时对象被优化，类似于上文的第4项</li>
+<li>7<br>逗号表达式的值为最后一个参数的值，即:t2 &#x3D; (Test)(50);这里将50进行了强制类型转换。编译器就会去找有没有带一个整型输入的构造函数去实现。</li>
+<li>11<br>不能使用指针指向临时对象，临时对象使用后析构。</li>
+<li>12<br>使用引用变量指向临时对象，相当于给临时对象起了一个别名，引用对象销毁时，临时对象才会析构。</li>
+</ul>
+<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>

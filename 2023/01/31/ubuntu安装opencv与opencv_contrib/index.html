@@ -439,9 +439,22 @@
 <span class="token function">mkdir</span> build                             <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <h2 id="现在进入到opencv-x-x-x目录下，查看文件结构"><a href="#现在进入到opencv-x-x-x目录下，查看文件结构" class="headerlink" title="现在进入到opencv-x.x.x目录下，查看文件结构"></a>现在进入到opencv-x.x.x目录下，查看文件结构</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ls</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<blockquote>
-<p>3rdparty cmake data LICENSE platforms apps CMakeLists.txt doc modules README.md build CONTRIBUTING.md include pencv_contrib-x.x.x samples</p>
-</blockquote>
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">3rdparty
+cmake
+data
+LICENSE
+platforms
+apps
+CMakeLists.txt
+doc
+modules
+README.md
+build
+CONTRIBUTING.md
+include
+pencv_contrib-x.x.x
+samples<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="进入build目录，并且执行cmake生成makefile文件"><a href="#进入build目录，并且执行cmake生成makefile文件" class="headerlink" title="进入build目录，并且执行cmake生成makefile文件"></a>进入build目录，并且执行cmake生成makefile文件</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> build  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cmake <span class="token parameter variable">-D</span> <span class="token assign-left variable">CMAKE_BUILD_TYPE</span><span class="token operator">=</span>Release <span class="token parameter variable">-D</span> <span class="token assign-left variable">CMAKE_INSTALL_PREFIX</span><span class="token operator">=</span>/usr/local <span class="token parameter variable">-D</span> <span class="token assign-left variable">OPENCV_EXTRA_MODULES_PATH</span><span class="token operator">=</span>/home/files/opencv-x.x.x/opencv_contrib-x.x.x/modules/ <span class="token punctuation">..</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <blockquote>

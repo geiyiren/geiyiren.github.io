@@ -392,14 +392,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-06-05
+                    2023-06-06
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.1k
+                    1.2k
                 </div>
                 
 
@@ -602,7 +602,7 @@ Test <span class="token function">t1</span><span class="token punctuation">(</sp
 
 Test <span class="token function">t5</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
+<h2 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
 Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
 --- <span class="token number">3</span> ---
 Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
@@ -643,13 +643,29 @@ Test<span class="token punctuation">(</span>int, int<span class="token punctuati
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
 ~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h1><ul>
+<h2 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h2><ul>
 <li>5<br>使用临时构造同类型新对象的时候，临时对象被优化，类似于上文的第4项</li>
 <li>7<br>逗号表达式的值为最后一个参数的值，即:t2 &#x3D; (Test)(50);这里将50进行了强制类型转换。编译器就会去找有没有带一个整型输入的构造函数去实现。</li>
 <li>11<br>不能使用指针指向临时对象，临时对象使用后析构。</li>
 <li>12<br>使用引用变量指向临时对象，相当于给临时对象起了一个别名，引用对象销毁时，临时对象才会析构。</li>
 </ul>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+<h1 id="函数调用过程中对象背后调用了哪些方法"><a href="#函数调用过程中对象背后调用了哪些方法" class="headerlink" title="函数调用过程中对象背后调用了哪些方法"></a>函数调用过程中对象背后调用了哪些方法</h1><h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">Test</span>
+<span class="token punctuation">&#123;</span>
+<span class="token keyword">public</span><span class="token operator">:</span>
+	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">int</span> data <span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(int)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token operator">~</span><span class="token function">Test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+		cout<span class="token operator">&lt;&lt;</span><span class="token string">"~Test"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>ma<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+		cout<span class="token operator">&lt;&lt;</span><span class="token string">"~Test"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
+	<span class="token punctuation">&#125;</span>
+	
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>

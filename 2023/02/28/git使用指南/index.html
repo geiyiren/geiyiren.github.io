@@ -309,19 +309,6 @@
 </header>
 
     
-<script src="/libs/cryptojs/crypto-js.min.js"></script>
-<script>
-    (function() {
-        let pwd = '31faa2bf193e0267926799e680a8c29ce462ce35739844b4533598fbee437ea5';
-        if (pwd && pwd.length > 0) {
-            if (pwd !== CryptoJS.SHA256(prompt('请输入访问本文章的密码')).toString(CryptoJS.enc.Hex)) {
-                alert('密码错误，将返回主页！');
-                location.href = '/';
-            }
-        }
-    })();
-</script>
-
 
 
 
@@ -388,14 +375,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2023-06-06
+                    2023-06-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    307
+                    6
                 </div>
                 
 
@@ -420,23 +407,18 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="git-config-设置用户名称和邮件地址"><a href="#git-config-设置用户名称和邮件地址" class="headerlink" title="git config 设置用户名称和邮件地址"></a><code>git config</code> 设置用户名称和邮件地址</h2><ul>
-<li>设置用户名称<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">"goto456"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>设置邮件地址<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">"goto456@126.com"</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>列出当前Git所有的配置信息<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--list</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-</ul>
-<h2 id="git-init-初始化本地仓库"><a href="#git-init-初始化本地仓库" class="headerlink" title="git init 初始化本地仓库"></a><code>git init</code> 初始化本地仓库</h2><p>获取一个 Git 仓库有两种方法：<br>1.本地初始化一个仓库<br>2.从远程克隆一个仓库到本地<br>对于第1种方式，如果想对本地现有的一个项目用 Git 来管理，可以直接进入该项目的目录下执行如下命令，就可以将其初始化成一个 Git 仓库了。  </p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="git-clone-克隆远程仓库到本地"><a href="#git-clone-克隆远程仓库到本地" class="headerlink" title="git clone 克隆远程仓库到本地"></a><code>git clone</code> 克隆远程仓库到本地</h2><ul>
-<li>通过ssh方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone git@github.com:goto456/leetcode.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>通过https方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/goto456/leetcode.git <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<blockquote>
-<p>https方式：不管是谁，只要拿到该项目的 url 可以随便 clone，但是在 push 到远程的时候需要验证用户名和密码；<br>ssh方式：需要现将你电脑的SSH key（SSH公钥）添加到GitHub（或者其他代码托管网站）上，这样在 clone 项目和 push 项目到远程时都不需要输入用户名和密码。</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/blob/pdf/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/git%E6%95%99%E7%A8%8B.pdf">参考文档</a></p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+                <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="fe90b8d308fc40271f1451e2e13c4f98defab77cb5d28559a50d328c3e794ab4">18fd6c0df378de8edb452a77edefc3079f76f1f558579dde7596153aa0a01753778afa43d45de248c9eb0913bb1db260cbcff91bbce8d3d79cfa44cf4ef61af43bd0829cf88c1b2407f8086f17a84f6fa282e457a5ba904cb6a64b52b5c7ed0ba63407eef3fbef1b4b3afe5cc3136be279f2d70127fdb39746f14ca1ec37e3d7213194ae8b4a8350bfe8611a5ae532a1233a546422ebe3b6bc04b7e71bec500a8458009b7bcaad0463d0dd07b83ca4b7f5d8b0f2c3e625e1eea5260556bea00ab4fa55bef71edc2675c0412d47b6b4a06ca0b689e0cc2805957696fa6196d5b7bc6fa1ef2532dd627997ca1835f34adf0f1c6ea9123060ccc5dd756206816d28590c0e0dd97817a9bd90a240ed03ebf2940ae12895c85790f1c18b41f4c1898c0bd11c4a405713c5b2b4cf44c4c6f609bd3efd660ac2cf12476bc21cf553b7335aab313270e125f62b23eca1f45b57be71b9f429abe84a4cf13ad9644930142ec25fee85fb4984aa0167593109692b7b98006730b94d702539b3e13f9d737ecc670854554e7fa4a6b0d1b0c6f74bbb6f9bc86f318e23067b06cd090fcec5bfadc9740ca62b3d26c09b5aed45fc67a1c075ca2eac91e729ab1cdf837e5cd19edd7b416e91c42662b208e2cf8887ceb38d3eee1393803b88ed314955024a4e1d7936b8ac32b364def02664f2328b2cccb6cd7a6c34f8e165de726d7bf63a26629fbf4942db362722de0f24c196de4dabe634e10b3821af644bfa0084e5f073812ecde76e519e1cb93b77180c936d746233b35efaaf874dfbe43efaf6fb08edbb4b64189564156b97685c13d3e997216eda44c8bed2160dd7c6f988c0223c40a737f474ea657016eea3e47751965265c61738a06878bf969968523b8d4f1223aeb1cb6f5d49bf56b290ab29fcb59db8a7b02c5184a83354ff3a02796f25b6df70b97673ae80f18263b927c25b351ba9c7528e63dc83efd42a8b993c2cd75d7c87de04497d812dc2b1efa5d08ce5495425154867d15e3e93c114505e6439178ec519bbe0f919cd69666e170078b4e3a92724a77f0f7ceabf60e32260aff0a0d2afff95a03059e0d71386aa8431525b2973c98444baa38c11e0384635fdd62155908003b4a1057a30f80f7ff0b1cb5d79ec396254ce051e306764c85da8e5233928c6b124480cae7d02b0afa337ca8e1b400e383c234495d61926b030f4ef1e0b293f0b2e491ef2f2654067d4f4ff1f4f6421113070b0785f54c5b8480d8844919f97f62c01eea49db753975185834c0b509df8f9dfa589501145371f31892931b470142602d25b9a958bb724687c454b7503148ba5905f4f2c7b5c282ec1a550d446d0b507ae0afbad4fd2518f5c6fdea404043c52e336722e3502ba12de86b85653ee87253d2304b61cfc2ef425121029c1117ff61366f61366dbb79b9636eb320dcb0a1472325f2975e02bb583044a6e90348fdb12adafe8d416ef2b4caf99516bf6b21720d684e97bb256d55a3a15ef185cace0b5c951b507b96c413a1ba1622d88a5a271016ca0069e7105c25b33d35a7ec20da44ee3454eb1eb000e5ac371396369cc0bd08124bf1e691eb89dbcaf4a7f75df43c1897cac9e0d48ebdbcea6cb8c692444f394dc16fc0c1a3a32b40d60dfbc917570cfe2c84272522c3d4f04b8ab98e371ac0b8d5f424dbe8456f7f29bd30242b852501fd63ae81116217c442c9e7b34f1fb3caa173a61377dea1898a80838ca6a5188ee3222de21592fbd332ce969f8c8e93d376920df5333b3a671e2b9a9d24321a2a53da3026d6100f1a5628d3e43829e8005f769fd983fded29b9dae9c28ea67eafac6050b9b7d0671083f266b733d385a4f709680a5aa11dc0fc115d9a72ca7169aa0f002b5b96895f677d1e69bd27393fc13cc8cd5ab1629c6e202a19b8bf253d2c74aa5303912b4d761512a611f2cbed1a32f4e3796a925697c1c065b90590ddb81e8f3e8dc91c29dc55405302ec77460a3015ead36a90dfd193398e282da2e8be7f6838646e18860fbbec3e9024a9ef220cfb8d4f2816d1d44e849b2c57dfcea1be9153a870bb47146d04bf5b5d51f3eaf1d987e1bde7104be99a3734cb2cba0ed25a9917d1093fa9ffc60944f332ab9cd64bb23cddb3900d92b6042e20b07baa9c6fc39c306dbdc27075d9a3e4fd7aeb52c7229da6a9c45ee61631c24778e3e1a0e854251173878d6a6abd1e4388ef7b52f81b099dd7782862e5f49ae6ea68f5f75c8bfcab87b22345250c567bea7bf02d24f6a49bf6a349c250d8d6ce20f7abe30b651b6099a7ba07f7b9e5fcd3f4512de6e84b84c1595b52f08e21bdc64f67b4bd18a0bac9b00d487f26cff05f42a641b1ce95a855dbbd12248cfd0457d566468b0c5877e44e29361238ab669e98c8fbdc825e9e9381f7d9aa8448a4982d0de6425ef630138b27735eefc0c997e79058be5f3823ae41dff5623cbfce52d00a3e109c92d8c8f96123e40ace88396538acae9355e5045c76c1639b6bcc77995b84a3fd001318f06786194b343b3078d091ba606e55e3e3a6d8e275b25bfe6aec5d408e7f3be12d746e3aa11bf30831b4f81df0451cb368ddb90f1a28608c22ffecd97b5cfd458988c98fc36753dbcbb1f18c8460c923c23f1ab0aee6984ef2e633d0338fc2d0ea1ac4cc4fedf13d2c7a93333ffdaa43642f188d8fc83500f17825affca19cbcd4d8012876598a04c67d77e283af3e02bcbb0143ad6e51533c2df075ea948ac7dcbce35b415f11fab7ab87c491c72b6990c5bd383cf84360df1fcd635daa0a98f41227c97573c226353a40517b8011645e80eaaccc3073d596bb78a5e6566c033f83ca8568f284194e2a15efd0751e01c93fac9ab9619b4b3b1d1825aee8f66896cdafdc568967656dec7ca01bfc205d4d693f3e362cef5af3957169f2fcb1fb5c0479a7baf49d9d0ccfd82e9c47d28caa5dcc4bd9bf5dce40851e9c4844d0b4140fadebab4a705a46783f14915d8a43e7b95052ceda9b7347f01d8c118193fb684364be09d427ba00705c38add1f6a6ddb8d9e4ff0c99d6b74b40da866d276973c1ed8cdd16872014e031807096e94ad51a64e24c401de645194938a0e6f5c73fbcc2fa380ca96ed8f69f02175f8b2e6140e14ce55a172cad801ec8e8300819ca0479463a216edb86aa0d6fe07f67cd72e9d8e281766e3b85b55d58c7d2535a7be88b863d1388c421f130da5fa6bdc6f05cdf16758a5f14b572e7dffdd97667c0ea6bc5561a0ee7f0d6d7a065c39226cf3cc995d4cbc42bcc462245d624394d2d0ed1be21a7c60d04d535ea3f797c475437dbecf258c356ebd1eed8fe8258c58b6198c93914a884ac5087087ce195c8f9e76505a8796bf3a2ea774ddcaa83e21d54037a76c6673700eef64f2e29fbd6f4d3ed011f86cd4cf772676f8e80f8588c3a2aa84f1aa4664f40f3b20c4bab917550a379226629e6249478c784695fe490501b69ba5922d20f93bcf3693baa424dd5e020f2c4376fbbd3a9cfd2169affa0906649501969f048496c89e2a867f19a358a8e3db6ab53272d892b53833596c156f501683b0df8046ee555eb96618bbcb8d790591facca88ad2835a360c3a62a7efa425a6384c50cabd5819965d5c1f6a15e5b307d92b30897b55ada7bf2869052b18586326547cb9eb7b739c8d7f734c6e663d98f9d891e4ced94f08a18058e1958fb94fa3acef4d3cfb568525b189a7da8a4ffbd15041c1d84236f2ee83b00936e7e11fbc8b0299e6ae7a3f57886f02e2aeedbc839ab40e8a37e35ad48678891e3bcb9080ceb8ba99d88fc5e653f358686c01a57efe73cba6bc8260c2be8e24df6f7d1cea5acbbef68227a970278964a11b37d2961356174ee2337af8c13ccc7974070f458ddfb235b3d03845d5cd2c678150f567450421b7948ab0b3cf7457bf9ce0d24983fa795316077b7020f1115abc0aa3e6ac2f298a4c03543daa13f5eda478812e8bd369a430f53a8ff479fade2fea6f6f4c1910f0428f3e3492ea22edd9b93e564f52d5f888fbc6f50eba3e18371f93c074fd4f380d66612f2cf375e3b02bd630c5370748007b68527258f35c47704a46f95616883aeb42e2cee8a2fabb5d27eb324676b61ffbca7050a23b6473923237fcaea3f095c3e7aec8c1175ced525dcb4d10586602a24153577f8ca77f5093fb49bccde596ef724fc71d2ae773b7e23c21dacc7d556d10c7fdc3eacd8d0ac68b7579cc67646d0b56b5501aacf9403e261775a3cd6617ae45755f8ef7abdb2c69db34275bbf22e2b7a334c51f449e385282d1e513c4fdd075c52371204fb2fb48a356bbeb3a68fc9a01a480ea2fb84cb46b9e9297ec44a60954f09930e9dbbcbbcf34f422c30efcf8af811ac456b39fae7618830b9bc4c65c4117e525489c8d7ee31af5a3a5cdef8b919eb9bf6e8f16d3bbdb3ad778a5063b69e83b859802d51d258868672f749a2d69e4b39196c3a9c4a7dc541a408ee51abc82b7bdd794063cb5576402903c0e8a52ea3aefc5654a6d9afa74bf233662f2a63bcff43200ab499fa76ef8caf8977fc092a96c69a7e9b1829d68cba1c4de2707bc860a860dcdb2f51bae515c707a41e8fa7f670fce7e22de5724eb7ef1a25698aba33c99fcd26e5c0ff3a98ef7d6ba068e9b57ffaa315e3d06ba7a7794b508fd7548949bc96ac8072c6835ede13bc80d3d6b4a55692e218c97a36ac08988ac8d0a7c65c93348557310d5d465bcebe6f28eb708274b2f9f6f4f9e3604a3277575189608c4288774a12465b7726762541f2b2962a0db5dd87870319e94bed25e692ca3a234ec61fd218efdd9e524abfa4fca5f3e60aa488a8b34bb9c91467b70ddb25d7e48ab1aaeb3e128e023db63c7a8c4a76edd648cda4c7c8c8c2b9c10132bcab7a44e79ded2576e50507db10e414fa018086326b46afcb4adee3ddae5ebe00868f93bbd3ca9fbf9c82bf9b1cf15dd5b0dca608e0d4c12a37138aa9b0fb7d7b290d3d778149f3543caf675119689b88b8d30d66a7f05927999e9972dc8a540fc95975a8a4506449f1bf4e79f20c88076444c708470b24dff0c84ba24f135cdc22579933c2c36dd51853393494b71c42db2fd22fc4acae339a2e7a3d6e7d2f124e048574ac5d42fbc603905c424e3eed794b063300135b1645060f4df1c8270c126ef46c762e3b8024955a820b6763b5787e8f730a72cb49b37901f2b0c9656b1581b8dd82e54cd4051360dce11687240404af4c030b4a0867587fb12b26ffa264777363613a2f6198dbce6305ed8d289ebde4410f3fa70ab4e87443eed13edfedbecbd2284d40cd2e7955f6278a0e1a85ebba52a2955025a952f9c173fdbb019846a440d871663f304ee409623a04bbabb6fe68a5cdddc7e6f8ce6db375bd9401008eb0a853e7d5234bd0f8eebfdeecbca26fde9e37497fa302bc5467438244620440288b09f23f3db404a682c88a5eb5ef50e569ec99da259de5d674e35fcb2ae1f314599f92952b1021bf2544807ed373c555e391771c3f3c9ccf1fbddc47e48e382f97274c3bfe87dc7aa537a5ac67c62ae355096abcb9137549863914c090d7a2c682190b5bb9ecd01224520ca9810a3848969514e24a2097533132e6839d7e8d895b4e353ed075e8ca652c8abb4f0231a87761d1aed4589112681ec02268ab173583c9bb1f928e6c1c5c0d10bdb2e1ea5a1977db6c1cf8bcfee34644b2545758262f7463f9a035d4cf08f22c7ec59ec472beaf457fc6b6487554bff97b5b107</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
                 
             </div>
             <hr/>

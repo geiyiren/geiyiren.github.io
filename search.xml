@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>零基础学习卡尔曼滤波</title>
+      <link href="/2023/10/08/ling-ji-chu-xue-xi-qia-er-man-lu-bo/"/>
+      <url>/2023/10/08/ling-ji-chu-xue-xi-qia-er-man-lu-bo/</url>
+      
+        <content type="html"><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">  <script id="hbeData" type="hbeData" data-hmacdigest="266c28df3315bce800cf77a71744b27cf68dfbd959641703862750b8ca766d45">18fd6c0df378de8edb452a77edefc3079f76f1f558579dde7596153aa0a017530cbb917bc9060be089d5a07f0ef7b29ed6c050fd75d1000330ccd7520c0f289d3c82fb73cf7cd24ac1030e7189db3c808e50bf5e2d4be7061f4a6846466a90caeba337cd7e6b9f2d853cdc7992accf2d3f05d351332d2679ba9f811d869659c31003a0525146226ed2cfa6e30798bdaea1b7a1e85e7f87b72ee7dc851a4b65982c595a94890ec40cec43d8a9ef909bb1da5b7c3c048f27f4c70174aa889cb93e63776f8199873f2ac0c302f3e4707e8d63ffba2c29e237538e5daf9da8591a81692a738281ec067dffcbdf455a1db0593dd4d6e62b16dce540c8851bcbcb71b6995bf44e2398a8db806c34b17dac4c2363b9af4e6fecd04e6bdfafe39d8a2112cd189352cd497dcb447d1cda1257e33e4cee0a393c126ddecdccc8d6969ca93be6d4933dcdd36ae54778aeaef3462557472073f46833e6bb4be6baf235de55743459e85013a2722d2a6b63db951150d8e417c1e3652501be64c4b925aa6450d08f59ebf00e0c076f856fcd5c335c4213cbbc3b95632c6b299b9bd00a1a4e5314e007ee13658f0c720a60b2b94014a6b64852843bb4b797142a546c01dd73a7b8dd8d8fd282eae0315de6ecb320ae24283ad1ea1647817608456b7682994b43d403a4ef246b046f85480160a394b10514ca2922abf4813137c66a83b9497c3206042826d880c758f41cedc4c1fa31e56e3e8ab0bed2280fd0ec7d8983eb43af95338d7e23aed88e35182c46ef76f380f336ba9b56207b8d6c1e6fa366bc8668a6e7e85941b0a5a72f2bc9404f68f37fc75aff854765d5504948bddf2f94ef6c59870be0b1e3872d64c9003d9e991e2b212548df8e441ed826b560650b74131edfc97b9223e1e72945ae87e6f42b0dbb66289e6069f474cbeeeb42c9e754c80e4b7d56cc9599837384a01325d5efdb731de0f7872ac38d3dbd21287a8bdce0d3b5ceaa89e72086496b08d56d16a2546007c3bd46267bcc46e4f30ff7964af9c124bd7dd1aeaf4ac56caf849302611e4c78ce9532e62bf140535db933cdecc11d49</script>  <div class="hbe hbe-content">    <div class="hbe hbe-input hbe-input-default">      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">        <span class="hbe hbe-input-label-content hbe-input-label-content-default">👉点我输入文章访问密码👈</span>      </label>    </div>  </div></div><script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+      
+      
+      <categories>
+          
+          <category> 卡尔曼滤波 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 卡尔曼滤 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>常用图像变换</title>
       <link href="/2023/09/20/chang-yong-tu-xiang-bian-huan/"/>
       <url>/2023/09/20/chang-yong-tu-xiang-bian-huan/</url>

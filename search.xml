@@ -265,6 +265,31 @@
     
     <entry>
       <title>文献检索</title>
+      <link href="/2023/10/09/ce-shi/"/>
+      <url>/2023/10/09/ce-shi/</url>
+      
+        <content type="html"><![CDATA[<h1 id="360环视"><a href="#360环视" class="headerlink" title="360环视"></a>360环视</h1><h2 id="相机标定优化"><a href="#相机标定优化" class="headerlink" title="相机标定优化"></a>相机标定优化</h2><h3 id="Online-Correction-of-Camera-Poses"><a href="#Online-Correction-of-Camera-Poses" class="headerlink" title="Online Correction of Camera Poses"></a>Online Correction of Camera Poses</h3><ul><li><p><a href="https://github.com/geiyiren/MyBlogPaper1/blob/main/AVM/%E6%A0%87%E5%AE%9A/Online%20correction%20of%20camera%20poses%20for%20the%20surround%20viewsystem%20a%20sparse%20direct%20approach.pdf">Online Correction of Camera Poses for the Surround-view System: A Sparse Direct Approach</a></p></li><li><p>摘要<br>环绕视图模块是现代先进驾驶辅助系统不可或缺的组成部分。通过精确地校准环绕视图摄像机的内部信息和外部信息，可以从原始的鱼眼图像中生成一个自上而下的环绕视图。然而，这些相机的姿势有时可能会改变。目前，如何在不重新校准的情况下，在线校正相机的姿态仍是一个有待解决的问题。为了解决这个问题，我们引入了稀疏直接框架，并提出了一种新的级联结构优化方案。该方案实际上由两级优化方案组成，并提出了两个相应的基于光度误差的模型。第一级优化的模型称为地面模型，因为它的光度误差是在地平面上测量的。对于优化的第二层，它是基于所谓的地面照相机模型，即在成像平面上计算光度误差。利用这些模型，姿态校正任务被表述为一个非线性最小二乘问题，以最小化相邻鸟瞰图图像重叠区域的光度误差。通过这两个层次优化的级联结构，可以在速度和精度之间达到适当的平衡。实验表明，该方法可以有效地消除环绕视图系统中摄像机适度姿态变化造成的错位。源代码和测试用例可以在<a href="https://cslinzhang.github.io/CamPoseCorrection/">https://cslinzhang.github.io/CamPoseCorrection/</a>上找到。</p></li></ul><blockquote><p><em>The surround-view module is an indispensable component of a modern advanced driving assistance system. By calibrating the ntrinsics and extrinsics of the surround-view cameras accurately, a top-down surround-view can be generated from raw fisheye images. However, poses of these cameras sometimes may change. At present, how to correct poses of cameras in a surround-view system online without re-calibration is still an open issue. To settle this problem, we introduce the sparse direct framework and propose a novel optimization scheme of a cascade structure. This scheme is actually composed of two levels of optimization and two corresponding photometric error based models are proposed. The model for the first-level optimization is called the ground model, as its photometric errors are measured on the ground plane. For the second level of the optimization, it’s based on the so-called ground-camera model, in which photometric errors are computed on the imaging planes. With these models, the pose correction task is formulated as a nonlinear least-squares problem to minimize photometric errors in overlapping regions of adjacent bird’s-eye-view images. With a cascade structure of these two levels of optimization, an appropriate balance between the speed and the ccuracy can be achieved. Experiments show that our method can effectively eliminate the misalignment caused by cameras’ moderate pose hanges in the surround-view system. Source code and test cases are available online at <a href="https://cslinzhang.github.io/CamPoseCorrection/">https://cslinzhang.github.io/CamPoseCorrection/</a>.</em></p></blockquote><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">]]></content>
+      
+      
+      <categories>
+          
+          <category> 文献检索 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 文献检索 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>文献检索</title>
       <link href="/2023/10/09/lun-wen-jian-suo/"/>
       <url>/2023/10/09/lun-wen-jian-suo/</url>
       

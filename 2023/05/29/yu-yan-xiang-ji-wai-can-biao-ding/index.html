@@ -382,7 +382,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    739
+                    790
                 </div>
                 
 
@@ -406,9 +406,127 @@
             <div id="articleContent">
                 <h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><p>待整理</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/603296375">AVM环视系统——鱼眼相机去畸变算法</a></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 外参求解</span></span><br><span class="line">std::vector&lt;cv::Point3f&gt; object_points;</span><br><span class="line"><span class="keyword">if</span> (!(cv::<span class="built_in">solvePnP</span>(object_points, image_points_undist_new, cam_K[cam_index], cv::<span class="built_in">noArray</span>(), cam_R[cam_index], cam_T[cam_index],</span><br><span class="line">                   <span class="literal">false</span>, cv::SOLVEPNP_ITERATIVE)))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;ERROR: solvePnP cam_index[%d]\n&quot;</span>, cam_index);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">float</span> projection_error = <span class="built_in">ComputeProjectionError</span>(object_points, image_points_undist_new, cam_K[cam_index], cam_R[cam_index], cam_T[cam_index]);</span><br><span class="line"></span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;projection_error1: &quot;</span> &lt;&lt; projection_error &lt;&lt; std::endl;</span><br><span class="line"><span class="comment">// 定义迭代终止条件：最大迭代次数为 100，收敛阈值为 0.001</span></span><br><span class="line"><span class="function">cv::TermCriteria <span class="title">termCrit</span><span class="params">(cv::TermCriteria::MAX_ITER | cv::TermCriteria::EPS, <span class="number">200</span>, <span class="number">0.001</span>)</span></span>;</span><br><span class="line"><span class="comment">// 使用 L-M（Levenberg-Marquardt） 算法进行迭代优化，不断减小重投影误差</span></span><br><span class="line">cv::Mat RR = cam_R[cam_index].<span class="built_in">clone</span>();</span><br><span class="line">cv::Mat TT = cam_R[cam_index].<span class="built_in">clone</span>();</span><br><span class="line">cv::<span class="built_in">solvePnPRefineLM</span>(object_points, image_points_undist_new, cam_K[cam_index], cv::<span class="built_in">noArray</span>(), RR, TT, termCrit);</span><br><span class="line"><span class="comment">// 使用虚拟视觉伺服 (Virtual Visual Servoing)方法进行迭代优化，不断减小重投影误差</span></span><br><span class="line"><span class="comment">// cv::solvePnPRefineVVS(object_points, image_points_undist_new, cam_K[cam_index], cv::noArray(), RR, TT, termCrit);</span></span><br><span class="line">cam_R[cam_index] = RR.<span class="built_in">clone</span>();</span><br><span class="line">cam_R[cam_index] = TT.<span class="built_in">clone</span>();</span><br></pre></td></tr></table></figure>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 外参求解</span>
+std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>cv<span class="token double-colon punctuation">::</span>Point3f<span class="token operator">></span> object_points<span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">solvePnP</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_T<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                   <span class="token boolean">false</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>SOLVEPNP_ITERATIVE<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"ERROR: solvePnP cam_index[%d]\n"</span><span class="token punctuation">,</span> cam_index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @description: 输入畸变图，输出去畸变图</span><br><span class="line"> * @param &#123;Mat&#125; &amp;img_dist</span><br><span class="line"> * @param &#123;Mat&#125; &amp;img_undist</span><br><span class="line"> * @return &#123;*&#125;</span><br><span class="line"> * @author: wangshuaiyang</span><br><span class="line"> */</span><br><span class="line">int TAvmCal::DistToUndistImage(cv::Mat img_dist, cv::Mat &amp;img_undist, int cam_index)</span><br><span class="line">&#123;</span><br><span class="line">    int ret = 0;</span><br><span class="line"></span><br><span class="line">#if 1</span><br><span class="line">    // 新的相机内参矩阵和图像尺寸（可选）</span><br><span class="line">    float scale = 2.5;</span><br><span class="line">    cv::Mat new_cam_K = cam_K[cam_index].clone();</span><br><span class="line">    new_cam_K.at&lt;float&gt;(0, 0) = new_cam_K.at&lt;float&gt;(0, 0);     // fx</span><br><span class="line">    new_cam_K.at&lt;float&gt;(1, 1) = new_cam_K.at&lt;float&gt;(0, 0);     // fy</span><br><span class="line">    new_cam_K.at&lt;float&gt;(0, 2) = new_cam_K.at&lt;float&gt;(0, 0) * 5; // cx</span><br><span class="line">    new_cam_K.at&lt;float&gt;(1, 2) = new_cam_K.at&lt;float&gt;(0, 0) * 2; // cy</span><br><span class="line"></span><br><span class="line">    cv::Size new_size = cv::Size(img_dist.size().width * scale, img_dist.size().height * scale);</span><br><span class="line">    cv::fisheye::undistortImage(img_dist, img_undist, cam_K[cam_index], cam_D[cam_index], new_cam_K, new_size);</span><br><span class="line">    cv::resize(img_undist, img_undist, img_dist.size());</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line">    cv::Mat mapx;</span><br><span class="line">    cv::Mat mapy;</span><br><span class="line"></span><br><span class="line">    // 计算矫正图</span><br><span class="line">    float point_u_tmp[2];</span><br><span class="line">    float point_d_tmp[2];</span><br><span class="line">    float scale = 2.5;</span><br><span class="line">    int offset_x = 1000;</span><br><span class="line">    int offset_y = 300;</span><br><span class="line">    int w = img_dist.cols * scale;</span><br><span class="line">    int h = img_dist.rows * scale;</span><br><span class="line">    mapx.create(h, w, CV_32FC1);</span><br><span class="line">    mapy.create(h, w, CV_32FC1);</span><br><span class="line">    for (int col = 0; col &lt; w; col += 1)</span><br><span class="line">    &#123;</span><br><span class="line">        for (int row = 0; row &lt; h; row += 1)</span><br><span class="line">        &#123;</span><br><span class="line">            // 归一化</span><br><span class="line">            std::vector&lt;cv::Point2d&gt; unDist_points(1);</span><br><span class="line">            std::vector&lt;cv::Point2d&gt; dist_points(1);</span><br><span class="line">            point_u_tmp[0] = col - offset_x;</span><br><span class="line">            point_u_tmp[1] = row - offset_y;</span><br><span class="line">            unDist_points[0].x = (point_u_tmp[0] - cam_K[cam_index].at&lt;float&gt;(0, 2)) / cam_K[cam_index].at&lt;float&gt;(0, 0);</span><br><span class="line">            unDist_points[0].y = (point_u_tmp[1] - cam_K[cam_index].at&lt;float&gt;(1, 2)) / cam_K[cam_index].at&lt;float&gt;(1, 1);</span><br><span class="line"></span><br><span class="line">            cv::fisheye::distortPoints(unDist_points, dist_points, cam_K[cam_index], cam_D[cam_index]);</span><br><span class="line"></span><br><span class="line">            mapx.at&lt;float&gt;(row, col) = dist_points[0].x;</span><br><span class="line">            mapy.at&lt;float&gt;(row, col) = dist_points[0].y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cv::remap(img_dist, img_undist, mapx, mapy, cv::INTER_LINEAR);</span><br><span class="line"></span><br><span class="line">    cv::resize(img_undist, img_undist, img_dist.size());</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#if  SHOW_DETECT_PROCESS</span><br><span class="line">    cv::imshow(&quot;image_remap_fish&quot;, img_undist);</span><br><span class="line">    cv::waitKey(0);</span><br><span class="line">#endif</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @description: 计算重投影误差(使用均方误差，RMS)</span><br><span class="line"> * @return &#123;*&#125;</span><br><span class="line"> * @author: wangshuaiyang</span><br><span class="line"> */</span><br><span class="line">float TAvmCal::ComputeProjectionError(const std::vector&lt;cv::Point3f&gt; &amp;objectPoints,</span><br><span class="line">                                      const std::vector&lt;cv::Point2f&gt; &amp;imagePoints,</span><br><span class="line">                                      const cv::Mat &amp;cameraMatrix,</span><br><span class="line">                                      const cv::Mat &amp;rvec,</span><br><span class="line">                                      const cv::Mat &amp;tvec)</span><br><span class="line">&#123;</span><br><span class="line">    // 使用估计的相机位姿将世界坐标系中的三维点投影到图像平面上</span><br><span class="line">    std::vector&lt;cv::Point2f&gt; projectedPoints;</span><br><span class="line">    cv::projectPoints(objectPoints, rvec, tvec, cameraMatrix, cv::noArray(), projectedPoints);</span><br><span class="line"></span><br><span class="line">    // 计算重投影误差</span><br><span class="line">    float RMS_Error = 0.0;</span><br><span class="line">    for (size_t i = 0; i &lt; imagePoints.size(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">        float dx = projectedPoints[i].x - imagePoints[i].x;</span><br><span class="line">        float dy = projectedPoints[i].y - imagePoints[i].y;</span><br><span class="line">        RMS_Error += (dx * dx + dy * dy);</span><br><span class="line">    &#125;</span><br><span class="line">    RMS_Error /= (float)imagePoints.size();</span><br><span class="line">    RMS_Error = std::sqrt(RMS_Error);</span><br><span class="line"></span><br><span class="line">    // 返回总的重投影误差</span><br><span class="line">    return RMS_Error;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+<span class="token keyword">float</span> projection_error <span class="token operator">=</span> <span class="token function">ComputeProjectionError</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_T<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"projection_error1: "</span> <span class="token operator">&lt;&lt;</span> projection_error <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
+<span class="token comment">// 定义迭代终止条件：最大迭代次数为 100，收敛阈值为 0.001</span>
+cv<span class="token double-colon punctuation">::</span>TermCriteria <span class="token function">termCrit</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>TermCriteria<span class="token double-colon punctuation">::</span>MAX_ITER <span class="token operator">|</span> cv<span class="token double-colon punctuation">::</span>TermCriteria<span class="token double-colon punctuation">::</span>EPS<span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">0.001</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 使用 L-M（Levenberg-Marquardt） 算法进行迭代优化，不断减小重投影误差</span>
+cv<span class="token double-colon punctuation">::</span>Mat RR <span class="token operator">=</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cv<span class="token double-colon punctuation">::</span>Mat TT <span class="token operator">=</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cv<span class="token double-colon punctuation">::</span><span class="token function">solvePnPRefineLM</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> RR<span class="token punctuation">,</span> TT<span class="token punctuation">,</span> termCrit<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 使用虚拟视觉伺服 (Virtual Visual Servoing)方法进行迭代优化，不断减小重投影误差</span>
+<span class="token comment">// cv::solvePnPRefineVVS(object_points, image_points_undist_new, cam_K[cam_index], cv::noArray(), RR, TT, termCrit);</span>
+cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span> <span class="token operator">=</span> RR<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span> <span class="token operator">=</span> TT<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">
+&#x2F;**
+ * @description: 输入畸变图，输出去畸变图
+ * @param &#123;Mat&#125; &amp;img_dist
+ * @param &#123;Mat&#125; &amp;img_undist
+ * @return &#123;*&#125;
+ * @author: wangshuaiyang
+ *&#x2F;
+int TAvmCal::DistToUndistImage(cv::Mat img_dist, cv::Mat &amp;img_undist, int cam_index)
+&#123;
+    int ret &#x3D; 0;
+
+#if 1
+    &#x2F;&#x2F; 新的相机内参矩阵和图像尺寸（可选）
+    float scale &#x3D; 2.5;
+    cv::Mat new_cam_K &#x3D; cam_K[cam_index].clone();
+    new_cam_K.at&lt;float&gt;(0, 0) &#x3D; new_cam_K.at&lt;float&gt;(0, 0);     &#x2F;&#x2F; fx
+    new_cam_K.at&lt;float&gt;(1, 1) &#x3D; new_cam_K.at&lt;float&gt;(0, 0);     &#x2F;&#x2F; fy
+    new_cam_K.at&lt;float&gt;(0, 2) &#x3D; new_cam_K.at&lt;float&gt;(0, 0) * 5; &#x2F;&#x2F; cx
+    new_cam_K.at&lt;float&gt;(1, 2) &#x3D; new_cam_K.at&lt;float&gt;(0, 0) * 2; &#x2F;&#x2F; cy
+
+    cv::Size new_size &#x3D; cv::Size(img_dist.size().width * scale, img_dist.size().height * scale);
+    cv::fisheye::undistortImage(img_dist, img_undist, cam_K[cam_index], cam_D[cam_index], new_cam_K, new_size);
+    cv::resize(img_undist, img_undist, img_dist.size());
+
+#else
+    cv::Mat mapx;
+    cv::Mat mapy;
+
+    &#x2F;&#x2F; 计算矫正图
+    float point_u_tmp[2];
+    float point_d_tmp[2];
+    float scale &#x3D; 2.5;
+    int offset_x &#x3D; 1000;
+    int offset_y &#x3D; 300;
+    int w &#x3D; img_dist.cols * scale;
+    int h &#x3D; img_dist.rows * scale;
+    mapx.create(h, w, CV_32FC1);
+    mapy.create(h, w, CV_32FC1);
+    for (int col &#x3D; 0; col &lt; w; col +&#x3D; 1)
+    &#123;
+        for (int row &#x3D; 0; row &lt; h; row +&#x3D; 1)
+        &#123;
+            &#x2F;&#x2F; 归一化
+            std::vector&lt;cv::Point2d&gt; unDist_points(1);
+            std::vector&lt;cv::Point2d&gt; dist_points(1);
+            point_u_tmp[0] &#x3D; col - offset_x;
+            point_u_tmp[1] &#x3D; row - offset_y;
+            unDist_points[0].x &#x3D; (point_u_tmp[0] - cam_K[cam_index].at&lt;float&gt;(0, 2)) &#x2F; cam_K[cam_index].at&lt;float&gt;(0, 0);
+            unDist_points[0].y &#x3D; (point_u_tmp[1] - cam_K[cam_index].at&lt;float&gt;(1, 2)) &#x2F; cam_K[cam_index].at&lt;float&gt;(1, 1);
+
+            cv::fisheye::distortPoints(unDist_points, dist_points, cam_K[cam_index], cam_D[cam_index]);
+
+            mapx.at&lt;float&gt;(row, col) &#x3D; dist_points[0].x;
+            mapy.at&lt;float&gt;(row, col) &#x3D; dist_points[0].y;
+        &#125;
+    &#125;
+
+    cv::remap(img_dist, img_undist, mapx, mapy, cv::INTER_LINEAR);
+
+    cv::resize(img_undist, img_undist, img_dist.size());
+#endif
+
+#if  SHOW_DETECT_PROCESS
+    cv::imshow(&quot;image_remap_fish&quot;, img_undist);
+    cv::waitKey(0);
+#endif
+    return 0;
+&#125;
+
+&#x2F;**
+ * @description: 计算重投影误差(使用均方误差，RMS)
+ * @return &#123;*&#125;
+ * @author: wangshuaiyang
+ *&#x2F;
+float TAvmCal::ComputeProjectionError(const std::vector&lt;cv::Point3f&gt; &amp;objectPoints,
+                                      const std::vector&lt;cv::Point2f&gt; &amp;imagePoints,
+                                      const cv::Mat &amp;cameraMatrix,
+                                      const cv::Mat &amp;rvec,
+                                      const cv::Mat &amp;tvec)
+&#123;
+    &#x2F;&#x2F; 使用估计的相机位姿将世界坐标系中的三维点投影到图像平面上
+    std::vector&lt;cv::Point2f&gt; projectedPoints;
+    cv::projectPoints(objectPoints, rvec, tvec, cameraMatrix, cv::noArray(), projectedPoints);
+
+    &#x2F;&#x2F; 计算重投影误差
+    float RMS_Error &#x3D; 0.0;
+    for (size_t i &#x3D; 0; i &lt; imagePoints.size(); ++i)
+    &#123;
+        float dx &#x3D; projectedPoints[i].x - imagePoints[i].x;
+        float dy &#x3D; projectedPoints[i].y - imagePoints[i].y;
+        RMS_Error +&#x3D; (dx * dx + dy * dy);
+    &#125;
+    RMS_Error &#x2F;&#x3D; (float)imagePoints.size();
+    RMS_Error &#x3D; std::sqrt(RMS_Error);
+
+    &#x2F;&#x2F; 返回总的重投影误差
+    return RMS_Error;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>

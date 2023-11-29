@@ -422,40 +422,40 @@
 <li>设置纹理参数和上传纹理数据等操作。在glActiveTexture函数和glBindTexture函数之后，你可以执行一系列与纹理相关的操作，如设置纹理过滤方式、纹理环绕方式、上传纹理数据等。</li>
 </ol>
 <p>通过glActiveTexture函数，你可以在渲染过程中使用多个纹理单元，并对每个纹理单元进行独立的设置和绑定。这样可以实现更复杂的纹理映射效果，如多重纹理、立方体贴图等。</p>
-<h1 id="怎么从缓冲区读取像素数据？"><a href="#怎么从缓冲区读取像素数据？" class="headerlink" title="怎么从缓冲区读取像素数据？"></a>怎么从缓冲区读取像素数据？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 读取颜色缓冲区的像素数据</span>
-       std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span><span class="token keyword">unsigned</span> <span class="token keyword">char</span><span class="token operator">></span> <span class="token function">pixelData</span><span class="token punctuation">(</span><span class="token number">10</span> <span class="token operator">*</span> <span class="token number">10</span> <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// RGBA格式，每个像素4个字节</span>
-       <span class="token function">glReadPixels</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">,</span> GL_RGBA<span class="token punctuation">,</span> GL_UNSIGNED_BYTE<span class="token punctuation">,</span> pixelData<span class="token punctuation">.</span><span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-       <span class="token comment">// 检查像素数据</span>
-       <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> <span class="token operator">++</span>i<span class="token punctuation">)</span>
-       <span class="token punctuation">&#123;</span>
-           <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> <span class="token operator">++</span>j<span class="token punctuation">)</span>
-           <span class="token punctuation">&#123;</span>
-               <span class="token keyword">int</span> pixelIndex <span class="token operator">=</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> <span class="token number">10</span> <span class="token operator">+</span> j<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">4</span><span class="token punctuation">;</span> <span class="token comment">// 每个像素4个字节</span>
-               <span class="token keyword">unsigned</span> <span class="token keyword">char</span> red <span class="token operator">=</span> pixelData<span class="token punctuation">[</span>pixelIndex<span class="token punctuation">]</span><span class="token punctuation">;</span>
-               <span class="token keyword">unsigned</span> <span class="token keyword">char</span> green <span class="token operator">=</span> pixelData<span class="token punctuation">[</span>pixelIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-               <span class="token keyword">unsigned</span> <span class="token keyword">char</span> blue <span class="token operator">=</span> pixelData<span class="token punctuation">[</span>pixelIndex <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-               <span class="token keyword">unsigned</span> <span class="token keyword">char</span> alpha <span class="token operator">=</span> pixelData<span class="token punctuation">[</span>pixelIndex <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-               <span class="token comment">// 打印像素值</span>
-               <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"像素(%d, %d): R=%d, G=%d, B=%d, A=%d\n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> j<span class="token punctuation">,</span> red<span class="token punctuation">,</span> green<span class="token punctuation">,</span> blue<span class="token punctuation">,</span> alpha<span class="token punctuation">)</span><span class="token punctuation">;</span>
-           <span class="token punctuation">&#125;</span>
-       <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="怎么从缓冲区读取像素数据？"><a href="#怎么从缓冲区读取像素数据？" class="headerlink" title="怎么从缓冲区读取像素数据？"></a>怎么从缓冲区读取像素数据？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F; 读取颜色缓冲区的像素数据
+       std::vector&lt;unsigned char&gt; pixelData(10 * 10 * 4); &#x2F;&#x2F; RGBA格式，每个像素4个字节
+       glReadPixels(0, 0, 10, 10, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());
+       &#x2F;&#x2F; 检查像素数据
+       for (int i &#x3D; 0; i &lt; 10; ++i)
+       &#123;
+           for (int j &#x3D; 0; j &lt; 10; ++j)
+           &#123;
+               int pixelIndex &#x3D; (i * 10 + j) * 4; &#x2F;&#x2F; 每个像素4个字节
+               unsigned char red &#x3D; pixelData[pixelIndex];
+               unsigned char green &#x3D; pixelData[pixelIndex + 1];
+               unsigned char blue &#x3D; pixelData[pixelIndex + 2];
+               unsigned char alpha &#x3D; pixelData[pixelIndex + 3];
+               &#x2F;&#x2F; 打印像素值
+               LOGI(1, &quot;像素(%d, %d): R&#x3D;%d, G&#x3D;%d, B&#x3D;%d, A&#x3D;%d\n&quot;, i, j, red, green, blue, alpha);
+           &#125;
+       &#125;</code></pre>
 
-<h1 id="怎么获取opengl-es的错误代码？"><a href="#怎么获取opengl-es的错误代码？" class="headerlink" title="怎么获取opengl es的错误代码？"></a>怎么获取opengl es的错误代码？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">EGLint status2 <span class="token operator">=</span> <span class="token function">eglGetError</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-       <span class="token keyword">if</span> <span class="token punctuation">(</span>status2 <span class="token operator">!=</span> EGL_SUCCESS<span class="token punctuation">)</span>
-       <span class="token punctuation">&#123;</span>
-           <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
-           <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"eglSwapBuffers failed!!!, status= %d\n"</span><span class="token punctuation">,</span> status2<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 帧缓冲不完整，eglSwapBuffers 执行失败&#125;</span>
-       <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="怎么获取opengl-es的错误代码？"><a href="#怎么获取opengl-es的错误代码？" class="headerlink" title="怎么获取opengl es的错误代码？"></a>怎么获取opengl es的错误代码？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">EGLint status2 &#x3D; eglGetError();
+       if (status2 !&#x3D; EGL_SUCCESS)
+       &#123;
+           return -1;
+           LOGI(1, &quot;eglSwapBuffers failed!!!, status&#x3D; %d\n&quot;, status2); &#x2F;&#x2F; 帧缓冲不完整，eglSwapBuffers 执行失败&#125;
+       &#125;</code></pre>
 
-<h1 id="VAO绑定怎么使用？"><a href="#VAO绑定怎么使用？" class="headerlink" title="VAO绑定怎么使用？"></a>VAO绑定怎么使用？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token function">glBindVertexArray</span><span class="token punctuation">(</span>VAO<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="VAO绑定怎么使用？"><a href="#VAO绑定怎么使用？" class="headerlink" title="VAO绑定怎么使用？"></a>VAO绑定怎么使用？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">glBindVertexArray(VAO);</code></pre>
 <p>绑定顶点数组对象,执行VAO绑定之后其后的所有VBO配置都是这个VAO对象的一部分。具体来说，glBindVertexArray的作用是将VAO与当前上下文相关的顶点状态绑定在一起。顶点状态包括顶点属性指针、顶点缓冲对象等。当我们需要绘制时，只需绑定相应的VAO，OpenGL会自动应用之前设置的顶点状态。</p>
 <h1 id="glDrawElements函数有什么作用？"><a href="#glDrawElements函数有什么作用？" class="headerlink" title="glDrawElements函数有什么作用？"></a>glDrawElements函数有什么作用？</h1><p>glDrawElements函数用于绘制索引化的图元，它并不会将绘制结果保存在任何地方。它的作用是根据索引数据来指定绘制顶点的顺序，并将这些顶点渲染到当前帧缓冲对象中。<br>绘制结果的保存通常发生在帧缓冲对象（Framebuffer Object, FBO）中。帧缓冲对象是一个特殊的OpenGL对象，它可以作为渲染目标来保存绘制结果。可以将帧缓冲对象与纹理或渲染缓冲对象关联，以便将绘制结果保存在纹理或渲染缓冲对象中。<br>在使用glDrawElements之前，需要先创建并绑定顶点数组对象（VAO），并将索引数据存储在索引缓冲对象（Index Buffer Object, IBO）中。然后，通过glBindVertexArray绑定VAO，使用glBindBuffer将IBO绑定到GL_ELEMENT_ARRAY_BUFFER目标，以告诉OpenGL使用IBO中的索引来绘制顶点。</p>
-<h1 id="怎么设置纹理采样方式和纹理拉伸方式？"><a href="#怎么设置纹理采样方式和纹理拉伸方式？" class="headerlink" title="怎么设置纹理采样方式和纹理拉伸方式？"></a>怎么设置纹理采样方式和纹理拉伸方式？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// ## 设置纹理拉伸方式</span>
-<span class="token function">glTexParameterf</span><span class="token punctuation">(</span>GL_TEXTURE_2D<span class="token punctuation">,</span> GL_TEXTURE_WRAP_S<span class="token punctuation">,</span> GL_CLAMP_TO_EDGE<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 设置纹理 S 横轴）的拉伸方式为截取</span>
-<span class="token function">glTexParameterf</span><span class="token punctuation">(</span>GL_TEXTURE_2D<span class="token punctuation">,</span> GL_TEXTURE_WRAP_T<span class="token punctuation">,</span> GL_CLAMP_TO_EDGE<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 设置纹理 T 纵轴）的拉伸方式为截取</span>
-<span class="token comment">// ## 设置纹理采样方式</span>
-<span class="token function">glTexParameteri</span><span class="token punctuation">(</span>GL_TEXTURE_2D<span class="token punctuation">,</span> GL_TEXTURE_MIN_FILTER<span class="token punctuation">,</span> GL_LINEAR<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 将纹理缩小时(GL_TEXTURE_MIN_FILTER)，会进行线性插值(GL_LINEAR)来计算新的纹理像素值。</span>
-<span class="token function">glTexParameteri</span><span class="token punctuation">(</span>GL_TEXTURE_2D<span class="token punctuation">,</span> GL_TEXTURE_MAG_FILTER<span class="token punctuation">,</span> GL_LINEAR<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 将纹理放大时(GL_TEXTURE_MAG_FILTER)，会进行线性插值(GL_LINEAR)来计算新的纹理像素值。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="怎么设置纹理采样方式和纹理拉伸方式？"><a href="#怎么设置纹理采样方式和纹理拉伸方式？" class="headerlink" title="怎么设置纹理采样方式和纹理拉伸方式？"></a>怎么设置纹理采样方式和纹理拉伸方式？</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F; ## 设置纹理拉伸方式
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); &#x2F;&#x2F; 设置纹理 S 横轴）的拉伸方式为截取
+glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); &#x2F;&#x2F; 设置纹理 T 纵轴）的拉伸方式为截取
+&#x2F;&#x2F; ## 设置纹理采样方式
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); &#x2F;&#x2F; 将纹理缩小时(GL_TEXTURE_MIN_FILTER)，会进行线性插值(GL_LINEAR)来计算新的纹理像素值。
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); &#x2F;&#x2F; 将纹理放大时(GL_TEXTURE_MAG_FILTER)，会进行线性插值(GL_LINEAR)来计算新的纹理像素值。</code></pre>
 <p>在OpenGL中，纹理参数是与当前绑定的纹理对象相关联的。当你调用glTexParameterf函数设置纹理参数时，它会作用于当前绑定的纹理对象。<br>要确定glTexParameterf设置的是哪个纹理的参数，需要在调用该函数之前通过glBindTexture函数将相应的纹理对象绑定到当前纹理目标。</p>
 <h1 id="Surfaceview和GLSurfaceview有什么区别"><a href="#Surfaceview和GLSurfaceview有什么区别" class="headerlink" title="Surfaceview和GLSurfaceview有什么区别"></a>Surfaceview和GLSurfaceview有什么区别</h1><p>SurfaceView和GLSurfaceView是Android中用于图形渲染的两个重要视图类，它们之间有以下区别：</p>
 <ol>

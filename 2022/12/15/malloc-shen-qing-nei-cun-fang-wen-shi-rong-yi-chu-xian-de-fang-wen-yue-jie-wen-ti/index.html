@@ -390,7 +390,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    481
+                    521
                 </div>
                 
 
@@ -414,48 +414,48 @@
             <div id="articleContent">
                 <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
 <li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
-<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">//构建4路YUV鱼眼图像去畸变映射关系</span>
-<span class="token keyword">void</span> <span class="token function">dist2undist</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token keyword">float</span> point_u_tmp<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> point_d_tmp<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-    <span class="token keyword">float</span> sf <span class="token operator">=</span> <span class="token number">1.5</span><span class="token punctuation">;</span>
-    <span class="token keyword">int</span> img_out_height <span class="token operator">=</span> <span class="token number">720</span> <span class="token operator">*</span> img_out_h_scale<span class="token punctuation">;</span>
-    <span class="token keyword">int</span> img_out_width <span class="token operator">=</span> <span class="token number">1280</span> <span class="token operator">*</span> img_out_w_scale<span class="token punctuation">;</span>
-    <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"dist2undist begin !,img_out size(%d,%d)"</span><span class="token punctuation">,</span> img_out_height<span class="token punctuation">,</span> img_out_width<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">&#x2F;&#x2F;构建4路YUV鱼眼图像去畸变映射关系
+void dist2undist()
+&#123;
+    float point_u_tmp[2], point_d_tmp[2];
+    float sf &#x3D; 1.5;
+    int img_out_height &#x3D; 720 * img_out_h_scale;
+    int img_out_width &#x3D; 1280 * img_out_w_scale;
+    LOGI(1, &quot;dist2undist begin !,img_out size(%d,%d)&quot;, img_out_height, img_out_width);
 
-    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> index <span class="token operator">&lt;</span> NUM_CAMERAS<span class="token punctuation">;</span> index<span class="token operator">++</span><span class="token punctuation">)</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 这里就是bug所在</span>
-        undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">float</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span>undistView_width <span class="token operator">*</span> undistView_height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    for (int index &#x3D; 0; index &lt; NUM_CAMERAS; index++)
+    &#123;
+        &#x2F;&#x2F; 这里就是bug所在
+        undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * 2 * sizeof(float));
 
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"undist_map malloc failed!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> img_out_height<span class="token punctuation">;</span> i <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">)</span>
-        <span class="token punctuation">&#123;</span>
-            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> j <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> j <span class="token operator">&lt;</span> img_out_width<span class="token punctuation">;</span> j <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">)</span>
-            <span class="token punctuation">&#123;</span>
-                point_u_tmp<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> j <span class="token operator">/</span> img_out_w_scale<span class="token punctuation">;</span>
-                point_u_tmp<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> i <span class="token operator">/</span> img_out_h_scale<span class="token punctuation">;</span>
-                <span class="token function">LDC_UndistToDistExt</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ldc<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> point_u_tmp<span class="token punctuation">,</span> point_d_tmp<span class="token punctuation">,</span> sf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        if (undist_map[index] &#x3D;&#x3D; NULL)
+        &#123;
+            LOGI(1, &quot;undist_map malloc failed!&quot;);
+        &#125;
+        for (int i &#x3D; 0; i &lt; img_out_height; i +&#x3D; 1)
+        &#123;
+            for (int j &#x3D; 0; j &lt; img_out_width; j +&#x3D; 1)
+            &#123;
+                point_u_tmp[0] &#x3D; j &#x2F; img_out_w_scale;
+                point_u_tmp[1] &#x3D; i &#x2F; img_out_h_scale;
+                LDC_UndistToDistExt(&amp;ldc[0], point_u_tmp, point_d_tmp, sf);
 
-                undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> point_d_tmp<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_w_scale<span class="token punctuation">;</span>
-                undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> point_d_tmp<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_h_scale<span class="token punctuation">;</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token keyword">int</span><span class="token punctuation">(</span>j <span class="token operator">%</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-                <span class="token punctuation">&#123;</span>
-                    undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j <span class="token operator">+</span> img_out_width <span class="token operator">*</span> img_out_height<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">int</span><span class="token punctuation">(</span>point_d_tmp<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_w_scale <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">;</span>
-                    undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j <span class="token operator">+</span> img_out_width <span class="token operator">*</span> img_out_height<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">int</span><span class="token punctuation">(</span>point_d_tmp<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_h_scale <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">720</span> <span class="token operator">*</span> img_in_h_scale<span class="token punctuation">;</span>
-                    undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j <span class="token operator">+</span> img_out_width <span class="token operator">*</span> img_out_height <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">int</span><span class="token punctuation">(</span>point_d_tmp<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_w_scale <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">;</span>
-                    undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">(</span>i <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> img_out_width <span class="token operator">+</span> j <span class="token operator">+</span> img_out_width <span class="token operator">*</span> img_out_height <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token keyword">int</span><span class="token punctuation">(</span>point_d_tmp<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">*</span> img_in_h_scale <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">720</span> <span class="token operator">*</span> img_in_h_scale<span class="token punctuation">;</span>
-                <span class="token punctuation">&#125;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+                undist_map[index][(i * img_out_width + j) * 2] &#x3D; point_d_tmp[0] * img_in_w_scale;
+                undist_map[index][(i * img_out_width + j) * 2 + 1] &#x3D; point_d_tmp[1] * img_in_h_scale;
+                if (!int(j % 2))
+                &#123;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2] &#x3D; int(point_d_tmp[0] * img_in_w_scale &#x2F; 2) * 2 + 1;
+                    undist_map[index][(i &#x2F; 2 * img_out_width + j + img_out_width * img_out_height + 1) * 2 + 1] &#x3D; int(point_d_tmp[1] * img_in_h_scale &#x2F; 2) + 720 * img_in_h_scale;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;</code></pre>
 如果 #18 行中申请内存为:</li>
 </ul>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">float</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span>undistView_width <span class="token operator">*</span> undistView_height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">undist_map[index] &#x3D; (float *)malloc(undistView_width * undistView_height * 3 &#x2F; 2 * sizeof(float));</code></pre>
 <p>那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。  </p>
 <hr>
 <p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>

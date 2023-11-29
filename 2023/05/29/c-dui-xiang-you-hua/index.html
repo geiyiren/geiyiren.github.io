@@ -386,7 +386,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.5k
+                    1.6k
                 </div>
                 
 
@@ -408,100 +408,100 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="对象使用过程中背后调用了哪些方法"><a href="#对象使用过程中背后调用了哪些方法" class="headerlink" title="对象使用过程中背后调用了哪些方法"></a>对象使用过程中背后调用了哪些方法</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
-<span class="token keyword">class</span> <span class="token class-name">Test</span>
-<span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(int)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+                <h1 id="对象使用过程中背后调用了哪些方法"><a href="#对象使用过程中背后调用了哪些方法" class="headerlink" title="对象使用过程中背后调用了哪些方法"></a>对象使用过程中背后调用了哪些方法</h1><h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+class Test
+&#123;
+public:
+	Test(int a&#x3D;10):ma(a)
+	&#123;
+		cout&lt;&lt;&quot;Test(int)&quot;&lt;&lt;endl;
+	&#125;
 
-	<span class="token operator">~</span><span class="token function">Test</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"~Test()"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+	~Test()
+	&#123;
+		cout&lt;&lt;&quot;~Test()&quot;&lt;&lt;endl;
+	&#125;
 
-	<span class="token function">Test</span> <span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>ma<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test (const Test &amp;t)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+	Test (const Test &amp;t):ma(t.ma)
+	&#123;
+		cout&lt;&lt;&quot;Test (const Test &amp;t)&quot;&lt;&lt;endl;
+	&#125;
 
-	Test<span class="token operator">&amp;</span> <span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"operator="</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-		ma <span class="token operator">=</span> t<span class="token punctuation">.</span>ma<span class="token punctuation">;</span>
-		<span class="token keyword">return</span> <span class="token operator">*</span><span class="token keyword">this</span><span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token keyword">private</span><span class="token operator">:</span>
-	<span class="token keyword">int</span> ma<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+	Test&amp; operator&#x3D;(const Test &amp;t)
+	&#123;
+		cout&lt;&lt;&quot;operator&#x3D;&quot;&lt;&lt;endl;
+		ma &#x3D; t.ma;
+		return *this;
+	&#125;
+private:
+	int ma;
+&#125;;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 1 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test t1<span class="token punctuation">;</span>
+int main()
+&#123;
+	cout&lt;&lt;&quot;--- 1 ---&quot;&lt;&lt;endl;
+	Test t1;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 2 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test <span class="token function">t2</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 2 ---&quot;&lt;&lt;endl;
+	Test t2(t1);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 3 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test t3 <span class="token operator">=</span> t1<span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 3 ---&quot;&lt;&lt;endl;
+	Test t3 &#x3D; t1;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 4 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test t4 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 4 ---&quot;&lt;&lt;endl;
+	Test t4 &#x3D; Test(20);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 5 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t4 <span class="token operator">=</span> t2<span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 5 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; t2;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 6 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t4 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 6 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; Test(30);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 7 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t4 <span class="token operator">=</span> <span class="token punctuation">(</span>Test<span class="token punctuation">)</span><span class="token number">30</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 7 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; (Test)30;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 8 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t4 <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 8 ---&quot;&lt;&lt;endl;
+	t4 &#x3D; 30;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 9 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token comment">//Test *p = &amp;Test(40;)</span>
+	cout&lt;&lt;&quot;--- 9 ---&quot;&lt;&lt;endl;
+	&#x2F;&#x2F;Test *p &#x3D; &amp;Test(40;)
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 10 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token keyword">const</span> Test <span class="token operator">&amp;</span>ref <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 10 ---&quot;&lt;&lt;endl;
+	const Test &amp;ref &#x3D; Test(50);
 
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&#125;</code></pre>
 
-<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">--- <span class="token number">1</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
---- <span class="token number">2</span> ---
-Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
---- <span class="token number">3</span> ---
-Test <span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
---- <span class="token number">4</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
---- <span class="token number">5</span> ---
-<span class="token assign-left variable">operator</span><span class="token operator">=</span>
---- <span class="token number">6</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-<span class="token assign-left variable">operator</span><span class="token operator">=</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">7</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-<span class="token assign-left variable">operator</span><span class="token operator">=</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">8</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-<span class="token assign-left variable">operator</span><span class="token operator">=</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">9</span> ---
---- <span class="token number">10</span> ---
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">--- 1 ---
+Test(int)
+--- 2 ---
+Test (const Test &amp;t)
+--- 3 ---
+Test (const Test &amp;t)
+--- 4 ---
+Test(int)
+--- 5 ---
+operator&#x3D;
+--- 6 ---
+Test(int)
+operator&#x3D;
+~Test()
+--- 7 ---
+Test(int)
+operator&#x3D;
+~Test()
+--- 8 ---
+Test(int)
+operator&#x3D;
+~Test()
+--- 9 ---
+--- 10 ---
+Test(int)
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()</code></pre>
 
 <h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><ul>
 <li>1	<br>正常使用构造函数生成t1，传入参数有默认值</li>
@@ -515,117 +515,117 @@ Test<span class="token punctuation">(</span>int<span class="token punctuation">)
 <li>9	<br>这里的临时对象需要生成，且出了语句临时对象就会调用析构函数，因此这里说明使用指针指向临时对象是不安全的，因此这里直接运行是报错的，无法获取右值的地址</li>
 <li>10	<br>这里的临时对象需要生成，且出了语句临时对象不会调用析构函数</li>
 </ul>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
-<span class="token keyword">class</span> <span class="token class-name">Test</span>
-<span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token operator">=</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token keyword">int</span> b <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token function">ma</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token function">mb</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(int, int)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
+class Test
+&#123;
+public:
+	Test(int a&#x3D;5, int b &#x3D; 5) : ma(a),mb(b)
+	&#123;
+		cout&lt;&lt;&quot;Test(int, int)&quot;&lt;&lt;endl;
+	&#125;
 
-	<span class="token operator">~</span><span class="token function">Test</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"~Test()"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+	~Test()
+	&#123;
+		cout&lt;&lt;&quot;~Test()&quot;&lt;&lt;endl;
+	&#125;
 
-	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>src<span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token function">ma</span><span class="token punctuation">(</span>src<span class="token punctuation">.</span>ma<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">mb</span><span class="token punctuation">(</span>src<span class="token punctuation">.</span>mb<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(const Test &amp;)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+	Test(const Test &amp;src) : ma(src.ma), mb(src.mb)
+	&#123;
+		cout&lt;&lt;&quot;Test(const Test &amp;)&quot;&lt;&lt;endl;
+	&#125;
 
-	Test <span class="token keyword">operator</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>src<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		ma <span class="token operator">=</span> src<span class="token punctuation">.</span>ma<span class="token punctuation">;</span>
-		mb <span class="token operator">=</span> src<span class="token punctuation">.</span>mb<span class="token punctuation">;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"operator = "</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token keyword">private</span><span class="token operator">:</span>
-	<span class="token keyword">int</span> ma<span class="token punctuation">;</span>
-	<span class="token keyword">int</span> mb<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+	Test operator &#x3D; (const Test &amp;src)
+	&#123;
+		ma &#x3D; src.ma;
+		mb &#x3D; src.mb;
+		cout&lt;&lt;&quot;operator &#x3D; &quot;&lt;&lt;endl;
+	&#125;
+private:
+	int ma;
+	int mb;
+&#125;;
 
-Test <span class="token function">t1</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Test t1(10,10);
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 3 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test <span class="token function">t2</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+int main()
+&#123;
+	cout&lt;&lt;&quot;--- 3 ---&quot;&lt;&lt;endl;
+	Test t2(20,20);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 4 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test t3 <span class="token operator">=</span> t2<span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 4 ---&quot;&lt;&lt;endl;
+	Test t3 &#x3D; t2;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 5 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token keyword">static</span> Test t4 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">30</span><span class="token punctuation">,</span><span class="token number">30</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 5 ---&quot;&lt;&lt;endl;
+	static Test t4 &#x3D; Test(30,30);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 6 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t2 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">40</span><span class="token punctuation">,</span><span class="token number">40</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 6 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; Test(40,40);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 7 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t2 <span class="token operator">=</span> <span class="token punctuation">(</span>Test<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">,</span><span class="token number">50</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 7 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; (Test)(50,50);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 8 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	t2 <span class="token operator">=</span> <span class="token number">60</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 8 ---&quot;&lt;&lt;endl;
+	t2 &#x3D; 60;
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 9 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test <span class="token operator">*</span>p1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">70</span><span class="token punctuation">,</span><span class="token number">70</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 9 ---&quot;&lt;&lt;endl;
+	Test *p1 &#x3D; new Test(70,70);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 10 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	Test <span class="token operator">*</span>p2 <span class="token operator">=</span> <span class="token keyword">new</span> Test<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 10 ---&quot;&lt;&lt;endl;
+	Test *p2 &#x3D; new Test[2];
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 11 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token comment">// Test *p3 = &amp;Test(80,80);</span>
+	cout&lt;&lt;&quot;--- 11 ---&quot;&lt;&lt;endl;
+	&#x2F;&#x2F; Test *p3 &#x3D; &amp;Test(80,80);
 
-	cout<span class="token operator">&lt;&lt;</span><span class="token string">"--- 12 ---"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token keyword">const</span> Test <span class="token operator">&amp;</span>p4 <span class="token operator">=</span> <span class="token function">Test</span><span class="token punctuation">(</span><span class="token number">90</span><span class="token punctuation">,</span><span class="token number">90</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	cout&lt;&lt;&quot;--- 12 ---&quot;&lt;&lt;endl;
+	const Test &amp;p4 &#x3D; Test(90,90);
 
-	<span class="token keyword">delete</span> p1<span class="token punctuation">;</span>
-	<span class="token keyword">delete</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> p2<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+	delete p1;
+	delete [] p2;
+&#125;
 
-Test <span class="token function">t5</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">,</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Test t5(100,100);</code></pre>
 
-<h2 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
---- <span class="token number">3</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
---- <span class="token number">4</span> ---
-Test<span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span><span class="token punctuation">)</span>
---- <span class="token number">5</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
---- <span class="token number">6</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-operator <span class="token operator">=</span> 
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">7</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-operator <span class="token operator">=</span> 
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">8</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-operator <span class="token operator">=</span> 
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
---- <span class="token number">9</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
---- <span class="token number">10</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
---- <span class="token number">11</span> ---
---- <span class="token number">12</span> ---
-Test<span class="token punctuation">(</span>int, int<span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span>
-~Test<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="运行结果-1"><a href="#运行结果-1" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test(int, int)
+Test(int, int)
+--- 3 ---
+Test(int, int)
+--- 4 ---
+Test(const Test &amp;)
+--- 5 ---
+Test(int, int)
+--- 6 ---
+Test(int, int)
+operator &#x3D; 
+~Test()
+~Test()
+--- 7 ---
+Test(int, int)
+operator &#x3D; 
+~Test()
+~Test()
+--- 8 ---
+Test(int, int)
+operator &#x3D; 
+~Test()
+~Test()
+--- 9 ---
+Test(int, int)
+--- 10 ---
+Test(int, int)
+Test(int, int)
+--- 11 ---
+--- 12 ---
+Test(int, int)
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()
+~Test()</code></pre>
 
 <h2 id="解析-1"><a href="#解析-1" class="headerlink" title="解析"></a>解析</h2><ul>
 <li>5<br>使用临时构造同类型新对象的时候，临时对象被优化，类似于上文的第4项</li>
@@ -633,59 +633,59 @@ Test<span class="token punctuation">(</span>int, int<span class="token punctuati
 <li>11<br>不能使用指针指向临时对象，临时对象使用后析构。</li>
 <li>12<br>使用引用变量指向临时对象，相当于给临时对象起了一个别名，引用对象销毁时，临时对象才会析构。</li>
 </ul>
-<h1 id="函数调用过程中对象背后调用了哪些方法"><a href="#函数调用过程中对象背后调用了哪些方法" class="headerlink" title="函数调用过程中对象背后调用了哪些方法"></a>函数调用过程中对象背后调用了哪些方法</h1><h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
-<span class="token keyword">using</span> <span class="token keyword">namespace</span> std<span class="token punctuation">;</span>
+<h1 id="函数调用过程中对象背后调用了哪些方法"><a href="#函数调用过程中对象背后调用了哪些方法" class="headerlink" title="函数调用过程中对象背后调用了哪些方法"></a>函数调用过程中对象背后调用了哪些方法</h1><h2 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;iostream&gt;
+using namespace std;
 
-<span class="token keyword">class</span> <span class="token class-name">Test</span>
-<span class="token punctuation">&#123;</span>
-<span class="token keyword">public</span><span class="token operator">:</span>
-	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">int</span> data <span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(int)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token operator">~</span><span class="token function">Test</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"~Test"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token function">Test</span><span class="token punctuation">(</span><span class="token keyword">const</span> Test <span class="token operator">&amp;</span>t<span class="token punctuation">)</span><span class="token operator">:</span><span class="token function">ma</span><span class="token punctuation">(</span>t<span class="token punctuation">.</span>ma<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"Test(const Test &amp;)"</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">void</span> <span class="token keyword">operator</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token keyword">const</span> Test<span class="token operator">&amp;</span>t<span class="token punctuation">)</span>
-	<span class="token punctuation">&#123;</span>
-		cout<span class="token operator">&lt;&lt;</span><span class="token string">"operator="</span><span class="token operator">&lt;&lt;</span>endl<span class="token punctuation">;</span>
-		ma<span class="token operator">=</span>t<span class="token punctuation">.</span>ma<span class="token punctuation">;</span>
-	<span class="token punctuation">&#125;</span>
+class Test
+&#123;
+public:
+	Test(int data &#x3D;10):ma(data)&#123;
+		cout&lt;&lt;&quot;Test(int)&quot;&lt;&lt;endl;
+	&#125;
+	~Test()&#123;
+		cout&lt;&lt;&quot;~Test&quot;&lt;&lt;endl;
+	&#125;
+	Test(const Test &amp;t):ma(t.ma)&#123;
+		cout&lt;&lt;&quot;Test(const Test &amp;)&quot;&lt;&lt;endl;
+	&#125;
+	void operator&#x3D;(const Test&amp;t)
+	&#123;
+		cout&lt;&lt;&quot;operator&#x3D;&quot;&lt;&lt;endl;
+		ma&#x3D;t.ma;
+	&#125;
 
-	<span class="token keyword">int</span> <span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">const</span> <span class="token punctuation">&#123;</span><span class="token keyword">return</span> ma<span class="token punctuation">;</span><span class="token punctuation">&#125;</span>
-<span class="token keyword">private</span><span class="token operator">:</span>
-	<span class="token keyword">int</span> ma<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+	int getData() const &#123;return ma;&#125;
+private:
+	int ma;
+&#125;;
 
-Test <span class="token function">GetObject</span><span class="token punctuation">(</span>Test t<span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-	<span class="token keyword">int</span> val<span class="token operator">=</span>t<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-	Test <span class="token function">tmp</span><span class="token punctuation">(</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
-	<span class="token keyword">return</span> tmp<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
+Test GetObject(Test t)
+&#123;
+	int val&#x3D;t.getData();
+	Test tmp(val);
+	return tmp;
+&#125;
 
-<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
+int main()
+&#123;
 
-	Test t1<span class="token punctuation">;</span>
-	Test t2<span class="token punctuation">;</span>
-	t2<span class="token operator">=</span><span class="token function">GetObject</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	Test t1;
+	Test t2;
+	t2&#x3D;GetObject(t1);
 
-	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+	return 0;
+&#125;</code></pre>
 
-<h2 id="程序运行结果"><a href="#程序运行结果" class="headerlink" title="程序运行结果"></a>程序运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-<span class="token operator">==</span><span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">==</span><span class="token operator">=</span>
-Test<span class="token punctuation">(</span>const Test <span class="token operator">&amp;</span><span class="token punctuation">)</span>
-Test<span class="token punctuation">(</span>int<span class="token punctuation">)</span>
-<span class="token assign-left variable">operator</span><span class="token operator">=</span>
+<h2 id="程序运行结果"><a href="#程序运行结果" class="headerlink" title="程序运行结果"></a>程序运行结果</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">Test(int)
+Test(int)
+&#x3D;&#x3D;&#x3D; 1 &#x3D;&#x3D;&#x3D;
+Test(const Test &amp;)
+Test(int)
+operator&#x3D;
 ~Test
 ~Test
 ~Test
-~Test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+~Test</code></pre>
 
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><ul>
 <li>Test(int)<br>调用默认构造函数</li>

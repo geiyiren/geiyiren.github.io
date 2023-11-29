@@ -386,7 +386,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    2.6k
                 </div>
                 
 
@@ -409,165 +409,165 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="1-安装AUBOi5的Moveit功能包"><a href="#1-安装AUBOi5的Moveit功能包" class="headerlink" title="1.安装AUBOi5的Moveit功能包"></a>1.安装AUBOi5的Moveit功能包</h2><h3 id="1-1环境配置"><a href="#1-1环境配置" class="headerlink" title="1.1环境配置"></a>1.1环境配置</h3><p>下载Move-it package</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-moveit<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install ros-kinetic-moveit</code></pre>
 
 <p>下载moveit_visual_tools</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-moveit-visual-tools<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install ros-kinetic-moveit-visual-tools</code></pre>
 
 <p>下载industrial_core package</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-industrial-core<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install ros-kinetic-industrial-core</code></pre>
 
-<h3 id="1-2建立ROS工作空间"><a href="#1-2建立ROS工作空间" class="headerlink" title="1.2建立ROS工作空间"></a>1.2建立ROS工作空间</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">source</span> /opt/ros/kinetic/setup.bash
+<h3 id="1-2建立ROS工作空间"><a href="#1-2建立ROS工作空间" class="headerlink" title="1.2建立ROS工作空间"></a>1.2建立ROS工作空间</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">source &#x2F;opt&#x2F;ros&#x2F;kinetic&#x2F;setup.bash
 
-<span class="token comment"># catkin_ws为工作空间名称</span>
-<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/catkin_ws/src
-<span class="token builtin class-name">cd</span> ~/catkin_ws/
-catkin_make<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+# catkin_ws为工作空间名称
+mkdir -p ~&#x2F;catkin_ws&#x2F;src
+cd ~&#x2F;catkin_ws&#x2F;
+catkin_make</code></pre>
 
-<h3 id="1-2-在-catkin-ws-src-目录中下载Moveit功能包，并编译"><a href="#1-2-在-catkin-ws-src-目录中下载Moveit功能包，并编译" class="headerlink" title="1.2 在  ~&#x2F;catkin_ws&#x2F;src  目录中下载Moveit功能包，并编译"></a>1.2 在  ~&#x2F;catkin_ws&#x2F;src  目录中下载Moveit功能包，并编译</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws/src
-<span class="token function">git</span> clone https://github.com/lg609/aubo_robot.git
-<span class="token builtin class-name">cd</span> ~/catkin_ws/
+<h3 id="1-2-在-catkin-ws-src-目录中下载Moveit功能包，并编译"><a href="#1-2-在-catkin-ws-src-目录中下载Moveit功能包，并编译" class="headerlink" title="1.2 在  ~&#x2F;catkin_ws&#x2F;src  目录中下载Moveit功能包，并编译"></a>1.2 在  ~&#x2F;catkin_ws&#x2F;src  目录中下载Moveit功能包，并编译</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws&#x2F;src
+git clone https:&#x2F;&#x2F;github.com&#x2F;lg609&#x2F;aubo_robot.git
+cd ~&#x2F;catkin_ws&#x2F;
 catkin_make
-<span class="token builtin class-name">source</span> ~/catkin_ws/devel/setup.bash<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+source ~&#x2F;catkin_ws&#x2F;devel&#x2F;setup.bash</code></pre>
 
 <p>注释：如果提示下列错误，则说明在安装Ros的时候没有安装Ros-moveit功能包：</p>
 <p><img src="https://i.loli.net/2021/05/28/jShBMoz9apcKVXE.png"></p>
 <p>解决办法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-moveit*<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install ros-kinetic-moveit*</code></pre>
 
 <p>注：参考网址：<a target="_blank" rel="noopener" href="https://github.com/tahsinkose/hector-moveit/issues/4">点我查看</a></p>
 <h2 id="2-安装Realsense-D435相机驱动与功能包"><a href="#2-安装Realsense-D435相机驱动与功能包" class="headerlink" title="2.安装Realsense D435相机驱动与功能包"></a>2.安装Realsense D435相机驱动与功能包</h2><h3 id="2-1驱动安装"><a href="#2-1驱动安装" class="headerlink" title="2.1驱动安装"></a>2.1驱动安装</h3><p>官方安装教程：<a target="_blank" rel="noopener" href="https://github.com/IntelRealSense/librealsense/blob/master/doc/distribution_linux.md">点我查看</a></p>
 <p>参考教程：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/93127918">点我查看</a></p>
 <p>注册公匙：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> apt-key adv <span class="token parameter variable">--keyserver</span> keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE <span class="token operator">||</span> <span class="token function">sudo</span> apt-key adv <span class="token parameter variable">--keyserver</span> hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp:&#x2F;&#x2F;keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE</code></pre>
 
 <p>添加服务器至存储列表：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> add-apt-repository <span class="token string">"deb https://librealsense.intel.com/Debian/apt-repo xenial main"</span> <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo add-apt-repository &quot;deb https:&#x2F;&#x2F;librealsense.intel.com&#x2F;Debian&#x2F;apt-repo xenial main&quot; -u</code></pre>
 
 <p>安装所需库：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> librealsense2-dkms
-<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> librealsense2-utils<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install librealsense2-dkms
+sudo apt-get install librealsense2-utils</code></pre>
 
 <p>安装功能包：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> librealsense2-dev
-<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> librealsense2-dbg<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install librealsense2-dev
+sudo apt-get install librealsense2-dbg</code></pre>
 
 <p>启动连接界面，进行测试，若可以看到相机图像则证明驱动安装成功：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">realsense-viewer<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">realsense-viewer</code></pre>
 
 <h3 id="2-2功能包安装"><a href="#2-2功能包安装" class="headerlink" title="2.2功能包安装"></a>2.2功能包安装</h3><p>创建工作空间：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/catkin_ws/src <span class="token operator">&amp;&amp;</span> <span class="token builtin class-name">cd</span> ~/catkin_ws/src<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mkdir -p ~&#x2F;catkin_ws&#x2F;src &amp;&amp; cd ~&#x2F;catkin_ws&#x2F;src</code></pre>
 
 <p>下载源码，并检查依赖:</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone <span class="token parameter variable">-b</span> <span class="token number">2.2</span>.7 https://github.com/IntelRealSense/realsense-ros.git 
-<span class="token builtin class-name">cd</span> realsense-ros/realsense2_camera <span class="token function">git</span> checkout <span class="token variable"><span class="token variable">`</span><span class="token function">git</span> tag <span class="token operator">|</span> <span class="token function">sort</span> <span class="token parameter variable">-V</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token parameter variable">-P</span> <span class="token string">"^\d+\.\d+\.\d+"</span> <span class="token operator">|</span> <span class="token function">tail</span> <span class="token parameter variable">-1</span><span class="token variable">`</span></span>
-<span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-ddynamic-reconfigure<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">git clone -b 2.2.7 https:&#x2F;&#x2F;github.com&#x2F;IntelRealSense&#x2F;realsense-ros.git 
+cd realsense-ros&#x2F;realsense2_camera git checkout &#96;git tag | sort -V | grep -P &quot;^\d+\.\d+\.\d+&quot; | tail -1&#96;
+sudo apt-get install ros-kinetic-ddynamic-reconfigure</code></pre>
 
 <p>编译：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws
-catkin_make <span class="token parameter variable">-DCATKIN_ENABLE_TESTING</span><span class="token operator">=</span>False <span class="token parameter variable">-DCMAKE_BUILD_TYPE</span><span class="token operator">=</span>Release 
-catkin_make <span class="token function">install</span> 
-<span class="token builtin class-name">echo</span> <span class="token string">"source ~/catkin_ws/devel/setup.bash"</span> <span class="token operator">>></span> ~/.bashrc 
-<span class="token builtin class-name">source</span> ~/.bashrc<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws
+catkin_make -DCATKIN_ENABLE_TESTING&#x3D;False -DCMAKE_BUILD_TYPE&#x3D;Release 
+catkin_make install 
+echo &quot;source ~&#x2F;catkin_ws&#x2F;devel&#x2F;setup.bash&quot; &gt;&gt; ~&#x2F;.bashrc 
+source ~&#x2F;.bashrc</code></pre>
 
 <p>测试，启动相机节点：</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">roslaunch realsense2_camera rs_camera.launch
 
-<span class="token comment"># 查看发布的话题</span>
-rostopic list<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+# 查看发布的话题
+rostopic list</code></pre>
 
-<h2 id="3-安装ros-kinetic-visp依赖包"><a href="#3-安装ros-kinetic-visp依赖包" class="headerlink" title="3.安装ros-kinetic-visp依赖包"></a>3.安装ros-kinetic-visp依赖包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ros-kinetic-visp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="3-安装ros-kinetic-visp依赖包"><a href="#3-安装ros-kinetic-visp依赖包" class="headerlink" title="3.安装ros-kinetic-visp依赖包"></a>3.安装ros-kinetic-visp依赖包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">sudo apt-get install ros-kinetic-visp</code></pre>
 
-<h2 id="4-安装aruco-ros二维码检测功能包"><a href="#4-安装aruco-ros二维码检测功能包" class="headerlink" title="4.安装aruco_ros二维码检测功能包"></a>4.安装aruco_ros二维码检测功能包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws/src
-<span class="token function">git</span> clone <span class="token parameter variable">-b</span> kinetic-devel https://github.com/pal-robotics/aruco_ros.git
-<span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>
+<h2 id="4-安装aruco-ros二维码检测功能包"><a href="#4-安装aruco-ros二维码检测功能包" class="headerlink" title="4.安装aruco_ros二维码检测功能包"></a>4.安装aruco_ros二维码检测功能包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws&#x2F;src
+git clone -b kinetic-devel https:&#x2F;&#x2F;github.com&#x2F;pal-robotics&#x2F;aruco_ros.git
+cd ..
 catkin_make
-<span class="token builtin class-name">source</span> ~/catkin_ws/devel/setup.bash<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+source ~&#x2F;catkin_ws&#x2F;devel&#x2F;setup.bash</code></pre>
 
-<h2 id="5-安装visp-hand2eye-calibration"><a href="#5-安装visp-hand2eye-calibration" class="headerlink" title="5.安装visp_hand2eye_calibration"></a>5.安装visp_hand2eye_calibration</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws/src
-<span class="token function">git</span> clone <span class="token parameter variable">-b</span> kinetic-devel https://github.com/lagadic/vision_visp.git
-<span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>
-catkin_make <span class="token parameter variable">--pkg</span> visp_hand2eye_calibration
-<span class="token builtin class-name">source</span> ~/catkin_ws/devel/setup.bash<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="5-安装visp-hand2eye-calibration"><a href="#5-安装visp-hand2eye-calibration" class="headerlink" title="5.安装visp_hand2eye_calibration"></a>5.安装visp_hand2eye_calibration</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws&#x2F;src
+git clone -b kinetic-devel https:&#x2F;&#x2F;github.com&#x2F;lagadic&#x2F;vision_visp.git
+cd ..
+catkin_make --pkg visp_hand2eye_calibration
+source ~&#x2F;catkin_ws&#x2F;devel&#x2F;setup.bash</code></pre>
 
-<h2 id="6-安装easy-handeye手眼标定功能包"><a href="#6-安装easy-handeye手眼标定功能包" class="headerlink" title="6.安装easy_handeye手眼标定功能包"></a>6.安装easy_handeye手眼标定功能包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws/src
-<span class="token function">git</span> clone https://github.com/IFL-CAMP/easy_handeye
-<span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>
+<h2 id="6-安装easy-handeye手眼标定功能包"><a href="#6-安装easy-handeye手眼标定功能包" class="headerlink" title="6.安装easy_handeye手眼标定功能包"></a>6.安装easy_handeye手眼标定功能包</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws&#x2F;src
+git clone https:&#x2F;&#x2F;github.com&#x2F;IFL-CAMP&#x2F;easy_handeye
+cd ..
 catkin_make
-<span class="token builtin class-name">source</span> ~/catkin_ws/devel/setup.bash<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+source ~&#x2F;catkin_ws&#x2F;devel&#x2F;setup.bash</code></pre>
 
 <h2 id="7-标定方法"><a href="#7-标定方法" class="headerlink" title="7.标定方法"></a>7.标定方法</h2><h3 id="7-1眼在手上-eye-in-hand标定方法"><a href="#7-1眼在手上-eye-in-hand标定方法" class="headerlink" title="7.1眼在手上 eye-in-hand标定方法"></a>7.1眼在手上 eye-in-hand标定方法</h3><h4 id="7-1-1修改launch文件"><a href="#7-1-1修改launch文件" class="headerlink" title="7.1.1修改launch文件"></a>7.1.1修改launch文件</h4><p>标定过程需启动 ur5 机械臂的相关节点，realsense 节点，aruco 节点，easy_handeye 节点，可以写一个 launch 文件同时启动上述节点，也可以分别启动。easy_handeye 包中给出了用一个 launch 文件实现的示例，在如下的目录中：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> ~/catkin_ws/src/easy_handeye/docs/example_launch/ur5_kinect_calibration.launch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">cd ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;docs&#x2F;example_launch&#x2F;ur5_kinect_calibration.launch</code></pre>
 
 <p>我们可以在此基础上进行修改。</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 将 launch 文件拷贝到 easy_handeye 功能包的 launch 目录中，顺便改个名字</span>
-<span class="token builtin class-name">cd</span> ~/catkin_ws/src/easy_handeye/docs/example_launch
-<span class="token function">cp</span> ur5_kinect_calibration.launch ~/catkin_ws/src/easy_handeye/easy_handeye/launch/eye_in_hand_calibration.launch
-gedit  ~/catkin_ws/src/easy_handeye/easy_handeye/launch/eye_in_hand_calibration.launch<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 将 launch 文件拷贝到 easy_handeye 功能包的 launch 目录中，顺便改个名字
+cd ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;docs&#x2F;example_launch
+cp ur5_kinect_calibration.launch ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;easy_handeye&#x2F;launch&#x2F;eye_in_hand_calibration.launch
+gedit  ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;easy_handeye&#x2F;launch&#x2F;eye_in_hand_calibration.launch</code></pre>
 
 <p>修改 launch 文件如下：</p>
-<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>launch</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace_prefix<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>aubo_i5_kinect_handeyecalibration<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&lt;launch&gt;
+    &lt;arg name&#x3D;&quot;namespace_prefix&quot; default&#x3D;&quot;aubo_i5_kinect_handeyecalibration&quot; &#x2F;&gt;
 
-	<span class="token comment">&lt;!-- 169.254.3.20为AUBOi5机械臂的IP地址,根据实际情况修改 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_ip<span class="token punctuation">"</span></span> <span class="token attr-name">doc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>The IP address of the UR5 robot<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>169.254.3.20<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+	&lt;!-- 169.254.3.20为AUBOi5机械臂的IP地址,根据实际情况修改 --&gt;
+    &lt;arg name&#x3D;&quot;robot_ip&quot; doc&#x3D;&quot;The IP address of the UR5 robot&quot; default&#x3D;&quot;169.254.3.20&quot;&#x2F;&gt;
 
 	
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marker_size<span class="token punctuation">"</span></span> <span class="token attr-name">doc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Size of the ArUco marker used, in meters<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0.1<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marker_id<span class="token punctuation">"</span></span> <span class="token attr-name">doc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>The ID of the ArUco marker used<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    &lt;arg name&#x3D;&quot;marker_size&quot; doc&#x3D;&quot;Size of the ArUco marker used, in meters&quot; default&#x3D;&quot;0.1&quot; &#x2F;&gt;
+    &lt;arg name&#x3D;&quot;marker_id&quot; doc&#x3D;&quot;The ID of the ArUco marker used&quot; default&#x3D;&quot;100&quot;&#x2F;&gt;
 
 
-    <span class="token comment">&lt;!-- 1. start the Realsense435 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>include</span> <span class="token attr-name">file</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(find realsense2_camera)/launch/rs_camera.launch<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;!-- 1. start the Realsense435 --&gt;
+    &lt;include file&#x3D;&quot;$(find realsense2_camera)&#x2F;launch&#x2F;rs_camera.launch&quot; &#x2F;&gt;
 
 
-    <span class="token comment">&lt;!-- 2. start ArUco --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>node</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>aruco_tracker<span class="token punctuation">"</span></span> <span class="token attr-name">pkg</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>aruco_ros<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>single<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>remap</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/camera_info<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/camera/color/camera_info<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>remap</span> <span class="token attr-name">from</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/image<span class="token punctuation">"</span></span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/camera/color/image_raw<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>image_is_rectified<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marker_size<span class="token punctuation">"</span></span>        <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg marker_size)<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marker_id<span class="token punctuation">"</span></span>          <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg marker_id)<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>reference_frame<span class="token punctuation">"</span></span>    <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_color_frame<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_frame<span class="token punctuation">"</span></span>       <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_color_frame<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>marker_frame<span class="token punctuation">"</span></span>       <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_marker<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>node</span><span class="token punctuation">></span></span>
+    &lt;!-- 2. start ArUco --&gt;
+    &lt;node name&#x3D;&quot;aruco_tracker&quot; pkg&#x3D;&quot;aruco_ros&quot; type&#x3D;&quot;single&quot;&gt;
+        &lt;remap from&#x3D;&quot;&#x2F;camera_info&quot; to&#x3D;&quot;&#x2F;camera&#x2F;color&#x2F;camera_info&quot; &#x2F;&gt;
+        &lt;remap from&#x3D;&quot;&#x2F;image&quot; to&#x3D;&quot;&#x2F;camera&#x2F;color&#x2F;image_raw&quot; &#x2F;&gt;
+        &lt;param name&#x3D;&quot;image_is_rectified&quot; value&#x3D;&quot;true&quot;&#x2F;&gt;
+        &lt;param name&#x3D;&quot;marker_size&quot;        value&#x3D;&quot;$(arg marker_size)&quot;&#x2F;&gt;
+        &lt;param name&#x3D;&quot;marker_id&quot;          value&#x3D;&quot;$(arg marker_id)&quot;&#x2F;&gt;
+        &lt;param name&#x3D;&quot;reference_frame&quot;    value&#x3D;&quot;camera_color_frame&quot;&#x2F;&gt;
+        &lt;param name&#x3D;&quot;camera_frame&quot;       value&#x3D;&quot;camera_color_frame&quot;&#x2F;&gt;
+        &lt;param name&#x3D;&quot;marker_frame&quot;       value&#x3D;&quot;camera_marker&quot; &#x2F;&gt;
+    &lt;&#x2F;node&gt;
 
 
-    <span class="token comment">&lt;!-- 3. start the robot --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>include</span> <span class="token attr-name">file</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(find aubo_i5_moveit_config)/launch/moveit_planning_execution.launch<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>include</span><span class="token punctuation">></span></span>
+    &lt;!-- 3. start the robot --&gt;
+    &lt;include file&#x3D;&quot;$(find aubo_i5_moveit_config)&#x2F;launch&#x2F;moveit_planning_execution.launch&quot;&gt;
+    &lt;&#x2F;include&gt;
 
 
-    <span class="token comment">&lt;!-- 4. start easy_handeye --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>include</span> <span class="token attr-name">file</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(find easy_handeye)/launch/calibrate.launch<span class="token punctuation">"</span></span> <span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace_prefix<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace_prefix)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token comment">&lt;!-- true：相机安装在机械臂末端 false: 相机安装在机械臂外--></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye_on_hand<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;!-- 4. start easy_handeye --&gt;
+    &lt;include file&#x3D;&quot;$(find easy_handeye)&#x2F;launch&#x2F;calibrate.launch&quot; &gt;
+        &lt;arg name&#x3D;&quot;namespace_prefix&quot; value&#x3D;&quot;$(arg namespace_prefix)&quot; &#x2F;&gt;
+        &lt;!-- true：相机安装在机械臂末端 false: 相机安装在机械臂外--&gt;
+        &lt;arg name&#x3D;&quot;eye_on_hand&quot; value&#x3D;&quot;true&quot; &#x2F;&gt;
 
-		<span class="token comment">&lt;!-- tracking_base_frame 为相机坐标系 camera_color_frame --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_color_frame<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_marker_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>camera_marker<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token comment">&lt;!-- robot_base_frame 为机器人基座坐标系 --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>base_link<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token comment">&lt;!-- robot_effector_frame 为工具坐标系，即：与相机相连的关节名称 --></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_effector_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrist3_Link<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+		&lt;!-- tracking_base_frame 为相机坐标系 camera_color_frame --&gt;
+        &lt;arg name&#x3D;&quot;tracking_base_frame&quot; value&#x3D;&quot;camera_color_frame&quot; &#x2F;&gt;
+        &lt;arg name&#x3D;&quot;tracking_marker_frame&quot; value&#x3D;&quot;camera_marker&quot; &#x2F;&gt;
+        &lt;!-- robot_base_frame 为机器人基座坐标系 --&gt;
+        &lt;arg name&#x3D;&quot;robot_base_frame&quot; value&#x3D;&quot;base_link&quot; &#x2F;&gt;
+        &lt;!-- robot_effector_frame 为工具坐标系，即：与相机相连的关节名称 --&gt;
+        &lt;arg name&#x3D;&quot;robot_effector_frame&quot; value&#x3D;&quot;wrist3_Link&quot; &#x2F;&gt;
 
 
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>freehand_robot_movement<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_velocity_scaling<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0.5<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_acceleration_scaling<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0.2<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+        &lt;arg name&#x3D;&quot;freehand_robot_movement&quot; value&#x3D;&quot;false&quot; &#x2F;&gt;
+        &lt;arg name&#x3D;&quot;robot_velocity_scaling&quot; value&#x3D;&quot;0.5&quot; &#x2F;&gt;
+        &lt;arg name&#x3D;&quot;robot_acceleration_scaling&quot; value&#x3D;&quot;0.2&quot; &#x2F;&gt;
         
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>move_group<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>manipulator_i5<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+        &lt;arg name&#x3D;&quot;move_group&quot; value&#x3D;&quot;manipulator_i5&quot; &#x2F;&gt;
 
 
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>include</span><span class="token punctuation">></span></span>
+    &lt;&#x2F;include&gt;
 
 
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>launch</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+&lt;&#x2F;launch&gt;</code></pre>
 
 <h4 id="7-1-2启动-launch-文件，开始标定"><a href="#7-1-2启动-launch-文件，开始标定" class="headerlink" title="7.1.2启动 launch 文件，开始标定"></a>7.1.2启动 launch 文件，开始标定</h4><p>启动 launch 文件：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">roslaunch easy_handeye eye_to_hand_calibration.launch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">roslaunch easy_handeye eye_to_hand_calibration.launch</code></pre>
 
 <p>成功运行后，会同时打开三个界面：</p>
 <img src="https://i.loli.net/2021/05/28/4Xmzb3hFrnd5R7c.jpg" alt="界面1" style="zoom:50%;" />
@@ -589,69 +589,69 @@ gedit  ~/catkin_ws/src/easy_handeye/easy_handeye/launch/eye_in_hand_calibration.
 <p><img src="https://i.loli.net/2021/05/28/gV9AWphbyU5mFlP.jpg"></p>
 <h3 id="7-2眼在手外-eye-to-hand标定方法"><a href="#7-2眼在手外-eye-to-hand标定方法" class="headerlink" title="7.2眼在手外 eye-to-hand标定方法"></a>7.2眼在手外 eye-to-hand标定方法</h3><p>方法与“眼在手上”基本相同，需要修改一下 launch 文件，注意两个 launch 文件不要重名。</p>
 <p>唯一修改的地方是 easy_handeye 功能包 calibrate.launch 文件中 “eye_on_hand” 参数改成 true，如下所示</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 将 launch 文件拷贝到 easy_handeye 功能包的 launch 目录中，顺便改个名字</span>
-<span class="token builtin class-name">cd</span> ~/catkin_ws/src/easy_handeye/docs/example_launch
-<span class="token function">cp</span> ur5_kinect_calibration.launch ~/catkin_ws/src/easy_handeye/easy_handeye/launch/eye_to_hand_calibration.launch
-gedit  ~/catkin_ws/src/easy_handeye/easy_handeye/launch/eye_to_hand_calibration.launch<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 将 launch 文件拷贝到 easy_handeye 功能包的 launch 目录中，顺便改个名字
+cd ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;docs&#x2F;example_launch
+cp ur5_kinect_calibration.launch ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;easy_handeye&#x2F;launch&#x2F;eye_to_hand_calibration.launch
+gedit  ~&#x2F;catkin_ws&#x2F;src&#x2F;easy_handeye&#x2F;easy_handeye&#x2F;launch&#x2F;eye_to_hand_calibration.launch</code></pre>
 
 <h2 id="8-将标定结果发送至TF树"><a href="#8-将标定结果发送至TF树" class="headerlink" title="8.将标定结果发送至TF树"></a>8.将标定结果发送至TF树</h2><p>easy_handeye 功能包提供了 publish.launch 文件，可以将标定好的 TF 发布出去</p>
 <h3 id="8-1眼在手上eye-in-hand"><a href="#8-1眼在手上eye-in-hand" class="headerlink" title="8.1眼在手上eye-in-hand"></a>8.1眼在手上eye-in-hand</h3><p>修改publish.launch 文件,要修改 “namespace_prefix” 参数，与眼在手上标定 launch 文件中的 “namespace_prefix” 一致，这样才能找到标定好的 YAML 文件</p>
-<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>launch</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye_on_hand<span class="token punctuation">"</span></span> <span class="token attr-name">doc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye-on-hand instead of eye-on-base<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace_prefix<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ur5_realsense_handeyecalibration<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace_prefix)_eye_on_hand<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace_prefix)_eye_on_base<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&lt;?xml version&#x3D;&quot;1.0&quot;?&gt;
+&lt;launch&gt;
+    &lt;arg name&#x3D;&quot;eye_on_hand&quot; doc&#x3D;&quot;eye-on-hand instead of eye-on-base&quot; default&#x3D;&quot;true&quot;&#x2F;&gt;
+    &lt;arg name&#x3D;&quot;namespace_prefix&quot; default&#x3D;&quot;ur5_realsense_handeyecalibration&quot; &#x2F;&gt;
+    &lt;arg if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;namespace&quot; value&#x3D;&quot;$(arg namespace_prefix)_eye_on_hand&quot; &#x2F;&gt;
+    &lt;arg unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;namespace&quot; value&#x3D;&quot;$(arg namespace_prefix)_eye_on_base&quot; &#x2F;&gt;
 
-    <span class="token comment">&lt;!--it is possible to override the link names saved in the yaml file in case of name clashes, for example--></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_effector_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;!--it is possible to override the link names saved in the yaml file in case of name clashes, for example--&gt;
+    &lt;arg if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_effector_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
+    &lt;arg unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_base_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
+    &lt;arg name&#x3D;&quot;tracking_base_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
     
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inverse<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;arg name&#x3D;&quot;inverse&quot; default&#x3D;&quot;false&quot; &#x2F;&gt;
     
-    <span class="token comment">&lt;!--publish hand-eye calibration--></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>group</span> <span class="token attr-name">ns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye_on_hand<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg robot_base_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_effector_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg robot_effector_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg tracking_base_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inverse<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg inverse)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>node</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(anon handeye_publisher)<span class="token punctuation">"</span></span> <span class="token attr-name">pkg</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>easy_handeye<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>publish.py<span class="token punctuation">"</span></span> <span class="token attr-name">output</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>screen<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>group</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>launch</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    &lt;!--publish hand-eye calibration--&gt;
+    &lt;group ns&#x3D;&quot;$(arg namespace)&quot;&gt;
+        &lt;param name&#x3D;&quot;eye_on_hand&quot; value&#x3D;&quot;$(arg eye_on_hand)&quot; &#x2F;&gt;
+        &lt;param unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_base_frame&quot; value&#x3D;&quot;$(arg robot_base_frame)&quot; &#x2F;&gt;
+        &lt;param if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_effector_frame&quot; value&#x3D;&quot;$(arg robot_effector_frame)&quot; &#x2F;&gt;
+        &lt;param name&#x3D;&quot;tracking_base_frame&quot; value&#x3D;&quot;$(arg tracking_base_frame)&quot; &#x2F;&gt;
+        &lt;param name&#x3D;&quot;inverse&quot; value&#x3D;&quot;$(arg inverse)&quot; &#x2F;&gt;
+        &lt;node name&#x3D;&quot;$(anon handeye_publisher)&quot; pkg&#x3D;&quot;easy_handeye&quot; type&#x3D;&quot;publish.py&quot; output&#x3D;&quot;screen&quot;&#x2F;&gt;
+    &lt;&#x2F;group&gt;
+&lt;&#x2F;launch&gt;</code></pre>
 
 <h3 id="8-2眼在手外-eye-to-hand"><a href="#8-2眼在手外-eye-to-hand" class="headerlink" title="8.2眼在手外 eye-to-hand"></a>8.2眼在手外 eye-to-hand</h3><p>修改 “namespace_prefix” 外（同上），还要将 “eye_on_hand” 参数设为false</p>
-<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>launch</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye_on_hand<span class="token punctuation">"</span></span> <span class="token attr-name">doc</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye-on-hand instead of eye-on-base<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace_prefix<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>ur5_realsense_handeyecalibration<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace_prefix)_eye_on_hand<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>namespace<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace_prefix)_eye_on_base<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">&lt;?xml version&#x3D;&quot;1.0&quot;?&gt;
+&lt;launch&gt;
+    &lt;arg name&#x3D;&quot;eye_on_hand&quot; doc&#x3D;&quot;eye-on-hand instead of eye-on-base&quot; default&#x3D;&quot;false&quot; &#x2F;&gt;
+    &lt;arg name&#x3D;&quot;namespace_prefix&quot; default&#x3D;&quot;ur5_realsense_handeyecalibration&quot; &#x2F;&gt;
+    &lt;arg if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;namespace&quot; value&#x3D;&quot;$(arg namespace_prefix)_eye_on_hand&quot; &#x2F;&gt;
+    &lt;arg unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;namespace&quot; value&#x3D;&quot;$(arg namespace_prefix)_eye_on_base&quot; &#x2F;&gt;
 
-    <span class="token comment">&lt;!--it is possible to override the link names saved in the yaml file in case of name clashes, for example--></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_effector_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;!--it is possible to override the link names saved in the yaml file in case of name clashes, for example--&gt;
+    &lt;arg if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_effector_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
+    &lt;arg unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_base_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
+    &lt;arg name&#x3D;&quot;tracking_base_frame&quot; default&#x3D;&quot;&quot; &#x2F;&gt;
     
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>arg</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inverse<span class="token punctuation">"</span></span> <span class="token attr-name">default</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+    &lt;arg name&#x3D;&quot;inverse&quot; default&#x3D;&quot;false&quot; &#x2F;&gt;
     
-    <span class="token comment">&lt;!--publish hand-eye calibration--></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>group</span> <span class="token attr-name">ns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg namespace)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>eye_on_hand<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">unless</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg robot_base_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg eye_on_hand)<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>robot_effector_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg robot_effector_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tracking_base_frame<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg tracking_base_frame)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>param</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>inverse<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(arg inverse)<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>node</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>$(anon handeye_publisher)<span class="token punctuation">"</span></span> <span class="token attr-name">pkg</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>easy_handeye<span class="token punctuation">"</span></span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>publish.py<span class="token punctuation">"</span></span> <span class="token attr-name">output</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>screen<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>group</span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>launch</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    &lt;!--publish hand-eye calibration--&gt;
+    &lt;group ns&#x3D;&quot;$(arg namespace)&quot;&gt;
+        &lt;param name&#x3D;&quot;eye_on_hand&quot; value&#x3D;&quot;$(arg eye_on_hand)&quot; &#x2F;&gt;
+        &lt;param unless&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_base_frame&quot; value&#x3D;&quot;$(arg robot_base_frame)&quot; &#x2F;&gt;
+        &lt;param if&#x3D;&quot;$(arg eye_on_hand)&quot; name&#x3D;&quot;robot_effector_frame&quot; value&#x3D;&quot;$(arg robot_effector_frame)&quot; &#x2F;&gt;
+        &lt;param name&#x3D;&quot;tracking_base_frame&quot; value&#x3D;&quot;$(arg tracking_base_frame)&quot; &#x2F;&gt;
+        &lt;param name&#x3D;&quot;inverse&quot; value&#x3D;&quot;$(arg inverse)&quot; &#x2F;&gt;
+        &lt;node name&#x3D;&quot;$(anon handeye_publisher)&quot; pkg&#x3D;&quot;easy_handeye&quot; type&#x3D;&quot;publish.py&quot; output&#x3D;&quot;screen&quot;&#x2F;&gt;
+    &lt;&#x2F;group&gt;
+&lt;&#x2F;launch&gt;</code></pre>
 
-<h2 id="9-测试"><a href="#9-测试" class="headerlink" title="9.测试"></a>9.测试</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 开启 publish.luanch 文件，以眼在手上为例</span>
+<h2 id="9-测试"><a href="#9-测试" class="headerlink" title="9.测试"></a>9.测试</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"># 开启 publish.luanch 文件，以眼在手上为例
 roslaunch easy_handeye publish.launch
 
-<span class="token comment"># 查看 TF（改成自己的工具坐标系与相机坐标系）</span>
-rosrun tf tf_echo /tool0_controller /camera_color_frame<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+# 查看 TF（改成自己的工具坐标系与相机坐标系）
+rosrun tf tf_echo &#x2F;tool0_controller &#x2F;camera_color_frame</code></pre>
 
 <p><img src="https://i.loli.net/2021/05/28/BgCzvN85MxAsUJV.jpg"></p>
 <p>注意：这里四元数的顺序是 [qx, qy, qz, qw]</p>

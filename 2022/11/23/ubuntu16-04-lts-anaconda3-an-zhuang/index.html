@@ -413,7 +413,7 @@
             <div id="articleContent">
                 <h1 id="1-下载清华源镜像文件"><a href="#1-下载清华源镜像文件" class="headerlink" title="1. 下载清华源镜像文件"></a>1. 下载清华源镜像文件</h1><p>网址：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/">https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/</a></p>
 <p>版本：建议安装Anaconda3-5.2.0-Linux-x86_64.sh</p>
-<h1 id="2-进入下载目录执行以下命令进行安装"><a href="#2-进入下载目录执行以下命令进行安装" class="headerlink" title="2. 进入下载目录执行以下命令进行安装"></a>2. 进入下载目录执行以下命令进行安装</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bash Anaconda3<span class="number">-5.2</span><span class="number">.0</span>-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+<h1 id="2-进入下载目录执行以下命令进行安装"><a href="#2-进入下载目录执行以下命令进行安装" class="headerlink" title="2. 进入下载目录执行以下命令进行安装"></a>2. 进入下载目录执行以下命令进行安装</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">bash Anaconda3<span class="number">-5.2</span><span class="number">.0</span>-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
 <p><img src="https://i.loli.net/2021/05/16/9curYTMUWmveogb.png"></p>
 <ul>
 <li>一路按回车至底部，出现提示：是否接受安装协议时：回复yes:</li>
@@ -431,30 +431,30 @@
 <li>默认的话直接按ENTER即可，等待安装过程完成即可。</li>
 </ul>
 <h1 id="3-检查是否安装成功"><a href="#3-检查是否安装成功" class="headerlink" title="3.检查是否安装成功"></a>3.检查是否安装成功</h1><p>  使用以下命令可以查看已经存在的conda虚拟环境</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">conda env list</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">conda env list</span><br></pre></td></tr></table></figure>
 
 <p>  使用以下命令可以查看conda的路径是否添加成功</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>  使其立即生效，在终端执行：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>  <strong>4.进入任意一个创建的虚拟环境里面检查python</strong></p>
 <p>  在虚拟环境中输入以下命令：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">python</span><br></pre></td></tr></table></figure>
 
 <p>  会出现类似以下含有anaconda的字样：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Python <span class="number">3.6</span><span class="number">.5</span> |Anaconda, Inc.| (<span class="keyword">default</span>, Apr <span class="number">29</span> <span class="number">2018</span>, <span class="number">16</span>:<span class="number">14</span>:<span class="number">56</span>) </span><br><span class="line">[GCC <span class="number">7.2</span><span class="number">.0</span>] on linux</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> <span class="keyword">or</span> <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">Python <span class="number">3.6</span><span class="number">.5</span> |Anaconda, Inc.| (<span class="keyword">default</span>, Apr <span class="number">29</span> <span class="number">2018</span>, <span class="number">16</span>:<span class="number">14</span>:<span class="number">56</span>) </span><br><span class="line">[GCC <span class="number">7.2</span><span class="number">.0</span>] on linux</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> <span class="keyword">or</span> <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br></pre></td></tr></table></figure>
 
 <p>  如果没有出现以下字样，说明系统的python版本需要指定，使用以下命令：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>  在bashrc中添加一行：</p>
-  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias python=python3</span><br></pre></td></tr></table></figure>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">alias python=python3</span><br></pre></td></tr></table></figure>
 
 <p>  (注意这里的python3是和安装的anaconda3对应的默认pyrhon对应的，可以在conda虚拟环境中的base环境中查看对应的python版本)</p>
 <p>  然后激活bashrc</p>
-  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+  <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
 
 <p>  这样就可以使用conda创建的虚拟环境对应的python。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">

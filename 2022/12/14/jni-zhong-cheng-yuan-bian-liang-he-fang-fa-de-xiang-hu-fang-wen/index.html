@@ -382,7 +382,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    1.4k
                 </div>
                 
 
@@ -398,6 +398,9 @@
         </div>
         <hr class="clearfix">
 
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
         
 
         
@@ -434,162 +437,162 @@
 <h1 id="涉及数据类型对照表"><a href="#涉及数据类型对照表" class="headerlink" title="涉及数据类型对照表"></a>涉及数据类型对照表</h1><h2 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/JNI%E4%B8%AD%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E7%9B%B8%E4%BA%92%E8%AE%BF%E9%97%AE/1.png"> </p>
 <h2 id="引用类型"><a href="#引用类型" class="headerlink" title="引用类型"></a>引用类型</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/JNI%E4%B8%AD%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%96%B9%E6%B3%95%E7%9A%84%E7%9B%B8%E4%BA%92%E8%AE%BF%E9%97%AE/2.png"> </p>
 <h1 id="java访问C-的变量"><a href="#java访问C-的变量" class="headerlink" title="java访问C++的变量"></a><code>java</code>访问<code>C++</code>的变量</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">JNIEXPORT jint JNICALL
-Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeGetViewInfo(JNIEnv *env,
-                                                                                    jclass type,
-                                                                                    jint cmd,
-                                                                                    jobject output)
-&#123;
-    jclass objectClass &#x3D; env-&gt;GetObjectClass(output);
+<span class="token function">Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeGetViewInfo</span><span class="token punctuation">(</span>JNIEnv <span class="token operator">*</span>env<span class="token punctuation">,</span>
+                                                                                    jclass type<span class="token punctuation">,</span>
+                                                                                    jint cmd<span class="token punctuation">,</span>
+                                                                                    jobject output<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    jclass objectClass <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetObjectClass</span><span class="token punctuation">(</span>output<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    &#x2F;&#x2F; 通过GetFieldID方法得到这个对象的dist属性
-    jfieldID m3DBtnOn &#x3D; env-&gt;GetFieldID(objectClass, &quot;m3DBtnOn&quot;, &quot;I&quot;);
-    jfieldID viewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewID&quot;, &quot;I&quot;);
-    jfieldID wheelViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;wheelViewID&quot;, &quot;I&quot;);
-    jfieldID trajectoryLineViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;trajectoryLineViewID&quot;, &quot;I&quot;);
-    jfieldID bsdViewID &#x3D; env-&gt;GetFieldID(objectClass, &quot;bsdViewID&quot;, &quot;I&quot;);
-    jfieldID brightID &#x3D; env-&gt;GetFieldID(objectClass, &quot;brightID&quot;, &quot;I&quot;);
-    &#x2F;&#x2F;
-    jfieldID dist_l &#x3D; env-&gt;GetFieldID(objectClass, &quot;dist_l&quot;, &quot;F&quot;);
-    jfieldID dist_r &#x3D; env-&gt;GetFieldID(objectClass, &quot;dist_r&quot;, &quot;F&quot;);
-    jfieldID upon &#x3D; env-&gt;GetFieldID(objectClass, &quot;upon&quot;, &quot;F&quot;);
-    jfieldID angle &#x3D; env-&gt;GetFieldID(objectClass, &quot;angle&quot;, &quot;F&quot;);
-    jfieldID viewPointX &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewPointX&quot;, &quot;F&quot;);
-    jfieldID viewPointY &#x3D; env-&gt;GetFieldID(objectClass, &quot;viewPointY&quot;, &quot;F&quot;);
+    <span class="token comment">// 通过GetFieldID方法得到这个对象的dist属性</span>
+    jfieldID m3DBtnOn <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"m3DBtnOn"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID viewID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"viewID"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID wheelViewID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"wheelViewID"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID trajectoryLineViewID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"trajectoryLineViewID"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID bsdViewID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"bsdViewID"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID brightID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"brightID"</span><span class="token punctuation">,</span> <span class="token string">"I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//</span>
+    jfieldID dist_l <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"dist_l"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID dist_r <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"dist_r"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID upon <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"upon"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID angle <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"angle"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID viewPointX <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"viewPointX"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jfieldID viewPointY <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetFieldID</span><span class="token punctuation">(</span>objectClass<span class="token punctuation">,</span> <span class="token string">"viewPointY"</span><span class="token punctuation">,</span> <span class="token string">"F"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    ParametersInit *m_Instance &#x3D; ParametersInit::GetInstance();
-    avmmanager::TAvmViewTag m_view_info;
-    m_Instance-&gt;getViewInfo(m_view_info);
+    ParametersInit <span class="token operator">*</span>m_Instance <span class="token operator">=</span> <span class="token class-name">ParametersInit</span><span class="token double-colon punctuation">::</span><span class="token function">GetInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    avmmanager<span class="token double-colon punctuation">::</span>TAvmViewTag m_view_info<span class="token punctuation">;</span>
+    m_Instance<span class="token operator">-></span><span class="token function">getViewInfo</span><span class="token punctuation">(</span>m_view_info<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    env-&gt;SetIntField(output, m3DBtnOn, m_view_info.m3DBtnOn);
-    env-&gt;SetIntField(output, viewID, m_view_info.viewID);
-    env-&gt;SetIntField(output, wheelViewID, m_view_info.wheelViewID);
-    env-&gt;SetIntField(output, trajectoryLineViewID, m_view_info.trajectoryLineViewID);
-    env-&gt;SetIntField(output, bsdViewID, m_view_info.bsdViewID);
-    env-&gt;SetIntField(output, brightID, m_view_info.brightID);
-    &#x2F;&#x2F;
-    env-&gt;SetFloatField(output, dist_l, m_view_info.dist_l);
-    env-&gt;SetFloatField(output, dist_r, m_view_info.dist_r);
-    env-&gt;SetFloatField(output, upon, m_view_info.upon);
-    env-&gt;SetFloatField(output, angle, m_view_info.angle);
-    env-&gt;SetFloatField(output, viewPointX, m_view_info.viewPointX);
-    env-&gt;SetFloatField(output, viewPointY, m_view_info.viewPointY);
-    return 0;
-&#125;</code></pre>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> m3DBtnOn<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>m3DBtnOn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> viewID<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>viewID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> wheelViewID<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>wheelViewID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> trajectoryLineViewID<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>trajectoryLineViewID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> bsdViewID<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>bsdViewID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetIntField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> brightID<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>brightID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">//</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> dist_l<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>dist_l<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> dist_r<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>dist_r<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> upon<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>upon<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> angle<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>angle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> viewPointX<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>viewPointX<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    env<span class="token operator">-></span><span class="token function">SetFloatField</span><span class="token punctuation">(</span>output<span class="token punctuation">,</span> viewPointY<span class="token punctuation">,</span> m_view_info<span class="token punctuation">.</span>viewPointY<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h1 id="C-访问java的变量"><a href="#C-访问java的变量" class="headerlink" title="C++访问java的变量"></a><code>C++</code>访问<code>java</code>的变量</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
 JNIEXPORT jint JNICALL
-Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeBSDInfo(JNIEnv *env,
-                                                                jobject obj, 
-                                                                jobjectArray objectArray)
-&#123;
-    jint ret &#x3D; 0;
-    &#x2F;&#x2F; 1. 获取数组的长度
-    jsize length &#x3D; env-&gt;GetArrayLength(objectArray);
-    &#x2F;&#x2F; XXX:数据长度永远为7，目前测试暂时支取第一个结果
-    if (length)
-        length &#x3D; 1;
+<span class="token function">Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeBSDInfo</span><span class="token punctuation">(</span>JNIEnv <span class="token operator">*</span>env<span class="token punctuation">,</span>
+                                                                jobject obj<span class="token punctuation">,</span> 
+                                                                jobjectArray objectArray<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    jint ret <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token comment">// 1. 获取数组的长度</span>
+    jsize length <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetArrayLength</span><span class="token punctuation">(</span>objectArray<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// XXX:数据长度永远为7，目前测试暂时支取第一个结果</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>length<span class="token punctuation">)</span>
+        length <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
 
-    &#x2F;&#x2F; 2. 获取Person类的Class对象
-    jclass class_Rect &#x3D; env-&gt;FindClass(&quot;com&#x2F;fibocom&#x2F;aidl&#x2F;Rect&quot;);
-    if (class_Rect &#x3D;&#x3D; NULL)
-    &#123;
-        return ret;
-    &#125;
-    else
-    &#123;
-        LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;FindClass success&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; \n&quot;);
-    &#125;
+    <span class="token comment">// 2. 获取Person类的Class对象</span>
+    jclass class_Rect <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">FindClass</span><span class="token punctuation">(</span><span class="token string">"com/fibocom/aidl/Rect"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>class_Rect <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">else</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====FindClass success===== \n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    &#x2F;&#x2F; 3. 获取Person的sayHello方法字段
-    jmethodID getX1 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getX1&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getX1 &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
-    jmethodID getX2 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getX2&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getX2 &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
-    jmethodID getY1 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getY1&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getY1 &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
-    jmethodID getY2 &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getY2&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getY2 &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
-    jmethodID getCamID &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getCamID&quot;, &quot;()I&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getCamID &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
-    jmethodID getTimestamp &#x3D; env-&gt;GetMethodID(class_Rect, &quot;getTimestamp&quot;, &quot;()J&quot;); &#x2F;&#x2F;(A)B---A为输入参数，B为输出参数
-    if (getTimestamp &#x3D;&#x3D; nullptr)
-    &#123;
-        return ret;
-    &#125;
+    <span class="token comment">// 3. 获取Person的sayHello方法字段</span>
+    jmethodID getX1 <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getX1"</span><span class="token punctuation">,</span> <span class="token string">"()I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getX1 <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    jmethodID getX2 <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getX2"</span><span class="token punctuation">,</span> <span class="token string">"()I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getX2 <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    jmethodID getY1 <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getY1"</span><span class="token punctuation">,</span> <span class="token string">"()I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getY1 <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    jmethodID getY2 <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getY2"</span><span class="token punctuation">,</span> <span class="token string">"()I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getY2 <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    jmethodID getCamID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getCamID"</span><span class="token punctuation">,</span> <span class="token string">"()I"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getCamID <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    jmethodID getTimestamp <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetMethodID</span><span class="token punctuation">(</span>class_Rect<span class="token punctuation">,</span> <span class="token string">"getTimestamp"</span><span class="token punctuation">,</span> <span class="token string">"()J"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//(A)B---A为输入参数，B为输出参数</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>getTimestamp <span class="token operator">==</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    &#x2F;&#x2F; 4. 循环调用每个方法
-    jint aaa&#x3D;0;
-    avmmanager::TBsdBox *avm_bsd &#x3D; new avmmanager::TBsdBox[length];
-    for (int i &#x3D; 0; i &lt; length; i++)
-    &#123;
-        &#x2F;&#x2F; 获取引用类型数组的对象
-        jobject element &#x3D; env-&gt;GetObjectArrayElement(objectArray, i);
-        &#x2F;&#x2F; 判断数组元素是否是Person类对象
-        LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; [%d] &#x3D;&#x3D;&#x3D;&#x3D;&#x3D; \n&quot;, i);
-        if (element !&#x3D; nullptr)
-        &#123;
-            &#x2F;&#x2F; 调用Person对象的sayHello()方法
-            avm_bsd[i].left &#x3D; env-&gt;CallIntMethod(element, getX1);
-            avm_bsd[i].right &#x3D; env-&gt;CallIntMethod(element, getX2);
-            avm_bsd[i].top &#x3D; env-&gt;CallIntMethod(element, getY1);
-            avm_bsd[i].bottom &#x3D; env-&gt;CallIntMethod(element, getY2);
+    <span class="token comment">// 4. 循环调用每个方法</span>
+    jint aaa<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span>
+    avmmanager<span class="token double-colon punctuation">::</span>TBsdBox <span class="token operator">*</span>avm_bsd <span class="token operator">=</span> <span class="token keyword">new</span> avmmanager<span class="token double-colon punctuation">::</span>TBsdBox<span class="token punctuation">[</span>length<span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 获取引用类型数组的对象</span>
+        jobject element <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">GetObjectArrayElement</span><span class="token punctuation">(</span>objectArray<span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 判断数组元素是否是Person类对象</span>
+        <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== [%d] ===== \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>element <span class="token operator">!=</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token comment">// 调用Person对象的sayHello()方法</span>
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>left <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallIntMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getX1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>right <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallIntMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getX2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>top <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallIntMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getY1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>bottom <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallIntMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getY2<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-            int camID &#x3D; env-&gt;CallIntMethod(element, getCamID);
-            LOGI(1, &quot;CallIntMethod %d \n&quot;, camID);
-            switch (camID)
-            &#123;
-            case 7:
-                avm_bsd[i].cam_index &#x3D; 0;
-                break;
-            case 4:
-                avm_bsd[i].cam_index &#x3D; 1;
-                break;
-            case 6:
-                avm_bsd[i].cam_index &#x3D; 2;
-                break;
-            case 5:
-                avm_bsd[i].cam_index &#x3D; 3;
-                break;
-            default:
-                LOGI(1, &quot;nativeBSDInfo cam_index %d \n&quot;, camID);
-                avm_bsd[i].cam_index &#x3D; camID;
-                break;
-            &#125;
+            <span class="token keyword">int</span> camID <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallIntMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getCamID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"CallIntMethod %d \n"</span><span class="token punctuation">,</span> camID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">switch</span> <span class="token punctuation">(</span>camID<span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+            <span class="token keyword">case</span> <span class="token number">7</span><span class="token operator">:</span>
+                avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token keyword">case</span> <span class="token number">4</span><span class="token operator">:</span>
+                avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token keyword">case</span> <span class="token number">6</span><span class="token operator">:</span>
+                avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token keyword">case</span> <span class="token number">5</span><span class="token operator">:</span>
+                avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token keyword">default</span><span class="token operator">:</span>
+                <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"nativeBSDInfo cam_index %d \n"</span><span class="token punctuation">,</span> camID<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index <span class="token operator">=</span> camID<span class="token punctuation">;</span>
+                <span class="token keyword">break</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
 
-            avm_bsd[i].timestamp &#x3D; env-&gt;CallLongMethod(element, getTimestamp);
-            avm_bsd[i].size &#x3D; length;
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; X1[%d] %d  \n&quot;, i, avm_bsd[i].left);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; X2[%d] %d  \n&quot;, i, avm_bsd[i].right);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; Y1[%d] %d  \n&quot;, i, avm_bsd[i].top);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; Y2[%d] %d  \n&quot;, i, avm_bsd[i].bottom);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; id[%d] %d  \n&quot;, i, avm_bsd[i].cam_index);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; timestamp[%d] %ld  \n&quot;, i, avm_bsd[i].timestamp);
-            LOGI(1, &quot;&#x3D;&#x3D;&#x3D;&#x3D;nativeBSDInfo&#x3D;&#x3D;&#x3D;&#x3D; size[%d] %d  \n&quot;, i, avm_bsd[i].size);
-        &#125;
-    &#125;
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>timestamp <span class="token operator">=</span> env<span class="token operator">-></span><span class="token function">CallLongMethod</span><span class="token punctuation">(</span>element<span class="token punctuation">,</span> getTimestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>size <span class="token operator">=</span> length<span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== X1[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>left<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== X2[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>right<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== Y1[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>top<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== Y2[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>bottom<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== id[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>cam_index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== timestamp[%d] %ld  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>timestamp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">LOGI</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token string">"====nativeBSDInfo==== size[%d] %d  \n"</span><span class="token punctuation">,</span> i<span class="token punctuation">,</span> avm_bsd<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>size<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
 
-    EventSystem::Instance()-&gt;SendEvent(&quot;avm_get_bsd_info&quot;, avm_bsd, [](void *ptr_event)
-                                       &#123;
-        Event *event &#x3D; (Event *) ptr_event;
-        bool *buf &#x3D; (bool *) event-&gt;Parameter();
-        delete buf;
-        delete event; &#125;);
-    return ret;
-&#125;</code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+    <span class="token class-name">EventSystem</span><span class="token double-colon punctuation">::</span><span class="token function">Instance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">SendEvent</span><span class="token punctuation">(</span><span class="token string">"avm_get_bsd_info"</span><span class="token punctuation">,</span> avm_bsd<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>ptr_event<span class="token punctuation">)</span>
+                                       <span class="token punctuation">&#123;</span>
+        Event <span class="token operator">*</span>event <span class="token operator">=</span> <span class="token punctuation">(</span>Event <span class="token operator">*</span><span class="token punctuation">)</span> ptr_event<span class="token punctuation">;</span>
+        <span class="token keyword">bool</span> <span class="token operator">*</span>buf <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">bool</span> <span class="token operator">*</span><span class="token punctuation">)</span> event<span class="token operator">-></span><span class="token function">Parameter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> buf<span class="token punctuation">;</span>
+        <span class="token keyword">delete</span> event<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>
             <hr/>
@@ -888,6 +891,9 @@ Java_com_fibocom_multicamera_AvmSurfaceViewNative_nativeBSDInfo(JNIEnv *env,
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

@@ -382,7 +382,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.8k
+                    6.6k
                 </div>
                 
 
@@ -398,6 +398,9 @@
         </div>
         <hr class="clearfix">
 
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
         
 
         
@@ -642,310 +645,310 @@
 <p><strong>可以看出去畸变图像的视野相比与原始图像视野范围有所减小，但物体更贴近实际尺寸。</strong></p>
 <h1 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h1><ul>
 <li><p>code</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">#include &lt;opencv2&#x2F;opencv.hpp&gt;
-#include &lt;opencv2&#x2F;highgui&#x2F;highgui.hpp&gt;
-#include &lt;opencv2&#x2F;imgproc&#x2F;imgproc.hpp&gt;
-#include &lt;vector&gt;
-#include &lt;iostream&gt;
-#include &lt;cstdlib&gt; 
-#include &lt;string&gt;  
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/opencv.hpp></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/highgui/highgui.hpp></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/imgproc/imgproc.hpp></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;vector></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;cstdlib></span> </span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span>  </span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 腐蚀变换
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyErode(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; ;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_ERODE, my_struct);
-    cv::imshow(&quot;腐蚀变换&quot;, dst_img);
-    cv::imwrite(&quot;腐蚀变换.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyErode</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// ;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_ERODE<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"腐蚀变换"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"腐蚀变换.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 膨胀变换
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyDilate(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_DILATE, my_struct);
-    cv::imshow(&quot;膨胀变换&quot;, dst_img);
-    cv::imwrite(&quot;膨胀变换.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyDilate</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_DILATE<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"膨胀变换"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"膨胀变换.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 开运算
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyOpen(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_OPEN, my_struct);
-    cv::imshow(&quot;开运算&quot;, dst_img);
-    cv::imwrite(&quot;开运算.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyOpen</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_OPEN<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"开运算"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"开运算.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 闭运算
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyClose(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_CLOSE, my_struct);
-    cv::imshow(&quot;闭运算&quot;, dst_img);
-    cv::imwrite(&quot;闭运算.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyClose</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_CLOSE<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"闭运算"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"闭运算.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 顶帽
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyTopHat(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_TOPHAT, my_struct);
-    cv::imshow(&quot;顶帽&quot;, dst_img);
-    cv::imwrite(&quot;顶帽.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyTopHat</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_TOPHAT<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"顶帽"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"顶帽.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 黑帽
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyBlackHat(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_BLACKHAT, my_struct);
-    cv::imshow(&quot;黑帽&quot;, dst_img);
-    cv::imwrite(&quot;黑帽.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyBlackHat</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_BLACKHAT<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"黑帽"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"黑帽.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 形态学梯度
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyGradient(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat my_struct &#x3D; cv::getStructuringElement(cv::MORPH_RECT, cv::Size(5, 5)); &#x2F;&#x2F; 十字形结构元素;
-    cv::Mat dst_img;
-    cv::morphologyEx(src_img, dst_img, cv::MORPH_GRADIENT, my_struct);
-    cv::imshow(&quot;形态学梯度&quot;, dst_img);
-    cv::imwrite(&quot;形态学梯度.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyGradient</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat my_struct <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getStructuringElement</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>MORPH_RECT<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 十字形结构元素;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">morphologyEx</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>MORPH_GRADIENT<span class="token punctuation">,</span> my_struct<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"形态学梯度"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"形态学梯度.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 仿射变换
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyAffine(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyAffine</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    float scale_x &#x3D; 0.7;     &#x2F;&#x2F; 水平缩放因子
-    float scale_y &#x3D; 0.3;     &#x2F;&#x2F; 垂直缩放因子
-    float theta &#x3D; CV_PI &#x2F; 5; &#x2F;&#x2F; 旋转角度
-    float tx &#x3D; 100;           &#x2F;&#x2F; 水平平移量
-    float ty &#x3D; 30;           &#x2F;&#x2F; 垂直平移量
-    float shear_x &#x3D; 0.8;     &#x2F;&#x2F; X轴错切
-    float shear_y &#x3D; 0.2;     &#x2F;&#x2F; Y轴错切
+    <span class="token keyword">float</span> scale_x <span class="token operator">=</span> <span class="token number">0.7</span><span class="token punctuation">;</span>     <span class="token comment">// 水平缩放因子</span>
+    <span class="token keyword">float</span> scale_y <span class="token operator">=</span> <span class="token number">0.3</span><span class="token punctuation">;</span>     <span class="token comment">// 垂直缩放因子</span>
+    <span class="token keyword">float</span> theta <span class="token operator">=</span> CV_PI <span class="token operator">/</span> <span class="token number">5</span><span class="token punctuation">;</span> <span class="token comment">// 旋转角度</span>
+    <span class="token keyword">float</span> tx <span class="token operator">=</span> <span class="token number">100</span><span class="token punctuation">;</span>           <span class="token comment">// 水平平移量</span>
+    <span class="token keyword">float</span> ty <span class="token operator">=</span> <span class="token number">30</span><span class="token punctuation">;</span>           <span class="token comment">// 垂直平移量</span>
+    <span class="token keyword">float</span> shear_x <span class="token operator">=</span> <span class="token number">0.8</span><span class="token punctuation">;</span>     <span class="token comment">// X轴错切</span>
+    <span class="token keyword">float</span> shear_y <span class="token operator">=</span> <span class="token number">0.2</span><span class="token punctuation">;</span>     <span class="token comment">// Y轴错切</span>
 
-    cv::Mat warpMatrix &#x3D; cv::Mat::zeros(2, 3, CV_32FC1);
-    warpMatrix.at&lt;float&gt;(0, 0) &#x3D; scale_x * cos(theta);
-    warpMatrix.at&lt;float&gt;(0, 1) &#x3D; -shear_y * scale_y * sin(theta);
-    warpMatrix.at&lt;float&gt;(0, 2) &#x3D; tx;
-    warpMatrix.at&lt;float&gt;(1, 0) &#x3D; shear_x * scale_x * sin(theta);
-    warpMatrix.at&lt;float&gt;(1, 1) &#x3D; scale_y * cos(theta);
-    warpMatrix.at&lt;float&gt;(1, 2) &#x3D; ty;
+    cv<span class="token double-colon punctuation">::</span>Mat warpMatrix <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token class-name">Mat</span><span class="token double-colon punctuation">::</span><span class="token function">zeros</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> CV_32FC1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">=</span> scale_x <span class="token operator">*</span> <span class="token function">cos</span><span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token operator">-</span>shear_y <span class="token operator">*</span> scale_y <span class="token operator">*</span> <span class="token function">sin</span><span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">=</span> tx<span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">=</span> shear_x <span class="token operator">*</span> scale_x <span class="token operator">*</span> <span class="token function">sin</span><span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> scale_y <span class="token operator">*</span> <span class="token function">cos</span><span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    warpMatrix<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">=</span> ty<span class="token punctuation">;</span>
 
-    cv::Mat dst_img;
-    cv::warpAffine(src_img, dst_img, warpMatrix, src_img.size());
-    cv::imshow(&quot;仿射变换&quot;, dst_img);
-    cv::imwrite(&quot;仿射变换.png&quot;, dst_img);
-    cv::waitKey(0);
-    return 0;
-&#125;
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">warpAffine</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> warpMatrix<span class="token punctuation">,</span> src_img<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"仿射变换"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"仿射变换.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;&#x2F; 鼠标操作 自己准备结构体
-struct ImageData
-&#123;
-    cv::Mat img;                &#x2F;&#x2F; 目标图像 用于点击 确定坐标
-    std::vector&lt;cv::Point2f&gt; points; &#x2F;&#x2F; 存放原图的坐标 通过鼠标的点击进行存放
-&#125;;
-&#x2F;&#x2F;鼠标操作的回调函数:用于选择四个角的点（使用方法：从左上角开始顺时针选择四个点，选完之后回车操作）
-void mouseHundle(int event,int x,int y,int flag,void *arg)
-&#123;
-    &#x2F;&#x2F; 强制转换
-    struct ImageData *d &#x3D; (struct ImageData *)arg;
-    &#x2F;&#x2F; 如果按下的是鼠标左键
-    if (event &#x3D;&#x3D; cv::EVENT_LBUTTONDOWN)
-    &#123;
-        &#x2F;&#x2F; 用圆形来标记下鼠标按下左键标记的位置
-        cv::circle(d-&gt;img, cv::Point(x, y), 3, cv::Scalar(255), 3, CV_AA); &#x2F;&#x2F; 在图上标记,圆心为点击的位置
-        cv::imshow(&quot;Image&quot;, d-&gt;img);                                       &#x2F;&#x2F; 原窗口上进行显示标记点
-        printf(&quot;选择点%d: %d,%d...\n&quot;, (int)d-&gt;points.size() + 1, x, y);
-        &#x2F;&#x2F; 透视变换 需要使用四个点的坐标
-        if (d-&gt;points.size() &lt; 4)
-        &#123;
-            d-&gt;points.push_back(cv::Point2f(x, y)); &#x2F;&#x2F; 把点击下来的坐标进行存储
-        &#125;
-        else
-        &#123;
-            cv::setMouseCallback(&quot;Image&quot;, nullptr, nullptr); &#x2F;&#x2F; 取消鼠标回调
-            cv::destroyWindow(&quot;Image&quot;);
-        &#125;
-    &#125;
-&#125;
+<span class="token comment">// 鼠标操作 自己准备结构体</span>
+<span class="token keyword">struct</span> <span class="token class-name">ImageData</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat img<span class="token punctuation">;</span>                <span class="token comment">// 目标图像 用于点击 确定坐标</span>
+    std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>cv<span class="token double-colon punctuation">::</span>Point2f<span class="token operator">></span> points<span class="token punctuation">;</span> <span class="token comment">// 存放原图的坐标 通过鼠标的点击进行存放</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token comment">//鼠标操作的回调函数:用于选择四个角的点（使用方法：从左上角开始顺时针选择四个点，选完之后回车操作）</span>
+<span class="token keyword">void</span> <span class="token function">mouseHundle</span><span class="token punctuation">(</span><span class="token keyword">int</span> event<span class="token punctuation">,</span><span class="token keyword">int</span> x<span class="token punctuation">,</span><span class="token keyword">int</span> y<span class="token punctuation">,</span><span class="token keyword">int</span> flag<span class="token punctuation">,</span><span class="token keyword">void</span> <span class="token operator">*</span>arg<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">// 强制转换</span>
+    <span class="token keyword">struct</span> <span class="token class-name">ImageData</span> <span class="token operator">*</span>d <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">ImageData</span> <span class="token operator">*</span><span class="token punctuation">)</span>arg<span class="token punctuation">;</span>
+    <span class="token comment">// 如果按下的是鼠标左键</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>event <span class="token operator">==</span> cv<span class="token double-colon punctuation">::</span>EVENT_LBUTTONDOWN<span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 用圆形来标记下鼠标按下左键标记的位置</span>
+        cv<span class="token double-colon punctuation">::</span><span class="token function">circle</span><span class="token punctuation">(</span>d<span class="token operator">-></span>img<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Point</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Scalar</span><span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> CV_AA<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 在图上标记,圆心为点击的位置</span>
+        cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">,</span> d<span class="token operator">-></span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>                                       <span class="token comment">// 原窗口上进行显示标记点</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"选择点%d: %d,%d...\n"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>d<span class="token operator">-></span>points<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 透视变换 需要使用四个点的坐标</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>d<span class="token operator">-></span>points<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">4</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            d<span class="token operator">-></span>points<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 把点击下来的坐标进行存储</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">else</span>
+        <span class="token punctuation">&#123;</span>
+            cv<span class="token double-colon punctuation">::</span><span class="token function">setMouseCallback</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">,</span> <span class="token keyword">nullptr</span><span class="token punctuation">,</span> <span class="token keyword">nullptr</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 取消鼠标回调</span>
+            cv<span class="token double-colon punctuation">::</span><span class="token function">destroyWindow</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
 
-&#x2F;**
+<span class="token comment">/**
  * @description: 透视变换
  * @return &#123;*&#125;
  * @author: wangshuaiyang
- *&#x2F;
-int MyPerspectiveTF(cv::Mat input_image)
-&#123;
-    cv::Mat src_img &#x3D; input_image.clone();
-    cv::Mat dst_img;
+ */</span>
+<span class="token keyword">int</span> <span class="token function">MyPerspectiveTF</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat input_image<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat src_img <span class="token operator">=</span> input_image<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat dst_img<span class="token punctuation">;</span>
 
-    ImageData data;
-    data.img &#x3D; src_img.clone();
-    cv::namedWindow(&quot;Image&quot;);
-    cv::setMouseCallback(&quot;Image&quot;, mouseHundle, &amp;data);
-    cv::imshow(&quot;Image&quot;, src_img);
-    printf(&quot;请在图像上点击四个点，然后按任意键继续...\n&quot;);
-    cv::waitKey(0);
+    ImageData data<span class="token punctuation">;</span>
+    data<span class="token punctuation">.</span>img <span class="token operator">=</span> src_img<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">namedWindow</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">setMouseCallback</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">,</span> mouseHundle<span class="token punctuation">,</span> <span class="token operator">&amp;</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"Image"</span><span class="token punctuation">,</span> src_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"请在图像上点击四个点，然后按任意键继续...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    cv::Size dst_size &#x3D; cv::Size(190, 260); &#x2F;&#x2F; 输出图像的尺寸
+    cv<span class="token double-colon punctuation">::</span>Size dst_size <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span><span class="token number">190</span><span class="token punctuation">,</span> <span class="token number">260</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 输出图像的尺寸</span>
 
-    std::vector&lt;cv::Point2f&gt; outputPoints; &#x2F;&#x2F; 输出图像上的对应点
-    outputPoints.emplace_back(cv::Point2f(0, 0));
-    outputPoints.emplace_back(cv::Point2f(dst_size.width, 0));
-    outputPoints.emplace_back(cv::Point2f(dst_size.width, dst_size.height));
-    outputPoints.emplace_back(cv::Point2f(0, dst_size.height));
+    std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>cv<span class="token double-colon punctuation">::</span>Point2f<span class="token operator">></span> outputPoints<span class="token punctuation">;</span> <span class="token comment">// 输出图像上的对应点</span>
+    outputPoints<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    outputPoints<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span>dst_size<span class="token punctuation">.</span>width<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    outputPoints<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span>dst_size<span class="token punctuation">.</span>width<span class="token punctuation">,</span> dst_size<span class="token punctuation">.</span>height<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    outputPoints<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> dst_size<span class="token punctuation">.</span>height<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    if (outputPoints.size() !&#x3D; 4 || data.points.size() !&#x3D; 4)
-    &#123;
-        std::cerr &lt;&lt; &quot;请选择4个点即可&quot; &lt;&lt; std::endl;
-        return 0;
-    &#125;
-    cv::Mat perspectiveMatrix &#x3D; cv::getPerspectiveTransform(data.points, outputPoints);
-    cv::warpPerspective(src_img, dst_img, perspectiveMatrix, dst_size);
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>outputPoints<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">4</span> <span class="token operator">||</span> data<span class="token punctuation">.</span>points<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token number">4</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        std<span class="token double-colon punctuation">::</span>cerr <span class="token operator">&lt;&lt;</span> <span class="token string">"请选择4个点即可"</span> <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat perspectiveMatrix <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">getPerspectiveTransform</span><span class="token punctuation">(</span>data<span class="token punctuation">.</span>points<span class="token punctuation">,</span> outputPoints<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">warpPerspective</span><span class="token punctuation">(</span>src_img<span class="token punctuation">,</span> dst_img<span class="token punctuation">,</span> perspectiveMatrix<span class="token punctuation">,</span> dst_size<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    cv::imshow(&quot;透视变换&quot;, dst_img);
-    cv::imwrite(&quot;透视变换.png&quot;, dst_img);
-    cv::waitKey(0);
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"透视变换"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"透视变换.png"</span><span class="token punctuation">,</span> dst_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    return 0;
-&#125;
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
 
-int main(int argc, char *argv[])
-&#123;
-    &#x2F;&#x2F; 判断参数输入是否正确
-    if (argc &lt;&#x3D; 2)
-    &#123;
-        std::cerr &lt;&lt; &quot;参数错误,请使用如下命令格式: &quot; &lt;&lt; argv[0] &lt;&lt; &quot;[图像路径] [图像变换类型(1,2,3,...)] &quot; &lt;&lt; std::endl;
-        return 1;
-    &#125;
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">// 判断参数输入是否正确</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>argc <span class="token operator">&lt;=</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        std<span class="token double-colon punctuation">::</span>cerr <span class="token operator">&lt;&lt;</span> <span class="token string">"参数错误,请使用如下命令格式: "</span> <span class="token operator">&lt;&lt;</span> argv<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;&lt;</span> <span class="token string">"[图像路径] [图像变换类型(1,2,3,...)] "</span> <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    int mode &#x3D; std::atoi(argv[2]);
+    <span class="token keyword">int</span> mode <span class="token operator">=</span> std<span class="token double-colon punctuation">::</span><span class="token function">atoi</span><span class="token punctuation">(</span>argv<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    if (mode &#x3D;&#x3D; 0)
-    &#123;
-        printf(&quot;说明：\n[0] 说明\n[1] 图像腐蚀变换\n[2] 图像膨胀变换\n[3] 开运算\n[4] 闭运算\n[5] 顶帽\n[6] 黑帽\n[7] 形态学梯度\n[8] 仿射变换\n[9] 透视变换\n&quot;);
-        return 0;
-    &#125;
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mode <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"说明：\n[0] 说明\n[1] 图像腐蚀变换\n[2] 图像膨胀变换\n[3] 开运算\n[4] 闭运算\n[5] 顶帽\n[6] 黑帽\n[7] 形态学梯度\n[8] 仿射变换\n[9] 透视变换\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    &#x2F;&#x2F; 获得图像
-    cv::Mat img &#x3D; cv::imread(argv[1], cv::IMREAD_GRAYSCALE);
-    cv::imshow(&quot;原始图像&quot;, img);
-    cv::imwrite(&quot;原始图像.png&quot;, img);
-    cv::waitKey(0);
+    <span class="token comment">// 获得图像</span>
+    cv<span class="token double-colon punctuation">::</span>Mat img <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">imread</span><span class="token punctuation">(</span>argv<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>IMREAD_GRAYSCALE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"原始图像"</span><span class="token punctuation">,</span> img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imwrite</span><span class="token punctuation">(</span><span class="token string">"原始图像.png"</span><span class="token punctuation">,</span> img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    int ret &#x3D; 0;
-    switch (mode)
-    &#123;
-    case 1:
-        printf(&quot;图像腐蚀变换...\n&quot;);
-        ret &#x3D; MyErode(img);
-        break;
-    case 2:
-        printf(&quot;图像膨胀变换...\n&quot;);
-        ret &#x3D; MyDilate(img);
-        break;
-    case 3:
-        printf(&quot;开运算...\n&quot;);
-        ret &#x3D; MyOpen(img);
-        break;
-    case 4:
-        printf(&quot;闭运算...\n&quot;);
-        ret &#x3D; MyClose(img);
-        break;
-    case 5:
-        printf(&quot;顶帽...\n&quot;);
-        ret &#x3D; MyTopHat(img);
-        break;
-    case 6:
-        printf(&quot;黑帽...\n&quot;);
-        ret &#x3D; MyBlackHat(img);
-        break;
-    case 7:
-        printf(&quot;形态学梯度...\n&quot;);
-        ret &#x3D; MyGradient(img);
-        break;
-    case 8:
-        printf(&quot;仿射变换...\n&quot;);
-        ret &#x3D; MyAffine(img);
-        break;
-    case 9:
-        printf(&quot;透视变换...\n&quot;);
-        ret &#x3D; MyPerspectiveTF(img);
-        break;
-    &#125;
+    <span class="token keyword">int</span> ret <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>mode<span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+    <span class="token keyword">case</span> <span class="token number">1</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"图像腐蚀变换...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyErode</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">2</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"图像膨胀变换...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyDilate</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">3</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"开运算...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyOpen</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">4</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"闭运算...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyClose</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">5</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"顶帽...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyTopHat</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">6</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"黑帽...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyBlackHat</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">7</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"形态学梯度...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyGradient</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">8</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"仿射变换...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyAffine</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token keyword">case</span> <span class="token number">9</span><span class="token operator">:</span>
+        <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"透视变换...\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        ret <span class="token operator">=</span> <span class="token function">MyPerspectiveTF</span><span class="token punctuation">(</span>img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">break</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
 
-    return 0;
-&#125;</code></pre>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 </li>
 <li><p>编译命令</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">g++ image_transform.cpp -o image_transform -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_calib3d</code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">g++ image_transform.cpp <span class="token parameter variable">-o</span> image_transform <span class="token parameter variable">-lopencv_core</span> <span class="token parameter variable">-lopencv_highgui</span> <span class="token parameter variable">-lopencv_imgproc</span> <span class="token parameter variable">-lopencv_imgcodecs</span> <span class="token parameter variable">-lopencv_calib3d</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 </li>
 <li><p>运行命令</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">.&#x2F;image_transform 图像路径 图像变换类型(1,2,3,...)</code></pre></li>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./image_transform 图像路径 图像变换类型<span class="token punctuation">(</span><span class="token number">1,2</span>,3,<span class="token punctuation">..</span>.<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ul>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ol>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_16137569/article/details/112398976">https://blog.csdn.net/qq_16137569/article/details/112398976</a></li>
@@ -1242,6 +1245,9 @@ int main(int argc, char *argv[])
 <!-- 代码块功能依赖 -->
 <script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
 
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="/libs/prism/prism.js"></script>
 
 
 <!-- 代码语言 -->

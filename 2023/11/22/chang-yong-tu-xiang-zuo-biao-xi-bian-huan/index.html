@@ -378,7 +378,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    657
+                    871
                 </div>
                 
 
@@ -404,7 +404,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v-的变换关系"><a href="#相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v-的变换关系" class="headerlink" title="相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$的变换关系"></a>相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$的变换关系</h1><p>$$<br>{Z_{c}}\begin{bmatrix}<br>u \\<br>v \\<br>1<br>\end{bmatrix} &#x3D; \begin{bmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \\<br>0 &amp; f_y &amp; c_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix} \cdot \begin{bmatrix}<br>X_c \\<br>Y_c \\<br>Z_c \\<br>1<br>\end{bmatrix} &#x3D; \begin{bmatrix}<br>f_x X_c+c_x Z_c \\<br>f_y Y_c+c_y Z_c \\<br>Z_c<br>\end{bmatrix}<br>$$</p>
-<p>其中<br>$\left[ \begin{smallmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \\<br>0 &amp; f_y &amp; c_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{smallmatrix} \right]$<br>为相机的内参矩阵，进一步化简得: </p>
+<p>其中<br>$\left[ \begin{smallmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \\<br>0 &amp; f_y &amp; c_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{smallmatrix} \right]$ 为相机的内参矩阵，进一步化简得: </p>
 <p>$$<br>\begin{bmatrix}<br>u \\<br>v \\<br>1<br>\end{bmatrix}<br>&#x3D;\begin{bmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \\<br>0 &amp; f_y &amp; c_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\cdot \begin{bmatrix}<br>X_c \\<br>Y_c \\<br>Z_c \\<br>1<br>\end{bmatrix}<br>&#x3D; \begin{bmatrix}<br>f_x X_c &#x2F; Z_c+c_x \\<br>f_y Y_c &#x2F; Z_c+c_y \\<br>1<br>\end{bmatrix}<br>$$</p>
 <p>相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$的变换关系如下所示: </p>
 <p>$$<br>\begin{cases}<br>    u &#x3D; \frac{f_x X_c}{Z_c} + c_x \\<br>    v &#x3D; \frac{f_y Y_c}{Z_c} + c_y<br>\end{cases}<br>$$</p>
@@ -412,7 +412,7 @@
 <p>$$<br>R_{y}&#x3D;<br>\begin{bmatrix}<br>\cos(yaw) &amp; 0 &amp; \sin(yaw) \\<br>0 &amp; 1 &amp; 0 \\<br>-\sin(yaw) &amp; 0 &amp; \cos(yaw)<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>R_{z}&#x3D;<br>\begin{bmatrix}<br>\cos(roll) &amp; -\sin(roll) &amp; 0 \\<br>\sin(roll) &amp; \cos(roll) &amp; 0 \\<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>$$<br>即，综合旋转矩阵为:<br>$$<br>R&#x3D;{R_z}{R_y}{R_x}&#x3D;<br>\begin{bmatrix}<br>c_{roll} c_{yaw} &amp; c_{roll} s_{yaw} s_{pitch}-s_{roll} c_{pitch} &amp; c_{roll} s_{yaw} c_{pitch}+s_{roll} s_{pitch} \\<br>s_{roll} c_{yaw} &amp; s_{roll} s_{yaw} s_{pitch}+c_{roll} c_{pitch} &amp; s_{roll} s_{yaw} c_{pitch}-c_{roll} s_{pitch} \\<br>-s_{yaw} &amp; c_{yaw} s_{pitch} &amp; c_{yaw} c_{pitch}<br>\end{bmatrix}<br>$$</p>
 <p>其中, $c_{yaw}&#x3D;\cos(yaw)$, $s_{yaw}&#x3D;\sin(yaw)$, $c_{pitch}&#x3D;\cos(pitch)$, $s_{pitch}&#x3D;\sin(pitch)$, $c_{roll}&#x3D;\cos(roll)$, $s_{roll}&#x3D;\sin(roll)$。</p>
-<p>相机的平移矩阵如下所示:<br>$$<br>t&#x3D;<br>\begin{bmatrix}<br>t_{x} \\<br>t_{y} \\<br>t_{z}<br>\end{bmatrix}<br>$$<br>其中，$t_{x}$, $t_{y}$, $t_{z}$分表表示沿着相机坐标系的坐标轴的平移方向，而不是世界坐标系坐标轴的方向。<br>$$<br>Z_{c}<br>\begin{bmatrix}<br>u \\<br>v \\<br>1<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>f_{x} &amp; {0} &amp; c_{x} &amp; {0} \\<br>{0} &amp; f_{y} &amp; c_{y} &amp; {0} \\<br>{0} &amp; {0} &amp;{1}<br>\end{bmatrix}<br>\begin{bmatrix}<br>{X_{w}} \\<br>{Y_{w}} \\<br>{Z_{w}}<br>\end{bmatrix}<br>$$</p>
+<p>相机的平移矩阵如下所示:<br>$$<br>t&#x3D;<br>\begin{bmatrix}<br>t_{x} \\<br>t_{y} \\<br>t_{z}<br>\end{bmatrix}<br>$$<br>其中，$t_{x}$, $t_{y}$, $t_{z}$分表表示沿着相机坐标系的坐标轴的平移方向，而不是世界坐标系坐标轴的方向。<br>$$<br>Z_{c}<br>\begin{bmatrix}<br>u \\<br>v \\<br>1<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>f_{x} &amp; {0} &amp; c_{x} &amp; {0} \\<br>{0} &amp; f_{y} &amp; c_{y} &amp; {0} \\<br>{0} &amp; {0} &amp;{1}<br>\end{bmatrix}<br>\begin{bmatrix}<br>R &amp; t \\<br>0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>{X_{w}} \\<br>{Y_{w}} \\<br>{Z_{w}}<br>\end{bmatrix}<br>$$<br>其中$Z_{c}$可以使用相机外参$(R,t)$和世界坐标系中的点$(X_w,Y_w,Z_w)$求得:<br>$$<br>\begin{bmatrix}<br>X_{c} \\<br>Y_{c} \\<br>Z_{c} \\<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>R &amp; t \\<br>0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>X_{w} \\<br>Y_{w} \\<br>Z_{w} \\<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>R_{11} &amp; R_{12} &amp; R_{13} &amp; t_{x}  \\<br>R_{21} &amp; R_{22} &amp; R_{23} &amp; t_{y}  \\<br>R_{31} &amp; R_{32} &amp; R_{33} &amp; t_{z}  \\<br>0 &amp; 0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>\begin{bmatrix}<br>X_{w} \\<br>Y_{w} \\<br>Z_{w} \\<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>R_{11}X_{w}+R_{12}Y_{w}+R_{13}Z_{w}+t_{1} \\<br>R_{21}X_{w}+R_{22}Y_{w}+R_{23}Z_{w}+t_{2} \\<br>R_{31}X_{w}+R_{32}Y_{w}+R_{33}Z_{w}+t_{3} \\<br>1<br>\end{bmatrix}<br>$$<br>即，$Z_{c}&#x3D;R_{31}X_{w}+R_{32}Y_{w}+R_{33}Z_{w}+t_{3}$，这样便可以得到世界坐标系中的点到图像坐标系的变换。</p>
 <script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
                 
             </div>

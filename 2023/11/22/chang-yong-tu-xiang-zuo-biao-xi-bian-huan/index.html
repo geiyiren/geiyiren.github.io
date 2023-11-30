@@ -378,7 +378,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    242
+                    365
                 </div>
                 
 
@@ -409,23 +409,10 @@
 <h1 id="世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v"><a href="#世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v" class="headerlink" title="世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$"></a>世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$</h1><p>$$<br>R_x&#x3D;\begin{bmatrix}<br>1 &amp; 0 &amp; 0 \<br>0 &amp; \cos(pitch) &amp; -\sin(pitch) \<br>0 &amp; \sin(pitch) &amp; \cos(pitch)<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>R_{y}&#x3D;\begin{bmatrix}<br>\cos(yaw) &amp; 0 &amp; \sin(yaw) \<br>0 &amp; 1 &amp; 0 \<br>-\sin(yaw) &amp; 0 &amp; \cos(yaw)<br>\end{bmatrix}<br>$$</p>
 <p>$$<br> R_{z}&#x3D;\begin{bmatrix}<br>\cos(roll) &amp; -\sin(roll) &amp; 0 \<br>\sin(roll) &amp; \cos(roll) &amp; 0 \<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>$$</p>
-<!-- 
-$$
-R=R_z R_y R_x=\begin{bmatrix}
-c_{roll} c_{yaw} & c_{roll} s_{yaw} s_{pitch}-s_{roll} c_{pitch} & c_{roll} s_{yaw} c_{pitch}+s_{roll} s_{pitch} \\
-s_{roll} c_{yaw} & s_{roll} s_{yaw} s_{pitch}+c_{roll} c_{pitch} & s_{roll} s_{yaw} c_{pitch}-c_{roll} s_{pitch} \\
--s_{yaw} & c_{yaw} s_{pitch} & c_{yaw} c_{pitch}
-\end{bmatrix}
-$$
-
-$$
-\begin{bmatrix}c_{yaw}=\cos(yaw) & s_{yaw}=\sin(yaw) \\ c_{pitch}=\cos(pitch) & s_{pitch}=\sin(pitch) \\ c_{roll}=\cos(roll) & s_{roll}=\sin(roll)\end{bmatrix}
-$$
-
-$$
-t=\begin{bmatrix}t_{x}\\ t_{y}\\ t_{z}\end{bmatrix}
-$$
-
+<p>$$<br>R&#x3D;R_z R_y R_x&#x3D;\begin{bmatrix}<br>c_{roll} c_{yaw} &amp; c_{roll} s_{yaw} s_{pitch}-s_{roll} c_{pitch} &amp; c_{roll} s_{yaw} c_{pitch}+s_{roll} s_{pitch} \<br>s_{roll} c_{yaw} &amp; s_{roll} s_{yaw} s_{pitch}+c_{roll} c_{pitch} &amp; s_{roll} s_{yaw} c_{pitch}-c_{roll} s_{pitch} \<br>-s_{yaw} &amp; c_{yaw} s_{pitch} &amp; c_{yaw} c_{pitch}<br>\end{bmatrix}<br>$$</p>
+<p>$$<br>\begin{bmatrix}c_{yaw}&#x3D;\cos(yaw) &amp; s_{yaw}&#x3D;\sin(yaw) \ c_{pitch}&#x3D;\cos(pitch) &amp; s_{pitch}&#x3D;\sin(pitch) \ c_{roll}&#x3D;\cos(roll) &amp; s_{roll}&#x3D;\sin(roll)\end{bmatrix}<br>$$</p>
+<p>$$<br>t&#x3D;\begin{bmatrix}t_{x}\ t_{y}\ t_{z}\end{bmatrix}<br>$$</p>
+<!--
 $$
 Z_c\begin{bmatrix}u\\v\\1\end{bmatrix}=\begin{bmatrix}
 {f_{x}}&{0}&{c_{x}}&{0}\\ {0}&{f_{y}}&{c_{y}}&{0}\\ {0}&{0}&{1}

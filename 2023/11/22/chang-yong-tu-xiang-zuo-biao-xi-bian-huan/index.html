@@ -405,7 +405,18 @@
             <div id="articleContent">
                 <span style="white-space: nowrap;">
 
-<h1 id="相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v"><a href="#相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v" class="headerlink" title="相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$"></a>相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$</h1><h1 id="Z-c-begin-bmatrix-u-v-1-end-bmatrix"><a href="#Z-c-begin-bmatrix-u-v-1-end-bmatrix" class="headerlink" title="$$Z_{c}\begin{bmatrix}u \v \1\end{bmatrix}$$$$"></a>$$<br>Z_{c}<br>\begin{bmatrix}<br>u \<br>v \<br>1<br>\end{bmatrix}<br>$$<br>$$</h1><p>\begin{bmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \<br>0 &amp; f_y &amp; c_y &amp; 0 \<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix} \cdot\begin{bmatrix}<br>X_c \<br>Y_c \<br>Z_c \<br>1<br>\end{bmatrix}&#x3D;\begin{bmatrix}<br>f_x X_c+c_x Z_c \<br>f_y Y_c+c_y Z_c \<br>Z_c<br>\end{bmatrix}<br>$$</p>
+<h1 id="相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v"><a href="#相机坐标系-X-c-Y-c-Z-c-到图像坐标系-u-v" class="headerlink" title="相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$"></a>相机坐标系$(X_c,Y_c,Z_c)$到图像坐标系$(u,v)$</h1><span style="white-space: nowrap;">
+$$
+Z_{c}
+\begin{bmatrix}
+u \\
+v \\
+1
+\end{bmatrix}
+$$
+</span>
+
+<h1 id=""><a href="#" class="headerlink" title="$$"></a>$$</h1><p>\begin{bmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \<br>0 &amp; f_y &amp; c_y &amp; 0 \<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix} \cdot\begin{bmatrix}<br>X_c \<br>Y_c \<br>Z_c \<br>1<br>\end{bmatrix}&#x3D;\begin{bmatrix}<br>f_x X_c+c_x Z_c \<br>f_y Y_c+c_y Z_c \<br>Z_c<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>\begin{bmatrix}<br>u \<br>v \<br>1<br>\end{bmatrix}&#x3D;\begin{bmatrix}<br>f_x &amp; 0 &amp; c_x &amp; 0 \<br>0 &amp; f_y &amp; c_y &amp; 0 \<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix} \cdot\begin{bmatrix}<br>X_c \<br>Y_c \<br>Z_c \<br>1<br>\end{bmatrix}&#x3D;\begin{bmatrix}<br>f_x X_c &#x2F; Z_c+c_x \<br>f_y Y_c &#x2F; Z_c+c_y \<br>1<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>\begin{cases}<br>    u &#x3D; \frac{f_x X_c}{Z_c} + c_x \<br>    v &#x3D; \frac{f_y Y_c}{Z_c} + c_y<br>\end{cases}<br>$$</p>
 <h1 id="世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v"><a href="#世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v" class="headerlink" title="世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$"></a>世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$</h1><p>$$<br>R_x&#x3D;\begin{bmatrix}<br>1 &amp; 0 &amp; 0 \<br>0 &amp; \cos(pitch) &amp; -\sin(pitch) \<br>0 &amp; \sin(pitch) &amp; \cos(pitch)<br>\end{bmatrix}<br>$$</p>

@@ -1,0 +1,1113 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="零基础学习卡尔曼滤波, geiyiren">
+    <meta name="description" content="卡尔曼滤波">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>零基础学习卡尔曼滤波 | geiyiren</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/matery.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/my.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/reward.css">
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">geiyiren</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+      
+      <i class="fas fa-edit" style="zoom: 0.6;"></i>
+      
+      <span>编辑</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">geiyiren</div>
+        <div class="logo-desc">
+            
+            geiyiren的博客
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-edit"></i>
+			
+			编辑
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/geiyiren" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/geiyiren" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/15.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">零基础学习卡尔曼滤波</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4/">
+                                <span class="chip bg-color">卡尔曼滤</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/" class="post-category">
+                                卡尔曼滤波
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2023-10-08
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2023-12-26
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    11
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="5a0be908870f9b42db724311303796953629f7e9ce67a8460016ac5e451738c3">7b9cc8a21d251bb8da608f74e50045829ff7555a0671524988b463daf3297ef836a30574667a68d4a5a03722943a6d3757b5f3804616a00bb35d05bdcadff2750c9b4ac64937e05236a7832dabe36a6a93d935465d9ad89073f8dada43c9aa132c60d7a856fd99b5a52546f2c245146a5df6cae8d412a66eb09e383cf4e1cbb05b44b9060e79728fc823cbaae1d7dec2345b0a51b472533682fef46d664fb4ab54301f8f4bcebb7090f4249cd677247d839275821c03acb1c27859b298fa4fdce6fb0bd24c3fdb8200e492b589b87f21b9171100c894babca9b184ac0f256f19330fbe5967ba86e5ed514098bb6b55c573e4e81bd6187e3c3971eea148c6db89accfa4a2c735e658b0cd59c6b608bd2cd23d51a5371ea24254e31568bea7686b1268a0ca74cfcf6fa82526e0b714397029d9a91f03db0766aeb0d5e19b6aaf43279d1eb1a6a8e187b00adb970f7da56fbeca38e2c375970d73a681ebb74bf47e2f7071b8eb44bb1eff82fc0717804c16d3a12d6ccdfd7f02a266526acbeccfebaab1d1c76707143e0dd9cced9aa74230f2fa5eacfeb5a0d066c7394298350755c6bbe5cecdb8b7345d46149555ea52ba82ae8c8d532a90ec45a2c85093f2d86ea4c8f756d35e258f29c48c72723f9903fc2eaf1d3f1a24405fb40ffacf11ae101f4e9c4a361cdb31088f9436f6d76b058eab82915ae2a9607dd33edce7f9ce0296e1cfddab1fd6fe93fe033a2dca36e3b3e2832242282bb29a86e26ee8680e9d0911c9aa84692838c7dd63b5fcf65e484ab66bb4955c680d136eb673d098738b47464f7aefe562a594a1f887f8b8285513b41aafd584cab393a8ef8b3bdb95d89170bfe9be51310f1ff5695eec8d040f1aaae8b6054752496fcd7542842cb1a28ce2ebdf4f1ee8796f1bd5401c32be406e09901d4214ddaa2dd866813cbb2eda7c8c33357bbfe6dc48155beed79498cd4e879185b4384f95f97af4d84cc5498caa569d8a34cf4dfbd115ca3a8ce7917d0d16ebce00c226bdee5e04060d24fb0bc750885c876aa2081b9f5d0531857ef412747774566cdee0ac247d14f68c545a07ed7dc70d75047eb5e312f3c49fdea86347b24b5d5b4ae67012585b608a0cd8803c9e7e92dca3b0a83e1be8501c6f282ec754cbdcd342b2c18c48c17bc91d43a46cba1e96d171c4a43e95f93a6d27f67dcbdd47305b8fa55bba68bc5c6fc7ec956c360855264968a6cc8718ba433ee2fb06ce8bba1d06370e5f845591b685940c3b18dc315e26d84237d33defddf7b921eebfe0b644e03c10b083ac95327947a29e1c27ea45241d1d292d57b482947792e8830d55bd60d949dbebabb3af11fef18b80ae3a0588bd28e2b48856a1628fc5095841f8c70e6367ad2887337405643dc874e34424d789ed5632fe007874957b0da3641ef9d57c47b40d346055800ee51676b0e2e1c71653d26bac602b93f27b4e0213384e8eeb31375335922135aeb7e648a575691c21ce0c6373bf7b0d36d56f2185ca9613171b61a288c4bb67b6302134ab637a36bfedb9d80563a2006333ba79485217706b8ea620ce9949fec1b339a8774111fe92d10c0ec2346cb1ca5fa5eddf6aca4eb74a21d8f361d60f786b4fbc9204559e879a3f3bfb3c9be01cb1c22874d0e70af49a27311c03a0e3ba014721c29efd7ed41e72a3b2bae76e65df883947e78d690d963e2c4aae5f88f369b0b5eab30bff02ec77aa652963aaca15ad0041fa7621bd3856ac8e12cc6ea6519dd20dee864cc0fdc566878e57e1839e75e22911d24489a237617cdb1262c6da9d312405dceea5b4dce866887d54481aa211b25bc81288c43a13f34b3e88016b3cd25fef7c782db2233232d9ff7becf8d063eedbe8ef58c697ea60691fc46353401c866d66e51fc1dbbdc38499ece0bb61b2e9d6b0e44866b12b7fe70cc31dd189d2f03cadb64ca5cdb2b94554f009ece044512e03aeed98151f3e7a61398d0cd729fa0727c791b0678d553ebb891c5dd3907e9e1f12d310c5c4da70efff870d19bde5e5509c7a1c94b951f97b9f9baa0e416db684a7ccfda1e592ebf7b8f7d09c02124b47832cab4552e99f78c64fdf145eb1703991a4e76d3051d8d458ec75452e2d6d38432e2e414c8d974e13ced9f62af37b4e3c05d1900bf6e9604a65bb3d02bbc144dc6599bbeecf5b387fb5b6c5e6d0aa4b4e2af320ab7bbb0a66b1fbaf515a9f5eaf2219c1f08472b5e93a5cd01f7bbe94463b029099a70d6371c4cde9bd7445e39dd45968b854e852f6241cc3d1fe5195b0b96b5cf71b8373ef2b594f02b561eeda87981b9bbd85133f836a8c0be5fd728afe62c65e2d22707fa31849ae8e04d68a99534086ce0c6e45a7ee07e6d8103f14bfdde1eaff956407965b22b80aed28778a38a25d678d6ad5435d2b2ead9e63d82bdf3e7b3137ce336eefa97e3c8ebacbbf5a6f7ec09b3f7e94a31d3414cd9a7ab8fec13d64e5c6f8d2cffccf66f5e814a35205c45412aecbdbf482b0b714f5ec22e409aa28ab562e3149c3ab70eb5d2576e8682863b5740b6100fe7efc240f3245665106c3dc6ae496ee4b48b390a9e4eaa7dfa3002a9522b0aef3759e61b99478c8c5d339df6bc0e7956335f3b6a8a497821179006e8dad486e47e1dda97d69303ede0c190d5e82fb577222d0595501aec30ceff6abb3b19319271219f48a83a5ba1577f333a6d094e879cf7faaaa25187e2d1bbf109a874b977f613800fc4d3c8e807928d5bae870b9b17e7b035edd984b2f1c407446bb9fa49800d0ec2c1237a52efbe360dab33c7768bae20d494a2743f541351a99031e030e8d1dd51cec864e6af7f88fa5a13eb6b2146e660119965c64d3ccc677af4cae488cdf323b516bf6ded25dd3cd757286264c9eb7a8cda0f95201061dc492e14a0e7a1d7b9d70133e6ee26910aa884686e881c88778906c044d822a4283124c8b52c2c86ea982dd68ec98a1ca1f1437ceb9139ee93bda63d3f5e8c47090bdc42d2115595b37583126a36bd255c01658ed1dd033c1c1edd432f5edb696938be86569270400ac787fa3fbb892d6b98a814f874c6f6811b5bfefcb6f5b58ed16d7c4c8f412e3e24a41174ea5f7771cd398f296471ab69afa7f0387e388ea5d57dc53a3353e6cc491a5f5ceaa8e92aeac387c1c6ff2e33dc7c223f96e2143432d04ccca641b696b07ca21ba622c21f6cfa2b481b9264d9c31d808b8b02f911b31c78f114af3313b5c0533a42ad5384f493f1a5dd73cbc83870d617d70a73c1b214f5449f612dbaa2970295d46e6d2a9fdc4115d4d756dab2aea433668bad467cd67c7e17f0b76ad0b12b5af234bc8fab97dac83221301f775c3d62b37c532ae65d6f5220b02294d76a7077c10823c07018fcbe89ac4ed3476308370a02cfbc5fa429e3215d303bd058cdc8b2478504095168f124f67ae9fe7517faf855bf7316b4a298402d58ad6c4d6816d5016b5778ae94a1bb5ec48b545b4e34061e24e7a00caf671e10dcc594d6925448bc6096a4bb0bef96f3574b0111541338259d5cbc7928363f4b9ee3726827d7d9cd161d868a59e4ac53c7e0f5c7e8312a3ec45e93279dc0270cf6bb1a8b875e4f9c57a59d8600b057bc2c6bed26ac4bc927e3ceb2bdc16b86d699d0436d193c95ad1edab9eb8d84e6aefcc21866d50b2849b180e8433d9bc38261f1704faa77609d9f2141ff095a1ab5d29eb2ba7a659b64a23f91da8d93b2b81c30fc4d7672af2abdf09ef4ce12e813202ed6a90ecf46c25645c86f47a3b672338cdff7fd0090f3b788422e2c2e4658531c54b8ebdd7183515f1b51ebb3df9b3679d972c2a8dc8e91abf3a7fc3f344f9499b0d137e0dd87305e2343af993f945629f3e161eab6270ff22b36e5b098e4be0d51ab71f4991878771e37a4f20288b1a47cc546ef22b3d9c5734f758c5e248d53f434fc679c340217d92bea35349c625faf66990ff2b8bec5eda14d35828136fa5e23e5ed1e77a9ba06e227efb8f36b5556ff9761b279c95a5526528ba53b3cd599a98eb6138334e1da88c2357f84669759771c8bd0e1b0418c549eae2ab7230e5d4af160796b3d19a9fabbd6518b3a45b8019005fd602111a6d5e70245a2c1db6995f88082c64a4ec8cb2763f882162bc5355430f7823d73287a99663eb3952aa3fe6242ec94d2412c3fc453eb40118969a68c60d11fe50ed6ee9e2b7305c2cce1ac875de4f3d90aaef905fce7a415c4a7a880d91f46ff39a3cade4aae7ef7451f696cbc3dd538ddeab4397badd205da992d9b828dcca39255fe1419c3d327158ee99c70da2c6e3e34318eaaee79ee8556864542b6a475fd9dc7891f487ec7b84c0e1ffb796ca267c5621e77ab21e1fd75011caf3fe9ad813d8bf1f7f5adb7eae4b4176556ec4e9ab498bd18b8dad8206ac093b7b924f66fe46c3bee782846ed08c1183e3662f94206f7a5c8e288aada225fc7bb1f8ad9cc4e932a6131dc441fc94cbe0abc702aff80bf1e673638183d765939de76b24630d45a7955a5cc30a9e76c98071fe8603d20718d36eb0f8c3f51719beefa43afdb403a3fc6fc45893df71629cfba2e2c2950ddd2bf2eeb4c0d625c73a57580e1e9c03835e03f7d7ab52562fac7665d5eeba218d98f88de03f3e55295e67a0ce6f64af956bf8de3dcd43c0711f60f5dcd56aa86297aad689da9ec03ae6c56bd75f44667a7b808251f2cd0391cc2cd95ded0406ab0e7ef6cbf993b6d6b9a2c66fc0c9ee6753f45b6e6dedeca834541bbb453f328c86544476139301c0e800bb589aae9ca6d89469403000e750e3093ca44f80dcc4eeb3c46d9789efaa6949596cdaa839ad5582766b93d6e4e74c3bba8eeb1bf970880f51fd34acabe900b5e391c4a1f78a3fa494f9044bb3c2d665dd05b06761cff0310b982fd00afa7c399f82e508dc6f9aef98c985059680a8fdc3035e2ed45ddb968be37fc947e5c392aaa68d1b48a7b4f541ac7bf1ca47eafad8e64afdb5854b8951f77cd3a1d41824bea4c70cb7ee3612d729fb4650160735398ecc99844c159d621ebc009d96256f7771e73fdea671b3d3398ed2c20c52f802a63b3d3905afb7ed7be2f977cd4e2f31450b39aa4202ec22c0360ce3cb210c21db6ae1ee8002bf484142394dd8fc4b740b22fe5c3e3537c3cf5a2666dcccadc00decee18df8bc6de9ef0bfdc9298ccea89d6b306e3ccaf52892080976b4faf207ada440d5e655f6408b88d69aabf5c05300fef06d1b963f158e785d107c69bc7bd591eff89f4f0af9a916bac01a5dc21c249a73e51a0a578a431a1a9f9c00733535c06cef1718e94f98317d697719b80e99a2524b6f5b81c399d457d0a370fd092a41c0b73c3bd9144aebe8f7424d940853a59d5f3db39cd46dfdd14b7c322b2e065c0e2364b1cbdf61953593c39700df34d5d6f01b12cebf3a301dff7a5a42dd08d7558ac0191b5e2544fc6960d770b047580bdcef8d53a759bbafe102b603158d40a5b63363f964aed44ff0cb8b9bd9a5b35deb9d1b785c59dcd9ce7fd9abb28aaa6d6e6be72e827c50e4d5aeeee6a0db9886603274495af007b434c550483463681ef6abdadd3ebab76bde5ac2d238003d7ea97e27e91b36f6247ef626799509a9c68a47b4cea2758f3067f44479ced6fe77b3f261828cbe00db661617db9d90e6104a8f61572bffcb90719f6dcc1732befa1ff379780a93d6ea4408da56fd06c8a4c3f5d53ebf6ff7c212bf093ca9da1c9625f89717d98f9919fcc98409d1fa47b23e1b3de328be67e3dd12ce8a88c7b7760fbe3ecf7a6227e8dccc9776b75721194bb0d9fcc00bf26100a84606f22474a9aaa677951053753771ff7473a6be755f0dfd10fd5b3136e25a33078396821a0146aed5282e4e3d5edb2fc7308d74b52b7d36d52c8659de32beb00e37c8cdddcdbd04cc6762da38c3649772a013cd2311cc66279852f918f90be07c28263ac788493141077da2ae783516e7694c1a8e910b9202279cd007840835903e8fdd394b50611f9a7145c4896977fe8e077cde8793dc485b4f0455501790d0bfe501b6c7d726f4149d5fbd9aa019d2f763224b20b34063332f387347574de9800ea274437c6a55d8715bb2301e8d955508bd9c72f1abcda4a18fbab6b2b488ae1090478d3925b7a8067aace730946132081d763a2765d1c7291da41754b2a0882a9d680a9cd595524586cefc01966ed6ecb2ed2326be5abab8ca84f39549e61c73175412db72a0a6259c4eeb440414fa8a912c98eb5034b3ca0cce1067f7467b91a13fe742dbccfe2a430c6c659f2132beb2051f18cc8c18b77837ac92688968e524a5a941e017478667553b44d802c42aaebab51a699e1f45c7d2fc1cbd80687cb5b47c3cdbb5176fa32e5eb749a2635ef6af54834f5c4706f688cc29f7c0cbd92811284d7735eb0feac8d52800799cb80e83c0b9a313b8e14369eb5e7aa397a89b890b58756e35d007e450d8940bc6f7640e8cf0d6ba62ac1dd7344f48efc227391c551d0c42d81c4142aae72c8f0d024695e8af9cd1b9cf467bcdadf29064466130dbf7d7ad888eb0101dda556399ded21dee23c98d3a8e74e6828df24e0c335da7d594a56949bfa2523b03922f1a47f472054e34a044569a0f90494ff4600855c740a14d9864c04fa618f1dc92370b07ac0e89aa67e42cb73b9a25c37ecaa0129a8ba6b56342b7af8675ccc3a06719365ef744180319aeedb9d47f74b2140c835805e985ab9f6389fa35e212958cb859623a97cded7012b0789df3749f1324a0430bc58ee619597a07cff337ea4cbb3d6ede016637fb6a5e3e610af603d5a6121d625909c6819a298fc772c93dc82ae06f205c6f29e0448a293b92d5f0002a0dd3fecc5963ef3120d942d48894b8a463a0506a8021da72b7042aa5e2dd217885e3cff8d362a9a5cd04beba02120bbaec5181dfad77cbe9cde408e155f9c185f7e8eb78b443283c5ba8575e2eb9ac1c87a3569f8b909fd6e63dcb85db2cfbb2cd7fa9f6296e02c0dbf8b98318c44c64fdcf5696147f331c30d5cfcc761f0eb2f4310fd2571660e215206a3f8b9f700e5e3608d7abd20252a5eb5d64b30b0e71c20f90a0b81cea01106b9ed95e716390ed9669b7894bd3f2cfae6575257255808b08ffed142bc0744abcee836f7d5c470c1d05c8f67399c83e38fd59783c0c4dafbb8c5dfde6ad7bf274fc81d5994aa900f4f4296b6391b986e558ac8196f793c5303f841b2e297832fed7f8fcf9f531ec2916d81441e659bd1e84e2e2ee4bdde294f1115798bff458e3d6a9bdc3bfe9517fcb6e4d57d3dcc574e95e333417a917e7ef761f37a53db8343b06b564bcbbbc0b1342c103311fdfb739c884f67114b1a3d0cd07cc9d8b5d83914347dd1e0149871eb22dcf5f6531ef016d88e6b6ca51a88226f5d97e87801892ec81855c253813db849c1d5c19d6970ab49f07d97b5b099e830d9759fc15830796e2ef00bfff8bfd5debf2e8361fff4d20e3ecf1f4c6a6f09782babb2c86b4dac03fd1cf0960dcbb2cc4231da857a4f5fd0f1aca2f48f3669fb3c62e18d951736409d1a9e1fca2df81dc03724c66c258f580a5255f860fe2ecb69292bb94afae5bc9194cb71d2c054bb05befa433686aa8aa7c1947142c3f9227f9afe28d920b4be008fd643bf7a895b5ddc0e1ec55df357cadd174a4f568847a9a836f3e1afd13f54206e57ef524c305679fa0b20d303c52ed434e2c9720fc1c87e0464f30c2b2d8400b222dcf313cf3b6dff9c0282537d6c1663afd5e4823cf824338873bab62b334eac12fa031ca9e39c15ae8cd425461e7ede455d0a3e40dc9f1ce4f0fc10a3226d6d45d8c925238f810b17d3cf2df00e89c85ce910e0921e8f8d4856e88b54bf014ca072b37be328ddb9b7486f6cfb912c3cc26aade4af8b42472c93cf8dd98a4ed278b06ed239dd9320e8f34d10af0c4955844f361ca58f58b2d6dcd926b35b78fb42997a6f1c1955a3a6050bb2bc1c7937eded4001a2794641778653b683d70d37f148d3346cd01e2f54384a0dfef22b82a8f1a7e285ba1d3df400fdfd948fa185d92f1733e1cbc722fb2b1a9268ab34530cdbd0635c84bd7f9d0d66f7aadc417a6140b12b66892647198ed0f874be7c90b98bfaf728217a4604649668afe7a808f1f861b8918c3a151193cf442d94bd0b46db4950a5a79ca205a90bb8e54e746ef9028e1a9ab8afad83f5ffa445450c19fc006f7dbdca9cadbf20082214d025c342904c8f47207e8147facda960ce33f0f58e435472d3381702c0151dce55a0104d5c79ec20880929f41c58bf864c5157c3acae30feed514fa5ec01834dc912825bb552840ff071b5253c5fde4ebd650f27b98c96f703f633af7d685e275e3be541779e0518f64de439ed4f113f1282e8d0d3ee90a08a9da58f9f581dffdd79982c7d800dac92eb495a1290881983d8b14e820ca59d5a64d4de5f1176b49ba1e815996de8bd5c39ffe24ee7bf3c728bfbd2ab2f72798106ec269f2877c8380f09457c38bf5893d7c0f89436068cb107624a09d4e823498ab9729717b58b6bca20baa691ae92120b6e5dfccb1bf0cac6ac352c73c28b719f629eeb3cc7b7a037280c59cd3ffeffe7e60f2e26d23aec318a0eb5636580d1a6a2fd5b2270aeca7212d33e06d979c81eb5135d8fd62de6f5c4f0f42660f56bf4db3bcc1995d64026f6d1a680551f60b8a86364a3ebb669236babb8ef3e56dc914724617ec939b3249854cb0cdd5d2b5d9d8677c77846ed3b3670e074c12b187f142cf14a26e92c2cfe631dba663b120889342b570782f18221048146a2bdda2b9be1d51dc506d510faf852ec41440e5f72294bc737c81f51452d239468f1512932867db01753f76d2164213968847899a79999dd1723c3ee91d8e4e3bc8c020e6e5e1f0e43414eabdb6778c35bc3cb9dd12ffffdbba54758ba9ab05f2ae6eb7078cd6fee7d468fca2aae7a82afe09460199c285d47d3fb5300e6b75965bd3dae5385b59fff3531b2515d2ddc53732ad42c70ca7119ffdc75af97581c111d1fe7919374518290aeac722ec317188383741b395054dfc3a71232f3cdacd323fd5a76c6f7733f17ec79a59c79c3477656062d1a00596ecc7d8a63e8b62ef0f6c10ad903c24445918ab396bd31535ee90abe401a2c9cfa261124cceadf4f161907793055a714334c3e05da214e2c2ec47b1dfe825de7d6d24146f107d7fe31c08db2b093cf8d76f67d5ccb590de515ba9d979b7d72c55a82a6f57dda404d9014cf384909ee0b57f8367fb59e23be2376900d325f4045d23a8dba59faa79355761db8ca391d1d15df3a8578ffe0ed123a7a60c5f1f38344e073245bbdf50bf4ccad4abc1fbd32eb677f9bfdfe29954b1f0bc2c052bfddf3f489f9bd07c189794cf8842c57a3b8b07dd419e0e0fb6b0e61a308e155032fc45c57cfa4b1cc157d289d964084bcab01ac89e4de030ce9da8462dfa1e6b8e155e33eff228ceb795bc32e50522a9f29165de8aa9c5a3bfe60311317255273ca234094807b7cf8a63b0c8666e0f6a1c2bbecca1328dacbe892c0e451f2c7d4cd360d4146b2ca6e8938c007e44c7b2b1c2c698dcee9252799f562aa912e09708ffeb000c5c1160ce663d61e56f41898d7e43c1efa80e7cfaeb47f81e95600fa40205b6f796ea9e1ad9d3e603c90084126b7c7360c1776a53dbc20cad47fb888a64fb1e2889dca7ec108a4b0ddea6a4ace115502cce7f75fa2127a3265f12597ad7590dfe505e043d104b6c5b304e495707fd6c57d84ae7e60e0894f15cd0b693a2e38e416b7b41fb47a8587750b71bb672789d3e3ae49d53b667bc75c26deff85e2cc08c2b32dd3bebc9b78863e1eaedd76b1935baa9b74f3e3f98329f4cfda965ccdf22834088a8019aeb152d7c03ebdc8aec4b92c6fc649a9baf904891cff312fa3e7994e497a028ecdef6e74b16f06583d3e3ab58a2f3ea390cc976707a29155a67c72a4ee24918458a044f8c7752b71c5b25c30e31a97510ca68ff7595dcd1482da68a215ff3fa13f67e71ca4330bd446fa46cf2a392c498a76dc9dc0c99a60752fd784d636bb6a7f3d1268f9e6678b9be3eab16776b0cb6ce84b75d6e7d0448f18f2d69e61ab0c22bc24957149ca9f0e4290708a14fdf5f6a59a1314ef6cd7fd25f15586087dcb12aeebe3245e7edcd645c061c595741600da172922a6a2a8823038d461084842032e2b3f4aba8a6cb0a336a966e47cc0c8626765b1604d1d61a44314d618188b4af8b1085e320abf0d485f3cdc0834ad4f6665ee5df970128830945a9878d40c017a3ffb51bfa1cf47160eb72d2d854284ebc5978b2b756d6d840cddad4366fe60ea5f4768027d5c4ce853fa604deb3663974994a0d511d12a5ef70326d8a120177acd41441d8b0bd525a5108ff3793623885522b72075f8bf94817551e0dc4eb0ef99574609f9d234abcd9abe9da69868b610c6c4f047a4005d1e6a5052cd7c051dd2e8066d7252889c9d1a2c2d4fb3cd8ac1fab1b3183398eb8061642d29c9fceeb8385938f201f9d66ab1caa621db5610edabdabbb280b661cfee176b7718dd612665e3ad8876bec3a08a58ed1d24a9110d1da0b6ef00199a20081f72e7823208c77b5d64ba969077eaeee3ae50e41b95d38f72b8d5accd1a327ad09468e203b61932e36ec8b0ddd911da984d580fba75b09bc946954b3028ea2a5bfeef1a19f7c4a51b1dd11bb0ec5a802095c95703a79cbf8d3ed9b954107a4f1868849bd99ec7a782a6395a0b7258759159eff1dba36d6c81074ec797a9dcce8eff80138e07a08c944da450104db7a58b31cfed822cd9e3974228e34acfd3a5e4cb9cc80a51cd0ad21311f3921004f5c8c94e8957704374e9d0fe27476d560f4c3459829ef57cd704ec3784e44ffff4231987dd859dbd0c909d6c76be421e7d35c790e09fcb643d4f00c661d34e7a2250265e976864be0d5b5ea322afced638ffe484561bc0b692924e3e5ef6a8da37925b602b0ff25700525843d7fbe8cbb980b022263fb2183ed01f76d3c0308240e1ff174a8d8fae26a9eaad96d2b8c8805b34ee8836701d5ca82ae0970a048a08fb5321d193fd1a29029051a89801859c75745bbe5926e917168d5af090e081b27ed27bcd8f909ca27bab2ea0050f33dcc03ef0710691c62c77dc378a1c77d749f350f199b0b05ff061db0908232b69f18e3038edd99ce92a877c16e924643ed430aacc66ff240ba3f84905d054dc1063e37039712e657a7bdcf45ab361836a36af921b3f777ed3a183e41ada0cbe95208eea2ebdeae749a728dc0fc091569fcdf21eed9ca289271b46358f817cc778b186c4e519205743ec373a8583f5c582bb8112e33741c1437657d7b32b122a4bae6c8d61af8c9ce0c43b66f797ec03a8d410fa72340c767bb61c5e1a32c0eb7914f6e6186cf2cd735bcdb95e78855911373f02fe214ec899e9a1e547b266cf952e1f8943dae55d23043bf17335bbbae8d889abeed5a16c6350693dd9ea3e09216b6cb26fc01807c185826c4756a32e754006fa157923348dbac1ef34877a6eedc9346d4a4202356f60ba5ceee52a76f466305a5f4666bf41218ddd6348d7eca574435ba8155cbcbfc8440b789c7c7735ff498fecd65145606e1171767f92f62d49ebb1bc597fac880d64c7585b1ec82112ec565cbc5e5ca74c83e4af0f39f07adf522a3c20b88ae2c882c3a7791e32124892265792ebf63482cef55a230e08eaa3f017767e1ab1c996e374948e750607d2f30af11282523b9906d67622a853950e66dfb3f731a9b4b16f1688bb498f1a779247d80ca8ced8e7539c4361affd91adec48e504f758bc9ffc4f8e5c2f9bf25bab610a5c8d065826baa4f241035c4aab1ef13db4043afa3fba6b3d72f7b0bbf444dc42efbeb69392d9b5206eec614a5ba6ae070fdd15caa14da4504ab2be2f641e036a6bae3cfe7d9e753078c150950480b9ab1c5f6da6799a67dd89ce8b303147e8170909a119d790c0631cb5637155620d57482e41dc9cb01c1bf80b68b69a608fa4086a85ca86f5605160fc91b8a7ada8ed00052dffb6fd34c3e0b9b3ed14acec7b0c12221f29742568cb081ef870fdde4d6729514b3fc696f6ec933316b9b9daae65ffc9ab0f6440f9b427dd3dfb06721f3f830083f49ca8185cea347bb1851a037eeccb68cff4dcc0777fbe4b74237e49e6d7f4c683f0babab6c4828b78b69c4711eb769c0cb4a63c37eeffba291df250632067fa027bc0e1b04a1cf0f66821586832cafc8c4082f0fd922bbcd211c0429a59774bd5cdd23696f4b60b8201ccefc61548c59c9d92030b5a5f16f8eebd8af386eaec1b6a68df050e70b0f5db5e41a3fc4d6041961482cfb0ad60336d458c16585d3a98a773725503a3050ab3ce30a80f</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">👉点我输入文章访问密码👈</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">geiyiren</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://geiyiren.github.io/2023/10/08/ling-ji-chu-xue-xi-qia-er-man-lu-bo/">https://geiyiren.github.io/2023/10/08/ling-ji-chu-xue-xi-qia-er-man-lu-bo/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">geiyiren</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4/">
+                                    <span class="chip bg-color">卡尔曼滤</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2023/10/08/markdown-shi-yong-gui-fan/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="Markdown使用规范">
+                        
+                        <span class="card-title">Markdown使用规范</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Markdown使用规范
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-10-08
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Markdown/" class="post-category">
+                                    Markdown
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Markdown%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/">
+                        <span class="chip bg-color">Markdown使用规范</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2023/09/20/chang-yong-tu-xiang-bian-huan/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="常用图像变换">
+                        
+                        <span class="card-title">常用图像变换</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            常用图像变换
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/opencv/" class="post-category">
+                                    opencv
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/opencv/">
+                        <span class="chip bg-color">opencv</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/">
+                        <span class="chip bg-color">图像变换</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: geiyiren<br />'
+            + '文章作者: geiyiren<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。详细内容请访问https://geiyiren.github.io';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+<!--  -->
+
+
+
+    
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+</script>
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022-2023</span>
+            
+            <a href="/about" target="_blank">geiyiren</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/geiyiren" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:geiyiren@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="/medias/geiyiren.jpg" class="tooltipped" target="_blank" data-tooltip="关注我的公众号" data-position="top" data-delay="50">
+        <i class="fab fa-weixin"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

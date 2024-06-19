@@ -52,7 +52,7 @@
 
     <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 7.0.0"></head>
+<meta name="generator" content="Hexo 6.3.0"></head>
 
 
 <body>
@@ -383,7 +383,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-04-24
+                    2024-06-19
                 </div>
                 
 
@@ -456,13 +456,12 @@
         <span class="token punctuation">&#125;</span>
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-如果 #18 行中申请内存为:</li>
+如果 #18 行中申请内存为:<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">float</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span>undistView_width <span class="token operator">*</span> undistView_height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。</li>
 </ul>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">undist_map<span class="token punctuation">[</span>index<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">float</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token function">malloc</span><span class="token punctuation">(</span>undistView_width <span class="token operator">*</span> undistView_height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">float</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>那么，后面构建map映射关系时并不会出现越界访问提示，甚至后面如果不再申请内存块的情况下，继续越界访问undist_map中的内容也不会报错；但是，如果后面继续申请内存块来使用的时候，后续的内存块可能就会和undist_map内存冲突。  </p>
 <hr>
 <p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
-<script type="text&#x2F;javascript" src="https://unpkg.com/kity@2.0.4/dist/kity.min.js"></script><script type="text&#x2F;javascript" src="https://unpkg.com/kityminder-core@1.4.50/dist/kityminder.core.min.js"></script><script defer="true" type="text&#x2F;javascript" src="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.js"></script><link rel="stylesheet" type="text&#x2F;css" href="https://unpkg.com/hexo-simple-mindmap@0.8.0/dist/mindmap.min.css">
+
                 
             </div>
             <hr/>

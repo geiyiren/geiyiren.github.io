@@ -1,0 +1,1206 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="马氏距离和欧式距离, geiyiren">
+    <meta name="description" content="马氏距离和欧式距离">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>马氏距离和欧式距离 | geiyiren</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/matery.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/my.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/tocbot/tocbot.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/post.css">
+
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/reward.css">
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">geiyiren</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+      
+      <i class="fas fa-edit" style="zoom: 0.6;"></i>
+      
+      <span>编辑</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">geiyiren</div>
+        <div class="logo-desc">
+            
+            geiyiren的博客
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-edit"></i>
+			
+			编辑
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/geiyiren" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/geiyiren" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/15.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">马氏距离和欧式距离</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="post-container content">
+    
+    <div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB/">
+                                <span class="chip bg-color">马氏距离</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D/" class="post-category">
+                                多目标匹配
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2024-06-29
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2024-06-29
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    2.2k
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>如果按照欧氏距离去理解马氏距离，一定会迷惑一段时间。因为欧氏距离可以计算两个点之间的距离，而马氏距离是计算一个点距离一个聚类的距离。如果想通过马氏距离去计算某两个点之间的距离是行不通的。下面按照一般的套路介绍一下欧氏距离与马氏距离的定义，从定义上可以发现二者之间的差异。</p>
+<h3 id="欧氏距离"><a href="#欧氏距离" class="headerlink" title="欧氏距离"></a>欧氏距离</h3><p>p和q两个点之间的欧氏距离，p和q都由n个维度构成。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416161613788.png"><br>对于维度尺度相同的情况，欧氏距离表现良好。如计算平面（二维）或三维空间中点之间的距离。但是对于有其它尺度的维度信息表现就不尽人意。下面两张表分别列举了面积和价格的关系，但是单位不同，这样子欧氏距离计算的表中任意两行之间的距离就差别巨大。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416162105950.png"><br>从技术上讲，可以通过归一化或者(x-mean)&#x2F;std来克服这个问题，但是还有另一个主要缺点。也就是说，如果维度（数据集中的列）相关，（实际数据集中通常是这种情况），则点与点中心（分布）之间的欧氏距离所给出的信息很少或具有误导性关于一个点实际距离聚类的距离。下图左图X与Y两个维度（数据集的两列）不相关，欧氏距离可以很好的判别Point1和Point2距离聚类的远近。如右图所示，X与Y相关时欧氏距离就无法很好的表征Point1和Point2谁是异常点（离群点）了。因为，两个点与中心的距离相等（欧氏距离）。但是，即使两点之间的欧氏距离相等，但实际上只有蓝色点更接近该聚类。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/2021041616255653.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dva2Fvd29rYW93b2thbzEyMzQ1,size_16,color_FFFFFF,t_70"></p>
+<p>出现这个问题的原因是因为，欧氏距离仅是两点之间的距离。它不考虑数据集中的其余点如何变化。因此，它不能用来真正判断一个点实际上与点的分布（聚类）的接近程度。马氏距离在很多应用场合可以很好的解决这一问题。</p>
+<h3 id="马氏距离"><a href="#马氏距离" class="headerlink" title="马氏距离"></a>马氏距离</h3><p>马氏距离是一种有效的多元距离计算方法，用于计算点与聚类（分布）之间的距离。其在多维数据集异常检测，高维数据集分类应用中表现出色。马氏距离是由Mahalanobis教授于1936年提出的，此后一直在各种统计应用中使用。<br>马氏距离的定义公式如下（定义如此简单，理解方式需要转变）：<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416163238303.png"><br>这里就不翻译了，英文更有助于理解，看到这里想必已经理解了马氏距离为什么是点到聚类的距离而不是点到点的距离了。</p>
+<pre class="line-numbers language-none"><code class="language-none">其中, 
+ - D^2        is the square of the Mahalanobis distance. 
+ - x          is the vector of the observation (row in a dataset), 
+ - m          is the vector of mean values of independent variables (mean of each column), 
+ - C^(-1)     is the inverse covariance matrix of independent variables. <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>那么，如何理解以上公式呢？</p>
+<p>让我们来看看 ( x − m ) T ∗ C − 1 (x-m)^T*C^{-1} (x−m)T∗C−1，x-m本质上是向量与平均值的距离。然后，将其除以协方差矩阵（或乘以协方差矩阵的逆），这实际上是常规的标准化公式 （ z &#x3D; （ x – m u ） &#x2F; s i g m a ） （z &#x3D;（x – mu）&#x2F; sigma） （z=（x–mu）&#x2F;sigma）。除以协方差的作用是，如果数据集中的变量高度相关，则协方差将很高。除以较大的协方差将有效缩短距离。同样，如果X不相关，则协方差也不高，距离也不会减少太多。</p>
+<h3 id="基于Matlab计算马氏距离"><a href="#基于Matlab计算马氏距离" class="headerlink" title="基于Matlab计算马氏距离"></a>基于Matlab计算马氏距离</h3><p>假设有五个人的<a target="_blank" rel="noopener" href="https://jamesmccaffrey.wordpress.com/2017/11/09/example-of-calculating-the-mahalanobis-distance/">数据</a>，每个人的数据为一个向量，包括身高、分数和年龄：</p>
+<pre class="line-numbers language-none"><code class="language-none">X       Y       Z
+Height  Score   Age
+64.0    580.0   29.0
+66.0    570.0   33.0
+68.0    590.0   37.0
+69.0    660.0   46.0
+73.0    600.0   55.0
+			
+m &#x3D;68.0 600.0   40.0
+			
+n&#x3D;5		<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>平均值m&#x3D; (68.0, 600.0, 40.0)。现在假设另一个人的数据为v &#x3D; (66, 640, 44), 通过马氏距离计算这个人与上面这一组人的马氏距离为5.33，下面基于Matlab 实现马氏距离的计算。<br>方法1：基于mahal函数</p>
+<pre class="line-numbers language-none"><code class="language-none">obs &#x3D; [64.0    580.0   29.0; 66.0    570.0   33.0; 68.0    590.0   37.0; 69.0    660.0   46.0; 73.0    600.0   55.0];
+per &#x3D; [66, 640, 44];
+mdi &#x3D; sqrt(mahal(per,obs))<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>mahal返回的是马氏距离的平方，需要开根号得到马氏距离。</p>
+<pre class="line-numbers language-none"><code class="language-none">mdi &#x3D;
+
+    5.3345<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>mahal函数是Matlab自带函数，无需自己定义。从定义可以清楚的看到范围的是距离的平方，X为样本数据，也就是提前已知的一个聚类数据，Y是观测数据，也就是要计算Y中的每一个观测距离样本数据集的距离，如果Y有n个观测（n行数据），将会计算出来n个距离，如果Y只有一个观测将会计算出一个距离。从mahal的实现来看<code>D2(I) = (Y(I,:)-MU) * SIGMA^(-1) * (Y(I,:)-MU)&#39;</code>转置是放在后面的，与马氏距离的定义有所不同。如果是自己实现马氏距离的时候，这一点要注意，否则会一直出错。</p>
+<pre class="line-numbers language-none"><code class="language-none">function d &#x3D; mahal(Y,X);
+%MAHAL Mahalanobis distance.
+%   D2 &#x3D; MAHAL(Y,X) returns the Mahalanobis distance (in squared units) of
+%   each observation (point) in Y from the sample data in X, i.e.,
+%
+%      D2(I) &#x3D; (Y(I,:)-MU) * SIGMA^(-1) * (Y(I,:)-MU)&#39;,
+%
+%   where MU and SIGMA are the sample mean and covariance of the data in X.
+%   Rows of Y and X correspond to observations, and columns to variables.  X
+%   and Y must have the same number of columns, but can have different numbers
+%   of rows.  X must have more rows than columns.
+%
+%   Example:  Generate some highly correlated bivariate data in X.  The
+%   observations in Y with equal coordinate values are much closer to X as
+%   defined by Mahalanobis distance, compared to the observations with opposite
+%   coordinate values, even though they are all approximately equidistant from
+%   the mean using Euclidean distance.
+%
+%      x &#x3D; mvnrnd([0;0], [1 .9;.9 1], 100);
+%      y &#x3D; [1 1;1 -1;-1 1;-1 -1];
+%      MahalDist &#x3D; mahal(y,x)
+%      sqEuclidDist &#x3D; sum((y - repmat(mean(x),4,1)).^2, 2)
+%      plot(x(:,1),x(:,2),&#39;b.&#39;,y(:,1),y(:,2),&#39;ro&#39;)
+%
+%   See also PDIST.
+
+%   Copyright 1993-2007 The MathWorks, Inc. 
+
+
+[rx,cx] &#x3D; size(X);
+[ry,cy] &#x3D; size(Y);
+
+if cx ~&#x3D; cy
+   error(message(&#39;stats:mahal:InputSizeMismatch&#39;));
+end
+
+if rx &lt; cx
+   error(message(&#39;stats:mahal:TooFewRows&#39;));
+end
+if any(imag(X(:))) | any(imag(Y(:)))
+   error(message(&#39;stats:mahal:NoComplex&#39;));
+end
+
+m &#x3D; mean(X,1);
+M &#x3D; m(ones(ry,1),:);
+C &#x3D; X - m(ones(rx,1),:);
+[Q,R] &#x3D; qr(C,0);
+
+ri &#x3D; R&#39;\(Y-M)&#39;;
+d &#x3D; sum(ri.*ri,1)&#39;*(rx-1);
+
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>方法2：根据定义实现</p>
+<pre class="line-numbers language-none"><code class="language-none">obs &#x3D; [64.0    580.0   29.0; 66.0    570.0   33.0; 68.0    590.0   37.0; 69.0    660.0   46.0; 73.0    600.0   55.0];
+per &#x3D; [66, 640, 44];
+
+mea &#x3D; mean(obs);
+icv &#x3D; inv(cov(obs));
+
+mdi &#x3D; sqrt(((per - mea)*icv)*(per - mea)&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">mdi &#x3D;
+
+    5.3345<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>方法3：excel实现</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416184829571.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dva2Fvd29rYW93b2thbzEyMzQ1,size_16,color_FFFFFF,t_70">  </p>
+<p>对上述计算方法进行分析：</p>
+<ul>
+<li>马氏距离的计算公式为$D^2&#x3D;(x-m)^T\cdot C^{-1}\cdot(x-m)$，其中x为新数据，m为历史数据的均值，c为历史数据的协方差本实例中每一组历史数据包含x,y,z三个<br>，每一个历史距离作为向量处理，则v-m也是一个向量，即：（-2，40，4）.</li>
+<li>对于方差和协方差，方差是一个单变量统计量，用于度量单个数据集的分布程度，即数据点离平均值的偏离程度。协方差是两个变量的联合统计量，用于度量两个变量如何一起变化。</li>
+<li>其中inv-covar为协方差矩阵的逆矩阵</li>
+<li>最终的马氏距离计算公式为：<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T*\begin{bmatrix}11.5 &amp;&amp; 50.0  &amp;&amp; 34.75 \\ 50.0 &amp;&amp; 1250.00 &amp;&amp; 205.00 \\ 34.75 &amp;&amp; 205.00 &amp;&amp; 110.00\end{bmatrix}^{-1}<em>\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}<br> $$<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T</em>\begin{bmatrix}3.6885 &amp;&amp; 0.0627  &amp;&amp; -1.2821 \\ 0.0627 &amp;&amp; 0.0022 &amp;&amp; -0.0240 \\ -1.2821 &amp;&amp; -0.0240 &amp;&amp; 0.4588\end{bmatrix}*\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}&#x3D;28.4573<br> $$</li>
+</ul>
+<p>最后一步，开平方得到最终的马氏距离为5.33</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>马氏距离不同于欧氏距离，马氏距离是对一组数据的距离，而不是像欧氏距离针对点与点的距离。明白了这一点就会发现很简单了。看资料还是要看英文版的，下面是博客内容出处的连篇文章。</p>
+<p>参考<br><a target="_blank" rel="noopener" href="https://www.machinelearningplus.com/statistics/mahalanobis-distance/">https://www.machinelearningplus.com/statistics/mahalanobis-distance/</a><br><a target="_blank" rel="noopener" href="https://jamesmccaffrey.wordpress.com/2017/11/09/example-of-calculating-the-mahalanobis-distance/">https://jamesmccaffrey.wordpress.com/2017/11/09/example-of-calculating-the-mahalanobis-distance/</a></p>
+<p>本文转自 <a target="_blank" rel="noopener" href="https://blog.csdn.net/wokaowokaowokao12345/article/details/115765116">https://blog.csdn.net/wokaowokaowokao12345/article/details/115765116</a>，如有侵权，请联系删除。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">geiyiren</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://geiyiren.github.io/2024/06/29/ma-shi-ju-chi-he-ou-shi-ju-chi/">https://geiyiren.github.io/2024/06/29/ma-shi-ju-chi-he-ou-shi-ju-chi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">geiyiren</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB/">
+                                    <span class="chip bg-color">马氏距离</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2024/06/29/ma-shi-ju-chi-he-ou-shi-ju-chi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="马氏距离和欧式距离">
+                        
+                        <span class="card-title">马氏距离和欧式距离</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            马氏距离和欧式距离
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-29
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D/" class="post-category">
+                                    多目标匹配
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB/">
+                        <span class="chip bg-color">马氏距离</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2024/06/19/zeng-guang-lu-yu-xiong-ya-li-pi-pei-suan-fa/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="增广路与匈牙利匹配算法">
+                        
+                        <span class="card-title">增广路与匈牙利匹配算法</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            增广路与匈牙利匹配算法
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2024-06-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D/" class="post-category">
+                                    多目标匹配
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D/">
+                        <span class="chip bg-color">多目标匹配</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: geiyiren<br />'
+            + '文章作者: geiyiren<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。详细内容请访问https://geiyiren.github.io';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+<!--  -->
+
+
+
+    
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022-2024</span>
+            
+            <a href="/about" target="_blank">geiyiren</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/geiyiren" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:geiyiren@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="/medias/geiyiren.jpg" class="tooltipped" target="_blank" data-tooltip="关注我的公众号" data-position="top" data-delay="50">
+        <i class="fab fa-weixin"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

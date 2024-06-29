@@ -512,7 +512,11 @@ mdi &#x3D; sqrt(((per - mea)*icv)*(per - mea)&#39;)<span aria-hidden="true" clas
 <li>马氏距离的计算公式为$D^2&#x3D;(x-m)^T\cdot C^{-1}\cdot(x-m)$，其中x为新数据，m为历史数据的均值，c为历史数据的协方差本实例中每一组历史数据包含x,y,z三个<br>，每一个历史距离作为向量处理，则v-m也是一个向量，即：（-2，40，4）.</li>
 <li>对于方差和协方差，方差是一个单变量统计量，用于度量单个数据集的分布程度，即数据点离平均值的偏离程度。协方差是两个变量的联合统计量，用于度量两个变量如何一起变化。</li>
 <li>其中inv-covar为协方差矩阵的逆矩阵</li>
-<li>最终的马氏距离计算公式为：<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T*\begin{bmatrix}11.5 &amp;&amp; 50.0  &amp;&amp; 34.75 \\ 50.0 &amp;&amp; 1250.00 &amp;&amp; 205.00 \\ 34.75 &amp;&amp; 205.00 &amp;&amp; 110.00\end{bmatrix}^{-1}<em>\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}<br> $$<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T</em>\begin{bmatrix}3.6885 &amp;&amp; 0.0627  &amp;&amp; -1.2821 \\ 0.0627 &amp;&amp; 0.0022 &amp;&amp; -0.0240 \\ -1.2821 &amp;&amp; -0.0240 &amp;&amp; 0.4588\end{bmatrix}*\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}&#x3D;28.4573<br> $$</li>
+<li>最终的马氏距离计算公式为：<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T</li>
+</ul>
+<ul>
+<li>\begin{bmatrix}11.5 &amp;&amp; 50.0  &amp;&amp; 34.75 \\ 50.0 &amp;&amp; 1250.00 &amp;&amp; 205.00 \\ 34.75 &amp;&amp; 205.00 &amp;&amp; 110.00\end{bmatrix}^{-1}</li>
+<li>\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}<br>$$<br>$$<br>D^2&#x3D;\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}^T*\begin{bmatrix}3.6885 &amp;&amp; 0.0627  &amp;&amp; -1.2821 \\ 0.0627 &amp;&amp; 0.0022 &amp;&amp; -0.0240 \\ -1.2821 &amp;&amp; -0.0240 &amp;&amp; 0.4588\end{bmatrix}*\begin{bmatrix}-2 \\ 40 \\ 4\end{bmatrix}&#x3D;28.4573<br>$$</li>
 </ul>
 <p>最后一步，开平方得到最终的马氏距离为5.33</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>马氏距离不同于欧氏距离，马氏距离是对一组数据的距离，而不是像欧氏距离针对点与点的距离。明白了这一点就会发现很简单了。看资料还是要看英文版的，下面是博客内容出处的连篇文章。</p>

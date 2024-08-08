@@ -375,14 +375,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-08-05
+                    2024-08-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    718
                 </div>
                 
 
@@ -408,40 +408,17 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span> 位置 <span class="token parameter variable">-name</span> <span class="token string">'名称'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h1 id="aiApp执行命令"><a href="#aiApp执行命令" class="headerlink" title="aiApp执行命令"></a>aiApp执行命令</h1><h2 id="打印"><a href="#打印" class="headerlink" title="打印"></a>打印</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">tail</span> <span class="token parameter variable">-F</span> /mnt/data/log/ylog <span class="token operator">|</span> <span class="token function">grep</span> aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.start aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="停止"><a href="#停止" class="headerlink" title="停止"></a>停止</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.stop aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="重启"><a href="#重启" class="headerlink" title="重启"></a>重启</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/data/hq/bin/hqsetprop ctl.restart aiApp<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><ul>
 <li>YUV查看<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffplay <span class="token parameter variable">-pixel_format</span> nv12 <span class="token parameter variable">-f</span> rawvideo <span class="token parameter variable">-video_size</span> 240x576 stitch_view.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>YUV转PNG<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token operator">&lt;&lt;&lt;</span><span class="token operator">&lt;&lt;&lt;</span><span class="token operator">&lt;</span> HEAD
-ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-i</span> src_3.yuv <span class="token parameter variable">-y</span> picture_left.png
-<span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">=</span>
-ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x720 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg
-ffmpeg <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-i</span> front0.bmp <span class="token parameter variable">-pix_fmt</span> nv12 front0.yuv
-<span class="token operator">>></span><span class="token operator">>></span><span class="token operator">>></span><span class="token operator">></span> bb2f1945590ab8806d900e39175cb8aded8cc506<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>YUV转PNG<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x720 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg
+ffmpeg <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-i</span> front0.bmp <span class="token parameter variable">-pix_fmt</span> nv12 front0.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
 </ul>
 <h1 id="ubuntu终端查看历史命令"><a href="#ubuntu终端查看历史命令" class="headerlink" title="ubuntu终端查看历史命令"></a>ubuntu终端查看历史命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">history</span> <span class="token operator">|</span> <span class="token function">grep</span> some_command<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h1 id="查看cup限制"><a href="#查看cup限制" class="headerlink" title="查看cup限制"></a>查看cup限制</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ps</span> <span class="token operator">|</span> <span class="token function">grep</span> limit <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h1 id="1126关闭DNS验证"><a href="#1126关闭DNS验证" class="headerlink" title="1126关闭DNS验证"></a>1126关闭DNS验证</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /etc/nsswitch.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<p>或者直接替换对应字段</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">"s/dns/#dns/g"</span> <span class="token variable"><span class="token variable">`</span><span class="token function">grep</span> <span class="token string">"dns"</span> <span class="token parameter variable">-rl</span> /etc/nsswitch.conf<span class="token variable">`</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<ul>
-<li>注释 dns选项，如下所示：<blockquote>
-<p>hosts:          files #dns<br>networks:       files #dns</p>
-</blockquote>
-</li>
-</ul>
+
 <h1 id="强制关闭窗口"><a href="#强制关闭窗口" class="headerlink" title="强制关闭窗口"></a>强制关闭窗口</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">xkill<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <ul>
 <li>然后移动鼠标点击需要关闭的窗口即可</li>
-</ul>
-<h1 id="修改aiapp的cpu限制"><a href="#修改aiapp的cpu限制" class="headerlink" title="修改aiapp的cpu限制"></a>修改aiapp的cpu限制</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">vi</span> /exapp/sh/run.sh<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<ul>
-<li>修改允许aiapp使用的cpu百分比 XX<blockquote>
-<p>#……………aiApp…CPU………<br>&#x2F;data&#x2F;hq&#x2F;bin&#x2F;cpulimit -l XX -e aiApp &amp;</p>
-</blockquote>
-</li>
 </ul>
 <h1 id="本地gitlab库添加远程库信任"><a href="#本地gitlab库添加远程库信任" class="headerlink" title="本地gitlab库添加远程库信任"></a>本地gitlab库添加远程库信任</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> <span class="token parameter variable">--add</span> safe.directory /media/geiyiren/MyCode/AVM/avm_2d/master/avm_cpu_algo<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
@@ -504,75 +481,9 @@ size_t bytes_write <span class="token operator">=</span> <span class="token func
 </ul>
 <h2 id="更新host文件"><a href="#更新host文件" class="headerlink" title="更新host文件"></a>更新host文件</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> /etc/init.d/network-manager restart<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h1 id="BSD测试程序运行命令"><a href="#BSD测试程序运行命令" class="headerlink" title="BSD测试程序运行命令"></a>BSD测试程序运行命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#801-s(rv1126)测试BSD程序运行命令</span>
-<span class="token builtin class-name">cd</span> /exapp/app
-./bsd_proc_test <span class="token parameter variable">-d</span> /dev/video0 <span class="token parameter variable">-w</span> <span class="token number">1280</span> <span class="token parameter variable">-h</span> <span class="token number">720</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
-
-<h1 id="鸿鹄"><a href="#鸿鹄" class="headerlink" title="鸿鹄"></a>鸿鹄</h1><h2 id="鸿鹄设备常用命令"><a href="#鸿鹄设备常用命令" class="headerlink" title="鸿鹄设备常用命令"></a>鸿鹄设备常用命令</h2><ul>
-<li>以root身份挂载<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root <span class="token operator">&amp;&amp;</span> adb remount<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>推送apk<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/MultiCameraDemo/avm_gpu_algo/app/build/outputs/apk/debug<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre class="line-numbers language-none"><code class="language-none">adb push MultiCameraDemo.apk &#x2F;system&#x2F;priv-app&#x2F;MultiCameraDemo&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>推送库文件<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /media/geiyiren/MyCode/AVM/avm_gpu_algo/branch/AVM_BSD_honghu/avm_gpu_algo/libs/arm64-v8a<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb push libavmjni.so /system/priv-app/MultiCameraDemo/lib/arm64/<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>查看log日志<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>保存NATIVE_LOG日志(cpp端打印信息)<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat <span class="token parameter variable">-s</span> NATIVE_LOG <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-<li>保存程序运行严重错误日志(一般程序异常退出时打印该log)<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell logcat *:F <span class="token operator">></span> log.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
-</ul>
-<h2 id="鸿鹄设备资源存储位置"><a href="#鸿鹄设备资源存储位置" class="headerlink" title="鸿鹄设备资源存储位置"></a>鸿鹄设备资源存储位置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">data
-└── gpu0------------
-    ├── calibrate
-    │   ├── **CALMAT.BIN**
-    │   └── **LENS.BIN**
-    └── shader
-        ├── **avm_3d_blend_lut.bin**
-        ├── **avm_3d_indices.bin**
-        ├── **avm_3d_lut.bin**
-        ├── car_model_line.fs
-        ├── car_model_line.vs
-        ├── car_model_test.fs
-        ├── car_model_test.vs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="鸿鹄Bug查询关键字"><a href="#鸿鹄Bug查询关键字" class="headerlink" title="鸿鹄Bug查询关键字"></a>鸿鹄Bug查询关键字</h2><table>
-<thead>
-<tr>
-<th>关键字</th>
-<th align="left">说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>dlopen</td>
-<td align="left">文件缺失标志</td>
-</tr>
-<tr>
-<td>crash</td>
-<td align="left">程序报错抛出异常标志</td>
-</tr>
-<tr>
-<td>NATIVE_LOG</td>
-<td align="left">AVM cpp端的打印</td>
-</tr>
-</tbody></table>
-<h2 id="鸿鹄CPU占用与GPU占用查看"><a href="#鸿鹄CPU占用与GPU占用查看" class="headerlink" title="鸿鹄CPU占用与GPU占用查看"></a>鸿鹄CPU占用与GPU占用查看</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># adb登录后执行如下命令:</span>
-<span class="token comment">## GPU</span>
-<span class="token function">cat</span> /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
-<span class="token function">watch</span> <span class="token parameter variable">-n</span> <span class="token number">1</span> <span class="token function">cat</span> /sys/class/kgsl/kgsl-3d0/gpu_busy_percentage
-<span class="token comment">## CPU</span>
-<span class="token function">top</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<blockquote>
-<p>更加详细的资源查看可参照：软件snapdragonprofiler_external_linux</p>
-<p>Snapdragon Profiler是高通开发的用于调试分析高通Adreno GPU的一款桌面应用，支持Windows、MacOS 和 Linux 。在调试opengles应用程序上能发挥非常重要的作用。该工具能够捕捉CPU、GPU、DSP、内存、功率、网络连接和设备运行时的发热数据等，具有Realtime、Trace Capture、Snapshot Capture 三种模式。实时(Realtime)模式用于实时跟踪数据，跟踪(Trace Capture)模式用于跟踪事件和数据，默认最大值是10秒。快照(Snapshot Capture)模式用于捕获OpenGL ES应用程序的当前帧并可以进行调试，包括单步调试绘制指令，查看和编辑着色器、程序、纹理以及查看像素历史的能力。着色器代码是通过反编译得到，得到的代码跟原glsl代码基本一致，并且可以在截图后修改glsl进行调试。</p>
-<p>作者：cain_huang<br>链接：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d8d1a231dada">https://www.jianshu.com/p/d8d1a231dada</a><br>来源：简书<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
-</blockquote>
 <h1 id="ssh相关"><a href="#ssh相关" class="headerlink" title="ssh相关"></a>ssh相关</h1><h2 id="主机A免密登录主机B"><a href="#主机A免密登录主机B" class="headerlink" title="主机A免密登录主机B"></a>主机A免密登录主机B</h2><p>在主机A执行如下命令</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ssh-copy-id 主机B的用户名@主机B的IP地址<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h1 id="NEON优化相关函数"><a href="#NEON优化相关函数" class="headerlink" title="NEON优化相关函数"></a>NEON优化相关函数</h1><h2 id="internal-prefetch"><a href="#internal-prefetch" class="headerlink" title="internal::prefetch()"></a>internal::prefetch()</h2><p>作用：将数据放在缓存中</p>
-<h2 id="vld1q"><a href="#vld1q" class="headerlink" title="vld1q()"></a>vld1q()</h2><p>作用：加载数据</p>
-<p>例如：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">float32x4_t q0 <span class="token operator">=</span> <span class="token function">vld1q_f32</span><span class="token punctuation">(</span>d0<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 加载 d0 地址起始的 4 个 float 数据到 q0</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="internal-getRowPtr"><a href="#internal-getRowPtr" class="headerlink" title="internal::getRowPtr()"></a>internal::getRowPtr()</h2><p>例如：</p>
-<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">internal<span class="token double-colon punctuation">::</span><span class="token function">getRowPtr</span><span class="token punctuation">(</span>src0Base<span class="token punctuation">,</span> src0Stride<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">//返回src0Base+src0Stride*y的地址</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <h2 id="YUV图像转换"><a href="#YUV图像转换" class="headerlink" title="YUV图像转换"></a>YUV图像转换</h2><ul>
 <li><p>安装ffmpeg</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ffmpeg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
@@ -583,6 +494,38 @@ size_t bytes_write <span class="token operator">=</span> <span class="token func
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-i</span> front0.jpg <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-pix_fmt</span> nv12 front0.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li><p>yuv –&gt; jpg</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x800 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h1 id="性能分析常用命令"><a href="#性能分析常用命令" class="headerlink" title="性能分析常用命令"></a>性能分析常用命令</h1><ul>
+<li>查看各个分区存储使用情况<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">df</span> <span class="token parameter variable">-h</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>查看IO使用情况<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">apt-get</span> <span class="token function">install</span> sysstat
+iostat <span class="token parameter variable">-x</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="git-新建仓库推送"><a href="#git-新建仓库推送" class="headerlink" title="git 新建仓库推送"></a>git 新建仓库推送</h1><ul>
+<li><p>Git 全局设置</p>
+<pre class="line-numbers language-none"><code class="language-none">git config --global user.name &quot;王帅炀&quot;
+git config --global user.email &quot;wangshuaiyang@hopechart.com&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>创建一个新仓库</p>
+<pre class="line-numbers language-none"><code class="language-none">git clone git@172.20.1.10:wangshuaiyang&#x2F;test.git
+cd test
+touch README.md
+git add README.md
+git commit -m &quot;add README&quot;
+git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>推送现有文件夹</p>
+<pre class="line-numbers language-none"><code class="language-none">cd existing_folder
+git init
+git remote add origin git@172.20.1.10:wangshuaiyang&#x2F;test.git
+git add .
+git commit -m &quot;Initial commit&quot;
+git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>推送现有的 Git 仓库</p>
+<pre class="line-numbers language-none"><code class="language-none">cd existing_repo
+git remote rename origin old-origin
+git remote add origin git@172.20.1.10:wangshuaiyang&#x2F;test.git
+git push -u origin --all
+git push -u origin --tags<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
 </ul>
 
                 

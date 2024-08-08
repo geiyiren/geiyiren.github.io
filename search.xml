@@ -1390,6 +1390,33 @@
     
     
     <entry>
+      <title>图像缩放插值方法使用说明</title>
+      <link href="/2022/12/14/tu-xiang-suo-fang-cha-zhi-fang-fa-shi-yong-shuo-ming/"/>
+      <url>/2022/12/14/tu-xiang-suo-fang-cha-zhi-fang-fa-shi-yong-shuo-ming/</url>
+      
+        <content type="html"><![CDATA[<h1 id="方法概览"><a href="#方法概览" class="headerlink" title="方法概览"></a>方法概览</h1><ul><li>图像加载</li></ul><table><thead><tr><th align="center">库</th><th align="center">函数</th><th align="center">默认加载图像格式</th></tr></thead><tbody><tr><td align="center">OpenCV</td><td align="center">imread</td><td align="center"><code>BGR</code></td></tr><tr><td align="center">PIL</td><td align="center">open</td><td align="center">RGB</td></tr><tr><td align="center">torchvision.datasets</td><td align="center">ImageFolder</td><td align="center">RGB</td></tr></tbody></table><blockquote><p>ImageFolder类通过Pillow（PIL）库来加载图像，而Pillow加载图像的默认模式是RGB。因此，使用ImageFolder加载图像时，它们会以RGB格式加载。</p></blockquote><ul><li>尺寸变换</li></ul><table><thead><tr><th align="center">库</th><th align="center">函数</th><th align="center">默认加载图像格式</th></tr></thead><tbody><tr><td align="center">OpenCV</td><td align="center">resize</td><td align="center">双线性插值<code>Resampling.BICUBIC</code></td></tr><tr><td align="center">PIL</td><td align="center">Resize</td><td align="center">双线性插值<code>Resampling.BICUBIC</code></td></tr><tr><td align="center">torchvision.transforms</td><td align="center">Resize</td><td align="center">双线性插值<code>InterpolationMode.BILINEAR</code></td></tr></tbody></table><h1 id="OpenCV图像缩放"><a href="#OpenCV图像缩放" class="headerlink" title="OpenCV图像缩放"></a>OpenCV图像缩放</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span><span class="token function">resize</span><span class="token punctuation">(</span>InputArray src<span class="token punctuation">,</span>OutputArray dst<span class="token punctuation">,</span>Size dsize<span class="token punctuation">,</span><span class="token keyword">double</span> fx <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token keyword">double</span> fy <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span><span class="token keyword">int</span> interpolation <span class="token operator">=</span> INTER_LINEAR <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><ul><li>opencv默认的图像缩放插值方法为<strong>双线性插值</strong><code>INTER_LINEAR</code>。</li><li>支持的插值方法如下：</li></ul><table><thead><tr><th align="center">插值方法</th><th align="center">说明</th></tr></thead><tbody><tr><td align="center">INTER_NEAREST</td><td align="center">近邻取样插值</td></tr><tr><td align="center">INTER_LINEAR</td><td align="center">双线性插值</td></tr><tr><td align="center">INTER_CUBIC</td><td align="center">双三次插值</td></tr><tr><td align="center">INTER_AREA</td><td align="center">区域插值。使用像素区域关系的重采样。它可能是一种首选的图像抽取方法，因为它提供了莫尔’免费的结果。但是当缩放图像时，它类似于 INTER _ NEAREST 方法。</td></tr><tr><td align="center">INTER_LANCZOS4</td><td align="center">Lanczos插值。8乘以8的 Lanczos 插值</td></tr><tr><td align="center">INTER_LINEAR_EXACT</td><td align="center">Bit exact bilinear interpolation</td></tr><tr><td align="center">INTER_NEAREST_EXACT</td><td align="center">比特精确近邻取样插值。这将产生与 PIL、 scikit-image 或 Matlab 中最近邻法相同的结果</td></tr><tr><td align="center">插值码掩码</td><td align="center"></td></tr><tr><td align="center">WARP_FILL_OUTLIERS</td><td align="center">flag:填充所有目标图像像素。如果其中一些对应于源图像中的异常值，则将其设置为零</td></tr><tr><td align="center">WARP_INVERSE_MAP</td><td align="center">flag, inverse transformation</td></tr></tbody></table><h1 id="torchvision-transforms图像缩放"><a href="#torchvision-transforms图像缩放" class="headerlink" title="torchvision.transforms图像缩放"></a>torchvision.transforms图像缩放</h1><ul><li><p>torchvision.transforms.Resize函数可以实现图像的缩放，<strong>默认插值方法为双线性插值</strong><code>InterpolationMode.BILINEAR</code>。</p></li><li><p>如果输入为张量，则仅支持临近插值<code>InterpolationMode.NEAREST</code>, 双线性插值<code>InterpolationMode.BILINEAR</code> 和双三次插值<code>InterpolationMode.BICUBIC</code></p></li><li><p>也支持PIL库的插值方法,例如： <code>transforms.Resize(args.resolution, interpolation=PIL.Image.BILINEAR)</code></p></li></ul><h1 id="PIL的图像缩放"><a href="#PIL的图像缩放" class="headerlink" title="PIL的图像缩放"></a>PIL的图像缩放</h1><ul><li>默认的插值方法为<strong>双线性插值</strong><code>Resampling.BICUBIC</code></li><li>其他方法如下：<ul><li>PIL.Image.NEAREST (或 InterpolationMode.NEAREST)：<br>最近邻插值。速度快，但图像质量较低。</li><li>PIL.Image.BILINEAR (或 InterpolationMode.BILINEAR)：<br>双线性插值。效果较好，图像更平滑。</li><li>PIL.Image.BICUBIC (或 InterpolationMode.BICUBIC)：<br>双三次插值。生成的图像质量更好，但计算量较大。</li><li>PIL.Image.LANCZOS (或 InterpolationMode.LANCZOS)：<br>Lanczos插值。适用于高质量的图像处理，计算量大，但生成的图像质量最高。</li><li>PIL.Image.BOX (或 InterpolationMode.BOX)：<br>简单的平均插值，通常用于图像缩小。</li><li>PIL.Image.HAMMING (或 InterpolationMode.HAMMING)：<br>Hamming插值，一种平滑插值方法。</li></ul></li></ul><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> PIL <span class="token keyword">import</span> Image<span class="token comment"># 读取图像</span>image <span class="token operator">=</span> Image<span class="token punctuation">.</span><span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">'path_to_image.jpg'</span><span class="token punctuation">)</span>resized_nearest <span class="token operator">=</span> image<span class="token punctuation">.</span>resize<span class="token punctuation">(</span>new_size<span class="token punctuation">,</span> Image<span class="token punctuation">.</span>NEAREST<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 图像处理 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 图像缩放 </tag>
+            
+            <tag> 插值方法 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>车辆动态辅助轨迹线生成方法</title>
       <link href="/2022/12/14/che-liang-dong-tai-fu-zhu-gui-ji-xian-sheng-cheng-fang-fa/"/>
       <url>/2022/12/14/che-liang-dong-tai-fu-zhu-gui-ji-xian-sheng-cheng-fang-fa/</url>

@@ -464,6 +464,9 @@
 <td align="center">双线性插值<code>InterpolationMode.BILINEAR</code></td>
 </tr>
 </tbody></table>
+<hr>
+<p><strong>注意</strong>：opencv 的<code>INTER_NEAREST_EXACT</code>比特精确近邻取样插值方法的结果和PIL的<code>NEAREST</code>最近邻算法的结果是一致的。</p>
+<hr>
 <h1 id="OpenCV图像缩放"><a href="#OpenCV图像缩放" class="headerlink" title="OpenCV图像缩放"></a>OpenCV图像缩放</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span><span class="token function">resize</span>	<span class="token punctuation">(</span>	InputArray 	src<span class="token punctuation">,</span>
 OutputArray 	dst<span class="token punctuation">,</span>
 Size 	dsize<span class="token punctuation">,</span>

@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>LaneNet实现车道线分割与聚类的端到端网络</title>
+      <link href="/2024/09/14/lanenet-shi-xian-che-dao-xian-fen-ge-yu-ju-lei-de-duan-dao-duan-wang-luo/"/>
+      <url>/2024/09/14/lanenet-shi-xian-che-dao-xian-fen-ge-yu-ju-lei-de-duan-dao-duan-wang-luo/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p>本文将车道检测问题看作一个实例分割问题（其中每个车道都形成自己的实例）可以进行端到端的训练。</p></li><li><p>装配车道前对分段的车道实例进行参数化，我们应用了一个以图像为条件的学习透视变换（不适用于固定的“鸟瞰”变换），这样，我们确保了一种对道路变化具有鲁棒性的车道匹配。</p></li><li><p>运行速度为50帧&#x2F;秒，可以处理不同数量的车道并应对车道变化。</p></li><li><p>在tuSimple 数据集上取得了不错的效果。</p></li></ul><p>Paper:<a href="https://github.com/geiyiren/MyBlogPaper1/blob/main/LDW/LaneNet_Towards%20End_to_End%20Lane%20Detection%20an%20Instance%20Segmentation%20Approach.pdf">Towards End-to-End Lane Detection an Instance Segmentation Approach</a></p><p>COde:<a href="https://github.com/MaybeShewill-CV/lanenet-lane-detection">https://github.com/MaybeShewill-CV/lanenet-lane-detection</a></p><h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><ul><li><a href="https://www.cnblogs.com/xiangs/p/12707472.html">https://www.cnblogs.com/xiangs/p/12707472.html</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 车道线检测 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> LaneNet </tag>
+            
+            <tag> 车道线检测 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>知识蒸馏在车道线分割上的应用</title>
       <link href="/2024/09/14/zhi-shi-zheng-liu-zai-che-dao-xian-fen-ge-shang-de-ying-yong/"/>
       <url>/2024/09/14/zhi-shi-zheng-liu-zai-che-dao-xian-fen-ge-shang-de-ying-yong/</url>
@@ -20,9 +47,9 @@
       
         <tags>
             
-            <tag> 知识蒸馏 </tag>
-            
             <tag> 车道线检测 </tag>
+            
+            <tag> 知识蒸馏 </tag>
             
         </tags>
       

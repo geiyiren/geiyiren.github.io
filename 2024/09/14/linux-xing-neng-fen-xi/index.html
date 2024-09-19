@@ -383,7 +383,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-09-18
+                    2024-09-19
                 </div>
                 
 
@@ -439,12 +439,16 @@
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> FlameGraph/flamegraph.pl perf.folded <span class="token operator">></span> perf.svg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="实时显示CPU占用"><a href="#实时显示CPU占用" class="headerlink" title="实时显示CPU占用"></a>实时显示CPU占用</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 指定进程</span>
-./perf_v2 <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span>
+./perf <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span>
 <span class="token comment"># 指定线程+库</span>
-./perf_v2 <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">--dsos</span> 动态库.so <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span>
+./perf <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">--dsos</span> 动态库.so <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span>
 <span class="token comment">#指定线程</span>
-./perf_v2 <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">-t</span> 线程ID<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+./perf <span class="token function">top</span> <span class="token parameter variable">-d1</span> <span class="token parameter variable">-t</span> 线程ID<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li>查看程序占用CPU的位置<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">geiyiren:build$ addr2line <span class="token parameter variable">-e</span> ./install/lib/liblane_detection_adas.so 0x00014c14
+/home/geiyiren/Code/5_adas/adas_core/src/perception/lanes/lines/detector/perceptron.cpp:114<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+0x00014c14为.&#x2F;perf top输出的库的地址</li>
+</ul>
 <h2 id="确保perf分析时可以看到函数名称"><a href="#确保perf分析时可以看到函数名称" class="headerlink" title="确保perf分析时可以看到函数名称"></a>确保perf分析时可以看到函数名称</h2><ul>
 <li><p>内核支持perf功能</p>
 </li>

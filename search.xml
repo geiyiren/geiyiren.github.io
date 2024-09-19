@@ -607,31 +607,6 @@
     
     
     <entry>
-      <title>Shell编程范例</title>
-      <link href="/2023/11/25/shell-bian-cheng-fan-li/"/>
-      <url>/2023/11/25/shell-bian-cheng-fan-li/</url>
-      
-        <content type="html"><![CDATA[<ul><li>点击下列链接直接访问<br><a href="https://tinylab-1.gitbook.io/shellbook/">Shell编程范例</a></li></ul>]]></content>
-      
-      
-      <categories>
-          
-          <category> Shell </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Shell </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Vim从入门到精通</title>
       <link href="/2023/11/25/vim-cong-ru-men-dao-jing-tong/"/>
       <url>/2023/11/25/vim-cong-ru-men-dao-jing-tong/</url>
@@ -649,6 +624,31 @@
         <tags>
             
             <tag> vim </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Shell编程范例</title>
+      <link href="/2023/11/25/shell-bian-cheng-fan-li/"/>
+      <url>/2023/11/25/shell-bian-cheng-fan-li/</url>
+      
+        <content type="html"><![CDATA[<ul><li>点击下列链接直接访问<br><a href="https://tinylab-1.gitbook.io/shellbook/">Shell编程范例</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Shell </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Shell </tag>
             
         </tags>
       

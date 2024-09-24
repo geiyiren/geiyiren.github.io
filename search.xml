@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Ultra Fast Structure-aware Deep Lane Detection</title>
+      <link href="/2024/09/24/ultra-fast-structure-aware-deep-lane-detection/"/>
+      <url>/2024/09/24/ultra-fast-structure-aware-deep-lane-detection/</url>
+      
+        <content type="html"><![CDATA[<p>将车道线检测的过程，视为在全局特征(通过全卷积CNN提取到的特征图)的基础上，基于行方向上的位置选择与分类。每个图像4条车道线，每条车道线固定18个点。</p><p>Paper:<a href="https://github.com/geiyiren/MyBlogPaper1/blob/main/LDW/Ultra%20Fast%20Structure-aware%20Deep%20Lane%20Detection.pdf">Ultra Fast Structure-aware Deep Lane Detection</a></p><p>COde:<a href="https://github.com/cfzd/Ultra-Fast-Lane-Detection-v2">https://github.com/cfzd/Ultra-Fast-Lane-Detection-v2</a></p><h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><ul><li><a href="https://mp.weixin.qq.com/s/ylNM8xA2iao2jvB_NaQ6FA">https://mp.weixin.qq.com/s/ylNM8xA2iao2jvB_NaQ6FA</a></li><li><a href="https://mp.weixin.qq.com/s/xFTdsSIMPbyyt6RIyYqb4A">https://mp.weixin.qq.com/s/xFTdsSIMPbyyt6RIyYqb4A</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> 车道线检测 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 车道线检测 </tag>
+            
+            <tag> Ultra </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>linux性能分析</title>
       <link href="/2024/09/14/linux-xing-neng-fen-xi/"/>
       <url>/2024/09/14/linux-xing-neng-fen-xi/</url>

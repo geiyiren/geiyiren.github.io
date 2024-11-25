@@ -396,7 +396,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-10-11
+                    2024-11-25
                 </div>
                 
 
@@ -481,7 +481,8 @@
 <h1 id="top"><a href="#top" class="headerlink" title="top"></a>top</h1><ul>
 <li>top</li>
 </ul>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">top</span> <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">export</span> <span class="token assign-left variable"><span class="token environment constant">TERM</span></span><span class="token operator">=</span>xterm
+<span class="token function">top</span> <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
 <ul>
 <li>busybox top<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">busybox <span class="token function">top</span> <span class="token parameter variable">-p</span> <span class="token variable"><span class="token variable">$(</span>pidof 线程名称<span class="token variable">)</span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
@@ -608,7 +609,7 @@ Main options and reports <span class="token punctuation">(</span>report name bet
 <ul>
 <li>使用方法<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">export</span> <span class="token assign-left variable"><span class="token environment constant">PATH</span></span><span class="token operator">=</span><span class="token environment constant">$PATH</span>:交叉编译生成的lib/sa的路径
 ./sar <span class="token parameter variable">-u</span> <span class="token number">1</span> <span class="token number">10</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-<blockquote>
+上述命令将统计10次CPU占用，每次间隔1s<blockquote>
 <p>sar 依赖<code>sadc</code>,这里需要指定<code>sadc</code>所在目录的路径</p>
 </blockquote>
 </li>

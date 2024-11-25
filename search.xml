@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>基于车道线的相机外参标定方法</title>
+      <link href="/2024/11/25/che-dao-xian-biao-ding-suan-fa/"/>
+      <url>/2024/11/25/che-dao-xian-biao-ding-suan-fa/</url>
+      
+        <content type="html"><![CDATA[<h1 id="旋转矩阵的表示"><a href="#旋转矩阵的表示" class="headerlink" title="旋转矩阵的表示"></a>旋转矩阵的表示</h1><p>$$<br>X_\alpha{\cdot}Z_\beta{\cdot}Y_\gamma&#x3D;\begin{bmatrix}cos\beta{\cdot}cos\gamma&amp;-sin\beta&amp;cos\beta{\cdot}sin\gamma\sin\alpha{\cdot}sin\gamma+cos\alpha{\cdot}cos\gamma{\cdot}sin\beta&amp;cos\alpha{\cdot}cos\beta&amp;cos\alpha{\cdot}sin\beta{\cdot}sin\gamma-cos\gamma{\cdot}sin\alpha\cos\gamma{\cdot}sin\alpha{\cdot}sin\beta-cos\alpha{\cdot}sin\gamma&amp;cos\beta{\cdot}sin\alpha&amp;cos\alpha{\cdot}cos\gamma+sin\alpha{\cdot}sin\beta{\cdot}sin\gamma\end{bmatrix}<br>$$</p><p>$$<br>X_{\alpha}Y_{\beta}Z_{\gamma}&#x3D;\begin{bmatrix}cos{\beta}{\cdot}cos{\gamma}&amp;-cos{\beta}{\cdot}sin{\gamma}&amp;sin{\beta}\cos{\alpha}{\cdot}sin{\gamma}+cos{\gamma}{\cdot}sin{\alpha}{\cdot}sin{\beta}&amp;cos{\alpha}{\cdot}cos{\gamma}-sin{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}&amp;-cos{\beta}{\cdot}sin{\alpha}\sin{\alpha}{\cdot}sin{\gamma}-cos{\alpha}{\cdot}cos{\gamma}{\cdot}sin{\beta}&amp;cos{\gamma}{\cdot}sin{\alpha}+cos{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}&amp;cos{\alpha}{\cdot}cos{\beta}\end{bmatrix}<br>$$</p><p>$$<br>Y_\alpha{\cdot}X_\beta{\cdot}Z_\gamma&#x3D;\begin{bmatrix}cos\alpha{\cdot}cos\gamma+sin\alpha{\cdot}sin\beta{\cdot}sin\gamma&amp;cos\gamma{\cdot}sin\alpha{\cdot}sin\beta-cos\alpha{\cdot}sin\gamma&amp;cos\beta{\cdot}sin\alpha\cos\beta{\cdot}sin\gamma&amp;cos\beta{\cdot}cos\gamma&amp;-sin\beta\cos\alpha{\cdot}sin\beta{\cdot}sin\gamma-cos\gamma{\cdot}sin\alpha&amp;cos\alpha{\cdot}cos\gamma{\cdot}sin\beta+sin\alpha{\cdot}sin\gamma&amp;cos\alpha{\cdot}cos\beta\end{bmatrix}<br>$$</p><p>$$<br>\left.Y_\alpha{\cdot}Z_\beta{\cdot}X_\gamma&#x3D;\left[\begin{array}{ccc}cos\alpha{\cdot}cos\beta&amp;sin\alpha{\cdot}sin\gamma-cos\alpha{\cdot}cos\gamma{\cdot}sin\beta&amp;cos\gamma{\cdot}sin\alpha+cos\alpha{\cdot}sin\beta{\cdot}sin\gamma\sin\beta&amp;cos\beta{\cdot}cos\gamma&amp;-cos\beta{\cdot}sin\gamma\-cos\beta{\cdot}sin\alpha&amp;cos\alpha{\cdot}sin\gamma+cos\gamma{\cdot}sin\alpha{\cdot}sin\beta&amp;cos\alpha{\cdot}cos\gamma-sin\alpha{\cdot}sin\beta{\cdot}sin\gamma\end{array}\right.\right]<br>$$</p><p>$$<br>Z_{\alpha}Y_{\beta}X_{\gamma}&#x3D;\begin{bmatrix}cos{\alpha}{\cdot}cos{\beta}&amp;cos{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}-cos{\gamma}{\cdot}sin{\alpha}&amp;sin{\alpha}{\cdot}sin{\gamma}+cos{\alpha}{\cdot}cos{\gamma}{\cdot}sin{\beta}\cos{\beta}{\cdot}sin{\alpha}&amp;cos{\alpha}{\cdot}cos{\gamma}+sin{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}&amp;cos{\gamma}{\cdot}sin{\alpha}{\cdot}sin{\beta}-cos{\alpha}{\cdot}sin{\gamma}\-sin{\beta}&amp;cos{\beta}{\cdot}sin{\gamma}&amp;cos{\beta}{\cdot}cos{\gamma}\end{bmatrix}<br>$$</p><p>$$<br>Z_{\alpha}X_{\beta}Y_{\gamma}&#x3D;\begin{bmatrix}cos{\alpha}{\cdot}cos{\gamma}-sin{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}&amp;-cos{\beta}{\cdot}sin{\alpha}&amp;cos{\alpha}{\cdot}sin{\gamma}+cos{\gamma}{\cdot}sin{\alpha}{\cdot}sin{\beta}\cos{\gamma}{\cdot}sin{\alpha}+cos{\alpha}{\cdot}sin{\beta}{\cdot}sin{\gamma}&amp;cos{\alpha}{\cdot}cos{\beta}&amp;sin{\alpha}{\cdot}sin{\gamma}-cos{\alpha}{\cdot}cos{\gamma}{\cdot}sin{\beta}\-cos{\beta}{\cdot}sin{\gamma}&amp;sin{\beta}&amp;cos{\beta}{\cdot}cos{\gamma}\end{bmatrix}<br>$$</p><p>$\alpha&#x3D;yaw,\beta&#x3D;pitch,\gamma&#x3D;roll$</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 外参标定 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 车道线标定 </tag>
+            
+            <tag> 外参标定 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Ultra Fast Deep Lane Detection with Hybrid Anchor Driven Ordinal Classification</title>
       <link href="/2024/09/24/ultra-fast-deep-lane-detection-with-hybrid-anchor-driven-ordinal-classification/"/>
       <url>/2024/09/24/ultra-fast-deep-lane-detection-with-hybrid-anchor-driven-ordinal-classification/</url>

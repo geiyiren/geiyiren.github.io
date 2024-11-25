@@ -4,11 +4,11 @@
   
     
     <entry>
-      <title>常用图像变换</title>
+      <title>基于车道线的相机外参标定方法</title>
       <link href="/2024/11/25/che-dao-xian-biao-ding-suan-fa/"/>
       <url>/2024/11/25/che-dao-xian-biao-ding-suan-fa/</url>
       
-        <content type="html"><![CDATA[<p>$$<br>R&#x3D;R_{yaw}R_{pitch}R_{roll}<br>$$</p><p>$$<br>R&#x3D;\begin{pmatrix}\cos(\gamma)\cos(\beta)+\sin(\alpha)\sin(\gamma)\sin(\beta)&amp;\cos(\gamma)\sin(\alpha)\sin(\beta)-\cos(\beta)\sin(\gamma)&amp;-\cos(\alpha)\sin(\beta)\\cos(\alpha)\sin(\gamma)&amp;\cos(\alpha)\cos(\gamma)&amp;\sin(\alpha)\\cos(\gamma)\sin(\beta)-\cos(\beta)\sin(\alpha)\sin(\gamma)&amp;-\cos(\gamma)\cos(\beta)\sin(\alpha)-\sin(\gamma)\sin(\beta)&amp;\cos(\alpha)\cos(\beta)\end{pmatrix}<br>$$</p>]]></content>
+        <content type="html"><![CDATA[<p>$$<br>R&#x3D;R_{yaw}R_{pitch}R_{roll}<br>$$</p><p>$$<br>\begin{equation}<br>R &#x3D; \begin{pmatrix}\cos(\gamma)\cos(\beta)+\sin(\alpha)\sin(\gamma)\sin(\beta)&amp;\cos(\gamma)\sin(\alpha)\sin(\beta)-\cos(\beta)\sin(\gamma)&amp;-\cos(\alpha)\sin(\beta)\\cos(\alpha)\sin(\gamma)&amp;\cos(\alpha)\cos(\gamma)&amp;\sin(\alpha)\\cos(\gamma)\sin(\beta)-\cos(\beta)\sin(\alpha)\sin(\gamma)&amp;-\cos(\gamma)\cos(\beta)\sin(\alpha)-\sin(\gamma)\sin(\beta)&amp;\cos(\alpha)\cos(\beta)\end{pmatrix}<br>\end{equation}<br>$$</p>]]></content>
       
       
       <categories>

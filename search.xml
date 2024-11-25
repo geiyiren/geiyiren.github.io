@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>常用图像变换</title>
+      <link href="/2024/11/25/che-dao-xian-biao-ding-suan-fa/"/>
+      <url>/2024/11/25/che-dao-xian-biao-ding-suan-fa/</url>
+      
+        <content type="html"><![CDATA[<p>$$<br>R&#x3D;R_{yaw}R_{pitch}R_{roll}<br>$$</p><p>$$<br>R&#x3D;\begin{pmatrix}\cos(\gamma)\cos(\beta)+\sin(\alpha)\sin(\gamma)\sin(\beta)&amp;\cos(\gamma)\sin(\alpha)\sin(\beta)-\cos(\beta)\sin(\gamma)&amp;-\cos(\alpha)\sin(\beta)\\cos(\alpha)\sin(\gamma)&amp;\cos(\alpha)\cos(\gamma)&amp;\sin(\alpha)\\cos(\gamma)\sin(\beta)-\cos(\beta)\sin(\alpha)\sin(\gamma)&amp;-\cos(\gamma)\cos(\beta)\sin(\alpha)-\sin(\gamma)\sin(\beta)&amp;\cos(\alpha)\cos(\beta)\end{pmatrix}<br>$$</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 外参标定 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 车道线标定 </tag>
+            
+            <tag> 外参标定 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Ultra Fast Deep Lane Detection with Hybrid Anchor Driven Ordinal Classification</title>
       <link href="/2024/09/24/ultra-fast-deep-lane-detection-with-hybrid-anchor-driven-ordinal-classification/"/>
       <url>/2024/09/24/ultra-fast-deep-lane-detection-with-hybrid-anchor-driven-ordinal-classification/</url>

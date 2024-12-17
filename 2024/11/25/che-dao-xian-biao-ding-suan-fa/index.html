@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-12-10
+                    2024-12-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.8k
+                    3.9k
                 </div>
                 
 
@@ -475,9 +475,16 @@
 </blockquote>
 <h2 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h2><p>可以看出，通过消失点只能得到<code>Yaw</code>和<code>Pitch</code>，无法得到<code>Roll</code>。那么现在来分析一下这个方法计算出来的<code>Yaw</code>和<code>Pitch</code>有什么假设条件：</p>
 <ul>
-<li>平行车道线在图像上的交点为消失点，而消失点在世界坐标系中的坐标表现为无穷远点，即$Z_{w}&#x3D;\infty$。因此这里需要车道线为严格平行线，因为只有平行线才能相交于无穷远处。</li>
-<li>消失点的准确性在实际场景中会依赖于车道线识别的准确率，因此这里假设车道线识别的准确率足够高，即消失点足够准确。车道线的抖动会使得消失点出现小范围的浮动，但这个小范围的浮动必须要保证这些浮动的消失点总是在无穷远的位置，这样不会破坏假设条件。也就是说如果点$(u_1,v_1)$为理想消失点，那么点$(u_1+\triangle u,v_1+\triangle v)$也必须为理想消失点，其中$\triangle u$和$\triangle v$足够小。</li>
-<li>由于标定过程中国使用了相机的内参$K$，因此，这里$K$的精度必须足够高，否则会导致计算出来的<code>Yaw</code>和<code>Pitch</code>出现误差。</li>
+<li><p>平行车道线在图像上的交点为消失点，而消失点在世界坐标系中的坐标表现为无穷远点，即$Z_{w}&#x3D;\infty$。因此这里需要车道线为严格平行线，因为只有平行线才能相交于无穷远处。</p>
+</li>
+<li><p>消失点的准确性在实际场景中会依赖于车道线识别的准确率，因此这里假设车道线识别的准确率足够高，即消失点足够准确。车道线的抖动会使得消失点出现小范围的浮动，但这个小范围的浮动必须要保证这些浮动的消失点总是在无穷远的位置，这样不会破坏假设条件。也就是说如果点$(u_1,v_1)$为理想消失点，那么点$(u_1+\triangle u,v_1+\triangle v)$也必须为理想消失点，其中$\triangle u$和$\triangle v$足够小。</p>
+</li>
+<li><p>由于标定过程中国使用了相机的内参$K$，因此，这里$K$的精度必须足够高，否则会导致计算出来的<code>Yaw</code>和<code>Pitch</code>出现误差。</p>
+</li>
+<li><p>由于这里假设了地面是平坦的，因此如果地面不平坦，那么计算出来的<code>Pitch</code>会有误差。</p>
+</li>
+<li><p>由于这里假设了车辆沿着直线行驶，因此如果车辆在转弯，那么计算出来的<code>Yaw</code>会有误差。</p>
+</li>
 </ul>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 消失点坐标</span>
 cv<span class="token double-colon punctuation">::</span>Mat vanish_point <span class="token operator">=</span> <span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">Mat_</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> vanish_point_x<span class="token punctuation">,</span> vanish_point_y<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>

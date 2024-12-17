@@ -428,19 +428,21 @@
 <ul>
 <li><strong>公式1</strong>：计算预测状态值</li>
 </ul>
-<p>$$<br>\hat{x}<em>{k}^{\prime} &#x3D; A \hat{x}</em>{k-1} + Bu_{k-1}<br>$$</p>
+<p>$$<br>\hat{x}<em>{k}^\prime &#x3D; A \hat{x}</em>{k-1} + Bu_{k-1}<br>$$</p>
+<p>$$<br>\hat{a}<br>$$</p>
+<p>$$<br>a^\prime<br>$$</p>
 <ul>
-<li><p><strong>公式2</strong>：计算预测值和真实值之间的预测误差协方差矩阵<br>$$<br>P_{k}^{\prime} &#x3D;A P_{k-1} A^T+Q<br>$$</p>
+<li><p><strong>公式2</strong>：计算预测值和真实值之间的预测误差协方差矩阵<br>$$<br>P_{k}^\prime &#x3D;A P_{k-1} A^T+Q<br>$$</p>
 </li>
-<li><p><strong>公式3</strong>：求得卡尔曼增益<br>$$<br>K_k &#x3D;P_{k}^{\prime} H^T(H P_{k}^{\prime} H^T+R)^{-1}<br>$$</p>
+<li><p><strong>公式3</strong>：求得卡尔曼增益<br>$$<br>K_k &#x3D;P_{k}^\prime H^T(H P_{k}^\prime H^T+R)^{-1}<br>$$</p>
 </li>
-<li><p><strong>公式4</strong>：计算估计值<br>$$<br>x_k &#x3D;x_{k}^{\prime}+K_k(Z_k-H x_{k}^{\prime})<br>$$</p>
+<li><p><strong>公式4</strong>：计算估计值<br>$$<br>x_k &#x3D;x_{k}^\prime+K_k(Z_k-H x_{k}^\prime)<br>$$</p>
 </li>
-<li><p><strong>公式5</strong>：计算估计值和真实值之间的误差协方差矩阵<br>$$<br>P_k &#x3D;(I-K_k H) P_{k}^{\prime}<br>$$</p>
+<li><p><strong>公式5</strong>：计算估计值和真实值之间的误差协方差矩阵<br>$$<br>P_k &#x3D;(I-K_k H) P_{k}^\prime<br>$$</p>
 </li>
 </ul>
-<h1 id="卡尔曼滤波的公式推导"><a href="#卡尔曼滤波的公式推导" class="headerlink" title="卡尔曼滤波的公式推导"></a>卡尔曼滤波的公式推导</h1><h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><p>$x_k: {k}$ 时刻的状态<br>$\hat{x}_{k}^{\prime}: k$ 时刻的预测状态 (未优化)<br>$\hat{x}_k: k$ 时刻的优化预测状态<br>$\tilde{x}_k: k$ 时刻的状态新息 (状态 - 预测状态)  </p>
-<p>$Z_k: {k}$ 时刻的观测值<br>$\hat{Z}_{k}^{\prime}: {k}$ 时刻的预测观测值 (未优化)<br>$\hat{Z}_k: {k}$ 时刻的优化预测观测值<br>$\tilde{Z}_k: {k}$ 时刻的观测新息 (观测 - 预测观测)  </p>
+<h1 id="卡尔曼滤波的公式推导"><a href="#卡尔曼滤波的公式推导" class="headerlink" title="卡尔曼滤波的公式推导"></a>卡尔曼滤波的公式推导</h1><h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><p>$x_k: {k}$ 时刻的状态<br>$\hat{x}_{k}^\prime: k$ 时刻的预测状态 (未优化)<br>$\hat{x}_k: k$ 时刻的优化预测状态<br>$\tilde{x}_k: k$ 时刻的状态新息 (状态 - 预测状态)  </p>
+<p>$Z_k: {k}$ 时刻的观测值<br>$\hat{Z}_{k}^\prime: {k}$ 时刻的预测观测值 (未优化)<br>$\hat{Z}_k: {k}$ 时刻的优化预测观测值<br>$\tilde{Z}_k: {k}$ 时刻的观测新息 (观测 - 预测观测)  </p>
 <p>$A$ : 状态转移矩阵<br>$B$ ：输入控制矩阵<br>$H$ : 观测矩阵<br>$Q$ : 预测噪声协方差矩阵<br>$R$ : 观测噪声协方差矩阵<br>$P$ : 误差矩阵  </p>
 <p>$K_k: {k}$ 时刻的卡尔曼增益 (观测权重)<br>$\omega_k: {k}$ 时刻的过程噪声<br>${v}_k: {k}$ 时刻的观测噪声<br>$u_k: {k}$ 时刻外界对系统的作用  </p>
 <h2 id="概念说明"><a href="#概念说明" class="headerlink" title="概念说明"></a>概念说明</h2><h3 id="高斯分布"><a href="#高斯分布" class="headerlink" title="高斯分布"></a>高斯分布</h3><p>通过概率密度函数来定义高斯分布： </p>
@@ -463,15 +465,15 @@
 </ul>
 <h2 id="4-4-求优化预测状态"><a href="#4-4-求优化预测状态" class="headerlink" title="4.4. 求优化预测状态"></a>4.4. 求优化预测状态</h2><p>在无噪声情况下的预测</p>
 <ul>
-<li>预测状态<br>$$<br>\hat{x}<em>{k}^{\prime}&#x3D;A\hat{x}</em>{k-1}^{\prime}<br>$$</li>
-<li>预测观测<br>$$\hat{Z}<em>{k}^{\prime}&#x3D;H\hat{x}</em>{k}^{\prime}&#x3D;HA\hat{x}_{k-1}^{\prime}$$</li>
-<li>观测新息(观测-预测观测)<br>$$\hat{Z}<em>k&#x3D;Z_k-\hat{Z}</em>{k}^{\prime} $$</li>
+<li>预测状态<br>$$<br>\hat{x}<em>{k}^\prime&#x3D;A\hat{x}</em>{k-1}^\prime<br>$$</li>
+<li>预测观测<br>$$\hat{Z}<em>{k}^\prime&#x3D;H\hat{x}</em>{k}^\prime&#x3D;HA\hat{x}_{k-1}^\prime$$</li>
+<li>观测新息(观测-预测观测)<br>$$\hat{Z}<em>k&#x3D;Z_k-\hat{Z}</em>{k}^\prime $$</li>
 </ul>
 <p>观测新息反应了预测噪声$\omega$和观测噪声$\upsilon$对状态的综合影响<br>将过程噪声$ωk$ 看作一个 <strong>新息 $\times$ 比例</strong>，则  </p>
 <ul>
 <li>优化预测状态</li>
 </ul>
-<p>$$<br>\hat{x}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k \tilde{Z}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k(Z_k-H \hat{x}_{k}^{\prime})<br>$$</p>
+<p>$$<br>\hat{x}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k \tilde{Z}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k(Z_k-H \hat{x}_{k}^\prime)<br>$$</p>
 <blockquote>
 <p>仅卡尔曼增益$K_k$为未知时  </p>
 </blockquote>
@@ -481,32 +483,32 @@
 <ul>
 <li>状态新息(状态 - 预测状态)</li>
 </ul>
-<p>$$<br>\begin{aligned}<br>\hat{x}<em>k<br>&amp;&#x3D;x_k-\hat{x}<em>k\<br>&amp;&#x3D;Ax</em>{k-1}+\omega</em>{k-1}-[A\hat{x}<em>{k-1}+K_k(Z_k-H\hat{x}</em>{k}^{\prime})]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-[A\hat{x}<em>{k-1}+K_k(Hx_k+\upsilon_k-HA\hat{x}</em>{k-1})]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-{(I-K_kH)A\hat{x}<em>{k-1}+K_k[H(AX</em>{k-1}+\omega_{k-1})+\upsilon_k]}\<br>&amp;&#x3D;Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}-K_kHAx</em>{k-1}+(I-K_kH)\omega_{k-1}-K_k\nu_k\&amp;&#x3D;(I-K_kH)Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)A(x</em>{k-1}-\hat{x}<em>{k-1})+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)[A(x</em>{k-1}-\hat{x}<em>{k-1})+\omega</em>{k-1}]-K_k\mathrm{u}_k<br>\end{aligned}<br>$$<br>假设在无噪声情况下，状态新息:</p>
-<p>$$<br>\tilde{x}<em>k&#x3D;(I-K_k H) A(x</em>{k-1}-\hat{x}<em>{k-1})&#x3D;(I-K_k H)(x_k-\hat{x}</em>{k}^{\prime})<br>$$ </p>
+<p>$$<br>\begin{aligned}<br>\hat{x}<em>k<br>&amp;&#x3D;x_k-\hat{x}<em>k\<br>&amp;&#x3D;Ax</em>{k-1}+\omega</em>{k-1}-[A\hat{x}<em>{k-1}+K_k(Z_k-H\hat{x}</em>{k}^\prime)]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-[A\hat{x}<em>{k-1}+K_k(Hx_k+\upsilon_k-HA\hat{x}</em>{k-1})]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-{(I-K_kH)A\hat{x}<em>{k-1}+K_k[H(AX</em>{k-1}+\omega_{k-1})+\upsilon_k]}\<br>&amp;&#x3D;Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}-K_kHAx</em>{k-1}+(I-K_kH)\omega_{k-1}-K_k\nu_k\&amp;&#x3D;(I-K_kH)Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)A(x</em>{k-1}-\hat{x}<em>{k-1})+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)[A(x</em>{k-1}-\hat{x}<em>{k-1})+\omega</em>{k-1}]-K_k\mathrm{u}_k<br>\end{aligned}<br>$$<br>假设在无噪声情况下，状态新息:</p>
+<p>$$<br>\tilde{x}<em>k&#x3D;(I-K_k H) A(x</em>{k-1}-\hat{x}<em>{k-1})&#x3D;(I-K_k H)(x_k-\hat{x}</em>{k}^\prime)<br>$$ </p>
 <p>则误差协方差矩阵：</p>
-<p>$$<br>P_k&#x3D;E[\tilde{x}<em>k \tilde{x}</em>{k}^T]&#x3D;E[[(I-K_k H)(x_k-\hat{x}<em>{k}^{\prime})][(I-K_k H)(x_k-\hat{x}</em>{k}^{\prime})]^T]<br>$$</p>
-<p>此时，来看看预测误差协方差矩阵：<br>$$<br>{\cal P}<em>{k}^{\prime}&#x3D;E[{\tilde{x}}</em>{k}^{\prime}{\tilde{x}}<em>{k}^{\prime}{}^{T}\bigr]&#x3D;E[(x</em>{k}-{\hat{x}}<em>{k}^{\prime})(x</em>{k}-{\hat{x}}_{k}^{\prime})^{T}\bigr]<br>$$ </p>
-<p>此时，再把误差协方差矩阵展开：<br>$$<br>\begin{aligned}<br>{P_{k}}&amp;&#x3D;(I-K_{k}H)E<a href="I-K_%7Bk%7DH">[(x_{k}-\hat{x}<em>{k}^{\prime})][(x</em>{k}-\hat{x}_{k}^{\prime})]^{T}</a>^{T}+K_{k}E[{\upsilon}<em>{k}\upsilon</em>{k}^{T}]{K}<em>{k}^{T}\<br>&amp;&#x3D;(I-K</em>{k}H)P_{k}^{\prime}(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;(P_{k}^{\prime}-K_{k}HP_{k}^{\prime})(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^{\prime}-K_{k}HP_{k}^{\prime}-P_{k}^{\prime}H^{T}K_{k}^{T}+K_{k}HP_{k}^{\prime}H^{T}K_{k}^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^{\prime}-K_{k}HP_{k}^{\prime}-P_{k}^{\prime}H^{T}K_{k}^{T}+K_{k}(HP_{k}^{\prime}H^{T}+R)K_{k}^{T}<br>\end{aligned}<br>$$</p>
+<p>$$<br>P_k&#x3D;E[\tilde{x}<em>k \tilde{x}</em>{k}^T]&#x3D;E[[(I-K_k H)(x_k-\hat{x}<em>{k}^\prime)][(I-K_k H)(x_k-\hat{x}</em>{k}^\prime)]^T]<br>$$</p>
+<p>此时，来看看预测误差协方差矩阵：<br>$$<br>{\cal P}<em>{k}^\prime&#x3D;E[{\tilde{x}}</em>{k}^\prime{\tilde{x}}<em>{k}^\prime{}^{T}\bigr]&#x3D;E[(x</em>{k}-{\hat{x}}<em>{k}^\prime)(x</em>{k}-{\hat{x}}_{k}^\prime)^{T}\bigr]<br>$$ </p>
+<p>此时，再把误差协方差矩阵展开：<br>$$<br>\begin{aligned}<br>{P_{k}}&amp;&#x3D;(I-K_{k}H)E<a href="I-K_%7Bk%7DH">[(x_{k}-\hat{x}<em>{k}^\prime)][(x</em>{k}-\hat{x}_{k}^\prime)]^{T}</a>^{T}+K_{k}E[{\upsilon}<em>{k}\upsilon</em>{k}^{T}]{K}<em>{k}^{T}\<br>&amp;&#x3D;(I-K</em>{k}H)P_{k}^\prime(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;(P_{k}^\prime-K_{k}HP_{k}^\prime)(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^{T}K_{k}^{T}+K_{k}HP_{k}^\primeH^{T}K_{k}^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^{T}K_{k}^{T}+K_{k}(HP_{k}^\primeH^{T}+R)K_{k}^{T}<br>\end{aligned}<br>$$</p>
 <p>若使用T表示误差协方差矩阵的对角线，则   </p>
-<p>$$<br>T[P_{k}]&#x3D;T[P_{k}^{\prime}]-2T[K_{k}HP_{k}^{\prime}]+T[K_{k}(HP_{k}^{\prime}H^{T}+R){K_{k}}^{T}]<br>$$</p>
+<p>$$<br>T[P_{k}]&#x3D;T[P_{k}^\prime]-2T[K_{k}HP_{k}^\prime]+T[K_{k}(HP_{k}^\primeH^{T}+R){K_{k}}^{T}]<br>$$</p>
 <p>对T[Pk ]求导，就可找到最小的均方差，使T[Pk ]最小，就能得到卡尔曼增益Kk 对T[Pk ]求导： </p>
-<p>$$<br>\frac{d(T[P_k])}{dK_k}&#x3D;-2(HP_{k}^{\prime})^T+2K_k(HP_{k}^{\prime}H^T+R)<br>$$</p>
+<p>$$<br>\frac{d(T[P_k])}{dK_k}&#x3D;-2(HP_{k}^\prime)^T+2K_k(HP_{k}^\primeH^T+R)<br>$$</p>
 <p>令其为0，则卡尔曼增益：</p>
-<p>$$<br>K_{k}&#x3D;P_{K}^{\prime}H^{T}(HP_{K}^{\prime}H^{T}+R)^{-1}<br>$$</p>
+<p>$$<br>K_{k}&#x3D;P_{K}^\primeH^{T}(HP_{K}^\primeH^{T}+R)^{-1}<br>$$</p>
 <p>其中观测矩阵H和观测噪声协方差矩阵R为常数，所以卡尔曼增益Kk与预测误差协方差矩阵Pk’ 有关  </p>
 <h2 id="4-6-求预测误差协方差矩阵"><a href="#4-6-求预测误差协方差矩阵" class="headerlink" title="4.6. 求预测误差协方差矩阵"></a>4.6. 求预测误差协方差矩阵</h2><p>假设观测矩阵 <em>H</em> &#x3D; 1，那么卡尔曼增益： </p>
-<p>$$<br>K_{k}&#x3D;P_{K}^{\prime}(P_{K}^{\prime}+R)^{-1}&#x3D;\frac{1}{1+\frac{R}{P_{K}^{\prime}}}<br>$$ </p>
-<p>则$P_{k}^{\prime}$ 越大，$K_k$越大，权重重视反馈测量 则$P_{k}^{\prime}$ 越小，$K_k$越小，权重重视预测值   此时，来看看下一状态的预测误差协方差矩阵：</p>
-<p>$$<br>\begin{aligned}P_{k+1}’&amp;&#x3D;E[\tilde{x}<em>{k+1}^{\prime}\tilde{x}</em>{k+1}^{\prime}\bigr]\&amp;&#x3D;E[(x_{k+1}-\hat{x}<em>{k+1}^{\prime})(x</em>{k+1}-\hat{x}_{k+1}^{\prime})^T\bigr]\&amp;&#x3D;E[(Ax_k+:\omega_k-A\hat{x}_k)(Ax_k+:\omega_k-A\hat{x}_k)^T\bigr]\&amp;&#x3D;E[(A(x_k-\hat{x}_k)+:\omega_k)(A(x_k-\hat{x}_k)+:\omega_k)^T\bigr]\end{aligned}<br>$$</p>
+<p>$$<br>K_{k}&#x3D;P_{K}^\prime(P_{K}^\prime+R)^{-1}&#x3D;\frac{1}{1+\frac{R}{P_{K}^\prime}}<br>$$ </p>
+<p>则$P_{k}^\prime$ 越大，$K_k$越大，权重重视反馈测量 则$P_{k}^\prime$ 越小，$K_k$越小，权重重视预测值   此时，来看看下一状态的预测误差协方差矩阵：</p>
+<p>$$<br>\begin{aligned}P_{k+1}’&amp;&#x3D;E[\tilde{x}<em>{k+1}^\prime\tilde{x}</em>{k+1}^\prime\bigr]\&amp;&#x3D;E[(x_{k+1}-\hat{x}<em>{k+1}^\prime)(x</em>{k+1}-\hat{x}_{k+1}^\prime)^T\bigr]\&amp;&#x3D;E[(Ax_k+:\omega_k-A\hat{x}_k)(Ax_k+:\omega_k-A\hat{x}_k)^T\bigr]\&amp;&#x3D;E[(A(x_k-\hat{x}_k)+:\omega_k)(A(x_k-\hat{x}_k)+:\omega_k)^T\bigr]\end{aligned}<br>$$</p>
 <p>因为状态x 和过程噪声ωk是独立的，所以再简化 </p>
-<p>$$<br>\begin{aligned}P_{k+1}^{\prime}&amp;&#x3D;E[(A\tilde{x}<em>{k}+:\omega</em>{k})(A\tilde{x}<em>{k}+:\omega</em>{k})^{T}]\&amp;&#x3D;E[(A\tilde{x}<em>{k})(A\tilde{x}</em>{k})^{T}]+E[\omega_{k}\omega_{k}^{T}]\&amp;&#x3D;AP_{k}A^{T}+:Q\end{aligned}<br>$$</p>
-<p>  其中状态转移矩阵$A$和预测噪声协方差矩阵$Q$为常数，所以预测误差协方差矩阵$P_{k}^{\prime}$ 与上一状态的误差协方差矩阵$P_{k-1}$有关  </p>
-<h2 id="4-7-求误差协方差矩阵"><a href="#4-7-求误差协方差矩阵" class="headerlink" title="4.7. 求误差协方差矩阵"></a>4.7. 求误差协方差矩阵</h2><p>$$<br>\begin{aligned}<br>P_{k}&amp;&#x3D;P_{k}^{\prime}-K_{k}HP_{k}^{\prime}-P_{k}^{\prime}H^{\prime}K_{k}^{\prime}+K_{k}(HP_{k}^{\prime}H^{\prime}+R){K_{k}}^{\prime}\<br>&amp;&#x3D;P_{k}^{\prime}-P_{k}^{\prime}H^{\prime}(HP_{k}^{\prime}H^{\prime}+R)^{-1}HP_{k}^{\prime}-P_{k}^{\prime}H^{\prime}[P_{k}^{\prime}H^{\prime}(HP_{k}^{\prime}H^{\prime}+R)^{-1}]^{T}+\<br>&amp;P_{k}^{\prime}H^{\prime}[P_{k}^{\prime}H^{\prime}(HP_{k}^{\prime}H^{\prime}+R)^{-1}]^{T}\<br>&amp;&#x3D;P_{k}^{\prime}-P_{k}^{\prime}H^{\prime}(HP_{K}^{\prime}H^{\prime}+R)^{-1}HP_{k}^{\prime}\<br>&amp;&#x3D;P_{k}^{\prime}-K_{k}HP_{k}^{\prime}\<br>&amp;&#x3D;(I-K_{k}H)P_{k}^{\prime}<br>\end{aligned}<br>$$</p>
+<p>$$<br>\begin{aligned}P_{k+1}^\prime&amp;&#x3D;E[(A\tilde{x}<em>{k}+:\omega</em>{k})(A\tilde{x}<em>{k}+:\omega</em>{k})^{T}]\&amp;&#x3D;E[(A\tilde{x}<em>{k})(A\tilde{x}</em>{k})^{T}]+E[\omega_{k}\omega_{k}^{T}]\&amp;&#x3D;AP_{k}A^{T}+:Q\end{aligned}<br>$$</p>
+<p>  其中状态转移矩阵$A$和预测噪声协方差矩阵$Q$为常数，所以预测误差协方差矩阵$P_{k}^\prime$ 与上一状态的误差协方差矩阵$P_{k-1}$有关  </p>
+<h2 id="4-7-求误差协方差矩阵"><a href="#4-7-求误差协方差矩阵" class="headerlink" title="4.7. 求误差协方差矩阵"></a>4.7. 求误差协方差矩阵</h2><p>$$<br>\begin{aligned}<br>P_{k}&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^\primeK_{k}^\prime+K_{k}(HP_{k}^\primeH^\prime+R){K_{k}}^\prime\<br>&amp;&#x3D;P_{k}^\prime-P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}HP_{k}^\prime-P_{k}^\primeH^\prime[P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}]^{T}+\<br>&amp;P_{k}^\primeH^\prime[P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}]^{T}\<br>&amp;&#x3D;P_{k}^\prime-P_{k}^\primeH^\prime(HP_{K}^\primeH^\prime+R)^{-1}HP_{k}^\prime\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime\<br>&amp;&#x3D;(I-K_{k}H)P_{k}^\prime<br>\end{aligned}<br>$$</p>
 <h2 id="4-8-加入外界对系统的作用"><a href="#4-8-加入外界对系统的作用" class="headerlink" title="4.8. 加入外界对系统的作用"></a>4.8. 加入外界对系统的作用</h2><p>在加入外界对系统的作用时，可整理出卡尔曼滤波的五个公式：</p>
 <ul>
-<li><p>预测<br>$$<br>\begin{array}{rcl}{\hat{x}<em>{k}^{\prime}&#x3D;}&amp;{A\hat{x}</em>{k-1}+}&amp;{B:{u}<em>{k-1}}\{P</em>{k}^{\prime}&#x3D;}&amp;{AP_{k-1}A^{T}+}&amp;{Q}\\end{array}<br>$$</p>
+<li><p>预测<br>$$<br>\begin{array}{rcl}{\hat{x}<em>{k}^\prime&#x3D;}&amp;{A\hat{x}</em>{k-1}+}&amp;{B:{u}<em>{k-1}}\{P</em>{k}^\prime&#x3D;}&amp;{AP_{k-1}A^{T}+}&amp;{Q}\\end{array}<br>$$</p>
 </li>
-<li><p>校正<br>$$<br>\begin{aligned}{rcl}{K_{k}&#x3D;}&amp;{P_{K}^{\prime}H^{T}(HP_{k}^{\prime}H^{T}+R)^{-1}}\{x_{k}&#x3D;}&amp;{x_{K}^{\prime}+K_{k}(Z_{k}-Hx_{k}^{\prime})}\{P_{k}~&#x3D;}&amp;{(I-K_{k}H)P_{k}^{\prime}}\\end{aligned}<br>$$</p>
+<li><p>校正<br>$$<br>\begin{aligned}{rcl}{K_{k}&#x3D;}&amp;{P_{K}^\primeH^{T}(HP_{k}^\primeH^{T}+R)^{-1}}\{x_{k}&#x3D;}&amp;{x_{K}^\prime+K_{k}(Z_{k}-Hx_{k}^\prime)}\{P_{k}~&#x3D;}&amp;{(I-K_{k}H)P_{k}^\prime}\\end{aligned}<br>$$</p>
 </li>
 </ul>
 <h2 id="5-卡尔曼滤波应用"><a href="#5-卡尔曼滤波应用" class="headerlink" title="5. 卡尔曼滤波应用"></a>5. 卡尔曼滤波应用</h2><p>用python来简单说明  </p>

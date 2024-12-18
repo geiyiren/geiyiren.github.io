@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2024-12-17
+                    2024-12-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.1k
+                    4k
                 </div>
                 
 
@@ -682,8 +682,8 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>其中，<code>GetLidarData()</code>函数除了获取点的位置信息 $S_x$ 和 $S_y$ 外，还获取了当前时刻的时间戳，用于计算前后两帧的时间差 $\mathrm{d}t$。在经典卡尔曼滤波器基础上，还有扩展卡尔曼滤波器（EKF）和无迹卡尔曼滤波器（UKF），它们与经典卡尔曼滤波器的最大区别是状态转移矩阵 $F$ 和测量矩阵 $H$ 的不同。</p>
-<h1 id="卡尔曼滤波五大公式解释"><a href="#卡尔曼滤波五大公式解释" class="headerlink" title="卡尔曼滤波五大公式解释"></a>卡尔曼滤波五大公式解释</h1><p>$$<br>\begin{align}<br>&amp;x_{k}^{-} &amp; &#x3D; :Ax_{k-1}:+:Bu_{k-1}\\&amp;P_{k}^{-} &amp; &#x3D; :AP_{k-1}A^T:+:Q\\&amp;K_{k} &amp; &#x3D; :\frac{P_{k}^{-}H^{T}}{HP_{k}^{-}H^{T}+R}\\&amp;x_{k} &amp; &#x3D; :x_{k}^{-}:+:K_{k}(z_{k}-Hx_{k}^{-})&amp;&amp;,z_{k}: &amp; &#x3D; :Hx_{k\text{测量}}\\&amp;P_{k} &amp; &#x3D; :(I:-:K_{k}H)P_{k}^{-}<br>\end{align}<br>$$</p>
-<p>$$<br>\begin{aligned}&amp;Z_{k-1}:\text{ 有}k-1\text{ 个是相邻的最长后的计,就变点模块产的数分数据交享。}\&amp;u_{k-1}:\text{ 其实数的复票:}\&amp;u_{k-1}:\text{ 求自持续时间};\&amp;A:\text{ 换创场转体时};\&amp;B:\text{ 相关性}:\&amp;B:\text{ 相关性}:\&amp;B_{i-1}:\text{ 条}k\text{ 企业群的本轮位的作计,被是余样像产面测得本的状态变率};\&amp;P_{k-1}:\text{ 常}k&#x3D;1\text{ 过进时的名弦合的分差的样};\&amp;P_{k-1}:\text{ 进高条为2分表组成};\&amp;Q:\text{ 过增高为2分别是曲线}:\&amp;P_{k-1}:\text{ 使得全法的余曲最受加力是最终};\&amp;H:\text{ 次期间样}:\&amp;H:\text{ 使到确本为少是推耗};\&amp;R:\text{ 成期设本为多差模式}:\&amp;R_{k}:\text{ 下不要得最最}:\&amp;B_{k-1}:\text{ 表以全站理的同学故成是要};\&amp;B_{k-1}:\text{ 其中理方向理测变量};\&amp;B_{k-1}:\text{ 其中理方向理制变量};\&amp;B_{k-1}:\text{ 其性是加值的定验论念估计,这条量是得吸产的融合数据变要};\&amp;P_{k-1}:\text{ 条}k\text{ 企业指以结误器是参多差描得;}\end{aligned}<br>$$</p>
+<h1 id="卡尔曼滤波五大公式解释"><a href="#卡尔曼滤波五大公式解释" class="headerlink" title="卡尔曼滤波五大公式解释"></a>卡尔曼滤波五大公式解释</h1><p>$$<br>\begin{align}<br>x_{k}^{-} &amp; &#x3D; :Ax_{k-1}:+:Bu_{k-1}\\<br>P_{k}^{-} &amp; &#x3D; :AP_{k-1}A^T:+:Q\\<br>K_{k} &amp; &#x3D; :\frac{P_{k}^{-}H^{T}}{HP_{k}^{-}H^{T}+R}\\<br>x_{k} &amp; &#x3D; :x_{k}^{-}:+:K_{k}(z_{k}-Hx_{k}^{-}),z_{k}&#x3D;Hx_{k\text{测量}}\\<br>P_{k} &amp; &#x3D; :(I:-:K_{k}H)P_{k}^{-}<br>\end{align}<br>$$</p>
+<p>$$<br>\begin{aligned}&amp;Z_{k-1}:\text{ 有}k-1\text{ 个是相邻的最长后的计,就变点模块产的数分数据交享。}\\<br>u_{k-1}:\text{ 其实数的复票:}\\<br>u_{k-1}:\text{ 求自持续时间};\\<br>A:\text{ 换创场转体时};\\B:\text{ 相关性}:\\<br>B:\text{ 相关性}:\\<br>B_{i-1}:\text{ 条}k\text{ 企业群的本轮位的作计,被是余样像产面测得本的状态变率};\\<br>P_{k-1}:\text{ 常}k&#x3D;1\text{ 过进时的名弦合的分差的样};\\<br>P_{k-1}:\text{ 进高条为2分表组成};\\<br>Q:\text{ 过增高为2分别是曲线}:\\<br>P_{k-1}:\text{ 使得全法的余曲最受加力是最终};\\<br>H:\text{ 次期间样}:\\H:\text{ 使到确本为少是推耗};\\<br>R:\text{ 成期设本为多差模式}:\\<br>R_{k}:\text{ 下不要得最最}:\\<br>B_{k-1}:\text{ 表以全站理的同学故成是要};\\<br>B_{k-1}:\text{ 其中理方向理测变量};\\<br>B_{k-1}:\text{ 其中理方向理制变量};\\<br>B_{k-1}:\text{ 其性是加值的定验论念估计,这条量是得吸产的融合数据变要};\\<br>P_{k-1}:\text{ 条}k\text{ 企业指以结误器是参多差描得;}\end{aligned}<br>$$</p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.shipengx.com/archives/d3b96bd5.html">手把手教你写卡尔曼滤波器</a></li>
 </ul>

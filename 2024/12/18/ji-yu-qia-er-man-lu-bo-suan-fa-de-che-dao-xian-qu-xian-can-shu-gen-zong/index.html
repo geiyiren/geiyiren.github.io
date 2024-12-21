@@ -481,7 +481,7 @@
 <p>$$<br>\begin{equation}<br>f(t)&#x3D;f(t-1)+f^{\prime}(t-1)d_{x}+\frac{f^{\prime\prime}(t-1)}{2!}(d_{x})^2+\frac{f^{(3)}(t-1)}{3!}(d_{x})^3+\cdots<br>\end{equation}<br>$$</p>
 <p>注意这里的$dx$为两次采样间隔之间$x$的变化量，即$d_{x}&#x3D;v_{x}\Delta{t}$。</p>
 <h2 id="卡尔曼滤波的五个公式"><a href="#卡尔曼滤波的五个公式" class="headerlink" title="卡尔曼滤波的五个公式"></a>卡尔曼滤波的五个公式</h2><ul>
-<li><p>状态预测<br>$$<br>\begin{equation}<br>\widehat{X}<em>t^-&#x3D;A_t\widehat{X}</em>{t-1}+B_tu_t<br>\end{equation}<br>$$</p>
+<li><p>状态预测<br>$$<br>\begin{equation}<br>{\widehat{X}<em>t}^{-}&#x3D;A_t\widehat{X}</em>{t-1}+B_tu_t<br>\end{equation}<br>$$</p>
 </li>
 <li><p>状态协方差预测<br>$$<br>\begin{equation}<br>P_t^-&#x3D;F_tP_{t-1}F_t^T+Q_t<br>\end{equation}<br>$$</p>
 </li>
@@ -500,9 +500,10 @@
 <li>$c_0$:表示在纵向距离$x&#x3D;0$处摄像头到车道线的横向距离：</li>
 <li>$atan(c_1)$:表示纵向距离$x&#x3D;0$处摄像头与车道线的航向角$\theta$；</li>
 <li>$2c_2$:表示纵向距离$x&#x3D;0$处车道线的曲率$k_r$;</li>
-<li>$6c_3$:表示纵向距离$x&#x3D;0$处车道线的曲率变化率$\dot{k}_{r}$,</li>
+<li>$6c_3$:表示纵向距离$x&#x3D;0$处车道线的曲率变化率$\dot{k}_{r}$;</li>
 </ul>
-<p>对上述车道线方程求导，分别计算出在纵向距离$x$处的自车到车道线的横向距离$y$,自车与车道线<br>的航向角$\theta$，车道线的曲率$k$,车道线的曲率变化率$\dot{k}<em>{r}$，可表示为：<br>$$<br>\begin{equation}<br>y</em>{x}&#x3D;c_{0}+c_{1}x+c_{2}x^{2}+c_{3}x^{3}<br>\end{equation}<br>$$</p>
+<p>对上述车道线方程求导，分别计算出在纵向距离$x$处的自车到车道线的横向距离$y$,自车与车道线<br>的航向角$\theta$，车道线的曲率$k$,车道线的曲率变化率$\dot{k}_{r}$，可表示为：</p>
+<p>$$<br>\begin{equation}<br>y_{x}&#x3D;c_{0}+c_{1}x+c_{2}x^2+c_{3}x^3<br>\end{equation}<br>$$</p>
 <p>一阶导如下所示:<br>$$<br>\begin{equation}<br>\theta_{x}&#x3D;c_{1}+2c_{2}x+3c_{3}x^{2}</p>
 <p>\end{equation}<br>$$</p>
 <p>二阶导如下所示:<br>$$<br>\begin{equation}<br>k_{rx}&#x3D;2c_{2}+6c_{3}x</p>

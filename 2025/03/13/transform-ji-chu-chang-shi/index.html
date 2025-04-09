@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-03-15
+                    2025-04-09
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    17.6k
+                    18.5k
                 </div>
                 
 
@@ -700,6 +700,126 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>2、为了找到token与其他token的关注关系，将token的向量与其他所有token的向量做内积，除以后得到注意力分数</p>
 <p>3、过softmax将分数归一化到[0,1]之间，那么对于不太需要关注的token权重就会很小<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-43.png" alt="多头注意力机制"></p>
 <p>多头注意力机制是在自注意力机制的基础上发展起来的，是自注意力机制的变体，旨在增强模型的表达能力和泛化能力。通过使用多个独立的注意力头，分别计算注意力权重，并将结果加权求和，从而获得更丰富的表示</p>
+<blockquote>
+<p>为什么要缩放点积？<br>在实际的深度学习训练过程中，查询和键的维度 d_k 可能会很大。如果不进行缩放，点积的结果会随着维度的增大而变得很大。这可能会导致梯度在反向传播时出现问题，从而影响训练的稳定性。因此，通过将点积结果除以 $\sqrt{d_k}$，缩放点积注意力机制能够使得点积的值保持在一个合理的范围内，从而避免数值过大或过小的问题。</p>
+</blockquote>
+<p>举例说明：<br>假设我们有句子 “I love deep learning” 作为输入 X，以下是如何通过注意力机制生成 Q、K 和 V 的详细过程。</p>
+<ul>
+<li>输入 X<br>首先，句子 “I love deep learning” 会被转换成一个矩阵 X，每个单词被映射为一个词向量。假设我们使用的是 4 维嵌入空间（为了简化举例），那么 X 可能如下所示：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">词</th>
+<th align="left">词向量（假设为4维）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">“I”</td>
+<td align="left">[0.1, 0.2, 0.3, 0.4]</td>
+</tr>
+<tr>
+<td align="left">“love”</td>
+<td align="left">[0.5, 0.6, 0.7, 0.8]</td>
+</tr>
+<tr>
+<td align="left">“deep”</td>
+<td align="left">[0.9, 1.0, 1.1, 1.2]</td>
+</tr>
+<tr>
+<td align="left">“learning”</td>
+<td align="left">[1.3, 1.4, 1.5, 1.6]</td>
+</tr>
+</tbody></table>
+<p>因此，输入矩阵 X 的形状为 (4, 4)，其中 4 是句子的长度（4 个词），每个词是一个 4 维的词向量。</p>
+<ul>
+<li>生成 Q、K 和 V<br>接下来，通过对 X 进行线性变换，我们分别得到查询（Q）、键（K）和值（V）：</li>
+</ul>
+<p>Q &#x3D; X * W_Q<br>K &#x3D; X * W_K<br>V &#x3D; X * W_V<br>其中，W_Q、W_K 和 W_V 是模型训练过程中学习到的权重矩阵。它们的维度通常是 (4, d_k) 和 (4, d_v)，其中 d_k 是每个头的键的维度，d_v 是每个头的值的维度。</p>
+<p>假设我们设置：</p>
+<p>d_k &#x3D; 2（查询和键的维度为 2）<br>d_v &#x3D; 2（值的维度为 2）<br>因此，W_Q、W_K 和 W_V 的维度分别为 (4, 2) 和 (4, 2)。</p>
+<p>在进行线性变换时，矩阵乘法将 X 与 W_Q、W_K、W_V 相乘，生成 Q、K 和 V。假设结果如下：</p>
+<p>Q（查询矩阵）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">词</th>
+<th align="left">Q 向量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">“I”</td>
+<td align="left">[0.12, 0.25]</td>
+</tr>
+<tr>
+<td align="left">“love”</td>
+<td align="left">[0.46, 0.56]</td>
+</tr>
+<tr>
+<td align="left">“deep”</td>
+<td align="left">[0.75, 0.88]</td>
+</tr>
+<tr>
+<td align="left">“learning”</td>
+<td align="left">[1.04, 1.18]</td>
+</tr>
+</tbody></table>
+<p>K（键矩阵）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">词</th>
+<th align="left">K 向量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">“I”</td>
+<td align="left">[0.08, 0.20]</td>
+</tr>
+<tr>
+<td align="left">“love”</td>
+<td align="left">[0.42, 0.53]</td>
+</tr>
+<tr>
+<td align="left">“deep”</td>
+<td align="left">[0.72, 0.85]</td>
+</tr>
+<tr>
+<td align="left">“learning”</td>
+<td align="left">[1.01, 1.12]</td>
+</tr>
+</tbody></table>
+<p>V（值矩阵）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">词</th>
+<th align="left">V 向量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">“I”</td>
+<td align="left">[0.14, 0.28]</td>
+</tr>
+<tr>
+<td align="left">“love”</td>
+<td align="left">[0.50, 0.61]</td>
+</tr>
+<tr>
+<td align="left">“deep”</td>
+<td align="left">[0.76, 0.90]</td>
+</tr>
+<tr>
+<td align="left">“learning”</td>
+<td align="left">[1.06, 1.20]</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>注意力计算<br>查询（Q）和键（K）的相似度： 我们计算 Q 和 K 之间的相似度，通常使用点积来衡量相似度。对于每个查询 Q[i] 和所有键 K[j]，我们计算点积（Q[i] 与 K[j] 的点积）。<br>加权值（V）的加权和： 在计算完相似度后，我们使用 softmax 来将相似度转换为注意力权重（概率）。然后，将这些权重应用到 V 上，通过加权和得到最终的输出。</p>
+</li>
+<li><p>总结<br>在这个例子中：<br>X 是输入的词向量矩阵，表示句子 “I love deep learning”。<br>通过线性变换，得到查询（Q）、键（K）和值（V），它们的维度会根据头数（multi-head）和模型设置（如 d_k、d_v）有所不同。<br>Q 代表每个词的查询，K 代表知识库中所有词的特征，V 是包含词的实际信息的矩阵。<br>通过这种方式，模型能够计算每个词（查询）和其他所有词（键）之间的相关性，然后从其他词（值）中提取相关信息，从而动态地调整每个词的表示。</p>
+</li>
+</ul>
 <h5 id="残差连接"><a href="#残差连接" class="headerlink" title="残差连接"></a>残差连接</h5><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-44.png"><br>残差连接：将多头注意力机制的输出向量加到原始输入向量上，再做层归一化</p>
 <h5 id="Norm层归一化"><a href="#Norm层归一化" class="headerlink" title="Norm层归一化"></a>Norm层归一化</h5><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-45.png"></p>
 <p>Transformer中主要利用Layer-normal层归一化而不是批归一化，有助于避免训练过程中的梯度消失问题，提高模型稳定性</p>
@@ -760,6 +880,7 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>例如,视觉Transformer已用于通过放射学筛查COVID-19、肺癌预后和视网膜血管分割。下表概述了一些关键应用及其参考文献:<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-35.png"></p>
 <p>Transformer融入计算机视觉不仅是技术演进,更是重塑了该领域可能性的格局。<br>随着我们不断探索和完善这些模型,可以期待看到更多突破性的应用,不断拓展机器感知和理解能力的边界。</p>
 <h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p>问:Transformer中的注意力机制有何重要性？<br>答:注意力机制在Transformer中至关重要,因为它允许根据重要性对输入中的不同tokens赋予不同权重,从而考虑语境,提高输出的质量和连贯性。<br>问:Transformer在处理序列数据时与RNN和LSTM有何不同？<br>答:与RNN和LSTM顺序处理数据不同,Transformer使用自注意力机制同时处理整个序列。这种并行处理能力有助于提高其有效性。<br>问:Transformer的关键组件是什么？<br>答:Transformer的架构包括自注意力机制、多头注意力和前馈神经网络。<br>问:Transformer在深度学习中有哪些应用？<br>答:Transformer广泛应用于NLP、语言建模、计算机视觉和开发最先进的模型。<br>问:Transformer如何在数据处理中捕捉长距离依赖？<br>答:Transformer利用自注意力机制衡量不同输入令牌的重要性,使其能够在无需顺序处理的情况下捕捉长距离依赖。<br>问:Transformer网络的架构是什么？<br>答:Transformer网络由包含多头自注意力机制和前馈神经网络的编码器和解码器层组成,用于有效处理序列数据。</p>
+<p>问：transformer中的attention为什么要除以根号$\sqrt{d_k}$<br>答：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43827595/article/details/125800615">https://blog.csdn.net/qq_43827595/article/details/125800615</a></p>
 <h1 id="实战-基于Transformer生成文章标题"><a href="#实战-基于Transformer生成文章标题" class="headerlink" title="实战-基于Transformer生成文章标题"></a>实战-基于Transformer生成文章标题</h1><p>整个模型结构如下，通过执行main.py文件运行整个模型<br>1 project&#x2F;<br>2 │<br>3 ├── transformer&#x2F;<br>4 │   ├── <strong>init</strong>.py<br>5 │   ├── DataLoader.py<br>6 │   ├── Translator.py<br>7 │   └── Modules.py<br>8 │<br>9 ├── config.py<br>10 ├── loader.py<br>11 ├── evaluate.py<br>12 └── main.py</p>
 <h2 id="Transformer框架"><a href="#Transformer框架" class="headerlink" title="Transformer框架"></a>Transformer框架</h2><p>Transformer整体分为以下几个部分：</p>
 <ul>
@@ -889,6 +1010,9 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
          attn <span class="token operator">=</span> self<span class="token punctuation">.</span>dropout<span class="token punctuation">(</span>F<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>attn<span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
          output <span class="token operator">=</span> torch<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>attn<span class="token punctuation">,</span> v<span class="token punctuation">)</span>
          <span class="token keyword">return</span> output<span class="token punctuation">,</span> attn<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
 <h2 id="实现Encoder和Decoder中的基本层"><a href="#实现Encoder和Decoder中的基本层" class="headerlink" title="实现Encoder和Decoder中的基本层"></a>实现Encoder和Decoder中的基本层</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token triple-quoted-string string">''' Define the Layers '''</span>
 <span class="token number">2</span> <span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
 <span class="token number">3</span> <span class="token keyword">import</span> torch
@@ -1544,31 +1668,31 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2025/02/17/hai-si-yi-zhi-bi-ji/">
+                <a href="/2025/03/13/da-mo-xing-ji-chu-zhi-shi-dian/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="海思模型部署笔记">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/23.jpg" class="responsive-img" alt="大模型基础知识点">
                         
-                        <span class="card-title">海思模型部署笔记</span>
+                        <span class="card-title">大模型基础知识点</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            海思模型部署笔记
+                            大模型基础知识点
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2025-02-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-03-13
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B5%B7%E6%80%9D/" class="post-category">
-                                    海思
+                            <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="post-category">
+                                    大模型
                                 </a>
                             
                             
@@ -1578,12 +1702,12 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B5%B7%E6%80%9D/">
-                        <span class="chip bg-color">海思</span>
+                    <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                        <span class="chip bg-color">基础知识</span>
                     </a>
                     
-                    <a href="/tags/%E6%A8%A1%E5%9E%8B%E9%83%A8%E7%BD%B2/">
-                        <span class="chip bg-color">模型部署</span>
+                    <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">
+                        <span class="chip bg-color">大模型</span>
                     </a>
                     
                 </div>

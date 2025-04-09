@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-03-15
+                    2025-04-09
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.6k
                 </div>
                 
 
@@ -454,6 +454,8 @@ std<span class="token double-colon punctuation">::</span><span class="token func
 <ul>
 <li><p>尝试使用较多的量化图像<br>无效</p>
 </li>
+<li><p>最终解决办法<br>在动态aipp的情况下需要配置归一化参数<br><img src="/../../../MyBlogImage1/%E6%B5%B7%E6%80%9D%E7%A7%BB%E6%A4%8D%E7%AC%94%E8%AE%B0/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_17422589229639.png" alt="alt text"></p>
+</li>
 <li><p>使用MSIT工具排查OM模型精度问题<br><a target="_blank" rel="noopener" href="https://www.hiascend.com/forum/thread-0219168838054191038-1-1.html">使用MSIT工具排查OM模型精度问题</a></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://gitee.com/ascend/msit.git
 <span class="token comment"># 1. git pull origin 更新最新代码 </span>
@@ -485,6 +487,81 @@ reprocess_output/input0_validation_npy_FP32.txt <span class="token parameter var
 <pre class="line-numbers language-none"><code class="language-none">app funcsim -m ..&#x2F;models&#x2F;dsm&#x2F;keypoints&#x2F;dsm_keypoints_val_original.om  -i &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#x2F;model_val&#x2F;.cache&#x2F;test&#x2F;preprocess_output&#x2F;input0_valid
 ation_bin_U8.txt dump --output &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#x2F;model_val&#x2F;.cache&#x2F;test&#x2F;dump_om<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
 </ul>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">
+<span class="token keyword">for</span> <span class="token punctuation">(</span>size_t dt <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> dt <span class="token operator">&lt;</span> data<span class="token punctuation">.</span>output_data<span class="token operator">-></span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> dt<span class="token operator">++</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    ai<span class="token double-colon punctuation">::</span>OutputDataSt<span class="token operator">*</span> ds <span class="token operator">=</span> data<span class="token punctuation">.</span>output_data<span class="token operator">-></span><span class="token function">at</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">=</span> ds<span class="token operator">-></span>dims<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">LOGI</span><span class="token punctuation">(</span>TAG <span class="token string">"feature_size_h_[dt] = %d\n"</span><span class="token punctuation">,</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">=</span> ds<span class="token operator">-></span>dims<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">LOGI</span><span class="token punctuation">(</span>TAG <span class="token string">"feature_size_w_[dt] = %d\n"</span><span class="token punctuation">,</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token function">LOGI</span><span class="token punctuation">(</span>TAG <span class="token string">"feature_length_ = %d\n"</span><span class="token punctuation">,</span> feature_length_<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">LOGI</span><span class="token punctuation">(</span>TAG <span class="token string">"num_classes_ = %d\n"</span><span class="token punctuation">,</span> num_classes_<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">LOGI</span><span class="token punctuation">(</span>TAG <span class="token string">"shrink_channels_ = %f\n"</span><span class="token punctuation">,</span> shrink_channels_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">float</span><span class="token operator">*</span>        ptr <span class="token operator">=</span> ds<span class="token operator">-></span>output<span class="token punctuation">;</span>
+    
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> center_x <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> center_y <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> width <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> height <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> pred_conf <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">float</span><span class="token operator">*</span> pred_cls<span class="token punctuation">[</span>num_classes_<span class="token punctuation">]</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> cls <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> cls <span class="token operator">&lt;</span> num_classes_<span class="token punctuation">;</span> cls<span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            pred_cls<span class="token punctuation">[</span>cls<span class="token punctuation">]</span> <span class="token operator">=</span> ptr <span class="token operator">+</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token punctuation">(</span>i <span class="token operator">*</span> feature_length_ <span class="token operator">+</span> <span class="token number">5</span> <span class="token operator">+</span> cls<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> h <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> h <span class="token operator">&lt;</span> feature_size_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">;</span> h<span class="token operator">++</span><span class="token punctuation">)</span>
+        <span class="token punctuation">&#123;</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> w <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> w <span class="token operator">&lt;</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">;</span> w<span class="token operator">++</span><span class="token punctuation">)</span>
+            <span class="token punctuation">&#123;</span>
+                <span class="token keyword">int</span> j <span class="token operator">=</span> h <span class="token operator">*</span> feature_size_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span> <span class="token operator">+</span> w<span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">(</span>pred_conf <span class="token operator">+</span> j<span class="token punctuation">)</span> <span class="token operator">></span> min_score_<span class="token punctuation">)</span>
+                <span class="token punctuation">&#123;</span>
+                    <span class="token keyword">float</span> max_cls_conf <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                    <span class="token keyword">int</span>   max_cls_index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+                    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> cls <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> cls <span class="token operator">&lt;</span> num_classes_<span class="token punctuation">;</span> cls<span class="token operator">++</span><span class="token punctuation">)</span>
+                    <span class="token punctuation">&#123;</span>
+                        <span class="token keyword">if</span> <span class="token punctuation">(</span>max_cls_conf <span class="token operator">&lt;</span> <span class="token operator">*</span><span class="token punctuation">(</span>pred_cls<span class="token punctuation">[</span>cls<span class="token punctuation">]</span> <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                        <span class="token punctuation">&#123;</span>
+                            max_cls_conf <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>pred_cls<span class="token punctuation">[</span>cls<span class="token punctuation">]</span> <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                            max_cls_index <span class="token operator">=</span> cls<span class="token punctuation">;</span>
+                        <span class="token punctuation">&#125;</span>
+                    <span class="token punctuation">&#125;</span>
+                    tmp_box<span class="token punctuation">.</span>anchor <span class="token operator">=</span> i<span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>feature_pointI <span class="token operator">=</span> w<span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>feature_pointJ <span class="token operator">=</span> h<span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>pred_conf <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>pred_conf <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>pred_cls <span class="token operator">=</span> labels_<span class="token punctuation">[</span>max_cls_index<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>pred_cls_idx <span class="token operator">=</span> max_cls_index<span class="token punctuation">;</span>
+
+                    tmp_box<span class="token punctuation">.</span>xmin <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>center_x <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>ymin <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>center_y <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>width <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>width <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token operator">*</span><span class="token punctuation">(</span>height <span class="token operator">+</span> j<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    tmp_box<span class="token punctuation">.</span>xmin <span class="token operator">=</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>xmin <span class="token operator">*</span> <span class="token number">2.</span> <span class="token operator">-</span> <span class="token number">0.5</span> <span class="token operator">+</span> tmp_box<span class="token punctuation">.</span>feature_pointI<span class="token punctuation">)</span> <span class="token operator">*</span> shrink_channels_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>ymin <span class="token operator">=</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>ymin <span class="token operator">*</span> <span class="token number">2.</span> <span class="token operator">-</span> <span class="token number">0.5</span> <span class="token operator">+</span> tmp_box<span class="token punctuation">.</span>feature_pointJ<span class="token punctuation">)</span> <span class="token operator">*</span> shrink_channels_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>width <span class="token operator">=</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>width <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>width <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> anchor_w_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">[</span>tmp_box<span class="token punctuation">.</span>anchor<span class="token punctuation">]</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>height <span class="token operator">=</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>height <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>height <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> anchor_h_<span class="token punctuation">[</span>dt<span class="token punctuation">]</span><span class="token punctuation">[</span>tmp_box<span class="token punctuation">.</span>anchor<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+                    tmp_box<span class="token punctuation">.</span>xmin <span class="token operator">=</span> tmp_box<span class="token punctuation">.</span>xmin <span class="token operator">-</span> <span class="token keyword">int</span><span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>width  <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    tmp_box<span class="token punctuation">.</span>ymin <span class="token operator">=</span> tmp_box<span class="token punctuation">.</span>ymin <span class="token operator">-</span> <span class="token keyword">int</span><span class="token punctuation">(</span>tmp_box<span class="token punctuation">.</span>height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+                    real_available_boxes<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>tmp_box<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">&#125;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h1 id="gdb工具使用"><a href="#gdb工具使用" class="headerlink" title="gdb工具使用"></a>gdb工具使用</h1><p>echo “&#x2F;userdata&#x2F;coreDump&#x2F;core-%e-%p-%t” |  tee &#x2F;proc&#x2F;s<br>ys&#x2F;kernel&#x2F;core_pattern</p>
 
                 
             </div>
@@ -637,19 +714,19 @@ ation_bin_U8.txt dump --output &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2025/03/13/transform-ji-chu-chang-shi/">
+                <a href="/2025/03/13/da-mo-xing-ji-chu-zhi-shi-dian/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="Transform基础常识">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/23.jpg" class="responsive-img" alt="大模型基础知识点">
                         
-                        <span class="card-title">Transform基础常识</span>
+                        <span class="card-title">大模型基础知识点</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Transform基础常识
+                            大模型基础知识点
                         
                     </div>
                     <div class="publish-info">
@@ -660,8 +737,8 @@ ation_bin_U8.txt dump --output &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Transform/" class="post-category">
-                                    Transform
+                            <a href="/categories/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" class="post-category">
+                                    大模型
                                 </a>
                             
                             
@@ -671,12 +748,12 @@ ation_bin_U8.txt dump --output &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Transform/">
-                        <span class="chip bg-color">Transform</span>
-                    </a>
-                    
                     <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
                         <span class="chip bg-color">基础知识</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">
+                        <span class="chip bg-color">大模型</span>
                     </a>
                     
                 </div>

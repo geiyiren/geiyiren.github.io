@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-04-09
+                    2025-04-15
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    1.7k
                 </div>
                 
 
@@ -561,7 +561,14 @@ ation_bin_U8.txt dump --output &#x2F;wsy_10&#x2F;.geiyiren&#x2F;HQ_Hi3519DV500&#
 
 
 
-<h1 id="gdb工具使用"><a href="#gdb工具使用" class="headerlink" title="gdb工具使用"></a>gdb工具使用</h1><p>echo “&#x2F;userdata&#x2F;coreDump&#x2F;core-%e-%p-%t” |  tee &#x2F;proc&#x2F;s<br>ys&#x2F;kernel&#x2F;core_pattern</p>
+<h1 id="已经设置设备和context，但仍旧报错的解决办法"><a href="#已经设置设备和context，但仍旧报错的解决办法" class="headerlink" title="已经设置设备和context，但仍旧报错的解决办法"></a>已经设置设备和context，但仍旧报错的解决办法</h1><p>错误提示如下：<br>[Func]:svp_npu_runtime_impl_execute_model [Line]:1773 [Info]:Error, get cur ctx failed when execute model, please set device or create context first<br>解决办法：</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// create context (set current)</span>
+svp_acl_error err_ret <span class="token operator">=</span> <span class="token function">svp_acl_rt_set_current_context</span><span class="token punctuation">(</span>context_<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>err_ret <span class="token operator">!=</span> SVP_ACL_SUCCESS<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">ERROR_LOG</span><span class="token punctuation">(</span><span class="token string">"acl create context failed"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> FAILED<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>需要在每次推理前设置上下文</p>
 
                 
             </div>

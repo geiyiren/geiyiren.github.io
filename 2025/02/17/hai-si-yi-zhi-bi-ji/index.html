@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-04-23
+                    2025-04-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    2k
                 </div>
                 
 
@@ -569,6 +569,12 @@ svp_acl_error err_ret <span class="token operator">=</span> <span class="token f
     <span class="token keyword">return</span> FAILED<span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <p>需要在每次推理前设置上下文</p>
+<h1 id="数据量化和权重量化"><a href="#数据量化和权重量化" class="headerlink" title="数据量化和权重量化"></a>数据量化和权重量化</h1><ul>
+<li><p>数据量化<br>数据量化是对每个待量化的层&#x2F;算子的输入数据进行统计，每个层&#x2F;算子计算出最优的一组scale和offset。数据是模型推理计算的中间结果，其范围与模型输入相关，因此需要使用一组参考输入（校准数据集）作为激励，从而记录下来待量化层&#x2F;算子的输入数据，搜索得到量化因子（scale和offset）。由于在做数据calibration的过程中，需要占用额外的存储空间（显存&#x2F;内存）来存储用于确定量化因子的输入数据，所以对于显存&#x2F;内存的占用，比仅推理的过程要高，额外占用空间的大小和calibration过程中的batch_size* batch_num正相关。<br>量化的计算公式：<br>$$<br>\mathrm{data}<em>{\mathrm{int}8}&#x3D;\mathrm{clip}</em>{\mathrm{int}8}\left(\mathrm{round}(\frac{\mathrm{data}_{\mathrm{float}}}{\mathrm{scale}})+\mathrm{offset}\right)<br>$$<br>其中,<br>$$<br>\begin{align}<br>\mathrm{scale}\in\left[\mathrm{FLT_EPSILON,}\frac1{\mathrm{FLT_EPSILON}}\right],\mathrm{FLT_EPSILON}\approx1.1920929\times10^{-7}<br>\end{align}<br>$$<br>$$<br>\mathrm{offset}\in[-128,127]<br>$$</p>
+</li>
+<li><p>权重量化<br>训练后模型的权值已经确定，数值的范围也已经确定，因此直接根据权值的数据范围进行量化。</p>
+</li>
+</ul>
 
                 
             </div>

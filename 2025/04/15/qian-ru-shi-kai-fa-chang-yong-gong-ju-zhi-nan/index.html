@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-04-29
+                    2025-05-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    339
+                    338
                 </div>
                 
 
@@ -417,7 +417,7 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="gdb工具使用"><a href="#gdb工具使用" class="headerlink" title="gdb工具使用"></a>gdb工具使用</h1><ul>
-<li>配置程序段错误生成文件的路径<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"/userdata/coreDump/core-%e-%p-%t"</span> <span class="token operator">|</span>  <span class="token function">tee</span> /proc/sys/kernel/core_pattern<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>配置程序段错误生成文件的路径<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"/userdata/core-%e-%p-%t"</span> <span class="token operator">|</span>  <span class="token function">tee</span> /proc/sys/kernel/core_pattern<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>运行<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">gdb adas_app core-%e-%p-%t<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>常用命令<ul>
 <li>bt 用于查看程序崩溃时的调用栈 </li>

@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-06-04
+                    2025-06-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    6.3k
+                    6k
                 </div>
                 
 
@@ -544,7 +544,9 @@
 <p><img src="/../../../MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image-1.png"></p>
 <h2 id="Conv模块解读"><a href="#Conv模块解读" class="headerlink" title="Conv模块解读"></a>Conv模块解读</h2><h2 id="网络结构预览"><a href="#网络结构预览" class="headerlink" title="网络结构预览"></a>网络结构预览</h2><p>下面是根据<a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml">yolov5s.yaml</a>绘制的网络整体结构简化版。</p>
 <p><img src="/../../../MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image.png"></p>
+<p> 详细结构如下所示：<br><a href="../../../MyBlogFile1/yolo/yolov5%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90.drawio">yolov5结构解析</a></p>
 <p>三个分支的输出[1, 128, 80, 80],[1, 256, 40, 40],[1, 512, 20, 20] 作为输入经过Detect的forward, 接着flow.cat()函数拼接成为output: [1, 25200, 85]。</p>
+<p>Detect层第一个操作为二维卷积，将得到的三个分支的输出转换为通道数为3x(类别数+5)的特征图，然后将特征图进行view和通道顺序变化并进行框的位置解析。</p>
 <h1 id="yolo-py解读"><a href="#yolo-py解读" class="headerlink" title="yolo.py解读"></a>yolo.py解读</h1><p>文件主要包含 三大部分 Detect类， Model类，和 parse_model 函数</p>
 <h2 id="parse-model函数解读"><a href="#parse-model函数解读" class="headerlink" title="parse_model函数解读"></a>parse_model函数解读</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">parse_model</span><span class="token punctuation">(</span>d<span class="token punctuation">,</span> ch<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># model_dict, input_channels(3)</span>
     <span class="token triple-quoted-string string">"""用在下面Model模块中
@@ -633,279 +635,278 @@
     <span class="token comment"># 将所有的层封装为nn.Sequential , 对保存的特征图排序</span>
     <span class="token keyword">return</span> nn<span class="token punctuation">.</span>Sequential<span class="token punctuation">(</span><span class="token operator">*</span>layers<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>save<span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="Model-类解读"><a href="#Model-类解读" class="headerlink" title="Model 类解读"></a>Model 类解读</h2><pre class="line-numbers language-none"><code class="language-none">class Model(nn.Module):
-    # YOLOv5 model
-    def __init__(self, cfg&#x3D;&#39;[yolov5s.yaml](https:&#x2F;&#x2F;github.com&#x2F;Oneflow-Inc&#x2F;one-yolov5&#x2F;blob&#x2F;main&#x2F;models&#x2F;yolov5s.yaml)&#39;, ch&#x3D;3, nc&#x3D;None, anchors&#x3D;None):  # model, input channels, number of classes
-        super().__init__()
-        # 如果cfg已经是字典，则直接赋值，否则先加载cfg路径的文件为字典并赋值给self.yaml。
-        if isinstance(cfg, dict): 
-            self.yaml &#x3D; cfg  # model dict
-        else:  # is *.yaml  加载yaml模块
-            import yaml  # for flow hub 
-            self.yaml_file &#x3D; Path(cfg).name
-            with open(cfg, encoding&#x3D;&#39;ascii&#39;, errors&#x3D;&#39;ignore&#39;) as f:
-                self.yaml &#x3D; yaml.safe_load(f)  # model dict  从yaml文件中加载出字典
+<h2 id="Model-类解读"><a href="#Model-类解读" class="headerlink" title="Model 类解读"></a>Model 类解读</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">Model</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># YOLOv5 model</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> cfg<span class="token operator">=</span><span class="token string">'[yolov5s.yaml](https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml)'</span><span class="token punctuation">,</span> ch<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> nc<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> anchors<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># model, input channels, number of classes</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token comment"># 如果cfg已经是字典，则直接赋值，否则先加载cfg路径的文件为字典并赋值给self.yaml。</span>
+        <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>cfg<span class="token punctuation">,</span> <span class="token builtin">dict</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
+            self<span class="token punctuation">.</span>yaml <span class="token operator">=</span> cfg  <span class="token comment"># model dict</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>  <span class="token comment"># is *.yaml  加载yaml模块</span>
+            <span class="token keyword">import</span> yaml  <span class="token comment"># for flow hub </span>
+            self<span class="token punctuation">.</span>yaml_file <span class="token operator">=</span> Path<span class="token punctuation">(</span>cfg<span class="token punctuation">)</span><span class="token punctuation">.</span>name
+            <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>cfg<span class="token punctuation">,</span> encoding<span class="token operator">=</span><span class="token string">'ascii'</span><span class="token punctuation">,</span> errors<span class="token operator">=</span><span class="token string">'ignore'</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+                self<span class="token punctuation">.</span>yaml <span class="token operator">=</span> yaml<span class="token punctuation">.</span>safe_load<span class="token punctuation">(</span>f<span class="token punctuation">)</span>  <span class="token comment"># model dict  从yaml文件中加载出字典</span>
 
-        # Define model
-        # ch: 输入通道数。 假如self.yaml有键‘ch’，则将该键对应的值赋给内部变量ch。假如没有‘ch’，则将形参ch赋给内部变量ch
-        ch &#x3D; self.yaml[&#39;ch&#39;] &#x3D; self.yaml.get(&#39;ch&#39;, ch)  # input channels
-        # 假如yaml中的nc和方法形参中的nc不一致，则覆盖yaml中的nc。
-        if nc and nc !&#x3D; self.yaml[&#39;nc&#39;]:
-            LOGGER.info(f&quot;Overriding model.yaml nc&#x3D;&#123;self.yaml[&#39;nc&#39;]&#125; with nc&#x3D;&#123;nc&#125;&quot;)
-            self.yaml[&#39;nc&#39;] &#x3D; nc  # override yaml value
-        if anchors: # anchors  先验框的配置
-            LOGGER.info(f&#39;Overriding model.yaml anchors with anchors&#x3D;&#123;anchors&#125;&#39;)
-            self.yaml[&#39;anchors&#39;] &#x3D; round(anchors)  # override yaml value
-        # 得到模型，以及对应的保存的特征图列表。    
-        self.model, self.save &#x3D; parse_model(deepcopy(self.yaml), ch&#x3D;[ch])  # model, savelist
-        self.names &#x3D; [str(i) for i in range(self.yaml[&#39;nc&#39;])]  # default names 初始化类名列表，默认为[0,1,2...]
+        <span class="token comment"># Define model</span>
+        <span class="token comment"># ch: 输入通道数。 假如self.yaml有键‘ch’，则将该键对应的值赋给内部变量ch。假如没有‘ch’，则将形参ch赋给内部变量ch</span>
+        ch <span class="token operator">=</span> self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'ch'</span><span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>yaml<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'ch'</span><span class="token punctuation">,</span> ch<span class="token punctuation">)</span>  <span class="token comment"># input channels</span>
+        <span class="token comment"># 假如yaml中的nc和方法形参中的nc不一致，则覆盖yaml中的nc。</span>
+        <span class="token keyword">if</span> nc <span class="token keyword">and</span> nc <span class="token operator">!=</span> self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'nc'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Overriding model.yaml nc=</span><span class="token interpolation"><span class="token punctuation">&#123;</span>self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'nc'</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span></span><span class="token string"> with nc=</span><span class="token interpolation"><span class="token punctuation">&#123;</span>nc<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+            self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'nc'</span><span class="token punctuation">]</span> <span class="token operator">=</span> nc  <span class="token comment"># override yaml value</span>
+        <span class="token keyword">if</span> anchors<span class="token punctuation">:</span> <span class="token comment"># anchors  先验框的配置</span>
+            LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'Overriding model.yaml anchors with anchors=</span><span class="token interpolation"><span class="token punctuation">&#123;</span>anchors<span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span>
+            self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'anchors'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token builtin">round</span><span class="token punctuation">(</span>anchors<span class="token punctuation">)</span>  <span class="token comment"># override yaml value</span>
+        <span class="token comment"># 得到模型，以及对应的保存的特征图列表。    </span>
+        self<span class="token punctuation">.</span>model<span class="token punctuation">,</span> self<span class="token punctuation">.</span>save <span class="token operator">=</span> parse_model<span class="token punctuation">(</span>deepcopy<span class="token punctuation">(</span>self<span class="token punctuation">.</span>yaml<span class="token punctuation">)</span><span class="token punctuation">,</span> ch<span class="token operator">=</span><span class="token punctuation">[</span>ch<span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># model, savelist</span>
+        self<span class="token punctuation">.</span>names <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span> <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>yaml<span class="token punctuation">[</span><span class="token string">'nc'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">]</span>  <span class="token comment"># default names 初始化类名列表，默认为[0,1,2...]</span>
 
-        # self.inplace&#x3D;True  默认True  节省内存
-        self.inplace &#x3D; self.yaml.get(&#39;inplace&#39;, True)
+        <span class="token comment"># self.inplace=True  默认True  节省内存</span>
+        self<span class="token punctuation">.</span>inplace <span class="token operator">=</span> self<span class="token punctuation">.</span>yaml<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'inplace'</span><span class="token punctuation">,</span> <span class="token boolean">True</span><span class="token punctuation">)</span>
 
-        # Build strides, anchors  确定步长、步长对应的锚框
-        m &#x3D; self.model[-1]  # Detect()
-        if isinstance(m, Detect): # 检验模型的最后一层是Detect模块
-            s &#x3D; 256  # 2x min stride
-            m.inplace &#x3D; self.inplace
-            # 计算三个feature map下采样的倍率  [8, 16, 32]
-            m.stride &#x3D; flow.tensor([s &#x2F; x.shape[-2] for x in self.forward(flow.zeros(1, ch, s, s))])  # forward
-            # 检查anchor顺序与stride顺序是否一致 anchor的顺序应该是从小到大，这里排一下序
-            check_anchor_order(m)  # must be in pixel-space (not grid-space)
-            # 对应的anchor进行缩放操作，原因：得到anchor在实际的特征图中的位置，因为加载的原始anchor大小是相对于原图的像素，但是经过卷积池化之后，特征图的长宽变小了。
-            m.anchors &#x2F;&#x3D; m.stride.view(-1, 1, 1)
-            self.stride &#x3D; m.stride
-            self._initialize_biases() # only run once  初始化偏置 
+        <span class="token comment"># Build strides, anchors  确定步长、步长对应的锚框</span>
+        m <span class="token operator">=</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># Detect()</span>
+        <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> Detect<span class="token punctuation">)</span><span class="token punctuation">:</span> <span class="token comment"># 检验模型的最后一层是Detect模块</span>
+            s <span class="token operator">=</span> <span class="token number">256</span>  <span class="token comment"># 2x min stride</span>
+            m<span class="token punctuation">.</span>inplace <span class="token operator">=</span> self<span class="token punctuation">.</span>inplace
+            <span class="token comment"># 计算三个feature map下采样的倍率  [8, 16, 32]</span>
+            m<span class="token punctuation">.</span>stride <span class="token operator">=</span> flow<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span><span class="token punctuation">[</span>s <span class="token operator">/</span> x<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> self<span class="token punctuation">.</span>forward<span class="token punctuation">(</span>flow<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> ch<span class="token punctuation">,</span> s<span class="token punctuation">,</span> s<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># forward</span>
+            <span class="token comment"># 检查anchor顺序与stride顺序是否一致 anchor的顺序应该是从小到大，这里排一下序</span>
+            check_anchor_order<span class="token punctuation">(</span>m<span class="token punctuation">)</span>  <span class="token comment"># must be in pixel-space (not grid-space)</span>
+            <span class="token comment"># 对应的anchor进行缩放操作，原因：得到anchor在实际的特征图中的位置，因为加载的原始anchor大小是相对于原图的像素，但是经过卷积池化之后，特征图的长宽变小了。</span>
+            m<span class="token punctuation">.</span>anchors <span class="token operator">/=</span> m<span class="token punctuation">.</span>stride<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            self<span class="token punctuation">.</span>stride <span class="token operator">=</span> m<span class="token punctuation">.</span>stride
+            self<span class="token punctuation">.</span>_initialize_biases<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># only run once  初始化偏置 </span>
 
-        # Init weights, biases
-        # 调用oneflow_utils.py下initialize_weights初始化模型权重
-        initialize_weights(self)
-        self.info() # 打印模型信息
-        LOGGER.info(&#39;&#39;)
-    # 管理前向传播函数
-    def forward(self, x, augment&#x3D;False, profile&#x3D;False, visualize&#x3D;False):
-        if augment:# 是否在测试时也使用数据增强  Test Time Augmentation(TTA)
-            return self._forward_augment(x)  # augmented inference, None
-        return self._forward_once(x, profile, visualize)  # single-scale inference, train
-    # 带数据增强的前向传播
-    def _forward_augment(self, x):
-        img_size &#x3D; x.shape[-2:]  # height, width
-        s &#x3D; [1, 0.83, 0.67]  # scales
-        f &#x3D; [None, 3, None]  # flips (2-ud, 3-lr)
-        y &#x3D; []  # outputs
-        for si, fi in zip(s, f):
-            xi &#x3D; scale_img(x.flip(fi) if fi else x, si, gs&#x3D;int(self.stride.max()))
-            yi &#x3D; self._forward_once(xi)[0]  # forward
-            # cv2.imwrite(f&#39;img_&#123;si&#125;.jpg&#39;, 255 * xi[0].cpu().numpy().transpose((1, 2, 0))[:, :, ::-1])  # save
-            yi &#x3D; self._descale_pred(yi, fi, si, img_size)
-            y.append(yi)
-        y &#x3D; self._clip_augmented(y)  # clip augmented tails
-        return flow.cat(y, 1), None  # augmented inference, train
-    # 前向传播具体实现
-    def _forward_once(self, x, profile&#x3D;False, visualize&#x3D;False):
-        &quot;&quot;&quot;
+        <span class="token comment"># Init weights, biases</span>
+        <span class="token comment"># 调用oneflow_utils.py下initialize_weights初始化模型权重</span>
+        initialize_weights<span class="token punctuation">(</span>self<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># 打印模型信息</span>
+        LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+    <span class="token comment"># 管理前向传播函数</span>
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">,</span> augment<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> profile<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> visualize<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">if</span> augment<span class="token punctuation">:</span><span class="token comment"># 是否在测试时也使用数据增强  Test Time Augmentation(TTA)</span>
+            <span class="token keyword">return</span> self<span class="token punctuation">.</span>_forward_augment<span class="token punctuation">(</span>x<span class="token punctuation">)</span>  <span class="token comment"># augmented inference, None</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>_forward_once<span class="token punctuation">(</span>x<span class="token punctuation">,</span> profile<span class="token punctuation">,</span> visualize<span class="token punctuation">)</span>  <span class="token comment"># single-scale inference, train</span>
+    <span class="token comment"># 带数据增强的前向传播</span>
+    <span class="token keyword">def</span> <span class="token function">_forward_augment</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        img_size <span class="token operator">=</span> x<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span>  <span class="token comment"># height, width</span>
+        s <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0.83</span><span class="token punctuation">,</span> <span class="token number">0.67</span><span class="token punctuation">]</span>  <span class="token comment"># scales</span>
+        f <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span>  <span class="token comment"># flips (2-ud, 3-lr)</span>
+        y <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token comment"># outputs</span>
+        <span class="token keyword">for</span> si<span class="token punctuation">,</span> fi <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> f<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            xi <span class="token operator">=</span> scale_img<span class="token punctuation">(</span>x<span class="token punctuation">.</span>flip<span class="token punctuation">(</span>fi<span class="token punctuation">)</span> <span class="token keyword">if</span> fi <span class="token keyword">else</span> x<span class="token punctuation">,</span> si<span class="token punctuation">,</span> gs<span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>stride<span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+            yi <span class="token operator">=</span> self<span class="token punctuation">.</span>_forward_once<span class="token punctuation">(</span>xi<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>  <span class="token comment"># forward</span>
+            <span class="token comment"># cv2.imwrite(f'img_&#123;si&#125;.jpg', 255 * xi[0].cpu().numpy().transpose((1, 2, 0))[:, :, ::-1])  # save</span>
+            yi <span class="token operator">=</span> self<span class="token punctuation">.</span>_descale_pred<span class="token punctuation">(</span>yi<span class="token punctuation">,</span> fi<span class="token punctuation">,</span> si<span class="token punctuation">,</span> img_size<span class="token punctuation">)</span>
+            y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>yi<span class="token punctuation">)</span>
+        y <span class="token operator">=</span> self<span class="token punctuation">.</span>_clip_augmented<span class="token punctuation">(</span>y<span class="token punctuation">)</span>  <span class="token comment"># clip augmented tails</span>
+        <span class="token keyword">return</span> flow<span class="token punctuation">.</span>cat<span class="token punctuation">(</span>y<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">None</span>  <span class="token comment"># augmented inference, train</span>
+    <span class="token comment"># 前向传播具体实现</span>
+    <span class="token keyword">def</span> <span class="token function">_forward_once</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">,</span> profile<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> visualize<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
         @params x: 输入图像
         @params profile: True 可以做一些性能评估
         @params feature_vis: True 可以做一些特征可视化
-        &quot;&quot;&quot;
-        # y: 存放着self.save&#x3D;True的每一层的输出，因为后面的特征融合操作要用到这些特征图
-        y, dt &#x3D; [], []  # outputs
-        # 前向推理每一层结构   m.i&#x3D;index   m.f&#x3D;from   m.type&#x3D;类名   m.np&#x3D;number of params
-        for m in self.model:
-            # if not from previous layer   m.f&#x3D;当前层的输入来自哪一层的输出  s的m.f都是-1
-            if m.f !&#x3D; -1:  # if not from previous layer
-                x &#x3D; y[m.f] if isinstance(m.f, int) else [x if j &#x3D;&#x3D; -1 else y[j] for j in m.f]  # from earlier layers
-            if profile:
-                self._profile_one_layer(m, x, dt)
-            x &#x3D; m(x)  # run
-            y.append(x if m.i in self.save else None)  # save output
-            if visualize:
-                feature_visualization(x, m.type, m.i, save_dir&#x3D;visualize)
-        return x
-    # 将推理结果恢复到原图图片尺寸(逆操作)
-    def _descale_pred(self, p, flips, scale, img_size):
-        # de-scale predictions following augmented inference (inverse operation)
-        &quot;&quot;&quot;用在上面的__init__函数上
+        """</span>
+        <span class="token comment"># y: 存放着self.save=True的每一层的输出，因为后面的特征融合操作要用到这些特征图</span>
+        y<span class="token punctuation">,</span> dt <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token comment"># outputs</span>
+        <span class="token comment"># 前向推理每一层结构   m.i=index   m.f=from   m.type=类名   m.np=number of params</span>
+        <span class="token keyword">for</span> m <span class="token keyword">in</span> self<span class="token punctuation">.</span>model<span class="token punctuation">:</span>
+            <span class="token comment"># if not from previous layer   m.f=当前层的输入来自哪一层的输出  s的m.f都是-1</span>
+            <span class="token keyword">if</span> m<span class="token punctuation">.</span>f <span class="token operator">!=</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">:</span>  <span class="token comment"># if not from previous layer</span>
+                x <span class="token operator">=</span> y<span class="token punctuation">[</span>m<span class="token punctuation">.</span>f<span class="token punctuation">]</span> <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>f<span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token keyword">else</span> <span class="token punctuation">[</span>x <span class="token keyword">if</span> j <span class="token operator">==</span> <span class="token operator">-</span><span class="token number">1</span> <span class="token keyword">else</span> y<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token keyword">for</span> j <span class="token keyword">in</span> m<span class="token punctuation">.</span>f<span class="token punctuation">]</span>  <span class="token comment"># from earlier layers</span>
+            <span class="token keyword">if</span> profile<span class="token punctuation">:</span>
+                self<span class="token punctuation">.</span>_profile_one_layer<span class="token punctuation">(</span>m<span class="token punctuation">,</span> x<span class="token punctuation">,</span> dt<span class="token punctuation">)</span>
+            x <span class="token operator">=</span> m<span class="token punctuation">(</span>x<span class="token punctuation">)</span>  <span class="token comment"># run</span>
+            y<span class="token punctuation">.</span>append<span class="token punctuation">(</span>x <span class="token keyword">if</span> m<span class="token punctuation">.</span>i <span class="token keyword">in</span> self<span class="token punctuation">.</span>save <span class="token keyword">else</span> <span class="token boolean">None</span><span class="token punctuation">)</span>  <span class="token comment"># save output</span>
+            <span class="token keyword">if</span> visualize<span class="token punctuation">:</span>
+                feature_visualization<span class="token punctuation">(</span>x<span class="token punctuation">,</span> m<span class="token punctuation">.</span><span class="token builtin">type</span><span class="token punctuation">,</span> m<span class="token punctuation">.</span>i<span class="token punctuation">,</span> save_dir<span class="token operator">=</span>visualize<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> x
+    <span class="token comment"># 将推理结果恢复到原图图片尺寸(逆操作)</span>
+    <span class="token keyword">def</span> <span class="token function">_descale_pred</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> p<span class="token punctuation">,</span> flips<span class="token punctuation">,</span> scale<span class="token punctuation">,</span> img_size<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># de-scale predictions following augmented inference (inverse operation)</span>
+        <span class="token triple-quoted-string string">"""用在上面的__init__函数上
         将推理结果恢复到原图图片尺寸  Test Time Augmentation(TTA)中用到
          de-scale predictions following augmented inference (inverse operation)
         @params p: 推理结果
         @params flips:
         @params scale:
         @params img_size:
-        &quot;&quot;&quot;
-        if self.inplace:
-            p[..., :4] &#x2F;&#x3D; scale  # de-scale
-            if flips &#x3D;&#x3D; 2:
-                p[..., 1] &#x3D; img_size[0] - p[..., 1]  # de-flip ud
-            elif flips &#x3D;&#x3D; 3:
-                p[..., 0] &#x3D; img_size[1] - p[..., 0]  # de-flip lr
-        else:
-            x, y, wh &#x3D; p[..., 0:1] &#x2F; scale, p[..., 1:2] &#x2F; scale, p[..., 2:4] &#x2F; scale  # de-scale
-            if flips &#x3D;&#x3D; 2:
-                y &#x3D; img_size[0] - y  # de-flip ud
-            elif flips &#x3D;&#x3D; 3:
-                x &#x3D; img_size[1] - x  # de-flip lr
-            p &#x3D; flow.cat((x, y, wh, p[..., 4:]), -1)
-        return p
-    # 这个是TTA的时候对原图片进行裁剪，也是一种数据增强方式，用在TTA测试的时候。
-    def _clip_augmented(self, y):
-        # Clip YOLOv5 augmented inference tails
-        nl &#x3D; self.model[-1].nl  # number of detection layers (P3-P5)
-        g &#x3D; sum(4 ** x for x in range(nl))  # grid points
-        e &#x3D; 1  # exclude layer count
-        i &#x3D; (y[0].shape[1] &#x2F;&#x2F; g) * sum(4 ** x for x in range(e))  # indices
-        y[0] &#x3D; y[0][:, :-i]  # large
-        i &#x3D; (y[-1].shape[1] &#x2F;&#x2F; g) * sum(4 ** (nl - 1 - x) for x in range(e))  # indices
-        y[-1] &#x3D; y[-1][:, i:]  # small
-        return y
-    # 打印日志信息  前向推理时间
-    def _profile_one_layer(self, m, x, dt):
-        c &#x3D; isinstance(m, Detect)  # is final layer, copy input as inplace fix
-        o &#x3D; thop.profile(m, inputs&#x3D;(x.copy() if c else x,), verbose&#x3D;False)[0] &#x2F; 1E9 * 2 if thop else 0  # FLOPs
-        t &#x3D; time_sync()
-        for _ in range(10):
-            m(x.copy() if c else x)
-        dt.append((time_sync() - t) * 100)
-        if m &#x3D;&#x3D; self.model[0]:
-            LOGGER.info(f&quot;&#123;&#39;time (ms)&#39;:&gt;10s&#125; &#123;&#39;GFLOPs&#39;:&gt;10s&#125; &#123;&#39;params&#39;:&gt;10s&#125;  module&quot;)
-        LOGGER.info(f&#39;&#123;dt[-1]:10.2f&#125; &#123;o:10.2f&#125; &#123;m.np:10.0f&#125;  &#123;m.type&#125;&#39;)
-        if c:
-            LOGGER.info(f&quot;&#123;sum(dt):10.2f&#125; &#123;&#39;-&#39;:&gt;10s&#125; &#123;&#39;-&#39;:&gt;10s&#125;  Total&quot;)
-    # initialize biases into Detect(), cf is class frequency
-    def _initialize_biases(self, cf&#x3D;None): 
-        # https:&#x2F;&#x2F;arxiv.org&#x2F;abs&#x2F;1708.02002 section 3.3
-        # cf &#x3D; flow.bincount(flow.tensor(np.concatenate(dataset.labels, 0)[:, 0]).long(), minlength&#x3D;nc) + 1.
-        m &#x3D; self.model[-1]  # Detect() module
-        for mi, s in zip(m.m, m.stride):  # from
-            b &#x3D; mi.bias.view(m.na, -1).detach()  # conv.bias(255) to (3,85)
-            b[:, 4] +&#x3D; math.log(8 &#x2F; (640 &#x2F; s) ** 2)  # obj (8 objects per 640 image)
-            b[:, 5:] +&#x3D; math.log(0.6 &#x2F; (m.nc - 0.999999)) if cf is None else flow.log(cf &#x2F; cf.sum())  # cls
-            mi.bias &#x3D; flow.nn.Parameter(b.view(-1), requires_grad&#x3D;True)
-    #  打印模型中最后Detect层的偏置biases信息(也可以任选哪些层biases信息)
-    def _print_biases(self):
-        &quot;&quot;&quot;
+        """</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>inplace<span class="token punctuation">:</span>
+            p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">/=</span> scale  <span class="token comment"># de-scale</span>
+            <span class="token keyword">if</span> flips <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+                p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> img_size<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># de-flip ud</span>
+            <span class="token keyword">elif</span> flips <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">:</span>
+                p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> img_size<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>  <span class="token comment"># de-flip lr</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> wh <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">/</span> scale<span class="token punctuation">,</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">/</span> scale<span class="token punctuation">,</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">/</span> scale  <span class="token comment"># de-scale</span>
+            <span class="token keyword">if</span> flips <span class="token operator">==</span> <span class="token number">2</span><span class="token punctuation">:</span>
+                y <span class="token operator">=</span> img_size<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> y  <span class="token comment"># de-flip ud</span>
+            <span class="token keyword">elif</span> flips <span class="token operator">==</span> <span class="token number">3</span><span class="token punctuation">:</span>
+                x <span class="token operator">=</span> img_size<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> x  <span class="token comment"># de-flip lr</span>
+            p <span class="token operator">=</span> flow<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> y<span class="token punctuation">,</span> wh<span class="token punctuation">,</span> p<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> p
+    <span class="token comment"># 这个是TTA的时候对原图片进行裁剪，也是一种数据增强方式，用在TTA测试的时候。</span>
+    <span class="token keyword">def</span> <span class="token function">_clip_augmented</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> y<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># Clip YOLOv5 augmented inference tails</span>
+        nl <span class="token operator">=</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>nl  <span class="token comment"># number of detection layers (P3-P5)</span>
+        g <span class="token operator">=</span> <span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">**</span> x <span class="token keyword">for</span> x <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>nl<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># grid points</span>
+        e <span class="token operator">=</span> <span class="token number">1</span>  <span class="token comment"># exclude layer count</span>
+        i <span class="token operator">=</span> <span class="token punctuation">(</span>y<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">//</span> g<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">**</span> x <span class="token keyword">for</span> x <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># indices</span>
+        y<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> y<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token operator">-</span>i<span class="token punctuation">]</span>  <span class="token comment"># large</span>
+        i <span class="token operator">=</span> <span class="token punctuation">(</span>y<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">//</span> g<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">**</span> <span class="token punctuation">(</span>nl <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># indices</span>
+        y<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> y<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> i<span class="token punctuation">:</span><span class="token punctuation">]</span>  <span class="token comment"># small</span>
+        <span class="token keyword">return</span> y
+    <span class="token comment"># 打印日志信息  前向推理时间</span>
+    <span class="token keyword">def</span> <span class="token function">_profile_one_layer</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> m<span class="token punctuation">,</span> x<span class="token punctuation">,</span> dt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        c <span class="token operator">=</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> Detect<span class="token punctuation">)</span>  <span class="token comment"># is final layer, copy input as inplace fix</span>
+        o <span class="token operator">=</span> thop<span class="token punctuation">.</span>profile<span class="token punctuation">(</span>m<span class="token punctuation">,</span> inputs<span class="token operator">=</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">if</span> c <span class="token keyword">else</span> x<span class="token punctuation">,</span><span class="token punctuation">)</span><span class="token punctuation">,</span> verbose<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">/</span> <span class="token number">1E9</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token keyword">if</span> thop <span class="token keyword">else</span> <span class="token number">0</span>  <span class="token comment"># FLOPs</span>
+        t <span class="token operator">=</span> time_sync<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            m<span class="token punctuation">(</span>x<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">if</span> c <span class="token keyword">else</span> x<span class="token punctuation">)</span>
+        dt<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>time_sync<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> t<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> m <span class="token operator">==</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+            LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'time (ms)'</span><span class="token punctuation">:</span><span class="token format-spec">>10s</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'GFLOPs'</span><span class="token punctuation">:</span><span class="token format-spec">>10s</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'params'</span><span class="token punctuation">:</span><span class="token format-spec">>10s</span><span class="token punctuation">&#125;</span></span><span class="token string">  module"</span></span><span class="token punctuation">)</span>
+        LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f'</span><span class="token interpolation"><span class="token punctuation">&#123;</span>dt<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">:</span><span class="token format-spec">10.2f</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span>o<span class="token punctuation">:</span><span class="token format-spec">10.2f</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span>m<span class="token punctuation">.</span>np<span class="token punctuation">:</span><span class="token format-spec">10.0f</span><span class="token punctuation">&#125;</span></span><span class="token string">  </span><span class="token interpolation"><span class="token punctuation">&#123;</span>m<span class="token punctuation">.</span><span class="token builtin">type</span><span class="token punctuation">&#125;</span></span><span class="token string">'</span></span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> c<span class="token punctuation">:</span>
+            LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token builtin">sum</span><span class="token punctuation">(</span>dt<span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token format-spec">10.2f</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'-'</span><span class="token punctuation">:</span><span class="token format-spec">>10s</span><span class="token punctuation">&#125;</span></span><span class="token string"> </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token string">'-'</span><span class="token punctuation">:</span><span class="token format-spec">>10s</span><span class="token punctuation">&#125;</span></span><span class="token string">  Total"</span></span><span class="token punctuation">)</span>
+    <span class="token comment"># initialize biases into Detect(), cf is class frequency</span>
+    <span class="token keyword">def</span> <span class="token function">_initialize_biases</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> cf<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span> 
+        <span class="token comment"># https://arxiv.org/abs/1708.02002 section 3.3</span>
+        <span class="token comment"># cf = flow.bincount(flow.tensor(np.concatenate(dataset.labels, 0)[:, 0]).long(), minlength=nc) + 1.</span>
+        m <span class="token operator">=</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># Detect() module</span>
+        <span class="token keyword">for</span> mi<span class="token punctuation">,</span> s <span class="token keyword">in</span> <span class="token builtin">zip</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>m<span class="token punctuation">,</span> m<span class="token punctuation">.</span>stride<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># from</span>
+            b <span class="token operator">=</span> mi<span class="token punctuation">.</span>bias<span class="token punctuation">.</span>view<span class="token punctuation">(</span>m<span class="token punctuation">.</span>na<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>detach<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># conv.bias(255) to (3,85)</span>
+            b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">+=</span> math<span class="token punctuation">.</span>log<span class="token punctuation">(</span><span class="token number">8</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">640</span> <span class="token operator">/</span> s<span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span>  <span class="token comment"># obj (8 objects per 640 image)</span>
+            b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">:</span><span class="token punctuation">]</span> <span class="token operator">+=</span> math<span class="token punctuation">.</span>log<span class="token punctuation">(</span><span class="token number">0.6</span> <span class="token operator">/</span> <span class="token punctuation">(</span>m<span class="token punctuation">.</span>nc <span class="token operator">-</span> <span class="token number">0.999999</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">if</span> cf <span class="token keyword">is</span> <span class="token boolean">None</span> <span class="token keyword">else</span> flow<span class="token punctuation">.</span>log<span class="token punctuation">(</span>cf <span class="token operator">/</span> cf<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># cls</span>
+            mi<span class="token punctuation">.</span>bias <span class="token operator">=</span> flow<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>Parameter<span class="token punctuation">(</span>b<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> requires_grad<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token comment">#  打印模型中最后Detect层的偏置biases信息(也可以任选哪些层biases信息)</span>
+    <span class="token keyword">def</span> <span class="token function">_print_biases</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
         打印模型中最后Detect模块里面的卷积层的偏置biases信息(也可以任选哪些层biases信息)
-        &quot;&quot;&quot;
-        m &#x3D; self.model[-1]  # Detect() module
-        for mi in m.m:  # from
-            b &#x3D; mi.bias.detach().view(m.na, -1).T  # conv.bias(255) to (3,85)
-            LOGGER.info(
-                (&#39;%6g Conv2d.bias:&#39; + &#39;%10.3g&#39; * 6) % (mi.weight.shape[1], *b[:5].mean(1).tolist(), b[5:].mean()))
+        """</span>
+        m <span class="token operator">=</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># Detect() module</span>
+        <span class="token keyword">for</span> mi <span class="token keyword">in</span> m<span class="token punctuation">.</span>m<span class="token punctuation">:</span>  <span class="token comment"># from</span>
+            b <span class="token operator">=</span> mi<span class="token punctuation">.</span>bias<span class="token punctuation">.</span>detach<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>m<span class="token punctuation">.</span>na<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>T  <span class="token comment"># conv.bias(255) to (3,85)</span>
+            LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span>
+                <span class="token punctuation">(</span><span class="token string">'%6g Conv2d.bias:'</span> <span class="token operator">+</span> <span class="token string">'%10.3g'</span> <span class="token operator">*</span> <span class="token number">6</span><span class="token punctuation">)</span> <span class="token operator">%</span> <span class="token punctuation">(</span>mi<span class="token punctuation">.</span>weight<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token operator">*</span>b<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">5</span><span class="token punctuation">]</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>tolist<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> b<span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 
-    def _print_weights(self):
-        &quot;&quot;&quot;
+    <span class="token keyword">def</span> <span class="token function">_print_weights</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
         打印模型中Bottleneck层的权重参数weights信息(也可以任选哪些层weights信息)
-        &quot;&quot;&quot;
-        for m in self.model.modules():
-            if type(m) is Bottleneck:
-                LOGGER.info(&#39;%10.3g&#39; % (m.w.detach().sigmoid() * 2))  # shortcut weights
+        """</span>
+        <span class="token keyword">for</span> m <span class="token keyword">in</span> self<span class="token punctuation">.</span>model<span class="token punctuation">.</span>modules<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> <span class="token builtin">type</span><span class="token punctuation">(</span>m<span class="token punctuation">)</span> <span class="token keyword">is</span> Bottleneck<span class="token punctuation">:</span>
+                LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'%10.3g'</span> <span class="token operator">%</span> <span class="token punctuation">(</span>m<span class="token punctuation">.</span>w<span class="token punctuation">.</span>detach<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># shortcut weights</span>
 
-    # fuse()是用来进行conv和bn层合并，为了提速模型推理速度。
-    def fuse(self):  # fuse model Conv2d() + BatchNorm2d() layers
-        &quot;&quot;&quot;用在detect.py、val.py
+    <span class="token comment"># fuse()是用来进行conv和bn层合并，为了提速模型推理速度。</span>
+    <span class="token keyword">def</span> <span class="token function">fuse</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># fuse model Conv2d() + BatchNorm2d() layers</span>
+        <span class="token triple-quoted-string string">"""用在detect.py、val.py
         fuse model Conv2d() + BatchNorm2d() layers
         调用oneflow_utils.py中的fuse_conv_and_bn函数和common.py中Conv模块的fuseforward函数
-        &quot;&quot;&quot;
-        LOGGER.info(&#39;Fusing layers... &#39;)
-        for m in self.model.modules():
-            # 如果当前层是卷积层Conv且有bn结构, 那么就调用fuse_conv_and_bn函数讲conv和bn进行融合, 加速推理
-            if isinstance(m, (Conv, DWConv)) and hasattr(m, &#39;bn&#39;):
-                m.conv &#x3D; fuse_conv_and_bn(m.conv, m.bn)  # update conv
-                delattr(m, &#39;bn&#39;)  # remove batchnorm  移除bn remove batchnorm
-                m.forward &#x3D; m.forward_fuse  # update forward 更新前向传播 update forward (反向传播不用管, 因为这种推理只用在推理阶段)
-        self.info()  # 打印conv+bn融合后的模型信息
-        return self
-    # 打印模型结构信息 在当前类__init__函数结尾处有调用
-    def info(self, verbose&#x3D;False, img_size&#x3D;640):  # print model information
-        model_info(self, verbose, img_size)
+        """</span>
+        LOGGER<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">'Fusing layers... '</span><span class="token punctuation">)</span>
+        <span class="token keyword">for</span> m <span class="token keyword">in</span> self<span class="token punctuation">.</span>model<span class="token punctuation">.</span>modules<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token comment"># 如果当前层是卷积层Conv且有bn结构, 那么就调用fuse_conv_and_bn函数讲conv和bn进行融合, 加速推理</span>
+            <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> <span class="token punctuation">(</span>Conv<span class="token punctuation">,</span> DWConv<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">and</span> <span class="token builtin">hasattr</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> <span class="token string">'bn'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                m<span class="token punctuation">.</span>conv <span class="token operator">=</span> fuse_conv_and_bn<span class="token punctuation">(</span>m<span class="token punctuation">.</span>conv<span class="token punctuation">,</span> m<span class="token punctuation">.</span>bn<span class="token punctuation">)</span>  <span class="token comment"># update conv</span>
+                <span class="token builtin">delattr</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> <span class="token string">'bn'</span><span class="token punctuation">)</span>  <span class="token comment"># remove batchnorm  移除bn remove batchnorm</span>
+                m<span class="token punctuation">.</span>forward <span class="token operator">=</span> m<span class="token punctuation">.</span>forward_fuse  <span class="token comment"># update forward 更新前向传播 update forward (反向传播不用管, 因为这种推理只用在推理阶段)</span>
+        self<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># 打印conv+bn融合后的模型信息</span>
+        <span class="token keyword">return</span> self
+    <span class="token comment"># 打印模型结构信息 在当前类__init__函数结尾处有调用</span>
+    <span class="token keyword">def</span> <span class="token function">info</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> verbose<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> img_size<span class="token operator">=</span><span class="token number">640</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># print model information</span>
+        model_info<span class="token punctuation">(</span>self<span class="token punctuation">,</span> verbose<span class="token punctuation">,</span> img_size<span class="token punctuation">)</span>
 
-    def _apply(self, fn):
-        # Apply to(), cpu(), cuda(), half() to model tensors that are not parameters or registered buffers
-        self &#x3D; super()._apply(fn)
-        m &#x3D; self.model[-1]  # Detect()
-        if isinstance(m, Detect):
-            m.stride &#x3D; fn(m.stride)
-            m.grid &#x3D; list(map(fn, m.grid))
-            if isinstance(m.anchor_grid, list):
-                m.anchor_grid &#x3D; list(map(fn, m.anchor_grid))
-        return self<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token keyword">def</span> <span class="token function">_apply</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> fn<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># Apply to(), cpu(), cuda(), half() to model tensors that are not parameters or registered buffers</span>
+        self <span class="token operator">=</span> <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>_apply<span class="token punctuation">(</span>fn<span class="token punctuation">)</span>
+        m <span class="token operator">=</span> self<span class="token punctuation">.</span>model<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># Detect()</span>
+        <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span> Detect<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            m<span class="token punctuation">.</span>stride <span class="token operator">=</span> fn<span class="token punctuation">(</span>m<span class="token punctuation">.</span>stride<span class="token punctuation">)</span>
+            m<span class="token punctuation">.</span>grid <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> m<span class="token punctuation">.</span>grid<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>m<span class="token punctuation">.</span>anchor_grid<span class="token punctuation">,</span> <span class="token builtin">list</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                m<span class="token punctuation">.</span>anchor_grid <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">,</span> m<span class="token punctuation">.</span>anchor_grid<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">return</span> self<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="Detect类解读"><a href="#Detect类解读" class="headerlink" title="Detect类解读"></a>Detect类解读</h2><pre class="line-numbers language-none"><code class="language-none">class Detect(nn.Module):
-    &quot;&quot;&quot;
+<h2 id="Detect类解读"><a href="#Detect类解读" class="headerlink" title="Detect类解读"></a>Detect类解读</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">Detect</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
     Detect模块是用来构建Detect层的，将输入feature map 通过一个卷积操作和公式计算到我们想要的shape, 为后面的计算损失或者NMS后处理作准备
-    &quot;&quot;&quot;
-    stride &#x3D; None  # strides computed during build
-    onnx_dynamic &#x3D; False  # ONNX export parameter
-    export &#x3D; False  # export mode
+    """</span>
+    stride <span class="token operator">=</span> <span class="token boolean">None</span>  <span class="token comment"># strides computed during build</span>
+    onnx_dynamic <span class="token operator">=</span> <span class="token boolean">False</span>  <span class="token comment"># ONNX export parameter</span>
+    export <span class="token operator">=</span> <span class="token boolean">False</span>  <span class="token comment"># export mode</span>
 
-    def __init__(self, nc&#x3D;80, anchors&#x3D;(), ch&#x3D;(), inplace&#x3D;True):  # detection layer
-        super().__init__()
-        #  nc:分类数量
-        self.nc &#x3D; nc  # number of classes  COCO : 80
-        #  no:每个anchor的输出数 COCO: 80 + 5 &#x3D; 85 
-        self.no &#x3D; nc + 5  # number of outputs per anchor  Detect的个数 3
-        # nl:预测层数，此次为3
-        self.nl &#x3D; len(anchors)  # number of detection layers
-        #  na:anchors的数量，此次为3
-        self.na &#x3D; len(anchors[0]) &#x2F;&#x2F; 2  # number of anchors
-        #  grid:格子坐标系，左上角为(1,1),右下角为(input.w&#x2F;stride,input.h&#x2F;stride)
-        self.grid &#x3D; [flow.zeros(1)] * self.nl  # init grid
-        self.anchor_grid &#x3D; [flow.zeros(1)] * self.nl  # init anchor grid
-        # 写入缓存中，并命名为anchors
-        # register_buffer
-        # 模型中需要保存的参数一般有两种：一种是反向传播需要被optimizer更新的，称为parameter; 另一种不要被更新称为buffer
-        # buffer的参数更新是在forward中，而optim.step只能更新nn.parameter类型的参数
-        self.register_buffer(&#39;anchors&#39;, flow.tensor(anchors).float().view(self.nl, -1, 2))  # shape(nl,na,2)
-        # 将输出通过卷积到 self.no * self.na 的通道，达到全连接的作用
-        self.m &#x3D; nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
-        self.inplace &#x3D; inplace  # use inplace ops (e.g. slice assignment)
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> nc<span class="token operator">=</span><span class="token number">80</span><span class="token punctuation">,</span> anchors<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ch<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> inplace<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># detection layer</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token comment">#  nc:分类数量</span>
+        self<span class="token punctuation">.</span>nc <span class="token operator">=</span> nc  <span class="token comment"># number of classes  COCO : 80</span>
+        <span class="token comment">#  no:每个anchor的输出数 COCO: 80 + 5 = 85 </span>
+        self<span class="token punctuation">.</span>no <span class="token operator">=</span> nc <span class="token operator">+</span> <span class="token number">5</span>  <span class="token comment"># number of outputs per anchor  Detect的个数 3</span>
+        <span class="token comment"># nl:预测层数，此次为3</span>
+        self<span class="token punctuation">.</span>nl <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>anchors<span class="token punctuation">)</span>  <span class="token comment"># number of detection layers</span>
+        <span class="token comment">#  na:anchors的数量，此次为3</span>
+        self<span class="token punctuation">.</span>na <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>anchors<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token number">2</span>  <span class="token comment"># number of anchors</span>
+        <span class="token comment">#  grid:格子坐标系，左上角为(1,1),右下角为(input.w/stride,input.h/stride)</span>
+        self<span class="token punctuation">.</span>grid <span class="token operator">=</span> <span class="token punctuation">[</span>flow<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>nl  <span class="token comment"># init grid</span>
+        self<span class="token punctuation">.</span>anchor_grid <span class="token operator">=</span> <span class="token punctuation">[</span>flow<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>nl  <span class="token comment"># init anchor grid</span>
+        <span class="token comment"># 写入缓存中，并命名为anchors</span>
+        <span class="token comment"># register_buffer</span>
+        <span class="token comment"># 模型中需要保存的参数一般有两种：一种是反向传播需要被optimizer更新的，称为parameter; 另一种不要被更新称为buffer</span>
+        <span class="token comment"># buffer的参数更新是在forward中，而optim.step只能更新nn.parameter类型的参数</span>
+        self<span class="token punctuation">.</span>register_buffer<span class="token punctuation">(</span><span class="token string">'anchors'</span><span class="token punctuation">,</span> flow<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span>anchors<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>self<span class="token punctuation">.</span>nl<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment"># shape(nl,na,2)</span>
+        <span class="token comment"># 将输出通过卷积到 self.no * self.na 的通道，达到全连接的作用</span>
+        self<span class="token punctuation">.</span>m <span class="token operator">=</span> nn<span class="token punctuation">.</span>ModuleList<span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span>x<span class="token punctuation">,</span> self<span class="token punctuation">.</span>no <span class="token operator">*</span> self<span class="token punctuation">.</span>na<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> ch<span class="token punctuation">)</span>  <span class="token comment"># output conv</span>
+        self<span class="token punctuation">.</span>inplace <span class="token operator">=</span> inplace  <span class="token comment"># use inplace ops (e.g. slice assignment)</span>
 
-    def forward(self, x):
-        z &#x3D; []  # inference output
-        for i in range(self.nl):
-            x[i] &#x3D; self.m[i](x[i])  # conv
-            bs, _, ny, nx &#x3D; x[i].shape  # x(bs,255,20,20) to x(bs,3,20,20,85)
-            x[i] &#x3D; x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        z <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token comment"># inference output</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>nl<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            x<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>m<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">(</span>x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># conv</span>
+            bs<span class="token punctuation">,</span> _<span class="token punctuation">,</span> ny<span class="token punctuation">,</span> nx <span class="token operator">=</span> x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>shape  <span class="token comment"># x(bs,255,20,20) to x(bs,3,20,20,85)</span>
+            x<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>na<span class="token punctuation">,</span> self<span class="token punctuation">.</span>no<span class="token punctuation">,</span> ny<span class="token punctuation">,</span> nx<span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-            if not self.training:  # inference
-                # 构造网格
-                # 因为推理返回的不是归一化后的网格偏移量 需要再加上网格的位置 得到最终的推理坐标 再送入nms
-                # 所以这里构建网格就是为了记录每个grid的网格坐标 方面后面使用
-                if self.onnx_dynamic or self.grid[i].shape[2:4] !&#x3D; x[i].shape[2:4]:
-                    # 向前传播时需要将相对坐标转换到grid绝对坐标系中
-                    self.grid[i], self.anchor_grid[i] &#x3D; self._make_grid(nx, ny, i)
-                y &#x3D; x[i].sigmoid()
-                if self.inplace:
-                    # 默认执行 不使用AWS Inferentia
-                    # 这里的公式和yolov3、v4中使用的不一样 是yolov5作者自己用的 效果更好
-                    y[..., 0:2] &#x3D; (y[..., 0:2] * 2 + self.grid[i]) * self.stride[i]  # xy
-                    y[..., 2:4] &#x3D; (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
-                else:  # for YOLOv5 on AWS Inferentia https:&#x2F;&#x2F;github.com&#x2F;ultralytics&#x2F;yolov5&#x2F;pull&#x2F;2953
-                    xy, wh, conf &#x3D; y.split((2, 2, self.nc + 1), 4)  # y.tensor_split((2, 4, 5), 4)  
-                    xy &#x3D; (xy * 2 + self.grid[i]) * self.stride[i]  # xy
-                    wh &#x3D; (wh * 2) ** 2 * self.anchor_grid[i]  # wh
-                    y &#x3D; flow.cat((xy, wh, conf), 4)
+            <span class="token keyword">if</span> <span class="token keyword">not</span> self<span class="token punctuation">.</span>training<span class="token punctuation">:</span>  <span class="token comment"># inference</span>
+                <span class="token comment"># 构造网格</span>
+                <span class="token comment"># 因为推理返回的不是归一化后的网格偏移量 需要再加上网格的位置 得到最终的推理坐标 再送入nms</span>
+                <span class="token comment"># 所以这里构建网格就是为了记录每个grid的网格坐标 方面后面使用</span>
+                <span class="token keyword">if</span> self<span class="token punctuation">.</span>onnx_dynamic <span class="token keyword">or</span> self<span class="token punctuation">.</span>grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">!=</span> x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                    <span class="token comment"># 向前传播时需要将相对坐标转换到grid绝对坐标系中</span>
+                    self<span class="token punctuation">.</span>grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>anchor_grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>_make_grid<span class="token punctuation">(</span>nx<span class="token punctuation">,</span> ny<span class="token punctuation">,</span> i<span class="token punctuation">)</span>
+                y <span class="token operator">=</span> x<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token keyword">if</span> self<span class="token punctuation">.</span>inplace<span class="token punctuation">:</span>
+                    <span class="token comment"># 默认执行 不使用AWS Inferentia</span>
+                    <span class="token comment"># 这里的公式和yolov3、v4中使用的不一样 是yolov5作者自己用的 效果更好</span>
+                    y<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>y<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">:</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> self<span class="token punctuation">.</span>grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>stride<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># xy</span>
+                    y<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">(</span>y<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>anchor_grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># wh</span>
+                <span class="token keyword">else</span><span class="token punctuation">:</span>  <span class="token comment"># for YOLOv5 on AWS Inferentia https://github.com/ultralytics/yolov5/pull/2953</span>
+                    xy<span class="token punctuation">,</span> wh<span class="token punctuation">,</span> conf <span class="token operator">=</span> y<span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>nc <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>  <span class="token comment"># y.tensor_split((2, 4, 5), 4)  </span>
+                    xy <span class="token operator">=</span> <span class="token punctuation">(</span>xy <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">+</span> self<span class="token punctuation">.</span>grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>stride<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># xy</span>
+                    wh <span class="token operator">=</span> <span class="token punctuation">(</span>wh <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>anchor_grid<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># wh</span>
+                    y <span class="token operator">=</span> flow<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">(</span>xy<span class="token punctuation">,</span> wh<span class="token punctuation">,</span> conf<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span>
 
-                # z [oneflow.Size([1, 19200, 85])  oneflow.Size([1, 4800, 85]) oneflow.Size([1, 1200, 85])]
-                z.append(y.view(bs, -1, self.no))
+                <span class="token comment"># z [oneflow.Size([1, 19200, 85])  oneflow.Size([1, 4800, 85]) oneflow.Size([1, 1200, 85])]</span>
+                z<span class="token punctuation">.</span>append<span class="token punctuation">(</span>y<span class="token punctuation">.</span>view<span class="token punctuation">(</span>bs<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>no<span class="token punctuation">)</span><span class="token punctuation">)</span>
 
 
-        return x if self.training else (flow.cat(z, 1),) if self.export else (flow.cat(z, 1), x)
+        <span class="token keyword">return</span> x <span class="token keyword">if</span> self<span class="token punctuation">.</span>training <span class="token keyword">else</span> <span class="token punctuation">(</span>flow<span class="token punctuation">.</span>cat<span class="token punctuation">(</span>z<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token punctuation">)</span> <span class="token keyword">if</span> self<span class="token punctuation">.</span>export <span class="token keyword">else</span> <span class="token punctuation">(</span>flow<span class="token punctuation">.</span>cat<span class="token punctuation">(</span>z<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> x<span class="token punctuation">)</span>
 
-    # 相对坐标转换到grid绝对坐标系
-    def _make_grid(self, nx&#x3D;20, ny&#x3D;20, i&#x3D;0):
-        d &#x3D; self.anchors[i].device
-        t &#x3D; self.anchors[i].dtype
-        shape &#x3D; 1, self.na, ny, nx, 2  # grid shape
-        y, x &#x3D; flow.arange(ny, device&#x3D;d, dtype&#x3D;t), flow.arange(nx, device&#x3D;d, dtype&#x3D;t)
+    <span class="token comment"># 相对坐标转换到grid绝对坐标系</span>
+    <span class="token keyword">def</span> <span class="token function">_make_grid</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> nx<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> ny<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        d <span class="token operator">=</span> self<span class="token punctuation">.</span>anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>device
+        t <span class="token operator">=</span> self<span class="token punctuation">.</span>anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>dtype
+        shape <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>na<span class="token punctuation">,</span> ny<span class="token punctuation">,</span> nx<span class="token punctuation">,</span> <span class="token number">2</span>  <span class="token comment"># grid shape</span>
+        y<span class="token punctuation">,</span> x <span class="token operator">=</span> flow<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>ny<span class="token punctuation">,</span> device<span class="token operator">=</span>d<span class="token punctuation">,</span> dtype<span class="token operator">=</span>t<span class="token punctuation">)</span><span class="token punctuation">,</span> flow<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>nx<span class="token punctuation">,</span> device<span class="token operator">=</span>d<span class="token punctuation">,</span> dtype<span class="token operator">=</span>t<span class="token punctuation">)</span>
 
-        yv, xv &#x3D; flow.meshgrid(y, x, indexing&#x3D;&quot;ij&quot;)
-        grid &#x3D; flow.stack((xv, yv), 2).expand(shape) - 0.5  # add grid offset, i.e. y &#x3D; 2.0 * x - 0.5
-        anchor_grid &#x3D; (self.anchors[i] * self.stride[i]).view((1, self.na, 1, 1, 2)).expand(shape)
-        return grid, anchor_grid<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+        yv<span class="token punctuation">,</span> xv <span class="token operator">=</span> flow<span class="token punctuation">.</span>meshgrid<span class="token punctuation">(</span>y<span class="token punctuation">,</span> x<span class="token punctuation">,</span> indexing<span class="token operator">=</span><span class="token string">"ij"</span><span class="token punctuation">)</span>
+        grid <span class="token operator">=</span> flow<span class="token punctuation">.</span>stack<span class="token punctuation">(</span><span class="token punctuation">(</span>xv<span class="token punctuation">,</span> yv<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span>shape<span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token number">0.5</span>  <span class="token comment"># add grid offset, i.e. y = 2.0 * x - 0.5</span>
+        anchor_grid <span class="token operator">=</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">*</span> self<span class="token punctuation">.</span>stride<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>na<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span>shape<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> grid<span class="token punctuation">,</span> anchor_grid<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h1><p>yolov5s网络结构图<br><img src="/../../../MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image-2.png"></p>
-<p>表2.1 <a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml">yolov5s.yaml</a>解析表</p>
+<h1 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h1><p>表2.1 <a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml">yolov5s.yaml</a>解析表</p>
 <table>
 <thead>
 <tr>

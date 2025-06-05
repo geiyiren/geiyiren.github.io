@@ -541,10 +541,10 @@
 <p>其模型的深度和宽度也会大很多，这就使得 YOLOv5l 的 精度值要比 YOLOv5s 好很多，因此在最终推理时的检测精度高，但是模型的推理速度更慢。</p>
 <p>所以 YOLOv5 提供了不同的选择，如果想要追求推理速度可选用较小一些的模型如 YOLOv5s、YOLOv5m，如果想要追求精度更高对推理速度要求不高的可以选择其他两个稍大的模型。</p>
 <p>如下面这张图：</p>
-<p><img src="/../../../MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image-1.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image-1.png"></p>
 <h2 id="Conv模块解读"><a href="#Conv模块解读" class="headerlink" title="Conv模块解读"></a>Conv模块解读</h2><h2 id="网络结构预览"><a href="#网络结构预览" class="headerlink" title="网络结构预览"></a>网络结构预览</h2><p>下面是根据<a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml">yolov5s.yaml</a>绘制的网络整体结构简化版。</p>
-<p><img src="/../../../MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image.png"></p>
-<p> 详细结构如下所示：<br><a href="../../../MyBlogFile1/yolo/yolov5%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90.drawio">yolov5结构解析</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image.png"></p>
+<p> 详细结构如下所示：<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogFile1/yolo/yolov5%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90.drawio">yolov5结构解析</a></p>
 <p>三个分支的输出[1, 128, 80, 80],[1, 256, 40, 40],[1, 512, 20, 20] 作为输入经过Detect的forward, 接着flow.cat()函数拼接成为output: [1, 25200, 85]。</p>
 <p>Detect层第一个操作为二维卷积，将得到的三个分支的输出转换为通道数为3x(类别数+5)的特征图，然后将特征图进行view和通道顺序变化并进行框的位置解析。</p>
 <h1 id="yolo-py解读"><a href="#yolo-py解读" class="headerlink" title="yolo.py解读"></a>yolo.py解读</h1><p>文件主要包含 三大部分 Detect类， Model类，和 parse_model 函数</p>

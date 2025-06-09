@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="云里雾里卡尔曼滤波, geiyiren">
-    <meta name="description" content="卡尔曼滤波">
+    <meta name="keywords" content="深度学习基础知识, geiyiren">
+    <meta name="description" content="深度学习基础知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>云里雾里卡尔曼滤波 | geiyiren</title>
+    <title>深度学习基础知识 | geiyiren</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
     
 
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/14.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">云里雾里卡尔曼滤波</h1>
+                    <h1 class="description center-align post-title">深度学习基础知识</h1>
                 </div>
             </div>
         </div>
@@ -352,8 +352,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4/">
-                                <span class="chip bg-color">卡尔曼滤</span>
+                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">深度学习</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                                <span class="chip bg-color">基础知识</span>
                             </a>
                         
                     </div>
@@ -364,8 +368,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/" class="post-category">
-                                卡尔曼滤波
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                深度学习
                             </a>
                         
                     </div>
@@ -377,7 +381,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-10-08
+                    2023-05-29
                 </div>
                 
 
@@ -391,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.5k
+                    707
                 </div>
                 
 
@@ -416,165 +420,32 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="卡尔曼滤波简介"><a href="#卡尔曼滤波简介" class="headerlink" title="卡尔曼滤波简介"></a>卡尔曼滤波简介</h1><ul>
-<li><strong>目的</strong> ：对线性系统状态的估计</li>
-</ul>
-<p>卡尔曼滤波（Kalman filtering）一种利用线性系统状态方程，通过系统输入输出观测数据，对系统状态进行最优估计的算法。由于观测数据中包括系统中的噪声和干扰的影响，所以最优估计也可看作是滤波过程。 斯坦利·施密特(Stanley Schmidt)首次实现了卡尔曼滤波器。卡尔曼在NASA埃姆斯研究中心访问时，发现他的方法对于解决阿波罗计划的轨道预测很有用，后来阿波罗飞船的导航电脑使用了这种滤波器。  </p>
-<h1 id="卡尔曼滤波原理"><a href="#卡尔曼滤波原理" class="headerlink" title="卡尔曼滤波原理"></a>卡尔曼滤波原理</h1><ul>
-<li><strong>方法</strong> ：利用状态过程中的噪声ω 和 观测噪声υ ，给予合理的权重，对状态x 进行估计</li>
-</ul>
-<p>详解的原文链接：<a target="_blank" rel="noopener" href="http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/">http://www.bzarg.com/p/how-a-kalman-filter-works-in-pictures/</a> 对此，进行一些简单的描述，只求通俗易懂： 假如想开发了一个可以在树林里到处跑的小机器人，那么需要知道它实时所在的位置，才能导航。 可以在机器人上装GPS定位装置，精度大约为10米， 但树林里有很多沟壑和悬崖，如果机器人走错了一步，就有可能掉下悬崖，所以这远远不够。 此时还可以获取一些运动的信息: 添加里程计和惯性惯性测量单元记录运动的过程，判断出机器人的姿势和行走距离。 获取发送给电机的指令，知道机器人是否在朝一个方向移动并且没有人干预，预测在下一个状态，机器人很可能朝着相同的方向移动。 但由于传感器的精度、树林里的坑坑洼洼和自然界的风等影响，里程计和惯性测量单元实际并不能非常精确表示机器人实际姿势和行走距离，预测也不是很完美。 GPS 、里程计和惯性测量单元等传感器告诉了我们一些状态信息，我们的预测告诉了我们机器人会怎样运动，但都只是间接的，并且伴随着一些不确定和不准确性。 但是，如果使用所有对我们可用的信息，根据其本身的噪声，分配一定的权重，就能得到一个比任何依据自身估计更好的结果，这就是卡尔曼滤波的用处。    </p>
-<h1 id="卡尔曼滤波的五个公式"><a href="#卡尔曼滤波的五个公式" class="headerlink" title="卡尔曼滤波的五个公式"></a>卡尔曼滤波的五个公式</h1><p>先了解一下卡尔曼滤波的五个公式：</p>
-<ul>
-<li><strong>公式1</strong>：计算预测状态值</li>
-</ul>
-<p>$$<br>x_{k}^\prime&#x3D;A x_{k-1} + Bu_{k-1}<br>$$</p>
-<p>$$<br>\hat{a}<br>$$</p>
-<p>$$<br>a^\prime<br>$$</p>
-<ul>
-<li><p><strong>公式2</strong>：计算预测值和真实值之间的预测误差协方差矩阵<br>$$<br>P_{k}^\prime &#x3D;A P_{k-1} A^T+Q<br>$$</p>
-</li>
-<li><p><strong>公式3</strong>：求得卡尔曼增益<br>$$<br>K_k &#x3D;P_{k}^\prime H^T(H P_{k}^\prime H^T+R)^{-1}<br>$$</p>
-</li>
-<li><p><strong>公式4</strong>：计算估计值<br>$$<br>x_k &#x3D;x_{k}^\prime+K_k(Z_k-H x_{k}^\prime)<br>$$</p>
-</li>
-<li><p><strong>公式5</strong>：计算估计值和真实值之间的误差协方差矩阵<br>$$<br>P_k &#x3D;(I-K_k H) P_{k}^\prime<br>$$</p>
-</li>
-</ul>
-<h1 id="卡尔曼滤波的公式推导"><a href="#卡尔曼滤波的公式推导" class="headerlink" title="卡尔曼滤波的公式推导"></a>卡尔曼滤波的公式推导</h1><h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><p>$x_k: {k}$ 时刻的状态<br>$\hat{x}_{k}^\prime: k$ 时刻的预测状态 (未优化)<br>$\hat{x}_k: k$ 时刻的优化预测状态<br>$\tilde{x}_k: k$ 时刻的状态新息 (状态 - 预测状态)  </p>
-<p>$Z_k: {k}$ 时刻的观测值<br>$\hat{Z}_{k}^\prime: {k}$ 时刻的预测观测值 (未优化)<br>$\hat{Z}_k: {k}$ 时刻的优化预测观测值<br>$\tilde{Z}_k: {k}$ 时刻的观测新息 (观测 - 预测观测)  </p>
-<p>$A$ : 状态转移矩阵<br>$B$ ：输入控制矩阵<br>$H$ : 观测矩阵<br>$Q$ : 预测噪声协方差矩阵<br>$R$ : 观测噪声协方差矩阵<br>$P$ : 误差矩阵  </p>
-<p>$K_k: {k}$ 时刻的卡尔曼增益 (观测权重)<br>$\omega_k: {k}$ 时刻的过程噪声<br>${v}_k: {k}$ 时刻的观测噪声<br>$u_k: {k}$ 时刻外界对系统的作用  </p>
-<h2 id="概念说明"><a href="#概念说明" class="headerlink" title="概念说明"></a>概念说明</h2><h3 id="高斯分布"><a href="#高斯分布" class="headerlink" title="高斯分布"></a>高斯分布</h3><p>通过概率密度函数来定义高斯分布： </p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/3-13.png" alt="3">  </p>
-<p>高斯分布的概率密度函数是：<br>$$<br>p(y)&#x3D;\frac{1}{\sigma \sqrt{2 \pi}} e^{-\frac{(y-\mu)^2}{2 \sigma^2}}<br>$$</p>
-<p>均值为$μ$，标准差为$σ$ 而上述的过程噪声$\omega$ 和 观测噪声$\upsilon$皆服从高斯分布。  </p>
-<h3 id="协方差矩阵"><a href="#协方差矩阵" class="headerlink" title="协方差矩阵"></a>协方差矩阵</h3><ul>
-<li><p><strong>方差</strong>：各个样本与样本均值的差的平方和的均值，度量一组数据的分散程度。 </p>
-</li>
-<li><p><strong>协方差</strong>：两个变量总体误差的期望，度量两个变量线性相关性程度。 当两个变量是相同的情况，协方差就是方差。 如果两个变量的变化趋势相反，其中一个变量大于自身的期望值时，另外一个却小于自身的期望值，那么两个变量之间的协方差就是负值。 两者之间的联系或者关系，关系越大，协方差越大。 </p>
-</li>
-<li><p><strong>协方差矩阵</strong>：数据集中两两变量的协方差组成，每个元素是各个向量元素之间的协方差 噪声协方差矩阵越小说明噪声的误差越小，可信度越高，其对角线上的值就是方差。 误差协方差矩阵越小说明过程噪声和量测噪声的关系越小，用比例分开过程噪声$\omega$ 和 观测噪声$\upsilon$，如果关系越小，分开的越精确。比如一堆白砂糖和盐，如果两种混合的很均匀，说它关系很大，也就越难用比例的方法将其分开。</p>
-</li>
-</ul>
-<p>  </p>
-<h2 id="更新优化的状态估计值"><a href="#更新优化的状态估计值" class="headerlink" title="更新优化的状态估计值"></a>更新优化的状态估计值</h2><p>假定k时刻的系统状态与k-1时刻有关，并且内部有噪声，则:</p>
-<ul>
-<li>状态方程<br>$$x_k&#x3D;Ax_{k-1}+ω_{k-1}$$</li>
-<li>观测方程<br>$$Z_k&#x3D;Hx_k+υ_k$$</li>
-</ul>
-<h2 id="4-4-求优化预测状态"><a href="#4-4-求优化预测状态" class="headerlink" title="4.4. 求优化预测状态"></a>4.4. 求优化预测状态</h2><p>在无噪声情况下的预测</p>
-<ul>
-<li>预测状态<br>$$<br>\hat{x}<em>{k}^\prime&#x3D;A\hat{x}</em>{k-1}^\prime<br>$$</li>
-<li>预测观测<br>$$\hat{Z}<em>{k}^\prime&#x3D;H\hat{x}</em>{k}^\prime&#x3D;HA\hat{x}_{k-1}^\prime$$</li>
-<li>观测新息(观测-预测观测)<br>$$\hat{Z}<em>k&#x3D;Z_k-\hat{Z}</em>{k}^\prime $$</li>
-</ul>
-<p>观测新息反应了预测噪声$\omega$和观测噪声$\upsilon$对状态的综合影响<br>将过程噪声$ωk$ 看作一个 <strong>新息 $\times$ 比例</strong>，则  </p>
-<ul>
-<li>优化预测状态</li>
-</ul>
-<p>$$<br>\hat{x}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k \tilde{Z}<em>k&#x3D;A \hat{x}</em>{k-1}+K_k(Z_k-H \hat{x}_{k}^\prime)<br>$$</p>
-<blockquote>
-<p>仅卡尔曼增益$K_k$为未知时  </p>
-</blockquote>
-<h2 id="4-5-求卡尔曼增益"><a href="#4-5-求卡尔曼增益" class="headerlink" title="4.5. 求卡尔曼增益"></a>4.5. 求卡尔曼增益</h2><p>误差协方差矩阵： </p>
-<p>$$<br>P_k&#x3D;E[\tilde{x},\tilde{x}_{k}^{T}]<br>$$</p>
-<p>而卡尔曼增益$K_k$应该使误差协方差矩阵$P_k$最小 </p>
-<ul>
-<li>状态新息(状态 - 预测状态)</li>
-</ul>
-<p>$$<br>\begin{aligned}<br>\hat{x}<em>k<br>&amp;&#x3D;x_k-\hat{x}<em>k\<br>&amp;&#x3D;Ax</em>{k-1}+\omega</em>{k-1}-[A\hat{x}<em>{k-1}+K_k(Z_k-H\hat{x}</em>{k}^\prime)]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-[A\hat{x}<em>{k-1}+K_k(Hx_k+\upsilon_k-HA\hat{x}</em>{k-1})]\<br>&amp;&#x3D;Ax_{k-1}+\omega_{k-1}-{(I-K_kH)A\hat{x}<em>{k-1}+K_k[H(AX</em>{k-1}+\omega_{k-1})+\upsilon_k]}\<br>&amp;&#x3D;Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}-K_kHAx</em>{k-1}+(I-K_kH)\omega_{k-1}-K_k\nu_k\&amp;&#x3D;(I-K_kH)Ax_{k-1}-(I-K_kH)A\hat{x}<em>{k-1}+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)A(x</em>{k-1}-\hat{x}<em>{k-1})+(I-K_kH)\omega</em>{k-1}-K_k\mathrm{u}<em>k\<br>&amp;&#x3D;(I-K_kH)[A(x</em>{k-1}-\hat{x}<em>{k-1})+\omega</em>{k-1}]-K_k\mathrm{u}_k<br>\end{aligned}<br>$$<br>假设在无噪声情况下，状态新息:</p>
-<p>$$<br>\tilde{x}<em>k&#x3D;(I-K_k H) A(x</em>{k-1}-\hat{x}<em>{k-1})&#x3D;(I-K_k H)(x_k-\hat{x}</em>{k}^\prime)<br>$$ </p>
-<p>则误差协方差矩阵：</p>
-<p>$$<br>P_k&#x3D;E[\tilde{x}<em>k \tilde{x}</em>{k}^T]&#x3D;E[[(I-K_k H)(x_k-\hat{x}<em>{k}^\prime)][(I-K_k H)(x_k-\hat{x}</em>{k}^\prime)]^T]<br>$$</p>
-<p>此时，来看看预测误差协方差矩阵：<br>$$<br>{\cal P}<em>{k}^\prime&#x3D;E[{\tilde{x}}</em>{k}^\prime{\tilde{x}}<em>{k}^\prime{}^{T}\bigr]&#x3D;E[(x</em>{k}-{\hat{x}}<em>{k}^\prime)(x</em>{k}-{\hat{x}}_{k}^\prime)^{T}\bigr]<br>$$ </p>
-<p>此时，再把误差协方差矩阵展开：<br>$$<br>\begin{aligned}<br>{P_{k}}&amp;&#x3D;(I-K_{k}H)E<a href="I-K_%7Bk%7DH">[(x_{k}-\hat{x}<em>{k}^\prime)][(x</em>{k}-\hat{x}_{k}^\prime)]^{T}</a>^{T}+K_{k}E[{\upsilon}<em>{k}\upsilon</em>{k}^{T}]{K}<em>{k}^{T}\<br>&amp;&#x3D;(I-K</em>{k}H)P_{k}^\prime(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;(P_{k}^\prime-K_{k}HP_{k}^\prime)(I-K_{k}H)^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^{T}K_{k}^{T}+K_{k}HP_{k}^\primeH^{T}K_{k}^{T}+K_{k}RK_{k}^{T}\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^{T}K_{k}^{T}+K_{k}(HP_{k}^\primeH^{T}+R)K_{k}^{T}<br>\end{aligned}<br>$$</p>
-<p>若使用T表示误差协方差矩阵的对角线，则   </p>
-<p>$$<br>T[P_{k}]&#x3D;T[P_{k}^\prime]-2T[K_{k}HP_{k}^\prime]+T[K_{k}(HP_{k}^\primeH^{T}+R){K_{k}}^{T}]<br>$$</p>
-<p>对T[Pk ]求导，就可找到最小的均方差，使T[Pk ]最小，就能得到卡尔曼增益Kk 对T[Pk ]求导： </p>
-<p>$$<br>\frac{d(T[P_k])}{dK_k}&#x3D;-2(HP_{k}^\prime)^T+2K_k(HP_{k}^\primeH^T+R)<br>$$</p>
-<p>令其为0，则卡尔曼增益：</p>
-<p>$$<br>K_{k}&#x3D;P_{K}^\primeH^{T}(HP_{K}^\primeH^{T}+R)^{-1}<br>$$</p>
-<p>其中观测矩阵H和观测噪声协方差矩阵R为常数，所以卡尔曼增益Kk与预测误差协方差矩阵Pk’ 有关  </p>
-<h2 id="4-6-求预测误差协方差矩阵"><a href="#4-6-求预测误差协方差矩阵" class="headerlink" title="4.6. 求预测误差协方差矩阵"></a>4.6. 求预测误差协方差矩阵</h2><p>假设观测矩阵 <em>H</em> &#x3D; 1，那么卡尔曼增益： </p>
-<p>$$<br>K_{k}&#x3D;P_{K}^\prime(P_{K}^\prime+R)^{-1}&#x3D;\frac{1}{1+\frac{R}{P_{K}^\prime}}<br>$$ </p>
-<p>则$P_{k}^\prime$ 越大，$K_k$越大，权重重视反馈测量 则$P_{k}^\prime$ 越小，$K_k$越小，权重重视预测值   此时，来看看下一状态的预测误差协方差矩阵：</p>
-<p>$$<br>\begin{aligned}P_{k+1}’&amp;&#x3D;E[\tilde{x}<em>{k+1}^\prime\tilde{x}</em>{k+1}^\prime\bigr]\&amp;&#x3D;E[(x_{k+1}-\hat{x}<em>{k+1}^\prime)(x</em>{k+1}-\hat{x}_{k+1}^\prime)^T\bigr]\&amp;&#x3D;E[(Ax_k+:\omega_k-A\hat{x}_k)(Ax_k+:\omega_k-A\hat{x}_k)^T\bigr]\&amp;&#x3D;E[(A(x_k-\hat{x}_k)+:\omega_k)(A(x_k-\hat{x}_k)+:\omega_k)^T\bigr]\end{aligned}<br>$$</p>
-<p>因为状态x 和过程噪声ωk是独立的，所以再简化 </p>
-<p>$$<br>\begin{aligned}P_{k+1}^\prime&amp;&#x3D;E[(A\tilde{x}<em>{k}+:\omega</em>{k})(A\tilde{x}<em>{k}+:\omega</em>{k})^{T}]\&amp;&#x3D;E[(A\tilde{x}<em>{k})(A\tilde{x}</em>{k})^{T}]+E[\omega_{k}\omega_{k}^{T}]\&amp;&#x3D;AP_{k}A^{T}+:Q\end{aligned}<br>$$</p>
-<p>  其中状态转移矩阵$A$和预测噪声协方差矩阵$Q$为常数，所以预测误差协方差矩阵$P_{k}^\prime$ 与上一状态的误差协方差矩阵$P_{k-1}$有关  </p>
-<h2 id="4-7-求误差协方差矩阵"><a href="#4-7-求误差协方差矩阵" class="headerlink" title="4.7. 求误差协方差矩阵"></a>4.7. 求误差协方差矩阵</h2><p>$$<br>\begin{aligned}<br>P_{k}&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime-P_{k}^\primeH^\primeK_{k}^\prime+K_{k}(HP_{k}^\primeH^\prime+R){K_{k}}^\prime\<br>&amp;&#x3D;P_{k}^\prime-P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}HP_{k}^\prime-P_{k}^\primeH^\prime[P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}]^{T}+\<br>&amp;P_{k}^\primeH^\prime[P_{k}^\primeH^\prime(HP_{k}^\primeH^\prime+R)^{-1}]^{T}\<br>&amp;&#x3D;P_{k}^\prime-P_{k}^\primeH^\prime(HP_{K}^\primeH^\prime+R)^{-1}HP_{k}^\prime\<br>&amp;&#x3D;P_{k}^\prime-K_{k}HP_{k}^\prime\<br>&amp;&#x3D;(I-K_{k}H)P_{k}^\prime<br>\end{aligned}<br>$$</p>
-<h2 id="4-8-加入外界对系统的作用"><a href="#4-8-加入外界对系统的作用" class="headerlink" title="4.8. 加入外界对系统的作用"></a>4.8. 加入外界对系统的作用</h2><p>在加入外界对系统的作用时，可整理出卡尔曼滤波的五个公式：</p>
-<ul>
-<li><p>预测<br>$$<br>\begin{array}{rcl}{\hat{x}<em>{k}^\prime&#x3D;}&amp;{A\hat{x}</em>{k-1}+}&amp;{B:{u}<em>{k-1}}\{P</em>{k}^\prime&#x3D;}&amp;{AP_{k-1}A^{T}+}&amp;{Q}\\end{array}<br>$$</p>
-</li>
-<li><p>校正<br>$$<br>\begin{aligned}{rcl}{K_{k}&#x3D;}&amp;{P_{K}^\primeH^{T}(HP_{k}^\primeH^{T}+R)^{-1}}\{x_{k}&#x3D;}&amp;{x_{K}^\prime+K_{k}(Z_{k}-Hx_{k}^\prime)}\{P_{k}~&#x3D;}&amp;{(I-K_{k}H)P_{k}^\prime}\\end{aligned}<br>$$</p>
-</li>
-</ul>
-<h2 id="5-卡尔曼滤波应用"><a href="#5-卡尔曼滤波应用" class="headerlink" title="5. 卡尔曼滤波应用"></a>5. 卡尔曼滤波应用</h2><p>用python来简单说明  </p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
-<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
-
-delta_t <span class="token operator">=</span> <span class="token number">0.1</span>                               <span class="token comment"># 每秒钟采一次样</span>
-end_t <span class="token operator">=</span> <span class="token number">7</span>                                   <span class="token comment"># 时间长度</span>
-time_t <span class="token operator">=</span> end_t <span class="token operator">*</span> <span class="token number">10</span>                         <span class="token comment"># 采样次数</span>
-t <span class="token operator">=</span> np<span class="token punctuation">.</span>arange<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> end_t<span class="token punctuation">,</span> delta_t<span class="token punctuation">)</span>            <span class="token comment"># 设置时间数组</span>
-
-u <span class="token operator">=</span> <span class="token number">1</span>                                       <span class="token comment"># 定义外界对系统的作用 加速度</span>
-x <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> u <span class="token operator">*</span> t <span class="token operator">**</span> <span class="token number">2</span>                      <span class="token comment"># 实际真实位置</span>
-
-v_var <span class="token operator">=</span> <span class="token number">1</span>                                   <span class="token comment"># 测量噪声的方差</span>
-<span class="token comment"># 创建高斯噪声，精确到小数点后两位</span>
-v_noise <span class="token operator">=</span> np<span class="token punctuation">.</span><span class="token builtin">round</span><span class="token punctuation">(</span>np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>normal<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> v_var<span class="token punctuation">,</span> time_t<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
-
-X <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>                      <span class="token comment"># 定义预测优化值的初始状态</span>
-v <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span>v_noise<span class="token punctuation">)</span>                         <span class="token comment"># 定义测量噪声</span>
-z <span class="token operator">=</span> x <span class="token operator">+</span> v                                   <span class="token comment"># 定义测量值（假设测量值=实际状态值+噪声）</span>
-A <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> delta_t<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>          <span class="token comment"># 定义状态转移矩阵</span>
-B <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token operator">*</span> <span class="token punctuation">(</span>delta_t <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span>delta_t<span class="token punctuation">]</span><span class="token punctuation">]</span>   <span class="token comment"># 定义输入控制矩阵</span>
-P <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>                <span class="token comment"># 定义初始状态协方差矩阵</span>
-Q <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0.001</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0.001</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>        <span class="token comment"># 定义状态转移(预测噪声)协方差矩阵</span>
-H <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>                          <span class="token comment"># 定义观测矩阵</span>
-R <span class="token operator">=</span> np<span class="token punctuation">.</span>mat<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>                             <span class="token comment"># 定义观测噪声协方差</span>
-X_mat <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>time_t<span class="token punctuation">)</span>                    <span class="token comment"># 初始化记录系统预测优化值的列表</span>
-
-<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>time_t<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token comment"># 预测</span>
-    X_predict <span class="token operator">=</span> A <span class="token operator">*</span> X <span class="token operator">+</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>B<span class="token punctuation">,</span> u<span class="token punctuation">)</span>        <span class="token comment"># 估算状态变量</span>
-    P_predict <span class="token operator">=</span> A <span class="token operator">*</span> P <span class="token operator">*</span> A<span class="token punctuation">.</span>T <span class="token operator">+</span> Q             <span class="token comment"># 估算状态误差协方差</span>
-    <span class="token comment"># 校正</span>
-    K <span class="token operator">=</span> P_predict <span class="token operator">*</span> H<span class="token punctuation">.</span>T <span class="token operator">/</span> <span class="token punctuation">(</span>H <span class="token operator">*</span> P_predict <span class="token operator">*</span> H<span class="token punctuation">.</span>T <span class="token operator">+</span> R<span class="token punctuation">)</span>     <span class="token comment"># 更新卡尔曼增益</span>
-    X <span class="token operator">=</span> X_predict <span class="token operator">+</span> K <span class="token operator">*</span> <span class="token punctuation">(</span>z<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> i<span class="token punctuation">]</span> <span class="token operator">-</span> H <span class="token operator">*</span> X_predict<span class="token punctuation">)</span>       <span class="token comment"># 更新预测优化值</span>
-    P <span class="token operator">=</span> <span class="token punctuation">(</span>np<span class="token punctuation">.</span>eye<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">-</span> K <span class="token operator">*</span> H<span class="token punctuation">)</span> <span class="token operator">*</span> P_predict                 <span class="token comment"># 更新状态误差协方差</span>
-    <span class="token comment"># 记录系统的预测优化值</span>
-    X_mat<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> X<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span>
-
-plt<span class="token punctuation">.</span>rcParams<span class="token punctuation">[</span><span class="token string">'font.sans-serif'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'SimHei'</span><span class="token punctuation">]</span>    <span class="token comment"># 设置正常显示中文</span>
-plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>x<span class="token punctuation">,</span> <span class="token string">"b"</span><span class="token punctuation">,</span> label<span class="token operator">=</span><span class="token string">'实际状态值'</span><span class="token punctuation">)</span>             <span class="token comment"># 设置曲线数值</span>
-plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>X_mat<span class="token punctuation">,</span> <span class="token string">"g"</span><span class="token punctuation">,</span> label<span class="token operator">=</span><span class="token string">'预测优化值'</span><span class="token punctuation">)</span>
-plt<span class="token punctuation">.</span>plot<span class="token punctuation">(</span>z<span class="token punctuation">.</span>T<span class="token punctuation">,</span> <span class="token string">"r--"</span><span class="token punctuation">,</span> label<span class="token operator">=</span><span class="token string">'测量值'</span><span class="token punctuation">)</span>
-plt<span class="token punctuation">.</span>xlabel<span class="token punctuation">(</span><span class="token string">"时间"</span><span class="token punctuation">)</span>                               <span class="token comment"># 设置X轴的名字</span>
-plt<span class="token punctuation">.</span>ylabel<span class="token punctuation">(</span><span class="token string">"位移"</span><span class="token punctuation">)</span>                               <span class="token comment"># 设置Y轴的名字</span>
-plt<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">"卡尔曼滤波示意图"</span><span class="token punctuation">)</span>                     <span class="token comment"># 设置标题</span>
-plt<span class="token punctuation">.</span>legend<span class="token punctuation">(</span><span class="token punctuation">)</span>                                    <span class="token comment"># 设置图例</span>
-plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span>                                      <span class="token comment"># 显示图表</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>  运行上面的卡尔曼滤波，得到下图：   <img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/9-5.png" alt="9">   可以看出，尽管测量值波动很大，但最终的预测优化值与实际状态值相差不大。</p>
-<h1 id="原文链接"><a href="#原文链接" class="headerlink" title="原文链接"></a>原文链接</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_32618327/article/details/89669062">卡尔曼滤波的理解、推导和应用</a></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
-<li><p>python的代码地址<br><a target="_blank" rel="noopener" href="https://github.com/JoveH-H/A-simple-explanation/blob/master/Kalman/_filtering.py">https://github.com/JoveH-H/A-simple-explanation/blob/master/Kalman\_filtering.py</a></p>
-</li>
-<li><p>jupyter notebook的代码地址<br><a target="_blank" rel="noopener" href="https://github.com/JoveH-H/A-simple-explanation/blob/master/ipynb/Kalman/_filtering.ipynb">https://github.com/JoveH-H/A-simple-explanation/blob/master/ipynb/Kalman\_filtering.ipynb</a></p>
-</li>
-<li><p>卡尔曼滤波 – 从推导到应用(一)<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/heyijia0327/article/details/17487467#">https://blog.csdn.net/heyijia0327/article/details/17487467#</a> </p>
-</li>
-<li><p>卡尔曼滤波 – 从推导到应用(二)<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/heyijia0327/article/details/17667341">https://blog.csdn.net/heyijia0327/article/details/17667341</a> </p>
-</li>
-<li><p>卡尔曼滤波算法–核心公式推导导论<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/24312995">https://zhuanlan.zhihu.com/p/24312995</a> </p>
-</li>
-<li><p>详解卡尔曼滤波原理<br><a target="_blank" rel="noopener" href="http://baijiahao.baidu.com/s?id=1604230489177143048&amp;wfr=spider&amp;for=pc">http://baijiahao.baidu.com/s?id=1604230489177143048&amp;wfr=spider&amp;for=pc</a></p>
-</li>
-</ul>
+                <h1 id="ROI-Pooling"><a href="#ROI-Pooling" class="headerlink" title="ROI Pooling"></a>ROI Pooling</h1><h2 id="什么是ROI？"><a href="#什么是ROI？" class="headerlink" title="什么是ROI？"></a>什么是ROI？</h2><p>ROI是 Region of interest 的简写，指的是 Faster R-CNN 结构中，经过 RPN 层后，产生的 proposal 对应的 box 框。</p>
+<p>ROI Pooling 顾名思义，是 pooling 层的一种，而且是针对 ROIs 的 pooling。整个 ROI 的过程，就是将这些 proposal 抠出来的过程，得到大小统一的 feature map。</p>
+<h2 id="ROI-Pooling-的输入"><a href="#ROI-Pooling-的输入" class="headerlink" title="ROI Pooling 的输入"></a>ROI Pooling 的输入</h2><p>ROI Pooling 该层有两个输入：</p>
+<ol>
+<li>从具有多个卷积核池化的深度网络中获得的固定大小的feature maps；</li>
+<li>一个表示所有 ROI 的 N*5 的矩阵，其中N表示ROI的数目。一列表示图像index，其余四列表示其余的左上角和右下角坐标；</li>
+</ol>
+<h2 id="ROI-Pooling-的输出"><a href="#ROI-Pooling-的输出" class="headerlink" title="ROI Pooling 的输出"></a>ROI Pooling 的输出</h2><p>输出是 batch 个 vector，其中 batch 的值等于 roi 的个数，vector的大小为 channel ∗ w ∗ h；ROI Pooling 的过程就是将一个个大小不同的 box 矩形框，都映射成大小为 w ∗ h 的矩形框。</p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image.png"><br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-1.png"></p>
+<p>如图所示，我们先把 roi 中的坐标映射到 feature map 上，映射规则比较简单，就是把各个坐标除以输入图片与 feature map 的大小的比值，得到了 feature map 上的 box 坐标后，我们使用 pooling 得到输出；由于输入的图片大小不一，所以这里我们使用的 spp pooling（空间金字塔池化），spp pooling 在 pooling 的过程中需要计算 pooling 后的结果对应的像素点反映射到 feature map 上所占的范围，然后在那个范围中进行取 max 或者取 average。理解起来有点绕，看后面，你会豁然开朗。</p>
+<h2 id="ROI-pooling具体操作如下"><a href="#ROI-pooling具体操作如下" class="headerlink" title="ROI pooling具体操作如下"></a>ROI pooling具体操作如下</h2><ol>
+<li>根据输入image，将 ROI 映射到 feature map 对应位置；</li>
+<li>将映射后的区域划分为相同大小的 sections（sections数量与输出的维度相同）；</li>
+<li>对每个 sections 进行 max pooling 操作；</li>
+</ol>
+<p>这样我们就可以从不同大小的方框得到固定大小的相应的 feature maps。值得一提的是，输出的 feature maps 的大小不取决于 ROI 和卷积 feature maps 大小。ROI pooling 最大的好处就在于极大地提高了处理速度。</p>
+<h2 id="ROI-pooling-example"><a href="#ROI-pooling-example" class="headerlink" title="ROI pooling example"></a>ROI pooling example</h2><p>我们有一个 8∗8 大小的 feature map，一个ROI，以及输出大小为2∗2.</p>
+<p>输入的固定大小的feature map<br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-2.png"></p>
+<p>region proposal 投影之后位置（左上角，右下角坐标）： (0,3)，(7,8)。 </p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-3.png"></p>
+<p>将其划分为（2<em>2）个 sections（因为输出大小为2</em>2），我们可以得到：  </p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-4.png"></p>
+<p>对每个section做max pooling，可以得到：  </p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-5.png"></p>
+<p>整体过程如下：<br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/f95107258e128dac79e9bec44cb09941.gif">  </p>
+<p>说明：在此案例中 region proposals 是 5<em>7 大小的，在 pooling 之后需要得到 2</em>2 的，所以在 5<em>7 的特征图划分成 2</em>2 的时候不是等分的，行是 5&#x2F;2，第一行得到2，剩下的那一行是3，列是7&#x2F;2，第一列得到3，剩下那一列是4。</p>
 
                 
             </div>
@@ -601,7 +472,7 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://geiyiren.github.io/2023/10/08/yun-li-wu-li-qia-er-man-lu-bo/">https://geiyiren.github.io/2023/10/08/yun-li-wu-li-qia-er-man-lu-bo/</a>
+                    <a href="https://geiyiren.github.io/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/">https://geiyiren.github.io/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -639,8 +510,12 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4/">
-                                    <span class="chip bg-color">卡尔曼滤</span>
+                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">深度学习</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                                    <span class="chip bg-color">基础知识</span>
                                 </a>
                             
                         </div>
@@ -723,31 +598,31 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/10/08/markdown-shi-yong-gui-fan/">
+                <a href="/2023/05/29/yolov5-mo-xing-jie-gou-jian-hua-shi-li/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="Markdown使用规范">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/14.jpg" class="responsive-img" alt="yolov5模型结构简化实例">
                         
-                        <span class="card-title">Markdown使用规范</span>
+                        <span class="card-title">yolov5模型结构简化实例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Markdown使用规范
+                            yolov5模型结构简化实例
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-10-08
+                            <i class="far fa-clock fa-fw icon-date"></i>2023-05-29
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/Markdown/" class="post-category">
-                                    Markdown
+                            <a href="/categories/yolov5/" class="post-category">
+                                    yolov5
                                 </a>
                             
                             
@@ -757,8 +632,12 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Markdown%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/">
-                        <span class="chip bg-color">Markdown使用规范</span>
+                    <a href="/tags/yolov5/">
+                        <span class="chip bg-color">yolov5</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">优化</span>
                     </a>
                     
                 </div>
@@ -772,31 +651,31 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/09/20/tu-xiang-gao-si-mo-hu-yuan-li/">
+                <a href="/2023/05/19/dan-li-mo-shi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="图像高斯模糊原理">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="单例模式">
                         
-                        <span class="card-title">图像高斯模糊原理</span>
+                        <span class="card-title">单例模式</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            图像高斯模糊原理
+                            单例模式
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-09-20
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-05-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/opencv/" class="post-category">
-                                    opencv
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
+                                    设计模式
                                 </a>
                             
                             
@@ -806,12 +685,12 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/opencv/">
-                        <span class="chip bg-color">opencv</span>
+                    <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+                        <span class="chip bg-color">设计模式</span>
                     </a>
                     
-                    <a href="/tags/%E5%9B%BE%E5%83%8F%E5%8F%98%E6%8D%A2/">
-                        <span class="chip bg-color">图像变换</span>
+                    <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+                        <span class="chip bg-color">单例模式</span>
                     </a>
                     
                 </div>
@@ -975,15 +854,6 @@ plt<span class="token punctuation">.</span>show<span class="token punctuation">(
 
 
     
-
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script>
-    MathJax = {
-        tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']]
-        }
-    };
-</script>
 
 
 

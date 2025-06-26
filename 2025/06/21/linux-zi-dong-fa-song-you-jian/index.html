@@ -392,14 +392,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-06-24
+                    2025-06-26
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    313
+                    269
                 </div>
                 
 
@@ -424,8 +424,10 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>apt update<br>apt install msmtp msmtp-mta</p>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><pre class="line-numbers language-none"><code class="language-none">defaults
+                <h1 id="邮件配置"><a href="#邮件配置" class="headerlink" title="邮件配置"></a>邮件配置</h1><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><pre class="line-numbers language-none"><code class="language-none">apt update
+apt install msmtp msmtp-mta<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><pre class="line-numbers language-none"><code class="language-none">defaults
 auth           on
 tls            on
 tls_starttls   off
@@ -442,29 +444,42 @@ password       Wsy101728
 account default : work
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="发送邮件"><a href="#发送邮件" class="headerlink" title="发送邮件"></a>发送邮件</h1><p>echo -e “Subject: Test Mail\n\nThis is the body.” | msmtp 接收者邮箱</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>echo -e “Subject: Test Mail\n\nThis is the body.” | msmtp 接收者邮箱</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 发送邮件函数</span>
 <span class="token function-name function">send_mail</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
     <span class="token builtin class-name">local</span> <span class="token assign-left variable">recipient</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$1</span>"</span>
     <span class="token builtin class-name">local</span> <span class="token assign-left variable">subject</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$2</span>"</span>
-    <span class="token builtin class-name">local</span> <span class="token assign-left variable">body</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$3</span>"</span>
-
-    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$recipient</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$subject</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$body</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
-        <span class="token builtin class-name">echo</span> <span class="token string">"[send_mail] 缺少参数。用法: send_mail 收件人 主题 正文"</span>
+    <span class="token builtin class-name">local</span> <span class="token assign-left variable">body_file</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$3</span>"</span>
+    <span class="token builtin class-name">local</span> <span class="token assign-left variable">model_name</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$4</span>"</span>
+    <span class="token builtin class-name">local</span> <span class="token assign-left variable">author</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$5</span>"</span>
+    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$recipient</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$subject</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-f</span> <span class="token string">"<span class="token variable">$body_file</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+        log_echo <span class="token string">"[send_mail] 参数错误：需要 收件人、主题、正文文件路径"</span>
         <span class="token builtin class-name">return</span> <span class="token number">1</span>
     <span class="token keyword">fi</span>
 
-    <span class="token builtin class-name">echo</span> <span class="token parameter variable">-e</span> <span class="token string">"Subject: <span class="token variable">$subject</span><span class="token entity" title="\n">\n</span><span class="token entity" title="\n">\n</span><span class="token variable">$body</span>"</span> <span class="token operator">|</span> msmtp <span class="token parameter variable">-a</span> default <span class="token string">"<span class="token variable">$recipient</span>"</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token punctuation">&#123;</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"Subject: <span class="token variable">$subject</span>"</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"To: <span class="token variable">$recipient</span>"</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"Content-Type: text/plain; charset=UTF-8"</span>
+        <span class="token builtin class-name">echo</span> -------------------------------------
+        <span class="token builtin class-name">echo</span> 模型名称: <span class="token variable">$model_name</span>
+        <span class="token builtin class-name">echo</span> 修改人员: <span class="token variable">$author</span>
+        <span class="token builtin class-name">echo</span> -------------------------------------
+        <span class="token builtin class-name">echo</span>
+        <span class="token builtin class-name">echo</span> 模型信息与测试结果如下
+        <span class="token builtin class-name">echo</span> <span class="token string">"param.json"</span>
+        <span class="token function">cat</span> <span class="token string">"<span class="token variable">$body_file</span>"</span>
+    <span class="token punctuation">&#125;</span> <span class="token operator">|</span> msmtp <span class="token parameter variable">-a</span> default <span class="token string">"<span class="token variable">$recipient</span>"</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="配置自动化任务"><a href="#配置自动化任务" class="headerlink" title="配置自动化任务"></a>配置自动化任务</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
-<span class="token builtin class-name">:</span> <span class="token operator">&lt;&lt;</span><span class="token string">'NOTE'
-说明: 自动化程序
-自动化配置如下: 
-    crontab -e
-    增加如下内容:
-    */1 * * * * /home/model_val/script/autoTest.sh >> /home/model_val/log/autoTest.txt 2>&amp;1
-脚本执行频率配置说明:
+
+<h1 id="自动化配置"><a href="#自动化配置" class="headerlink" title="自动化配置"></a>自动化配置</h1><h2 id="crontab配置"><a href="#crontab配置" class="headerlink" title="crontab配置"></a>crontab配置</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#打开配置文件</span>
+<span class="token function">crontab</span> <span class="token parameter variable">-e</span>
+<span class="token comment">#增加如下内容:</span>
+<span class="token assign-left variable"><span class="token environment constant">SHELL</span></span><span class="token operator">=</span>/bin/bash
+*/1 * * * * <span class="token function">bash</span> /home/model_val/autoTest.sh <span class="token operator">>></span> /home/model_val/log/autoTest.txt <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">脚本执行频率配置说明:
 ┌───────────── 分钟 (0 - 59)
 │ ┌─────────── 小时 (0 - 23)
 │ │ ┌───────── 日 (1 - 31)
@@ -472,26 +487,9 @@ account default : work
 │ │ │ │ ┌───── 星期 (0 - 7) (0 或 7 表示周日)
 │ │ │ │ │
 │ │ │ │ │
-* * * * * &lt;命令>
-NOTE</span>
+* * * * * &lt;命令&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<span class="token comment"># 发送邮件函数</span>
-<span class="token function-name function">send_mail</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token builtin class-name">local</span> <span class="token assign-left variable">recipient</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$1</span>"</span>
-    <span class="token builtin class-name">local</span> <span class="token assign-left variable">subject</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$2</span>"</span>
-    <span class="token builtin class-name">local</span> <span class="token assign-left variable">body</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$3</span>"</span>
-
-    <span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$recipient</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$subject</span>"</span> <span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$body</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
-        <span class="token builtin class-name">echo</span> <span class="token string">"[send_mail] 缺少参数。用法: send_mail 收件人 主题 正文"</span>
-        <span class="token builtin class-name">return</span> <span class="token number">1</span>
-    <span class="token keyword">fi</span>
-
-    <span class="token builtin class-name">echo</span> <span class="token parameter variable">-e</span> <span class="token string">"Subject: <span class="token variable">$subject</span><span class="token entity" title="\n">\n</span><span class="token entity" title="\n">\n</span><span class="token variable">$body</span>"</span> <span class="token operator">|</span> msmtp <span class="token parameter variable">-a</span> default <span class="token string">"<span class="token variable">$recipient</span>"</span>
-<span class="token punctuation">&#125;</span>
-
-<span class="token comment"># 测试结束后发送通知邮件</span>
-send_mail <span class="token string">"shuaiyang.wang@hopechart.com"</span> <span class="token string">"自动化测试结果"</span> <span class="token string">"这是一封测试邮件..."</span>
-<span class="token builtin class-name">echo</span> <span class="token string">"邮件发送成功"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="crontab-启动"><a href="#crontab-启动" class="headerlink" title="crontab 启动"></a>crontab 启动</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">service</span> <span class="token function">cron</span> start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
                 
             </div>
             <hr/>

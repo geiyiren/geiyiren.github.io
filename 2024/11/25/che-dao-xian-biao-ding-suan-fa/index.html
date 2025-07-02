@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-01
+                    2025-07-02
                 </div>
                 
 
@@ -464,8 +464,7 @@
 <p>其中,<br>$$<br>k&#x3D;<br>\begin{bmatrix}<br>f_{x} &amp; {0} &amp; c_{x} \\<br>{0} &amp; f_{y} &amp; c_{y} \\<br>{0} &amp; {0} &amp; {1}<br>\end{bmatrix}<br>$$</p>
 <p>即：<br>$$<br>\lambda k^{-1}\begin{bmatrix}<br>u\\<br>v\\<br>1\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>R_{13}\\<br>R_{23}\\<br>R_{33}<br>\end{bmatrix}<br>$$</p>
 <p>由于旋转矩阵中的每个旋转向量都是单位向量，因此$||r_{3}||&#x3D;1$，将向量单位化后如下所示：</p>
-<p>$$<br>\hat{\mathbf{r_{3}}}&#x3D;</p>
-<p>\frac{k^{-1}\begin{bmatrix}<br>u\\<br>v\\<br>1\end{bmatrix}}{ \left |\mathbf{k^{-1}\begin{bmatrix}<br>u\\<br>v\\<br>1\end{bmatrix} }\right | }<br>$$</p>
+<p>$$<br>\hat{\mathbf{r_{3}}}&#x3D;<br>\frac{k^{-1}\begin{bmatrix}<br>u\\<br>v\\<br>1\end{bmatrix}}{ \left |\mathbf{k^{-1}\begin{bmatrix}<br>u\\<br>v\\<br>1\end{bmatrix} }\right | }<br>$$</p>
 <p>由于方程的解只和旋转矩阵的第三列有关。而在所有的旋转方式中只有<code>方式2</code>和<code>方式3</code>的旋转角度求解可以仅与旋转矩阵第三列有关，这里以<code>方式3</code>的旋转为例：</p>
 <p>$$<br>R &#x3D;<br>Y_\alpha{\cdot}X_\beta{\cdot}Z_\gamma&#x3D;\begin{bmatrix}cos\alpha{\cdot}cos\gamma+sin\alpha{\cdot}sin\beta{\cdot}sin\gamma&amp;cos\gamma{\cdot}sin\alpha{\cdot}sin\beta-cos\alpha{\cdot}sin\gamma&amp;cos\beta{\cdot}sin\alpha\\<br>cos\beta{\cdot}sin\gamma&amp;cos\beta{\cdot}cos\gamma&amp;-sin\beta\\cos\alpha{\cdot}sin\beta{\cdot}sin\gamma-cos\gamma{\cdot}sin\alpha&amp;cos\alpha{\cdot}cos\gamma{\cdot}sin\beta+sin\alpha{\cdot}sin\gamma&amp;cos\alpha{\cdot}cos\beta\end{bmatrix}<br>$$</p>
 <p>其中:<br>$$<br>\alpha&#x3D;\arctan\left(\frac{R_{13}}{R_{33}}\right)\\<br>\beta&#x3D;\arcsin(-R_{23})\\<br>\gamma&#x3D;\arctan\left(\frac{R_{21}}{R_{22}}\right)<br>$$</p>

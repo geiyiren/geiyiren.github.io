@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-02
+                    2025-07-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    389
+                    498
                 </div>
                 
 
@@ -457,6 +457,22 @@ strings <span class="token operator">&lt;</span>executable_file<span class="toke
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/bin
 /usr/bin/
 /usr/sbin/<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+
+<h1 id="降低串口打印级别"><a href="#降低串口打印级别" class="headerlink" title="降低串口打印级别"></a>降低串口打印级别</h1><p>dmesg -n <LEVEL></p>
+<p>LEVEL	含义	        打印内容<br>1	    KERN_EMERG	    紧急情况（系统崩溃）<br>3	    KERN_ERR	    错误信息<br>4	    KERN_WARNING    警告信息<br>5	    KERN_NOTICE	    正常但重要的信息<br>6	    KERN_INFO	    常规信息<br>7	    KERN_DEBUG	    所有调试信息（默认）</p>
+<blockquote>
+<p>dmesg -n 1</p>
+</blockquote>
+<h1 id="“-“开头的文件删除"><a href="#“-“开头的文件删除" class="headerlink" title="“ “开头的文件删除"></a>“ “开头的文件删除</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">rm</span> <span class="token punctuation">\</span>"<span class="token punctuation">\</span> <span class="token punctuation">\</span>"<span class="token punctuation">\</span>*<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>使用反斜杠转义空格和引号</p>
+<h1 id="网卡IP配置"><a href="#网卡IP配置" class="headerlink" title="网卡IP配置"></a>网卡IP配置</h1><pre class="line-numbers language-none"><code class="language-none"># IP配置
+ifconfig eth1 10.10.150.218 
+# 网卡激活
+ifconfig eth1 up<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
                 
             </div>
             <hr/>

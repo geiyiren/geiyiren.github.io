@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-09
+                    2025-07-10
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    870
+                    942
                 </div>
                 
 
@@ -416,7 +416,11 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="cudnn环境配置"><a href="#cudnn环境配置" class="headerlink" title="cudnn环境配置"></a>cudnn环境配置</h1><p><strong>PyTorch 自带了自己的 cuDNN 库</strong>（包含在其预编译的二进制包里），不依赖系统的 <code>libcudnn.so</code>，但是 <strong>ONNX Runtime GPU 依赖容器系统环境里存在兼容版本的 <code>libcudnn.so</code></strong></p>
+                <h1 id="测试注意事项"><a href="#测试注意事项" class="headerlink" title="测试注意事项"></a>测试注意事项</h1><ol>
+<li>gpu推理时如果推理次数比较少的情况下，帧率会不稳定，建议配置推理次数使得推理时间大于10s</li>
+<li></li>
+</ol>
+<h1 id="cudnn环境配置"><a href="#cudnn环境配置" class="headerlink" title="cudnn环境配置"></a>cudnn环境配置</h1><p><strong>PyTorch 自带了自己的 cuDNN 库</strong>（包含在其预编译的二进制包里），不依赖系统的 <code>libcudnn.so</code>，但是 <strong>ONNX Runtime GPU 依赖容器系统环境里存在兼容版本的 <code>libcudnn.so</code></strong></p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 添加 NVIDIA 公钥</span>
 <span class="token function">curl</span> <span class="token parameter variable">-fsSL</span> https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub <span class="token operator">|</span> <span class="token function">sudo</span> gpg <span class="token parameter variable">--dearmor</span> <span class="token parameter variable">-o</span> /usr/share/keyrings/nvidia-cuda-keyring.gpg
 
@@ -429,7 +433,12 @@
 <span class="token comment">#安装指定版本的cudnn</span>
 <span class="token function">apt-get</span> <span class="token function">install</span> <span class="token assign-left variable">libcudnn8</span><span class="token operator">=</span><span class="token number">8.1</span>.1.33-1+cuda11.2 libcudnn8-dev<span class="token operator">=</span><span class="token number">8.1</span>.1.33-1+cuda11.2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h1 id="cpu和gpu推理速度测试"><a href="#cpu和gpu推理速度测试" class="headerlink" title="cpu和gpu推理速度测试"></a>cpu和gpu推理速度测试</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> onnxruntime <span class="token keyword">as</span> ort
+<h1 id="onnx性能参数分析工具"><a href="#onnx性能参数分析工具" class="headerlink" title="onnx性能参数分析工具"></a>onnx性能参数分析工具</h1><ul>
+<li><p>onnx_tool</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> onnx_tool <span class="token keyword">import</span> model_profile
+report <span class="token operator">=</span> model_profile<span class="token punctuation">(</span>m<span class="token operator">=</span><span class="token string">"model.onnx"</span><span class="token punctuation">,</span>save_profile<span class="token operator">=</span><span class="token string">"out.txt"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="cpu和gpu推理速度测试完整脚本"><a href="#cpu和gpu推理速度测试完整脚本" class="headerlink" title="cpu和gpu推理速度测试完整脚本"></a>cpu和gpu推理速度测试完整脚本</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> onnxruntime <span class="token keyword">as</span> ort
 <span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
 <span class="token keyword">import</span> time
 <span class="token keyword">import</span> psutil

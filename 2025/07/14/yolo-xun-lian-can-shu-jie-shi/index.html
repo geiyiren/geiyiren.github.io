@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-14
+                    2025-07-15
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.1k
+                    1.3k
                 </div>
                 
 
@@ -420,8 +420,10 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Ultralytics-🚀-AGPL-3-0-License-https-ultralytics-com-license"><a href="#Ultralytics-🚀-AGPL-3-0-License-https-ultralytics-com-license" class="headerlink" title="Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license"></a>Ultralytics 🚀 AGPL-3.0 License - <a target="_blank" rel="noopener" href="https://ultralytics.com/license">https://ultralytics.com/license</a></h1><h1 id="Global-configuration-YAML-with-settings-and-hyperparameters-for-YOLO-training-validation-prediction-and-export"><a href="#Global-configuration-YAML-with-settings-and-hyperparameters-for-YOLO-training-validation-prediction-and-export" class="headerlink" title="Global configuration YAML with settings and hyperparameters for YOLO training, validation, prediction and export"></a>Global configuration YAML with settings and hyperparameters for YOLO training, validation, prediction and export</h1><h1 id="For-documentation-see-https-docs-ultralytics-com-usage-cfg"><a href="#For-documentation-see-https-docs-ultralytics-com-usage-cfg" class="headerlink" title="For documentation see https://docs.ultralytics.com/usage/cfg/"></a>For documentation see <a target="_blank" rel="noopener" href="https://docs.ultralytics.com/usage/cfg/">https://docs.ultralytics.com/usage/cfg/</a></h1><p>task: detect # (str) YOLO task, i.e. detect, segment, classify, pose, obb<br>mode: train # (str) YOLO mode, i.e. train, val, predict, export, track, benchmark</p>
-<h1 id="Train-settings"><a href="#Train-settings" class="headerlink" title="Train settings"></a>Train settings</h1><table>
+                <blockquote>
+<p>Ultralytics 🚀 AGPL-3.0 License</p>
+</blockquote>
+<h1 id="Train"><a href="#Train" class="headerlink" title="Train"></a>Train</h1><table>
 <thead>
 <tr>
 <th>参数名</th>
@@ -431,195 +433,638 @@
 </tr>
 </thead>
 <tbody><tr>
-<td><code>model</code></td>
-<td><code>str (optional)</code></td>
+<td>model</td>
+<td>str (optional)</td>
 <td></td>
-<td>模型文件路径，如 <code>yolov8n.pt</code> 或配置文件 <code>yolov8n.yaml</code></td>
+<td>模型文件路径，如  yolov8n.pt  或配置文件  yolov8n.yaml</td>
 </tr>
 <tr>
-<td><code>data</code></td>
-<td><code>str (optional)</code></td>
+<td>data</td>
+<td>str (optional)</td>
 <td></td>
-<td>数据集配置文件路径，如 <code>coco8.yaml</code></td>
+<td>数据集配置文件路径，如  coco8.yaml</td>
 </tr>
 <tr>
-<td><code>epochs</code></td>
-<td><code>int</code></td>
-<td><code>100</code></td>
+<td>epochs</td>
+<td>int</td>
+<td>100</td>
 <td>训练轮数</td>
 </tr>
 <tr>
-<td><code>time</code></td>
-<td><code>float (optional)</code></td>
+<td>time</td>
+<td>float (optional)</td>
 <td></td>
-<td>指定训练时长（小时），若设定则覆盖 <code>epochs</code></td>
+<td>指定训练时长（小时），若设定则覆盖  epochs</td>
 </tr>
 <tr>
-<td><code>patience</code></td>
-<td><code>int</code></td>
-<td><code>100</code></td>
+<td>patience</td>
+<td>int</td>
+<td>100</td>
 <td>若连续该轮数没有提升，则提前停止训练</td>
 </tr>
 <tr>
-<td><code>batch</code></td>
-<td><code>int</code></td>
-<td><code>16</code></td>
-<td>每批训练图像数量，<code>-1</code> 表示自动调整</td>
+<td>batch</td>
+<td>int</td>
+<td>16</td>
+<td>每批训练图像数量， -1  表示自动调整</td>
 </tr>
 <tr>
-<td><code>imgsz</code></td>
-<td>&#96;int</td>
-<td>list&#96;</td>
-<td><code>640</code></td>
+<td>imgsz</td>
+<td>int</td>
+<td>list</td>
+<td>640</td>
 </tr>
 <tr>
-<td><code>save</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
+<td>save</td>
+<td>bool</td>
+<td>True</td>
 <td>是否保存训练检查点和预测结果</td>
 </tr>
 <tr>
-<td><code>save_period</code></td>
-<td><code>int</code></td>
-<td><code>-1</code></td>
-<td>每多少 epoch 保存一次模型，<code>-1</code> 表示禁用</td>
+<td>save_period</td>
+<td>int</td>
+<td>-1</td>
+<td>每多少 epoch 保存一次模型， -1  表示禁用</td>
 </tr>
 <tr>
-<td><code>cache</code></td>
-<td>&#96;bool</td>
-<td>str&#96;</td>
-<td><code>False</code></td>
-</tr>
-<tr>
-<td><code>device</code></td>
-<td>&#96;int</td>
+<td>cache</td>
+<td>bool</td>
 <td>str</td>
-<td>list&#96;</td>
+<td>False</td>
 </tr>
 <tr>
-<td><code>workers</code></td>
-<td><code>int</code></td>
-<td><code>8</code></td>
+<td>device</td>
+<td>int</td>
+<td>str</td>
+<td>list</td>
+</tr>
+<tr>
+<td>workers</td>
+<td>int</td>
+<td>8</td>
 <td>加载数据时的线程数（每个 DDP rank）</td>
 </tr>
 <tr>
-<td><code>project</code></td>
-<td><code>str (optional)</code></td>
+<td>project</td>
+<td>str (optional)</td>
 <td></td>
 <td>项目名称</td>
 </tr>
 <tr>
-<td><code>name</code></td>
-<td><code>str (optional)</code></td>
+<td>name</td>
+<td>str (optional)</td>
 <td></td>
-<td>实验名称，结果将保存至 <code>project/name</code> 目录下</td>
+<td>实验名称，结果将保存至  project&#x2F;name  目录下</td>
 </tr>
 <tr>
-<td><code>exist_ok</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>exist_ok</td>
+<td>bool</td>
+<td>False</td>
 <td>若目录已存在，是否覆盖</td>
 </tr>
 <tr>
-<td><code>pretrained</code></td>
-<td>&#96;bool</td>
-<td>str&#96;</td>
-<td><code>True</code></td>
+<td>pretrained</td>
+<td>bool</td>
+<td>str</td>
+<td>True</td>
 </tr>
 <tr>
-<td><code>optimizer</code></td>
-<td><code>str</code></td>
-<td><code>auto</code></td>
+<td>optimizer</td>
+<td>str</td>
+<td>auto</td>
 <td>优化器选择，选项有：SGD, Adam, Adamax, AdamW, 等</td>
 </tr>
 <tr>
-<td><code>verbose</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
+<td>verbose</td>
+<td>bool</td>
+<td>True</td>
 <td>是否打印详细信息</td>
 </tr>
 <tr>
-<td><code>seed</code></td>
-<td><code>int</code></td>
-<td><code>0</code></td>
+<td>seed</td>
+<td>int</td>
+<td>0</td>
 <td>随机种子，确保可复现性</td>
 </tr>
 <tr>
-<td><code>deterministic</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
-<td>是否启用确定性训练</td>
+<td>deterministic</td>
+<td>bool</td>
+<td>True</td>
+<td>是否启用确定性训练，主要用于确保每次训练结果一致，在调试、复现实验结果时非常重要</td>
 </tr>
 <tr>
-<td><code>single_cls</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
-<td>是否将多类别数据作为单类别训练</td>
+<td>single_cls</td>
+<td>bool</td>
+<td>False</td>
+<td>是否将多类别数据作为单类别训练，model.nc 会被设置为 1，配置文件中配置的多类信息失效</td>
 </tr>
 <tr>
-<td><code>rect</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>rect</td>
+<td>bool</td>
+<td>False</td>
 <td>是否使用矩形训练&#x2F;验证</td>
 </tr>
 <tr>
-<td><code>cos_lr</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
+<td>cos_lr</td>
+<td>bool</td>
+<td>False</td>
 <td>是否使用余弦学习率调度器</td>
 </tr>
 <tr>
-<td><code>close_mosaic</code></td>
-<td><code>int</code></td>
-<td><code>10</code></td>
+<td>close_mosaic</td>
+<td>int</td>
+<td>10</td>
 <td>最后多少个 epoch 禁用 mosaic 数据增强</td>
 </tr>
 <tr>
-<td><code>resume</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>resume</td>
+<td>bool</td>
+<td>False</td>
 <td>是否从上次检查点恢复训练</td>
 </tr>
 <tr>
-<td><code>amp</code></td>
-<td><code>bool</code></td>
-<td><code>True</code></td>
+<td>amp</td>
+<td>bool</td>
+<td>True</td>
 <td>是否启用自动混合精度（AMP）训练</td>
 </tr>
 <tr>
-<td><code>fraction</code></td>
-<td><code>float</code></td>
-<td><code>1.0</code></td>
+<td>fraction</td>
+<td>float</td>
+<td>1.0</td>
 <td>训练集使用比例（如0.1表示只使用10%的训练集）</td>
 </tr>
 <tr>
-<td><code>profile</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>profile</td>
+<td>bool</td>
+<td>False</td>
 <td>是否在训练期间 profile ONNX 或 TensorRT 推理速度</td>
 </tr>
 <tr>
-<td><code>freeze</code></td>
-<td>&#96;int</td>
-<td>list&#96;</td>
-<td></td>
+<td><strong>freeze</strong></td>
+<td>int</td>
+<td>list</td>
+<td>训练的时候冻结某些层</td>
 </tr>
 <tr>
-<td><code>multi_scale</code></td>
-<td><code>bool</code></td>
-<td><code>False</code></td>
+<td>multi_scale</td>
+<td>bool</td>
+<td>False</td>
 <td>是否启用多尺度训练</td>
 </tr>
 </tbody></table>
-<h1 id="Segmentation"><a href="#Segmentation" class="headerlink" title="Segmentation"></a>Segmentation</h1><p>overlap_mask: True # (bool) merge object masks into a single image mask during training (segment train only)<br>mask_ratio: 4 # (int) mask downsample ratio (segment train only)</p>
-<h1 id="Classification"><a href="#Classification" class="headerlink" title="Classification"></a>Classification</h1><p>dropout: 0.0 # (float) use dropout regularization (classify train only)</p>
-<h1 id="Val-x2F-Test-settings-—————————————————————————————————"><a href="#Val-x2F-Test-settings-—————————————————————————————————" class="headerlink" title="Val&#x2F;Test settings —————————————————————————————————-"></a>Val&#x2F;Test settings —————————————————————————————————-</h1><p>val: True # (bool) validate&#x2F;test during training<br>split: val # (str) dataset split to use for validation, i.e. ‘val’, ‘test’ or ‘train’<br>save_json: False # (bool) save results to JSON file<br>conf: # (float, optional) object confidence threshold for detection (default 0.25 predict, 0.001 val)<br>iou: 0.7 # (float) intersection over union (IoU) threshold for NMS<br>max_det: 300 # (int) maximum number of detections per image<br>half: False # (bool) use half precision (FP16)<br>dnn: False # (bool) use OpenCV DNN for ONNX inference<br>plots: True # (bool) save plots and images during train&#x2F;val</p>
-<h1 id="Predict-settings-—————————————————————————————————–"><a href="#Predict-settings-—————————————————————————————————–" class="headerlink" title="Predict settings —————————————————————————————————–"></a>Predict settings —————————————————————————————————–</h1><p>source: # (str, optional) source directory for images or videos<br>vid_stride: 1 # (int) video frame-rate stride<br>stream_buffer: False # (bool) buffer all streaming frames (True) or return the most recent frame (False)<br>visualize: False # (bool) visualize model features<br>augment: False # (bool) apply image augmentation to prediction sources<br>agnostic_nms: False # (bool) class-agnostic NMS<br>classes: # (int | list[int], optional) filter results by class, i.e. classes&#x3D;0, or classes&#x3D;[0,2,3]<br>retina_masks: False # (bool) use high-resolution segmentation masks<br>embed: # (list[int], optional) return feature vectors&#x2F;embeddings from given layers</p>
-<h1 id="Visualize-settings-—————————————————————————————————"><a href="#Visualize-settings-—————————————————————————————————" class="headerlink" title="Visualize settings —————————————————————————————————"></a>Visualize settings —————————————————————————————————</h1><p>show: False # (bool) show predicted images and videos if environment allows<br>save_frames: False # (bool) save predicted individual video frames<br>save_txt: False # (bool) save results as .txt file<br>save_conf: False # (bool) save results with confidence scores<br>save_crop: False # (bool) save cropped images with results<br>show_labels: True # (bool) show prediction labels, i.e. ‘person’<br>show_conf: True # (bool) show prediction confidence, i.e. ‘0.99’<br>show_boxes: True # (bool) show prediction boxes<br>line_width: # (int, optional) line width of the bounding boxes. Scaled to image size if None.</p>
-<h1 id="Export-settings"><a href="#Export-settings" class="headerlink" title="Export settings"></a>Export settings</h1><p>format: torchscript # (str) format to export to, choices at <a target="_blank" rel="noopener" href="https://docs.ultralytics.com/modes/export/#export-formats">https://docs.ultralytics.com/modes/export/#export-formats</a><br>keras: False # (bool) use Kera&#x3D;s<br>optimize: False # (bool) TorchScript: optimize for mobile<br>int8: False # (bool) CoreML&#x2F;TF INT8 quantization<br>dynamic: False # (bool) ONNX&#x2F;TF&#x2F;TensorRT: dynamic axes<br>simplify: True # (bool) ONNX: simplify model using <code>onnxslim</code><br>opset: # (int, optional) ONNX: opset version<br>workspace: # (float, optional) TensorRT: workspace size (GiB), <code>None</code> will let TensorRT auto-allocate memory<br>nms: False # (bool) CoreML: add NMS</p>
-<h1 id="Hyperparameters"><a href="#Hyperparameters" class="headerlink" title="Hyperparameters"></a>Hyperparameters</h1><p>lr0: 0.01 # (float) initial learning rate (i.e. SGD&#x3D;1E-2, Adam&#x3D;1E-3)<br>lrf: 0.01 # (float) final learning rate (lr0 * lrf)<br>momentum: 0.937 # (float) SGD momentum&#x2F;Adam beta1<br>weight_decay: 0.0005 # (float) optimizer weight decay 5e-4<br>warmup_epochs: 3.0 # (float) warmup epochs (fractions ok)<br>warmup_momentum: 0.8 # (float) warmup initial momentum<br>warmup_bias_lr: 0.1 # (float) warmup initial bias lr<br>box: 7.5 # (float) box loss gain<br>cls: 0.5 # (float) cls loss gain (scale with pixels)<br>dfl: 1.5 # (float) dfl loss gain<br>pose: 12.0 # (float) pose loss gain<br>kobj: 1.0 # (float) keypoint obj loss gain<br>nbs: 64 # (int) nominal batch size<br>hsv_h: 0.015 # (float) image HSV-Hue augmentation (fraction)<br>hsv_s: 0.7 # (float) image HSV-Saturation augmentation (fraction)<br>hsv_v: 0.4 # (float) image HSV-Value augmentation (fraction)<br>degrees: 0.0 # (float) image rotation (+&#x2F;- deg)<br>translate: 0.1 # (float) image translation (+&#x2F;- fraction)<br>scale: 0.5 # (float) image scale (+&#x2F;- gain)<br>shear: 0.0 # (float) image shear (+&#x2F;- deg)<br>perspective: 0.0 # (float) image perspective (+&#x2F;- fraction), range 0-0.001<br>flipud: 0.0 # (float) image flip up-down (probability)<br>fliplr: 0.5 # (float) image flip left-right (probability)<br>bgr: 0.0 # (float) image channel BGR (probability)<br>mosaic: 1.0 # (float) image mosaic (probability)<br>mixup: 0.0 # (float) image mixup (probability)<br>cutmix: 0.0 # (float) image cutmix (probability)<br>copy_paste: 0.0 # (float) segment copy-paste (probability)<br>copy_paste_mode: “flip” # (str) the method to do copy_paste augmentation (flip, mixup)<br>auto_augment: randaugment # (str) auto augmentation policy for classification (randaugment, autoaugment, augmix)<br>erasing: 0.4 # (float) probability of random erasing during classification training (0-0.9), 0 means no erasing, must be less than 1.0.</p>
-<h1 id="Custom-config-yaml"><a href="#Custom-config-yaml" class="headerlink" title="Custom config.yaml"></a>Custom config.yaml</h1><p>cfg: # (str, optional) for overriding defaults.yaml</p>
-<h1 id="Tracker-settings"><a href="#Tracker-settings" class="headerlink" title="Tracker settings"></a>Tracker settings</h1><p>tracker: botsort.yaml # (str) tracker type, choices&#x3D;[botsort.yaml, bytetrack.yaml]</p>
+<h1 id="Val-x2F-Test"><a href="#Val-x2F-Test" class="headerlink" title="Val&#x2F;Test"></a>Val&#x2F;Test</h1><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>val</td>
+<td>True</td>
+<td>bool</td>
+<td>是否在训练时进行验证&#x2F;测试</td>
+</tr>
+<tr>
+<td>split</td>
+<td>val</td>
+<td>str</td>
+<td>用于验证的数据集划分（val&#x2F;test&#x2F;train）</td>
+</tr>
+<tr>
+<td>save_json</td>
+<td>False</td>
+<td>bool</td>
+<td>是否将结果保存为 JSON 文件</td>
+</tr>
+<tr>
+<td>conf</td>
+<td></td>
+<td>float</td>
+<td>目标检测置信度阈值（默认：预测时0.25，验证时0.001）</td>
+</tr>
+<tr>
+<td>iou</td>
+<td>0.7</td>
+<td>float</td>
+<td>NMS 的 IoU 阈值</td>
+</tr>
+<tr>
+<td>max_det</td>
+<td>300</td>
+<td>int</td>
+<td>每张图像的最大检测数</td>
+</tr>
+<tr>
+<td>half</td>
+<td>False</td>
+<td>bool</td>
+<td>是否使用半精度 FP16</td>
+</tr>
+<tr>
+<td>dnn</td>
+<td>False</td>
+<td>bool</td>
+<td>是否使用 OpenCV DNN 模式推理 ONNX</td>
+</tr>
+<tr>
+<td>plots</td>
+<td>True</td>
+<td>bool</td>
+<td>是否在训练&#x2F;验证过程中保存图像和图表</td>
+</tr>
+</tbody></table>
+<h1 id="Predict"><a href="#Predict" class="headerlink" title="Predict"></a>Predict</h1><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>source</td>
+<td></td>
+<td>str</td>
+<td>输入图像或视频路径</td>
+</tr>
+<tr>
+<td>vid_stride</td>
+<td>1</td>
+<td>int</td>
+<td>视频帧步长</td>
+</tr>
+<tr>
+<td>stream_buffer</td>
+<td>False</td>
+<td>bool</td>
+<td>是否缓冲所有视频流帧</td>
+</tr>
+<tr>
+<td>visualize</td>
+<td>False</td>
+<td>bool</td>
+<td>是否可视化模型特征</td>
+</tr>
+<tr>
+<td>augment</td>
+<td>False</td>
+<td>bool</td>
+<td>是否对预测输入进行增强</td>
+</tr>
+<tr>
+<td>agnostic_nms</td>
+<td>False</td>
+<td>bool</td>
+<td>类别无关的 NMS</td>
+</tr>
+<tr>
+<td>classes</td>
+<td></td>
+<td>int &#x2F; list[int]</td>
+<td>仅保留指定类别的检测结果</td>
+</tr>
+<tr>
+<td>retina_masks</td>
+<td>False</td>
+<td>bool</td>
+<td>使用高分辨率分割掩码</td>
+</tr>
+<tr>
+<td>embed</td>
+<td></td>
+<td>list[int]</td>
+<td>输出指定层的特征向量</td>
+</tr>
+</tbody></table>
+<h1 id="Visualize"><a href="#Visualize" class="headerlink" title="Visualize"></a>Visualize</h1><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>show</td>
+<td>False</td>
+<td>bool</td>
+<td>是否展示预测图像&#x2F;视频（前提环境支持）</td>
+</tr>
+<tr>
+<td>save_frames</td>
+<td>False</td>
+<td>bool</td>
+<td>是否保存预测视频的帧</td>
+</tr>
+<tr>
+<td>save_txt</td>
+<td>False</td>
+<td>bool</td>
+<td>是否保存结果为 txt 文件</td>
+</tr>
+<tr>
+<td>save_conf</td>
+<td>False</td>
+<td>bool</td>
+<td>是否保存置信度得分</td>
+</tr>
+<tr>
+<td>save_crop</td>
+<td>False</td>
+<td>bool</td>
+<td>是否保存裁剪出的目标图像</td>
+</tr>
+<tr>
+<td>show_labels</td>
+<td>True</td>
+<td>bool</td>
+<td>是否显示预测类别标签</td>
+</tr>
+<tr>
+<td>show_conf</td>
+<td>True</td>
+<td>bool</td>
+<td>是否显示预测置信度</td>
+</tr>
+<tr>
+<td>show_boxes</td>
+<td>True</td>
+<td>bool</td>
+<td>是否显示预测框</td>
+</tr>
+<tr>
+<td>line_width</td>
+<td></td>
+<td>int</td>
+<td>边框线宽（默认根据图像大小自动缩放）</td>
+</tr>
+</tbody></table>
+<h1 id="Export"><a href="#Export" class="headerlink" title="Export"></a>Export</h1><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>format</td>
+<td>torchscript</td>
+<td>str</td>
+<td>导出格式</td>
+</tr>
+<tr>
+<td>keras</td>
+<td>False</td>
+<td>bool</td>
+<td>是否导出为 Keras 格式</td>
+</tr>
+<tr>
+<td>optimize</td>
+<td>False</td>
+<td>bool</td>
+<td>TorchScript 导出是否优化</td>
+</tr>
+<tr>
+<td>int8</td>
+<td>False</td>
+<td>bool</td>
+<td>CoreML &#x2F; TF 是否使用 INT8 量化</td>
+</tr>
+<tr>
+<td>dynamic</td>
+<td>False</td>
+<td>bool</td>
+<td>ONNX&#x2F;TF&#x2F;TensorRT 是否使用动态轴</td>
+</tr>
+<tr>
+<td>simplify</td>
+<td>True</td>
+<td>bool</td>
+<td>ONNX 模型简化</td>
+</tr>
+<tr>
+<td>opset</td>
+<td></td>
+<td>int</td>
+<td>ONNX 的 opset 版本</td>
+</tr>
+<tr>
+<td>workspace</td>
+<td></td>
+<td>float</td>
+<td>TensorRT 的工作空间（GiB）</td>
+</tr>
+<tr>
+<td>nms</td>
+<td>False</td>
+<td>bool</td>
+<td>CoreML 中是否添加 NMS</td>
+</tr>
+</tbody></table>
+<h1 id="超参数"><a href="#超参数" class="headerlink" title="超参数"></a>超参数</h1><table>
+<thead>
+<tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lr0</td>
+<td>0.01</td>
+<td>float</td>
+<td>初始学习率（SGD&#x3D;1E-2，Adam&#x3D;1E-3）</td>
+</tr>
+<tr>
+<td>lrf</td>
+<td>0.01</td>
+<td>float</td>
+<td>最终学习率，lr0 × lrf</td>
+</tr>
+<tr>
+<td>momentum</td>
+<td>0.937</td>
+<td>float</td>
+<td>SGD 动量 &#x2F; Adam β1</td>
+</tr>
+<tr>
+<td>weight_decay</td>
+<td>0.0005</td>
+<td>float</td>
+<td>权重衰减</td>
+</tr>
+<tr>
+<td>warmup_epochs</td>
+<td>3.0</td>
+<td>float</td>
+<td>预热轮数</td>
+</tr>
+<tr>
+<td>warmup_momentum</td>
+<td>0.8</td>
+<td>float</td>
+<td>预热初始动量</td>
+</tr>
+<tr>
+<td>warmup_bias_lr</td>
+<td>0.1</td>
+<td>float</td>
+<td>预热初始 bias 学习率</td>
+</tr>
+<tr>
+<td>box</td>
+<td>7.5</td>
+<td>float</td>
+<td>目标框损失权重</td>
+</tr>
+<tr>
+<td>cls</td>
+<td>0.5</td>
+<td>float</td>
+<td>类别损失权重</td>
+</tr>
+<tr>
+<td>dfl</td>
+<td>1.5</td>
+<td>float</td>
+<td>DFL 损失权重</td>
+</tr>
+<tr>
+<td>pose</td>
+<td>12.0</td>
+<td>float</td>
+<td>姿态估计损失权重</td>
+</tr>
+<tr>
+<td>kobj</td>
+<td>1.0</td>
+<td>float</td>
+<td>关键点目标损失权重</td>
+</tr>
+<tr>
+<td>nbs</td>
+<td>64</td>
+<td>int</td>
+<td>名义 batch size</td>
+</tr>
+<tr>
+<td>hsv_h</td>
+<td>0.015</td>
+<td>float</td>
+<td>HSV 色调增强</td>
+</tr>
+<tr>
+<td>hsv_s</td>
+<td>0.7</td>
+<td>float</td>
+<td>HSV 饱和度增强</td>
+</tr>
+<tr>
+<td>hsv_v</td>
+<td>0.4</td>
+<td>float</td>
+<td>HSV 明度增强</td>
+</tr>
+<tr>
+<td>degrees</td>
+<td>0.0</td>
+<td>float</td>
+<td>旋转角度</td>
+</tr>
+<tr>
+<td>translate</td>
+<td>0.1</td>
+<td>float</td>
+<td>平移</td>
+</tr>
+<tr>
+<td>scale</td>
+<td>0.5</td>
+<td>float</td>
+<td>缩放</td>
+</tr>
+<tr>
+<td>shear</td>
+<td>0.0</td>
+<td>float</td>
+<td>裁剪倾斜角度</td>
+</tr>
+<tr>
+<td>perspective</td>
+<td>0.0</td>
+<td>float</td>
+<td>透视变换</td>
+</tr>
+<tr>
+<td>flipud</td>
+<td>0.0</td>
+<td>float</td>
+<td>上下翻转概率</td>
+</tr>
+<tr>
+<td>fliplr</td>
+<td>0.5</td>
+<td>float</td>
+<td>左右翻转概率</td>
+</tr>
+<tr>
+<td>bgr</td>
+<td>0.0</td>
+<td>float</td>
+<td>BGR 通道扰动概率</td>
+</tr>
+<tr>
+<td>mosaic</td>
+<td>1.0</td>
+<td>float</td>
+<td>mosaic 数据增强概率</td>
+</tr>
+<tr>
+<td>mixup</td>
+<td>0.0</td>
+<td>float</td>
+<td>mixup 概率</td>
+</tr>
+<tr>
+<td>cutmix</td>
+<td>0.0</td>
+<td>float</td>
+<td>cutmix 概率</td>
+</tr>
+<tr>
+<td>copy_paste</td>
+<td>0.0</td>
+<td>float</td>
+<td>segment 拷贝粘贴增强概率</td>
+</tr>
+<tr>
+<td>copy_paste_mode</td>
+<td>flip</td>
+<td>str</td>
+<td>拷贝粘贴方式（flip, mixup）</td>
+</tr>
+<tr>
+<td>auto_augment</td>
+<td>randaugment</td>
+<td>str</td>
+<td>图像自动增强策略</td>
+</tr>
+<tr>
+<td>erasing</td>
+<td>0.4</td>
+<td>float</td>
+<td>分类训练时随机擦除概率（&lt; 1.0）。在训练过程中，对图像的随机区域进行遮挡（擦除），增强模型鲁棒性</td>
+</tr>
+</tbody></table>
 
                 
             </div>

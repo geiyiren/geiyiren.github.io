@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-18
+                    2025-07-22
                 </div>
                 
 
@@ -632,7 +632,13 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <p>它允许模型独立于它们在序列中的位置来权衡输入不同部分的重要性。</p>
 <p>这在上下文对于理解含义至关重要的场景中特别有用,例如判断给定句子中的“it”是指“wolf”还是“rabbit”。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-30.png"><br>为了实现这一目标,该机制会为每个输入元素计算三个向量:查询向量、键向量和值向量。</p>
-<p>过程涉及每个查询向量与键向量之间的点积运算,随后使用SoftMax进行归一化处理,最终将得到的权重应用于值向量,生成注意力向量。</p>
+<p>对于一个输入序列，每个位置的表示向量 $x_i$ 会通过不同的线性变换，生成三个向量：</p>
+<ul>
+<li><strong>查询向量（Query）</strong> $Q$：代表我要“问什么”</li>
+<li><strong>键向量（Key）</strong> $K$：代表你能“回答什么”</li>
+<li><strong>值向量（Value）</strong> $V$：代表你真正“携带的信息”</li>
+</ul>
+<p>过程涉及每个查询向量与键向量之间的点积运算,随后使用SoftMax进行归一化处理,最终将得到的权重应用于值向量,生成注意力向量。(每个查询向量与所有键向量做点积，计算相关性；Softmax 得到注意力权重；然后用这些权重对值向量加权，生成输出。)</p>
 <p>这个向量是一种表示,能够捕捉输入中的上下文关系。</p>
 <p>自注意力机制的优雅之处在于,它能够建模元素间的关系,而不受序列中元素间距离的限制。</p>
 <p>这一特性与早期的序列建模方法截然不同,后者在处理长距离依赖时往往力不从心。</p>
@@ -1390,73 +1396,73 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
 <span class="token number">30</span>     <span class="token keyword">def</span> <span class="token function">decode_seq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> seq<span class="token punctuation">)</span><span class="token punctuation">:</span>
 <span class="token number">31</span>         <span class="token keyword">return</span><span class="token string">""</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>reverse_vocab<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> idx <span class="token keyword">in</span> seq<span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <h2 id="模型主程序"><a href="#模型主程序" class="headerlink" title="模型主程序"></a>模型主程序</h2><p>整个模型我们通过执行main.py文件运行模型</p>
-<pre><code class="py">1 &quot;&quot;&quot;
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token triple-quoted-string string">"""
 2 模型训练主程序
-3 &quot;&quot;&quot;
-4 def choose_optimizer(config, model):
-5     optimizer = config[&quot;optimizer&quot;]
-6     learning_rate = config[&quot;learning_rate&quot;]
-7     if optimizer == &quot;adam&quot;:
-8         return torch.optim.Adam(model.parameters(), lr=learning_rate)
-9     elif optimizer == &quot;sgd&quot;:
-10         return torch.optim.SGD(model.parameters(), lr=learning_rate)
-11 
-12 def main(config):
-13     #创建保存模型的目录
-14     if not os.path.isdir(config[&quot;model_path&quot;]):
-15         os.mkdir(config[&quot;model_path&quot;])
-16     #加载模型
-17     logger.info(json.dumps(config, ensure_ascii=False, indent=2))
-18     model = Transformer(config[&quot;vocab_size&quot;], config[&quot;vocab_size&quot;], 0, 0,
-19                         d_word_vec=128, d_model=128, d_inner=256,
-20                         n_layers=1, n_head=2, d_k=64, d_v=64,
-21                         )
-22     # 标识是否使用gpu
-23     cuda_flag = torch.cuda.is_available()
-24     if cuda_flag:
-25         logger.info(&quot;gpu可以使用，迁移模型至gpu&quot;)
-26         model = model.cuda()
-27     #加载优化器
-28     optimizer = choose_optimizer(config, model)
-29     # 加载训练数据
-30     train_data = load_data(config[&quot;train_data_path&quot;], config, logger)
-31     #加载效果测试类
-32     evaluator = Evaluator(config, model, logger)
-33     #加载loss
-34     loss_func = torch.nn.CrossEntropyLoss(ignore_index=0)
-35     #训练
-36     for epoch in range(config[&quot;epoch&quot;]):
-37         epoch += 1
-38         model.train()
-39         if cuda_flag:
-40             model.cuda()
-41         logger.info(&quot;epoch %d begin&quot; % epoch)
-42         train_loss = []
-43         for index, batch_data in enumerate(train_data):
-44             if cuda_flag:
-45                 batch_data = [d.cuda() for d in batch_data]
-46             input_seq, target_seq, gold = batch_data
-47 
-48             pred = model(input_seq, target_seq)
-49             loss = loss_func(pred, gold.view(-1))
-50 
-51             train_loss.append(float(loss))
-52             loss.backward()
-53             optimizer.step()
-54             optimizer.zero_grad()
-55 
-56         logger.info(&quot;epoch average loss: %f&quot; % np.mean(train_loss))
-57         evaluator.eval(epoch)
-58     model_path = os.path.join(config[&quot;model_path&quot;], &quot;epoch_%d.pth&quot; % epoch)
-59     torch.save(model.state_dict(), model_path)
-60     return
-61 
-62 if __name__ == &quot;__main__&quot;:
-63     main(Config)
-64 #输出示例
-65 输入： 路透社消息，一艘从利比亚横渡地中海开往意大利的偷渡船倾覆，约400人身亡。船上载有550多名偷渡客，许多是年轻人和儿童，大部分来自撒哈拉以南非洲地区。事发后意大利海防部队展开搜救，获救的150人被送往意大利南部港口。[UNK][PAD][PAD][PAD][PAD][PAD][PAD][PAD][PAD][PAD][PAD][PAD]
-66 输出： [CLS]从利叒FII意大利：400偷渡客沉船身亡[SEP]
-</code></pre>
+3 """</span>
+<span class="token number">4</span> <span class="token keyword">def</span> <span class="token function">choose_optimizer</span><span class="token punctuation">(</span>config<span class="token punctuation">,</span> model<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token number">5</span>     optimizer <span class="token operator">=</span> config<span class="token punctuation">[</span><span class="token string">"optimizer"</span><span class="token punctuation">]</span>
+<span class="token number">6</span>     learning_rate <span class="token operator">=</span> config<span class="token punctuation">[</span><span class="token string">"learning_rate"</span><span class="token punctuation">]</span>
+<span class="token number">7</span>     <span class="token keyword">if</span> optimizer <span class="token operator">==</span> <span class="token string">"adam"</span><span class="token punctuation">:</span>
+<span class="token number">8</span>         <span class="token keyword">return</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>Adam<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span>learning_rate<span class="token punctuation">)</span>
+<span class="token number">9</span>     <span class="token keyword">elif</span> optimizer <span class="token operator">==</span> <span class="token string">"sgd"</span><span class="token punctuation">:</span>
+<span class="token number">10</span>         <span class="token keyword">return</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>SGD<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span>learning_rate<span class="token punctuation">)</span>
+<span class="token number">11</span> 
+<span class="token number">12</span> <span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token number">13</span>     <span class="token comment">#创建保存模型的目录</span>
+<span class="token number">14</span>     <span class="token keyword">if</span> <span class="token keyword">not</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>isdir<span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"model_path"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token number">15</span>         os<span class="token punctuation">.</span>mkdir<span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"model_path"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token number">16</span>     <span class="token comment">#加载模型</span>
+<span class="token number">17</span>     logger<span class="token punctuation">.</span>info<span class="token punctuation">(</span>json<span class="token punctuation">.</span>dumps<span class="token punctuation">(</span>config<span class="token punctuation">,</span> ensure_ascii<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> indent<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">18</span>     model <span class="token operator">=</span> Transformer<span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"vocab_size"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> config<span class="token punctuation">[</span><span class="token string">"vocab_size"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span>
+<span class="token number">19</span>                         d_word_vec<span class="token operator">=</span><span class="token number">128</span><span class="token punctuation">,</span> d_model<span class="token operator">=</span><span class="token number">128</span><span class="token punctuation">,</span> d_inner<span class="token operator">=</span><span class="token number">256</span><span class="token punctuation">,</span>
+<span class="token number">20</span>                         n_layers<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> n_head<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> d_k<span class="token operator">=</span><span class="token number">64</span><span class="token punctuation">,</span> d_v<span class="token operator">=</span><span class="token number">64</span><span class="token punctuation">,</span>
+<span class="token number">21</span>                         <span class="token punctuation">)</span>
+<span class="token number">22</span>     <span class="token comment"># 标识是否使用gpu</span>
+<span class="token number">23</span>     cuda_flag <span class="token operator">=</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">24</span>     <span class="token keyword">if</span> cuda_flag<span class="token punctuation">:</span>
+<span class="token number">25</span>         logger<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">"gpu可以使用，迁移模型至gpu"</span><span class="token punctuation">)</span>
+<span class="token number">26</span>         model <span class="token operator">=</span> model<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">27</span>     <span class="token comment">#加载优化器</span>
+<span class="token number">28</span>     optimizer <span class="token operator">=</span> choose_optimizer<span class="token punctuation">(</span>config<span class="token punctuation">,</span> model<span class="token punctuation">)</span>
+<span class="token number">29</span>     <span class="token comment"># 加载训练数据</span>
+<span class="token number">30</span>     train_data <span class="token operator">=</span> load_data<span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"train_data_path"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> config<span class="token punctuation">,</span> logger<span class="token punctuation">)</span>
+<span class="token number">31</span>     <span class="token comment">#加载效果测试类</span>
+<span class="token number">32</span>     evaluator <span class="token operator">=</span> Evaluator<span class="token punctuation">(</span>config<span class="token punctuation">,</span> model<span class="token punctuation">,</span> logger<span class="token punctuation">)</span>
+<span class="token number">33</span>     <span class="token comment">#加载loss</span>
+<span class="token number">34</span>     loss_func <span class="token operator">=</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>CrossEntropyLoss<span class="token punctuation">(</span>ignore_index<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token number">35</span>     <span class="token comment">#训练</span>
+<span class="token number">36</span>     <span class="token keyword">for</span> epoch <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"epoch"</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token number">37</span>         epoch <span class="token operator">+=</span> <span class="token number">1</span>
+<span class="token number">38</span>         model<span class="token punctuation">.</span>train<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">39</span>         <span class="token keyword">if</span> cuda_flag<span class="token punctuation">:</span>
+<span class="token number">40</span>             model<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">41</span>         logger<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">"epoch %d begin"</span> <span class="token operator">%</span> epoch<span class="token punctuation">)</span>
+<span class="token number">42</span>         train_loss <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token number">43</span>         <span class="token keyword">for</span> index<span class="token punctuation">,</span> batch_data <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>train_data<span class="token punctuation">)</span><span class="token punctuation">:</span>
+<span class="token number">44</span>             <span class="token keyword">if</span> cuda_flag<span class="token punctuation">:</span>
+<span class="token number">45</span>                 batch_data <span class="token operator">=</span> <span class="token punctuation">[</span>d<span class="token punctuation">.</span>cuda<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">for</span> d <span class="token keyword">in</span> batch_data<span class="token punctuation">]</span>
+<span class="token number">46</span>             input_seq<span class="token punctuation">,</span> target_seq<span class="token punctuation">,</span> gold <span class="token operator">=</span> batch_data
+<span class="token number">47</span> 
+<span class="token number">48</span>             pred <span class="token operator">=</span> model<span class="token punctuation">(</span>input_seq<span class="token punctuation">,</span> target_seq<span class="token punctuation">)</span>
+<span class="token number">49</span>             loss <span class="token operator">=</span> loss_func<span class="token punctuation">(</span>pred<span class="token punctuation">,</span> gold<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">50</span> 
+<span class="token number">51</span>             train_loss<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token builtin">float</span><span class="token punctuation">(</span>loss<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">52</span>             loss<span class="token punctuation">.</span>backward<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">53</span>             optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">54</span>             optimizer<span class="token punctuation">.</span>zero_grad<span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token number">55</span> 
+<span class="token number">56</span>         logger<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">"epoch average loss: %f"</span> <span class="token operator">%</span> np<span class="token punctuation">.</span>mean<span class="token punctuation">(</span>train_loss<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token number">57</span>         evaluator<span class="token punctuation">.</span><span class="token builtin">eval</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span>
+<span class="token number">58</span>     model_path <span class="token operator">=</span> os<span class="token punctuation">.</span>path<span class="token punctuation">.</span>join<span class="token punctuation">(</span>config<span class="token punctuation">[</span><span class="token string">"model_path"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"epoch_%d.pth"</span> <span class="token operator">%</span> epoch<span class="token punctuation">)</span>
+<span class="token number">59</span>     torch<span class="token punctuation">.</span>save<span class="token punctuation">(</span>model<span class="token punctuation">.</span>state_dict<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> model_path<span class="token punctuation">)</span>
+<span class="token number">60</span>     <span class="token keyword">return</span>
+<span class="token number">61</span> 
+<span class="token number">62</span> <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+<span class="token number">63</span>     main<span class="token punctuation">(</span>Config<span class="token punctuation">)</span>
+<span class="token number">64</span> <span class="token comment">#输出示例</span>
+<span class="token number">65</span> 输入： 路透社消息，一艘从利比亚横渡地中海开往意大利的偷渡船倾覆，约<span class="token number">400</span>人身亡。船上载有<span class="token number">550</span>多名偷渡客，许多是年轻人和儿童，大部分来自撒哈拉以南非洲地区。事发后意大利海防部队展开搜救，获救的<span class="token number">150</span>人被送往意大利南部港口。<span class="token punctuation">[</span>UNK<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span><span class="token punctuation">[</span>PAD<span class="token punctuation">]</span>
+<span class="token number">66</span> 输出： <span class="token punctuation">[</span>CLS<span class="token punctuation">]</span>从利叒FII意大利：<span class="token number">400</span>偷渡客沉船身亡<span class="token punctuation">[</span>SEP<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/338817680">知乎: Transformer模型详解(图解最完整版)</a></li>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Pze538g8CK4hDeaTKNi5Zg">微信: Transformer原理详解</a></li>

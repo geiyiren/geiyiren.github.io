@@ -428,7 +428,7 @@
 <li>一个表示所有 ROI 的 N*5 的矩阵，其中N表示ROI的数目。一列表示图像index，其余四列表示其余的左上角和右下角坐标；</li>
 </ol>
 <h2 id="ROI-Pooling-的输出"><a href="#ROI-Pooling-的输出" class="headerlink" title="ROI Pooling 的输出"></a>ROI Pooling 的输出</h2><p>输出是 batch 个 vector，其中 batch 的值等于 roi 的个数，vector的大小为 channel ∗ w ∗ h；ROI Pooling 的过程就是将一个个大小不同的 box 矩形框，都映射成大小为 w ∗ h 的矩形框。</p>
-<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image.png"><br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-1.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image.png"><br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-1.png"></p>
 <p>如图所示，我们先把 roi 中的坐标映射到 feature map 上，映射规则比较简单，就是把各个坐标除以输入图片与 feature map 的大小的比值，得到了 feature map 上的 box 坐标后，我们使用 pooling 得到输出；由于输入的图片大小不一，所以这里我们使用的 spp pooling（空间金字塔池化），spp pooling 在 pooling 的过程中需要计算 pooling 后的结果对应的像素点反映射到 feature map 上所占的范围，然后在那个范围中进行取 max 或者取 average。理解起来有点绕，看后面，你会豁然开朗。</p>
 <h2 id="ROI-pooling具体操作如下"><a href="#ROI-pooling具体操作如下" class="headerlink" title="ROI pooling具体操作如下"></a>ROI pooling具体操作如下</h2><ol>
 <li>根据输入image，将 ROI 映射到 feature map 对应位置；</li>
@@ -437,14 +437,14 @@
 </ol>
 <p>这样我们就可以从不同大小的方框得到固定大小的相应的 feature maps。值得一提的是，输出的 feature maps 的大小不取决于 ROI 和卷积 feature maps 大小。ROI pooling 最大的好处就在于极大地提高了处理速度。</p>
 <h2 id="ROI-pooling-example"><a href="#ROI-pooling-example" class="headerlink" title="ROI pooling example"></a>ROI pooling example</h2><p>我们有一个 8∗8 大小的 feature map，一个ROI，以及输出大小为2∗2.</p>
-<p>输入的固定大小的feature map<br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-2.png"></p>
+<p>输入的固定大小的feature map<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-2.png"></p>
 <p>region proposal 投影之后位置（左上角，右下角坐标）： (0,3)，(7,8)。 </p>
-<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-3.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-3.png"></p>
 <p>将其划分为（2<em>2）个 sections（因为输出大小为2</em>2），我们可以得到：  </p>
-<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-4.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-4.png"></p>
 <p>对每个section做max pooling，可以得到：  </p>
-<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-5.png"></p>
-<p>整体过程如下：<br><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/f95107258e128dac79e9bec44cb09941.gif">  </p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-5.png"></p>
+<p>整体过程如下：<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/f95107258e128dac79e9bec44cb09941.gif">  </p>
 <p>说明：在此案例中 region proposals 是 5<em>7 大小的，在 pooling 之后需要得到 2</em>2 的，所以在 5<em>7 的特征图划分成 2</em>2 的时候不是等分的，行是 5&#x2F;2，第一行得到2，剩下的那一行是3，列是7&#x2F;2，第一列得到3，剩下那一列是4。</p>
 
                 

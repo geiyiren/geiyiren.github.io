@@ -535,7 +535,7 @@ q<span class="token punctuation">,</span> k<span class="token punctuation">,</sp
 <li><p>qkv.reshape()</p>
 <p>将 <strong>原来的图像每张切成 area 份</strong>，所以总的 batch 就变成了 <code>B × area</code></p>
 <p>每一份区域中，包含的 token 数是 $\frac{H<em>W}{\text{area}}$，即空间被均匀划分。这里的token就是像素块，H</em>W的图像被均匀的划分为area个像素块，那就是类似下面这样的:</p>
-<p><img src="/../../../MyBlogImage1/yolo12%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/image-20250722161844082.png" alt="image-20250722161844082"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/image-20250722161844082.png" alt="image-20250722161844082"></p>
 <p>每个 token 的特征维度还是 3C（因为包含 q, k, v）,这里其实是张量的”深度“为3C</p>
 </li>
 <li><p>q, k, v提取</p>
@@ -646,7 +646,7 @@ v <span class="token operator">=</span> v<span class="token punctuation">.</span
 
 <p>多头注意力机制中每个 head 学习不同的子空间信息。<code>self.proj(x)</code> 是一个 1×1 卷积层，用于将多头注意力后的特征图从多头拼接的维度 (<code>all_head_dim</code>) 映射回模型原始的维度 <code>dim</code>，完成通道融合。</p>
 <p>上述便是yolo12的区域注意力机制，该模块不改变输出张量的维度。完整的注意力机制的流程图如下所示:</p>
-<img src="../../../MyBlogImage1/yolo12注意力机制的实现分析/deepseek_mermaid_20250722_1f42f8.png" alt="deepseek_mermaid_20250722_1f42f8" style="zoom: 33%;" />
+<img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12注意力机制的实现分析/deepseek_mermaid_20250722_1f42f8.png" alt="deepseek_mermaid_20250722_1f42f8" style="zoom: 33%;" />
 
                 
             </div>

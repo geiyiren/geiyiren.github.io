@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.4k
+                    3.3k
                 </div>
                 
 
@@ -685,6 +685,115 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 <blockquote>
 <p>注意：输入必须是概率（0~1 之间），即通常需要先用 <code>sigmoid</code>。</p>
 </blockquote>
+<h3 id="DFL损失"><a href="#DFL损失" class="headerlink" title="DFL损失"></a>DFL损失</h3><p>DFL损失，全称为Distribution Focal Loss：它主要应用在目标检测任务中的边界框回归（bounding box regression）过程。 DFL损失的主要作用是用于校正模型在预测物体边界框时的误差，优化后的效果可以在一定程度上针对有些模糊或者焦点不集中的图片提升对象检测的精度。 在训练过程中DFL损失越低，说明模型在预测边界框方面的性能越好。</p>
+<ul>
+<li><strong>DFL和IoULoss的区别</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>对比点</th>
+<th>DFL（距离精度）</th>
+<th>IoU Loss（重叠度）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>关注对象</strong></td>
+<td>每个方向的偏移量（ltrb）</td>
+<td>整体框与 GT 框的 IoU</td>
+</tr>
+<tr>
+<td><strong>误差表现</strong></td>
+<td>数值上与 GT 偏差</td>
+<td>重叠面积比例</td>
+</tr>
+<tr>
+<td><strong>可解释性</strong></td>
+<td>“我左边预测错了 2 像素”</td>
+<td>“我框和目标只有 60% 重叠”</td>
+</tr>
+<tr>
+<td><strong>优化引导方向</strong></td>
+<td>优化边界精度、贴近真实距离</td>
+<td>优化整体框覆盖目标</td>
+</tr>
+<tr>
+<td><strong>结果解码方式</strong></td>
+<td>解码后再计算框</td>
+<td>已解码框直接参与计算</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p> 预测框的anchor_point只有落在标签框的区域内才会进行Iou损失和DFL损失计算</p>
+</blockquote>
+<p>DFL损失计算的步骤如下：</p>
+<ul>
+<li>计算anchor_point和标签框边界的距离，得到$ltrb &#x3D; [左距离，顶距离，右距离，下距离]$</li>
+<li>对这些距离进行限制，强制限制在(0, reg_max - 0.01)范围内</li>
+<li>计算左右 bin 索引和权重</li>
+<li>计算交叉熵损失</li>
+</ul>
+<p>计算公式如下所示:<br>$$<br>\begin{array}{c}<br>\mathrm{DFL}(p,t)&#x3D;w_l\cdot\mathrm{CE}(p,t_l)+w_r\cdot\mathrm{CE}(p,t_r)<br>\end{array}<br>$$<br>其中：</p>
+<ul>
+<li>$t$：目标边界框的连续坐标值（如偏移量）</li>
+<li>$t_l &#x3D; \lfloor t \rfloor$：目标值左侧的整数 bin 索引</li>
+<li>$t_r &#x3D; t_l + 1$：目标值右侧的整数 bin 索引</li>
+<li>$w_l &#x3D; t_r - t$：左侧 bin 的权重</li>
+<li>$w_r &#x3D; t - t_l &#x3D; 1 - w_l$：右侧 bin 的权重</li>
+<li>$p$：模型预测的离散概率分布（长度为 $reg_max + 1$）</li>
+<li>$\text{CE}(p, y) &#x3D; -\log(p_y)$：交叉熵损失（当 $p$ 为概率）或标准交叉熵形式（当 $p$ 为 logits）</li>
+</ul>
+<p>举个例子:</p>
+<p>假设 <code>reg_max=5</code>，GT <code>target=2.6</code>，<code>pred_dist=[0.1, 0.1, 0.2, 0.3, 0.3]</code>，则：</p>
+<ul>
+<li><p><code>tl=2</code>, <code>tr=3</code></p>
+</li>
+<li><p><code>wl=0.4</code>, <code>wr=0.6</code></p>
+<blockquote>
+<p>40% 属于桶 2</p>
+<p>60% 属于桶 3</p>
+</blockquote>
+</li>
+<li><p>loss &#x3D; 0.4 × CrossEntropy(pred, 2) + 0.6 × CrossEntropy(pred, 3)</p>
+</li>
+</ul>
+<p><code>pred_dist</code> 是模型输出的 <strong>分布式回归预测</strong>，即：<strong>每个 bbox 边界（left&#x2F;top&#x2F;right&#x2F;bottom）对某个离散距离桶的概率分布预测。</strong></p>
+<p>DFLoss的实现程序如下所示:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
+<span class="token keyword">class</span> <span class="token class-name">DFLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Criterion class for computing Distribution Focal Loss (DFL)."""</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> reg_max<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""Initialize the DFL module with regularization maximum."""</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>reg_max <span class="token operator">=</span> reg_max
+
+    <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pred_dist<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> target<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""Return sum of left and right DFL losses from https://ieeexplore.ieee.org/document/9792391."""</span>
+        target <span class="token operator">=</span> target<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>reg_max <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> <span class="token number">0.01</span><span class="token punctuation">)</span>
+        tl <span class="token operator">=</span> target<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># target left</span>
+        tr <span class="token operator">=</span> tl <span class="token operator">+</span> <span class="token number">1</span>  <span class="token comment"># target right</span>
+        wl <span class="token operator">=</span> tr <span class="token operator">-</span> target  <span class="token comment"># weight left</span>
+        wr <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> wl  <span class="token comment"># weight right</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span>
+            F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tl<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wl
+            <span class="token operator">+</span> F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tr<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wr
+        <span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="损失加权计算"><a href="#损失加权计算" class="headerlink" title="损失加权计算"></a>损失加权计算</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
+<span class="token keyword">class</span> <span class="token class-name">v8DetectionLoss</span><span class="token punctuation">:</span>
+     <span class="token comment"># ......省略无关代码......</span>
+	<span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> preds<span class="token punctuation">:</span> Any<span class="token punctuation">,</span> batch<span class="token punctuation">:</span> Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> Tuple<span class="token punctuation">[</span>torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">]</span><span class="token punctuation">:</span>
+         <span class="token comment"># ......省略无关代码......</span>
+        loss<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">.</span>box  <span class="token comment"># box gain</span>
+        loss<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">.</span>cls  <span class="token comment"># cls gain</span>
+        loss<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">.</span>dfl  <span class="token comment"># dfl gain</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中<code>box gain</code>、<code>cls gain</code>和<code>dfl gain</code>的值配置如下所示：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># ultralytics/cfg/default.yaml</span>
+<span class="token key atrule">box</span><span class="token punctuation">:</span> <span class="token number">7.5</span> <span class="token comment"># (float) box loss gain</span>
+<span class="token key atrule">cls</span><span class="token punctuation">:</span> <span class="token number">0.5</span> <span class="token comment"># (float) cls loss gain (scale with pixels)</span>
+<span class="token key atrule">dfl</span><span class="token punctuation">:</span> <span class="token number">1.5</span> <span class="token comment"># (float) dfl loss gain</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
 
                 
             </div>

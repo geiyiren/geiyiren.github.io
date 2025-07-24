@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.8k
+                    2.4k
                 </div>
                 
 
@@ -513,14 +513,14 @@
     <span class="token triple-quoted-string string">"""Criterion class for computing training losses for YOLOv8 object detection."""</span>
 
     <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> model<span class="token punctuation">,</span> tal_topk<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment"># model must be de-paralleled</span>
- 	    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+ 	    <span class="token comment"># ......省略无关代码......</span>
         self<span class="token punctuation">.</span>assigner <span class="token operator">=</span> TaskAlignedAssigner<span class="token punctuation">(</span>topk<span class="token operator">=</span>tal_topk<span class="token punctuation">,</span> num_classes<span class="token operator">=</span>self<span class="token punctuation">.</span>nc<span class="token punctuation">,</span> alpha<span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">,</span> beta<span class="token operator">=</span><span class="token number">6.0</span><span class="token punctuation">)</span>
         self<span class="token punctuation">.</span>bbox_loss <span class="token operator">=</span> BboxLoss<span class="token punctuation">(</span>m<span class="token punctuation">.</span>reg_max<span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token punctuation">)</span>
         self<span class="token punctuation">.</span>proj <span class="token operator">=</span> torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>m<span class="token punctuation">.</span>reg_max<span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">,</span> device<span class="token operator">=</span>device<span class="token punctuation">)</span>
-	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+	<span class="token comment"># ......省略无关代码......</span>
 
     <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> preds<span class="token punctuation">:</span> Any<span class="token punctuation">,</span> batch<span class="token punctuation">:</span> Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> Tuple<span class="token punctuation">[</span>torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">]</span><span class="token punctuation">:</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token comment"># ......省略无关代码......</span>
 
         <span class="token comment"># Cls loss</span>
         <span class="token comment"># loss[1] = self.varifocal_loss(pred_scores, target_scores, target_labels) / target_scores_sum  # VFL way</span>
@@ -540,7 +540,7 @@
         <span class="token keyword">return</span> loss <span class="token operator">*</span> batch_size<span class="token punctuation">,</span> loss<span class="token punctuation">.</span>detach<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># loss(box, cls, dfl)</span>
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="box损失"><a href="#box损失" class="headerlink" title="box损失"></a>box损失</h3><p>这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
+<h3 id="位置损失"><a href="#位置损失" class="headerlink" title="位置损失"></a>位置损失</h3><p>这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
 <span class="token keyword">class</span> <span class="token class-name">BboxLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token triple-quoted-string string">"""Criterion class for computing training losses for bounding boxes."""</span>
@@ -550,8 +550,8 @@
         <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
         self<span class="token punctuation">.</span>dfl_loss <span class="token operator">=</span> DFLoss<span class="token punctuation">(</span>reg_max<span class="token punctuation">)</span> <span class="token keyword">if</span> reg_max <span class="token operator">></span> <span class="token number">1</span> <span class="token keyword">else</span> <span class="token boolean">None</span>
 
-    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
-        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span><span class="token comment"># ......省略无关代码......)</span>
+        <span class="token comment"># ......省略无关代码......</span>
         weight <span class="token operator">=</span> target_scores<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
         iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pred_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> target_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
         loss_iou <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span> <span class="token operator">*</span> weight<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> target_scores_sum
@@ -568,9 +568,9 @@
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="IOU计算"><a href="#IOU计算" class="headerlink" title="IOU计算"></a>IOU计算</h4><p>这里使用了<code>bbox_iou()</code>函数进行iou计算，详细内容如下：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">
-<span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>
-	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/metrics.py</span>
+<span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span><span class="token comment"># ......省略无关代码......)</span>
+	<span class="token comment"># ......省略无关代码......</span>
     <span class="token comment"># IoU</span>
     iou <span class="token operator">=</span> inter <span class="token operator">/</span> union
     <span class="token keyword">if</span> CIoU <span class="token keyword">or</span> DIoU <span class="token keyword">or</span> GIoU<span class="token punctuation">:</span>
@@ -638,6 +638,53 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 <li>另一方面<code>1.0 - iou</code>是一个张量，里面存储了这个bach_size中所有框的iou损失，如果不进行归一化，无法进行损失回传且loss的量级不稳定</li>
 </ul>
 <h4 id="TaskAlignedAssigner"><a href="#TaskAlignedAssigner" class="headerlink" title="TaskAlignedAssigner"></a>TaskAlignedAssigner</h4><p><code>TaskAlignedAssigner</code> 是一种 <strong>用于目标检测中正负样本分配（匹配）的策略</strong>，最初由 <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2107.08430">YOLOX</a> 提出(YOLOX 是旷视（Megvii）在 2021 年发布的 YOLO 系列衍生模型，不属于官方 YOLOv1~v10 的系列命名)，并在 YOLOv8 中被广泛使用。它的目标是更好地将预测框和真实框进行<strong>一对一匹配</strong>，尤其在复杂或拥挤场景下，提升小目标、重叠目标的检测性能。</p>
+<p> TaskAlignedAssigner 的匹配策略简单总结为：<strong>根据分类与回归的分数加权的分数选择正样本</strong>。</p>
+<ul>
+<li>计算真实框和预测框的匹配程度。</li>
+</ul>
+<p>$$<br>align_metric &#x3D; s^\alpha \cdot u^\beta<br>$$</p>
+<p>​	其中，$s$是预测类别分值，$u$是预测框和真实框的ciou值，$\alpha$和$\beta$为权重超参数，两者相乘就可以衡量匹配程度，当分类的分值越高且ciou越高时，$align_metric$的值就越接近于1,此时预测框就与真实框越匹配，就越符合正样本的标准。</p>
+<p>正负样本分配（匹配）的策略的流程如下:</p>
+<ul>
+<li>初筛正样本      选取中心点在gt_bboxes内的预测点作为正样本匹配位置；</li>
+<li>精选正样本      根据对齐分数$t$在初步筛选的正样本中进一步选取topK个预测点作为正样本匹配位置；</li>
+<li>过滤正样本      若一个预测点匹配到多个gt_bboxs，则选取具有最大CIoU的gt作为该预测点匹配的正样本；</li>
+</ul>
+<p>实际计算代码如下所示:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/tal.py</span>
+<span class="token keyword">class</span> <span class="token class-name">TaskAlignedAssigner</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># ......省略无关代码......</span>
+    <span class="token keyword">def</span> <span class="token function">get_box_metrics</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pd_scores<span class="token punctuation">,</span> pd_bboxes<span class="token punctuation">,</span> gt_labels<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> mask_gt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># ......省略无关代码......</span>
+        na <span class="token operator">=</span> pd_bboxes<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>
+        mask_gt <span class="token operator">=</span> mask_gt<span class="token punctuation">.</span><span class="token builtin">bool</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj, h*w</span>
+        overlaps <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> na<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>pd_bboxes<span class="token punctuation">.</span>dtype<span class="token punctuation">,</span> device<span class="token operator">=</span>pd_bboxes<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+        bbox_scores <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> na<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>pd_scores<span class="token punctuation">.</span>dtype<span class="token punctuation">,</span> device<span class="token operator">=</span>pd_scores<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+
+        ind <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">)</span>  <span class="token comment"># 2, b, max_num_obj</span>
+        ind<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>end<span class="token operator">=</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+        ind<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> gt_labels<span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+        <span class="token comment"># 提取每个 GT 匹配位置的分类分数</span>
+        bbox_scores<span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span> <span class="token operator">=</span> pd_scores<span class="token punctuation">[</span>ind<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> ind<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>  <span class="token comment"># b, max_num_obj, h*w</span>
+
+        <span class="token comment"># (b, max_num_obj, 1, 4), (b, 1, h*w, 4)</span>
+        pd_boxes <span class="token operator">=</span> pd_bboxes<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>
+        gt_boxes <span class="token operator">=</span> gt_bboxes<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> na<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>
+        overlaps<span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>iou_calculation<span class="token punctuation">(</span>gt_boxes<span class="token punctuation">,</span> pd_boxes<span class="token punctuation">)</span>
+
+        align_metric <span class="token operator">=</span> bbox_scores<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>alpha<span class="token punctuation">)</span> <span class="token operator">*</span> overlaps<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>beta<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> align_metric<span class="token punctuation">,</span> overlaps<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="类别损失"><a href="#类别损失" class="headerlink" title="类别损失"></a>类别损失</h3><p>类别的损失计算方法是<code>nn.BCEWithLogitsLoss</code>,计算方法如下：</p>
+<p>假设：</p>
+<ul>
+<li>$\hat{y} \in (0, 1)$：模型预测的概率（<strong>已经经过 Sigmoid 函数</strong>）</li>
+<li>$y \in {0, 1}$：真实标签（0 或 1）</li>
+</ul>
+<p>那么 BCELoss 的公式是：<br>$$<br>\text{BCELoss}(\hat{y}, y) &#x3D; -[y \cdot \log(\hat{y}) + (1 - y) \cdot \log(1 - \hat{y})]<br>$$</p>
+<blockquote>
+<p>注意：输入必须是概率（0~1 之间），即通常需要先用 <code>sigmoid</code>。</p>
+</blockquote>
 
                 
             </div>
@@ -1044,6 +1091,15 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 
 
     
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+</script>
 
 
 

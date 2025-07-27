@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-25
+                    2025-07-27
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    57
+                    329
                 </div>
                 
 
@@ -423,8 +423,46 @@
 </li>
 </ul>
 <h2 id="2025-07-25"><a href="#2025-07-25" class="headerlink" title="2025-07-25"></a>2025-07-25</h2><ul>
-<li><input disabled="" type="checkbox"> 评估算法IOU计算方法优化</li>
-<li><input disabled="" type="checkbox"> FCW-YOLOv12n训练情况跟进分析</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+评估算法IOU计算方法优化</p>
+<p>使用CIoU计算情况如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据集</th>
+<th align="center">iou_small_label_true[IOU]</th>
+<th align="center">iou_small_label_true[CIOU]</th>
+<th align="center">iou_small_label_error[IOU]</th>
+<th align="center">iou_small_label_error[CIOU]</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">fcw_01.tar</td>
+<td align="center">72</td>
+<td align="center">72</td>
+<td align="center">28</td>
+<td align="center">26</td>
+</tr>
+<tr>
+<td align="center">fcw_02.tar</td>
+<td align="center">489</td>
+<td align="center">306</td>
+<td align="center">318</td>
+<td align="center">292</td>
+</tr>
+</tbody></table>
+<p>整体来说对重叠目标的过滤影响不太，IOU和CIoU对重叠目标的匹配效果提升不明显</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+FCW-YOLOv12n训练情况跟进分析</p>
+<ul>
+<li>分类损失的权重为0.5，偏低，可以增加至0.75</li>
+<li>dfl损失的权重为1.5，值适中，影响的是边界框的精细度，可以适当增加至2.0左右看训练是否收敛，避免训练不稳定</li>
+<li>训练时进行nms时iou的阈值配置为0.7，对于小目标不太友好，可以使得降低，设置为0.5尝试</li>
+<li>agnostic_nms可以设置为True，所有框不管类别统一做 NMS，<strong>得分高的框优先保留</strong>，可<strong>有效抑制密集、重复框</strong></li>
+<li>copy_paste建议设置为0.2，是将检测到的目标（通常是分割掩码）复制粘贴到另一图像中，增强目标数量，特别是对小目标非常有帮助。并用 <code>&quot;flip&quot;</code> 模式复制后水平翻转，增加多样性。</li>
+</ul>
+</li>
 </ul>
 
                 

@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-27
+                    2025-07-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    553
+                    860
                 </div>
                 
 
@@ -468,7 +468,7 @@ strings <span class="token operator">&lt;</span>executable_file<span class="toke
 
 <p>使用反斜杠转义空格和引号</p>
 <h1 id="网卡IP配置"><a href="#网卡IP配置" class="headerlink" title="网卡IP配置"></a>网卡IP配置</h1><pre class="line-numbers language-none"><code class="language-none"># IP配置
-ifconfig eth1 10.10.150.218 
+ifconfig eth1 10.10.150.37 
 # 网卡激活
 ifconfig eth1 up<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
@@ -476,6 +476,57 @@ ifconfig eth1 up<span aria-hidden="true" class="line-numbers-rows"><span></span>
 
 <h1 id="统计指定目录中所有子目录下文件的个数"><a href="#统计指定目录中所有子目录下文件的个数" class="headerlink" title="统计指定目录中所有子目录下文件的个数"></a>统计指定目录中所有子目录下文件的个数</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span> ./ <span class="token parameter variable">-mindepth</span> <span class="token number">1</span> <span class="token parameter variable">-maxdepth</span> <span class="token number">1</span> <span class="token parameter variable">-type</span> d <span class="token operator">|</span> <span class="token keyword">while</span> <span class="token builtin class-name">read</span> <span class="token function">dir</span><span class="token punctuation">;</span> <span class="token keyword">do</span> <span class="token builtin class-name">echo</span> <span class="token string">"<span class="token variable"><span class="token variable">$(</span><span class="token function">basename</span> <span class="token string">"<span class="token variable">$dir</span>"</span><span class="token variable">)</span></span> <span class="token variable"><span class="token variable">$(</span><span class="token function">find</span> <span class="token string">"<span class="token variable">$dir</span>"</span> <span class="token parameter variable">-maxdepth</span> <span class="token number">1</span> <span class="token parameter variable">-type</span> f <span class="token operator">|</span> <span class="token function">wc</span> <span class="token parameter variable">-l</span><span class="token variable">)</span></span>"</span><span class="token punctuation">;</span> <span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
+
+
+<h1 id="在linux上查看build-id"><a href="#在linux上查看build-id" class="headerlink" title="在linux上查看build-id"></a>在linux上查看build-id</h1><ul>
+<li><p>1.使用xxd</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">xxd <span class="token operator">&lt;</span>file path<span class="token operator">></span> <span class="token operator">|</span><span class="token function">grep</span> <span class="token parameter variable">-e</span>  <span class="token string">"GN"</span> <span class="token parameter variable">-e</span> <span class="token string">"NU"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>显示如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@HQA804:~<span class="token punctuation">]</span><span class="token comment"># xxd /exapp/lib/libdecision_alarm_adas.so |grep -e  "GN" -e "NU"</span>
+00111580: <span class="token number">7220</span> 552b <span class="token number">3030</span> <span class="token number">3030</span> <span class="token number">2028</span> 4e55 4c29 206d  r U+0000 <span class="token punctuation">(</span>NUL<span class="token punctuation">)</span> m
+001180c0: <span class="token number">7220</span> 552b <span class="token number">3030</span> <span class="token number">3030</span> <span class="token number">2028</span> 4e55 4c29 206d  r U+0000 <span class="token punctuation">(</span>NUL<span class="token punctuation">)</span> m
+0014b960: 4e55 0020 <span class="token number">2507</span> <span class="token number">2913</span> <span class="token number">4431</span> 0102 0300 c669  NU. %.<span class="token punctuation">)</span>.D1<span class="token punctuation">..</span><span class="token punctuation">..</span>.i<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>或显示如下:</p>
+<pre class="line-numbers language-none"><code class="language-none">[root@HQA804:~]# xxd &#x2F;exapp&#x2F;lib&#x2F;libblur_det.so |grep GNU
+00029030: 0000 0003 0000 0047 4e55 0020 2507 2913  .......GNU. %.).<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>然后查看指定偏移下的完整build-id</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@HQA804:~<span class="token punctuation">]</span><span class="token comment"># xxd -s 0x14b960 -l 32 /exapp/lib/libdecision_alarm_adas.so </span>
+0014b960: 4e55 0020 <span class="token number">2507</span> <span class="token number">2913</span> <span class="token number">4431</span> 0102 0300 c669  NU. %.<span class="token punctuation">)</span>.D1<span class="token punctuation">..</span><span class="token punctuation">..</span>.i
+0014b970: f763 0000 2e73 <span class="token number">6873</span> <span class="token number">7472</span> <span class="token number">7461</span> <span class="token number">6200</span> 2e67  .c<span class="token punctuation">..</span>.shstrtab<span class="token punctuation">..</span>g<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>20 2507 2913 4431 0102 0300 c669  f763表示:  2025-0729-13:44:31 1.2.3.0  CRC校验码:c669  f763</p>
+</blockquote>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@HQA804:~<span class="token punctuation">]</span><span class="token comment"># xxd -s 0x29030 -l 32 /exapp/lib/libblur_det.so</span>
+00029030: 0000 0003 0000 0047 4e55 0020 <span class="token number">2507</span> <span class="token number">2913</span>  <span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.GNU. %.<span class="token punctuation">)</span>.
+00029040: <span class="token number">3746</span> 0100 0000 cee7 9b21 0000 2e73 <span class="token number">6873</span>  7F<span class="token punctuation">..</span><span class="token punctuation">..</span><span class="token punctuation">..</span>.<span class="token operator">!</span><span class="token punctuation">..</span>.shs<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>20 2507 2913 3746 0100 0000 cee7 9b21 表示:  2025-0729-13:37:46 1.0.0.0  CRC校验码:cee7 9b21</p>
+</blockquote>
+</li>
+<li><p>使用readelf</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">readelf <span class="token parameter variable">-n</span> <span class="token operator">&lt;</span>file path<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>显示如下：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@4488e85a74cc:build<span class="token comment"># readelf -n /exapp/lib/libdecision_alarm_adas.so </span>
+
+Displaying notes found in: .note.gnu.build-id
+  Owner                 Data size	Description
+  GNU                  0x0000000f	NT_GNU_BUILD_ID <span class="token punctuation">(</span>unique build ID bitstring<span class="token punctuation">)</span>
+    Build ID: 2025072913443101020300c669f763
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@4488e85a74cc:build<span class="token comment"># readelf -n /exapp/lib/libdecision_alarm_adas.so</span>
+
+Displaying notes found in: .note.gnu.build-id
+  Owner                 Data size	Description
+  GNU                  0x0000000f	NT_GNU_BUILD_ID <span class="token punctuation">(</span>unique build ID bitstring<span class="token punctuation">)</span>
+    Build ID: 2025072913443101020300c669f763<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
 
                 
             </div>

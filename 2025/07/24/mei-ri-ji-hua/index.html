@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="name, geiyiren">
-    <meta name="description" content="note">
+    <meta name="keywords" content="每日计划, geiyiren">
+    <meta name="description" content="每日计划">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>name | geiyiren</title>
+    <title>每日计划 | geiyiren</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
     
 
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/15.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">name</h1>
+                    <h1 class="description center-align post-title">每日计划</h1>
                 </div>
             </div>
         </div>
@@ -352,8 +352,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/tag/">
-                                <span class="chip bg-color">tag</span>
+                            <a href="/tags/%E6%AF%8F%E6%97%A5%E8%AE%A1%E5%88%92/">
+                                <span class="chip bg-color">每日计划</span>
                             </a>
                         
                     </div>
@@ -364,8 +364,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Class/" class="post-category">
-                                Class
+                            <a href="/categories/%E6%AF%8F%E6%97%A5%E8%AE%A1%E5%88%92/" class="post-category">
+                                每日计划
                             </a>
                         
                     </div>
@@ -377,21 +377,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2023-05-29
+                    2025-07-24
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-27
+                    2025-07-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    329
+                    612
                 </div>
                 
 
@@ -453,7 +453,7 @@
 </tbody></table>
 <p>整体来说对重叠目标的过滤影响不太，IOU和CIoU对重叠目标的匹配效果提升不明显</p>
 </li>
-<li><p><input disabled="" type="checkbox"> 
+<li><p><input checked="" disabled="" type="checkbox"> 
 FCW-YOLOv12n训练情况跟进分析</p>
 <ul>
 <li>分类损失的权重为0.5，偏低，可以增加至0.75</li>
@@ -463,6 +463,37 @@ FCW-YOLOv12n训练情况跟进分析</p>
 <li>copy_paste建议设置为0.2，是将检测到的目标（通常是分割掩码）复制粘贴到另一图像中，增强目标数量，特别是对小目标非常有帮助。并用 <code>&quot;flip&quot;</code> 模式复制后水平翻转，增加多样性。</li>
 </ul>
 </li>
+</ul>
+<h2 id="2025-07-28"><a href="#2025-07-28" class="headerlink" title="2025-07-28"></a>2025-07-28</h2><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+FCW模型训练超参配置与训练</p>
+<p>训练开启后，服务器GPU异常中断，正在重启</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+自动标定算法流程熟悉与手动开启配置</p>
+<p>在adas_app.jsonc中将cal_enable置为1，然后设置打印等级hq.ai.log info,然后过滤<code>[calib] cal</code>既可以看到标定相关信息</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+ldw右偏不报警或报警频率低问题排查</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+dsm相机和ipc遮挡报警问题排查[版本168]</p>
+<ul>
+<li>dsm和ipc相机在遮挡算法中都可以收到视频流</li>
+<li>dsm遮挡信息上包aiApp后，苏标层收不到报警</li>
+<li>ipc相机报警链路正常，但误报较多，主要原因为ipc相机使用的dsm相机的遮挡模型，应使用通用遮挡模型</li>
+</ul>
+</li>
+</ul>
+<h2 id="2025-07-29"><a href="#2025-07-29" class="headerlink" title="2025-07-29"></a>2025-07-29</h2><ul>
+<li><input checked="" disabled="" type="checkbox"> 通用遮挡模型适配程序调试与板端效果测试</li>
+<li><input checked="" disabled="" type="checkbox"> 通用遮挡配置与算法库更新<ol>
+<li>libblur_det.so  版本号：Build ID: 2025072913374601000000cee79b21</li>
+<li>libdecision_alarm_adas.so 版本号: Build ID: 2025072913443101020300c669f763</li>
+<li>blur_det.ini更新dsm和ipc使用通用遮挡模型，修改遮挡模型为cam_blur.om</li>
+</ol>
+</li>
+<li><input checked="" disabled="" type="checkbox"> 108服务器GPU异常问题排查与解决，开启yolo12模型训练</li>
 </ul>
 
                 
@@ -490,7 +521,7 @@ FCW-YOLOv12n训练情况跟进分析</p>
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://geiyiren.github.io/2023/05/29/mei-ri-ji-hua/">https://geiyiren.github.io/2023/05/29/mei-ri-ji-hua/</a>
+                    <a href="https://geiyiren.github.io/2025/07/24/mei-ri-ji-hua/">https://geiyiren.github.io/2025/07/24/mei-ri-ji-hua/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -528,8 +559,8 @@ FCW-YOLOv12n训练情况跟进分析</p>
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/tag/">
-                                    <span class="chip bg-color">tag</span>
+                                <a href="/tags/%E6%AF%8F%E6%97%A5%E8%AE%A1%E5%88%92/">
+                                    <span class="chip bg-color">每日计划</span>
                                 </a>
                             
                         </div>
@@ -608,50 +639,48 @@ FCW-YOLOv12n训练情况跟进分析</p>
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2023/05/29/yolov5-mo-xing-jie-gou-jian-hua-shi-li/">
+                <a href="/2025/07/24/mei-ri-ji-hua/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/14.jpg" class="responsive-img" alt="yolov5模型结构简化实例">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="每日计划">
                         
-                        <span class="card-title">yolov5模型结构简化实例</span>
+                        <span class="card-title">每日计划</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            yolov5模型结构简化实例
+                            每日计划
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2023-05-29
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-07-24
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/yolov5/" class="post-category">
-                                    yolov5
+                            <a href="/categories/%E6%AF%8F%E6%97%A5%E8%AE%A1%E5%88%92/" class="post-category">
+                                    每日计划
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E4%BC%98%E5%8C%96/">
-                        <span class="chip bg-color">优化</span>
-                    </a>
-                    
-                    <a href="/tags/yolov5/">
-                        <span class="chip bg-color">yolov5</span>
+                    <a href="/tags/%E6%AF%8F%E6%97%A5%E8%AE%A1%E5%88%92/">
+                        <span class="chip bg-color">每日计划</span>
                     </a>
                     
                 </div>
@@ -665,31 +694,31 @@ FCW-YOLOv12n训练情况跟进分析</p>
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/">
+                <a href="/2025/07/23/yolo-mu-biao-jian-ce-suan-fa-zhi-sun-shi-ji-suan/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="深度学习基础知识">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/0.jpg" class="responsive-img" alt="yolo目标检测算法之损失计算">
                         
-                        <span class="card-title">深度学习基础知识</span>
+                        <span class="card-title">yolo目标检测算法之损失计算</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            深度学习基础知识
+                            分析yolo目标检测算法中损失计算方法
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-05-29
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-07-23
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
-                                    深度学习
+                            <a href="/categories/yolo/" class="post-category">
+                                    yolo
                                 </a>
                             
                             
@@ -699,12 +728,12 @@ FCW-YOLOv12n训练情况跟进分析</p>
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
+                    <a href="/tags/yolo/">
+                        <span class="chip bg-color">yolo</span>
                     </a>
                     
-                    <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-                        <span class="chip bg-color">基础知识</span>
+                    <a href="/tags/loss/">
+                        <span class="chip bg-color">loss</span>
                     </a>
                     
                 </div>

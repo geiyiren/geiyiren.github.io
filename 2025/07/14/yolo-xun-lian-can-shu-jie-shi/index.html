@@ -368,8 +368,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/yolo/" class="post-category">
-                                yolo
+                            <a href="/categories/ultralytics/" class="post-category">
+                                ultralytics
                             </a>
                         
                     </div>
@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-07-29
+                    2025-07-30
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.4k
                 </div>
                 
 
@@ -436,7 +436,7 @@
 <td>model</td>
 <td>str (optional)</td>
 <td></td>
-<td>模型文件路径，如  yolov8n.pt  或配置文件  yolov8n.yaml</td>
+<td>模型文件路径，如  yolov8n.pt  或配置文件  yolov8n.yaml；需要进行resume时，<mark>这里需要填写需要加载模型的权重</mark></td>
 </tr>
 <tr>
 <td>data</td>
@@ -460,7 +460,7 @@
 <td><strong>patience</strong></td>
 <td>int</td>
 <td>100</td>
-<td>若连续该轮数没有提升，则提前停止训练</td>
+<td><mark>若连续该轮数没有提升，则提前停止训练</mark></td>
 </tr>
 <tr>
 <td>batch</td>
@@ -490,7 +490,7 @@
 <td><strong>cache</strong></td>
 <td>bool</td>
 <td>str</td>
-<td>False</td>
+<td>False<mark>将数据集加载后保存在内存中或disk上，可以适当提升训练速度</mark></td>
 </tr>
 <tr>
 <td>device</td>
@@ -580,7 +580,7 @@
 <td><strong>resume</strong></td>
 <td>bool</td>
 <td>False</td>
-<td>是否从上次检查点恢复训练</td>
+<td>恢复训练是否从上次检查点<mark>恢复训练</mark></td>
 </tr>
 <tr>
 <td>amp</td>
@@ -598,13 +598,13 @@
 <td>profile</td>
 <td>bool</td>
 <td>False</td>
-<td>是否在训练期间 profile ONNX 或 TensorRT 推理速度</td>
+<td>是否在训练期间测试 profile ONNX 或 TensorRT 推理速度</td>
 </tr>
 <tr>
 <td><strong>freeze</strong></td>
 <td>int</td>
 <td>list</td>
-<td>训练的时候冻结某些层</td>
+<td><mark>训练的时候冻结某些层</mark></td>
 </tr>
 <tr>
 <td>multi_scale</td>
@@ -650,7 +650,7 @@
 <td><strong>iou</strong></td>
 <td>0.7</td>
 <td>float</td>
-<td>NMS 的 IoU 阈值</td>
+<td>NMS 的 IoU 阈值<mark>在进行nms时iou大于该值的框会被认为时重复框，进而被删除</mark></td>
 </tr>
 <tr>
 <td><strong>max_det</strong></td>
@@ -924,19 +924,19 @@
 <td>box</td>
 <td>7.5</td>
 <td>float</td>
-<td>目标框损失权重</td>
+<td><mark>目标框损失权重</mark></td>
 </tr>
 <tr>
 <td>cls</td>
 <td>0.5</td>
 <td>float</td>
-<td>类别损失权重</td>
+<td><mark>类别损失权重</mark></td>
 </tr>
 <tr>
 <td>dfl</td>
 <td>1.5</td>
 <td>float</td>
-<td>DFL 损失权重</td>
+<td><mark>DFL 损失权重</mark></td>
 </tr>
 <tr>
 <td>pose</td>
@@ -956,7 +956,18 @@
 <td>int</td>
 <td>名义 batch size</td>
 </tr>
+</tbody></table>
+<ul>
+<li>图像增强参数<table>
+<thead>
 <tr>
+<th>参数名</th>
+<th>默认值</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
 <td>hsv_h</td>
 <td>0.015</td>
 <td>float</td>
@@ -1065,6 +1076,8 @@
 <td>分类训练时随机擦除概率（&lt; 1.0）。在训练过程中，对图像的随机区域进行遮挡（擦除），增强模型鲁棒性</td>
 </tr>
 </tbody></table>
+</li>
+</ul>
 
                 
             </div>

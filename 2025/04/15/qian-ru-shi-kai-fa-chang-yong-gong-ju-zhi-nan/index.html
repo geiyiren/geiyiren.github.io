@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-01
+                    2025-08-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    860
+                    892
                 </div>
                 
 
@@ -434,8 +434,8 @@ strings <span class="token operator">&lt;</span>executable_file<span class="toke
 <h1 id="调整文件系统大小"><a href="#调整文件系统大小" class="headerlink" title="调整文件系统大小"></a>调整文件系统大小</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">resize2fs <span class="token operator">&lt;</span>选项<span class="token operator">></span> <span class="token operator">&lt;</span>设备路径<span class="token operator">></span> <span class="token operator">&lt;</span>大小<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>用于调整 ext2&#x2F;ext3&#x2F;ext4 文件系统大小 的命令。它可以 增大或减小 文件系统的大小。&lt;大小&gt;可以省略，表示扩展到设备的最大空间</p>
 <blockquote>
-</blockquote>
 <p>resize2fs &#x2F;dev&#x2F;block&#x2F;by-name&#x2F;externApp<br> 扩展exapp文件系统的大小为最大空间</p>
+</blockquote>
 <h1 id="以写的方式重新挂载目录"><a href="#以写的方式重新挂载目录" class="headerlink" title="以写的方式重新挂载目录"></a>以写的方式重新挂载目录</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">mount</span> <span class="token parameter variable">-o</span> rw,remount /exapp/<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h1 id="压缩库或可执行文件"><a href="#压缩库或可执行文件" class="headerlink" title="压缩库或可执行文件"></a>压缩库或可执行文件</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">aarch64-v01c01-linux-gnu-strip <span class="token operator">&lt;</span>文件名<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -523,7 +523,9 @@ Displaying notes found in: .note.gnu.build-id
 Displaying notes found in: .note.gnu.build-id
   Owner                 Data size	Description
   GNU                  0x0000000f	NT_GNU_BUILD_ID <span class="token punctuation">(</span>unique build ID bitstring<span class="token punctuation">)</span>
-    Build ID: 2025072913443101020300c669f763<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+    Build ID: 2025072913443101020300c669f763<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="文件批量自动重命名"><a href="#文件批量自动重命名" class="headerlink" title="文件批量自动重命名"></a>文件批量自动重命名</h1><pre class="line-numbers language-none"><code class="language-none">i&#x3D;0; for f in .&#x2F;*; do mv &quot;$f&quot; &quot;.&#x2F;$(date +%s)_$((i++)).$&#123;f##*.&#125;&quot;; done<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 </ul>
 
                 

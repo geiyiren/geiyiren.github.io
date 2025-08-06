@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-05
+                    2025-08-06
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.3k
+                    1.5k
                 </div>
                 
 
@@ -496,14 +496,14 @@ dsm相机和ipc遮挡报警问题排查[版本168]</p>
 <li><input checked="" disabled="" type="checkbox"> 108服务器GPU异常问题排查与解决，开启yolo12模型训练</li>
 </ul>
 <h2 id="2025-07-30"><a href="#2025-07-30" class="headerlink" title="2025-07-30"></a>2025-07-30</h2><ul>
-<li><input disabled="" type="checkbox"> ultralytics工程梯度调整方法配置与生效方法查看</li>
+<li><input disabled="" type="checkbox"> <mark>ultralytics工程梯度调整方法配置与生效方法查看</mark></li>
 <li><input checked="" disabled="" type="checkbox"> nms与soft-nms算法对比分析</li>
-<li><input disabled="" type="checkbox"> yolo-backbone常用特征提取组件整理分析</li>
+<li><input disabled="" type="checkbox"> <mark>yolo-backbone常用特征提取组件整理分析</mark></li>
 <li><input checked="" disabled="" type="checkbox"> ultralytics工程混淆矩阵计算、检测结果匹配方法熟悉</li>
 </ul>
 <h2 id="2025-07-31"><a href="#2025-07-31" class="headerlink" title="2025-07-31"></a>2025-07-31</h2><ul>
 <li><p><input disabled="" type="checkbox"> 
-ultralytics工程检测结果异常图像保存</p>
+<mark>ultralytics工程检测结果异常图像保存</mark></p>
 </li>
 <li><p><input checked="" disabled="" type="checkbox"> 
 新相机内参标定</p>
@@ -511,14 +511,14 @@ ultralytics工程检测结果异常图像保存</p>
 </ul>
 <h2 id="2025-08-01"><a href="#2025-08-01" class="headerlink" title="2025-08-01"></a>2025-08-01</h2><ul>
 <li><input checked="" disabled="" type="checkbox"> FCW-YOLOv12n训练情况跟进分析,整理训练进展</li>
-<li><input disabled="" type="checkbox"> ultralytics工程检测结果异常图像保存</li>
+<li><input disabled="" type="checkbox"> <mark>ultralytics工程检测结果异常图像保存</mark></li>
 </ul>
 <h2 id="2025-08-04"><a href="#2025-08-04" class="headerlink" title="2025-08-04"></a>2025-08-04</h2><ul>
 <li><p><input checked="" disabled="" type="checkbox"> 
 bsd消防栓素材搜</p>
 </li>
 <li><p><input disabled="" type="checkbox"> 
-对已有数据集场景增加消防栓贴图处理</p>
+<mark>对已有数据集场景增加消防栓贴图处理</mark></p>
 </li>
 <li><p><input checked="" disabled="" type="checkbox"> 
 整理bsd数据集，当前使用的数据集共计614,755张，启动BSD视角的图像数量为341,551张</p>
@@ -528,7 +528,7 @@ bsd消防栓素材搜</p>
 </li>
 </ul>
 <h2 id="2025-08-05"><a href="#2025-08-05" class="headerlink" title="2025-08-05"></a>2025-08-05</h2><ul>
-<li><p><input disabled="" type="checkbox"> 
+<li><p><input checked="" disabled="" type="checkbox"> 
 消防栓图像批量爬取脚本编写，爬取谷歌图像中的消防栓图像</p>
 <ul>
 <li><p>数据集下载网站：<a target="_blank" rel="noopener" href="https://universe.roboflow.com/">https://universe.roboflow.com</a></p>
@@ -537,7 +537,7 @@ bsd消防栓素材搜</p>
 </li>
 </ul>
 </li>
-<li><p><input disabled="" type="checkbox"> 
+<li><p><input checked="" disabled="" type="checkbox"> 
 困难负样本挖掘</p>
 <p>  通过难负样本惩罚降低误识别,比如使用Focal Loss。</p>
 <ul>
@@ -566,6 +566,19 @@ bsd消防栓素材搜</p>
 </li>
 </ul>
 <p>​	在yolo训练中<strong>fl_gamma</strong>是 <strong>Focal Loss</strong> 中的核心超参数之一，控制对“难样本”的关注程度。</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> bsd_normal数据集现状<ul>
+<li>数据集中背景偏多，占比44.4%，合适占比应该在30%左右</li>
+<li>背景中贴图素材似乎是将误检图像随机直接贴在了背景图像中，一个背景图中仅贴一张，贴图包括：消防栓、车轮、模糊的背影小人、杂物、锥形桶等。贴图与背景较为突兀</li>
+<li>真正bsd视角的有目标的图像占比约37.32%</li>
+</ul>
+</li>
+<li><input checked="" disabled="" type="checkbox"> 数据集重复项删除工具<ul>
+<li>VisiPics可以查找到贴图相似图像，且可以设置相似等级，但是数据量大时最后移动重复图像时容易卡死</li>
+<li>Visual Similarity Duplicate Image Finde Pro可以设置相似百分比</li>
+</ul>
+</li>
+</ul>
 
                 
             </div>

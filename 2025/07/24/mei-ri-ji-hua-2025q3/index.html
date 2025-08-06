@@ -539,7 +539,8 @@ bsd消防栓素材搜</p>
 </li>
 <li><p><input checked="" disabled="" type="checkbox"> 
 困难负样本挖掘</p>
-<p>  通过难负样本惩罚降低误识别,比如使用Focal Loss。</p>
+<ul>
+<li><p>通过难负样本惩罚降低误识别,比如使用Focal Loss。</p>
 <ul>
 <li><p>问题: 类别不平衡导致简单负样本主导梯度</p>
 <p>在二分类（是否为某类目标）任务中，交叉熵损失定义为：</p>
@@ -565,7 +566,11 @@ bsd消防栓素材搜</p>
 </ul>
 </li>
 </ul>
-<p>​	在yolo训练中<strong>fl_gamma</strong>是 <strong>Focal Loss</strong> 中的核心超参数之一，控制对“难样本”的关注程度。</p>
+</li>
+</ul>
+<blockquote>
+<p>在yolo训练中<strong>fl_gamma</strong>是 <strong>Focal Loss</strong> 中的核心超参数之一，控制对“难样本”的关注程度。</p>
+</blockquote>
 <ul>
 <li><input checked="" disabled="" type="checkbox"> bsd_normal数据集现状<ul>
 <li>数据集中背景偏多，占比44.4%，合适占比应该在30%左右</li>
@@ -575,9 +580,13 @@ bsd消防栓素材搜</p>
 </li>
 <li><input checked="" disabled="" type="checkbox"> 数据集重复项删除工具<ul>
 <li>VisiPics可以查找到贴图相似图像，且可以设置相似等级，但是数据量大时最后移动重复图像时容易卡死</li>
-<li>Visual Similarity Duplicate Image Finde Pro可以设置相似百分比</li>
+<li>Visual Similarity Duplicate Image Finde Pro可以设置相似百分比，需要将相似比控制在99%以上才可以筛选出想要的重复图像，在进行相似图像移动是不会卡死</li>
 </ul>
 </li>
+</ul>
+<h1 id="2025-08-06"><a href="#2025-08-06" class="headerlink" title="2025-08-06"></a>2025-08-06</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> bsd数据集part1重复素材筛选</li>
+<li><input disabled="" type="checkbox"> C3、C2f、SPPF组件适用场景与功能分析</li>
 </ul>
 
                 

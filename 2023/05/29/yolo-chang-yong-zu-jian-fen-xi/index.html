@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="深度学习基础知识, geiyiren">
-    <meta name="description" content="深度学习基础知识">
+    <meta name="keywords" content="yolo常用组件分析, geiyiren">
+    <meta name="description" content="yolo常用组件分析">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>深度学习基础知识 | geiyiren</title>
+    <title>yolo常用组件分析 | geiyiren</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
     
 
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">深度学习基础知识</h1>
+                    <h1 class="description center-align post-title">yolo常用组件分析</h1>
                 </div>
             </div>
         </div>
@@ -352,12 +352,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">深度学习</span>
+                            <a href="/tags/yolo/">
+                                <span class="chip bg-color">yolo</span>
                             </a>
                         
-                            <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-                                <span class="chip bg-color">基础知识</span>
+                            <a href="/tags/%E7%BB%84%E4%BB%B6/">
+                                <span class="chip bg-color">组件</span>
                             </a>
                         
                     </div>
@@ -368,8 +368,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
-                                深度学习
+                            <a href="/categories/yolo/" class="post-category">
+                                yolo
                             </a>
                         
                     </div>
@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    707
+                    1.7k
                 </div>
                 
 
@@ -420,32 +420,187 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="ROI-Pooling"><a href="#ROI-Pooling" class="headerlink" title="ROI Pooling"></a>ROI Pooling</h1><h2 id="什么是ROI？"><a href="#什么是ROI？" class="headerlink" title="什么是ROI？"></a>什么是ROI？</h2><p>ROI是 Region of interest 的简写，指的是 Faster R-CNN 结构中，经过 RPN 层后，产生的 proposal 对应的 box 框。</p>
-<p>ROI Pooling 顾名思义，是 pooling 层的一种，而且是针对 ROIs 的 pooling。整个 ROI 的过程，就是将这些 proposal 抠出来的过程，得到大小统一的 feature map。</p>
-<h2 id="ROI-Pooling-的输入"><a href="#ROI-Pooling-的输入" class="headerlink" title="ROI Pooling 的输入"></a>ROI Pooling 的输入</h2><p>ROI Pooling 该层有两个输入：</p>
+                <blockquote>
+<p>残差网络的核心思想是：每个附加层都应该更容易地包含原始函数作为其元素之一</p>
+</blockquote>
+<h1 id="C3模块分析"><a href="#C3模块分析" class="headerlink" title="C3模块分析"></a>C3模块分析</h1><h2 id="ResNet结构分析"><a href="#ResNet结构分析" class="headerlink" title="ResNet结构分析"></a>ResNet结构分析</h2><p>C3的设计灵感来自ResNet的残差结构，是对残差结构的改进，首先来看下ResNet的残差结构是什么样子的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> torch
+<span class="token keyword">from</span> torch <span class="token keyword">import</span> nn
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">import</span> functional <span class="token keyword">as</span> F
+<span class="token keyword">from</span> d2l <span class="token keyword">import</span> torch <span class="token keyword">as</span> d2l
+
+
+<span class="token keyword">class</span> <span class="token class-name">Residual</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>  <span class="token comment">#@save</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> input_channels<span class="token punctuation">,</span> num_channels<span class="token punctuation">,</span>
+                 use_1x1conv<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> strides<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>conv1 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span>input_channels<span class="token punctuation">,</span> num_channels<span class="token punctuation">,</span>
+                               kernel_size<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> padding<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> stride<span class="token operator">=</span>strides<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>conv2 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span>num_channels<span class="token punctuation">,</span> num_channels<span class="token punctuation">,</span>
+                               kernel_size<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span> padding<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> use_1x1conv<span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>conv3 <span class="token operator">=</span> nn<span class="token punctuation">.</span>Conv2d<span class="token punctuation">(</span>input_channels<span class="token punctuation">,</span> num_channels<span class="token punctuation">,</span>
+                                   kernel_size<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">,</span> stride<span class="token operator">=</span>strides<span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>conv3 <span class="token operator">=</span> <span class="token boolean">None</span>
+        self<span class="token punctuation">.</span>bn1 <span class="token operator">=</span> nn<span class="token punctuation">.</span>BatchNorm2d<span class="token punctuation">(</span>num_channels<span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>bn2 <span class="token operator">=</span> nn<span class="token punctuation">.</span>BatchNorm2d<span class="token punctuation">(</span>num_channels<span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> X<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        Y <span class="token operator">=</span> F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>self<span class="token punctuation">.</span>bn1<span class="token punctuation">(</span>self<span class="token punctuation">.</span>conv1<span class="token punctuation">(</span>X<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        Y <span class="token operator">=</span> self<span class="token punctuation">.</span>bn2<span class="token punctuation">(</span>self<span class="token punctuation">.</span>conv2<span class="token punctuation">(</span>Y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>conv3<span class="token punctuation">:</span>
+            X <span class="token operator">=</span> self<span class="token punctuation">.</span>conv3<span class="token punctuation">(</span>X<span class="token punctuation">)</span>
+        Y <span class="token operator">+=</span> X
+        <span class="token keyword">return</span> F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>Y<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806161119151.png" alt="image-20250806161119151"></p>
+<blockquote>
+<p>1x1卷积是为了调整通道和分辨率</p>
+</blockquote>
+<ul>
+<li><h3 id="ResNet的优点"><a href="#ResNet的优点" class="headerlink" title="ResNet的优点"></a>ResNet的优点</h3><ul>
+<li><p><strong>可以有效缓解梯度消失</strong></p>
+<p>残差结构的函数表达式如下所示：<br>$$<br>y&#x3D;F(x)+x<br>$$<br>其中$x$表示模块输入，$F$为虚线框对应的操作，$y$为残差模块的输出，这里将损失表示为$\mathcal{L}$，则进行损失的反向传播时需要计算损失$\mathcal{L}$对输入$x$的导数,由链式法则可知:<br>$$<br>\frac{\partial\mathcal{L}}{\partial x}&#x3D;\frac{\partial\mathcal{L}}{\partial y}\cdot\frac{\partial y}{\partial x}<br>$$<br>则：<br>$$<br>\frac{\partial y}{\partial x}&#x3D;\frac{\partial F(x)}{\partial x}+\frac{\partial x}{\partial x}&#x3D;\frac{\partial F(x)}{\partial x}+I<br>\\<br>\frac{\partial\mathcal{L}}{\partial x}&#x3D;\frac{\partial\mathcal{L}}{\partial y}\cdot\left(\frac{\partial F(x)}{\partial x}+I\right)<br>$$<br>这样当主干分支的梯度$\frac{\partial F(x)}{\partial x}$为0时(出现了梯度消失)，由于$I$为单位矩阵，那么梯度仍旧可以沿着$\frac{\partial\mathcal{L}}{\partial y}$进行传播。</p>
+</li>
+<li><p><strong>可以缓解深度网络退化现象</strong></p>
+<p>这里的退化可以理解为当网络变深后，如果没有残差结构，梯度即使不消失也会很小，这样浅层收到梯度就会越来越弱，这样网络虽然深了，但是浅层的网络参数无法进行训练了，网络的精度有可能不升反而降低</p>
+</li>
+<li><p><strong>增加了网络的表达能力</strong>  </p>
+<p>说人话就是网络可以映射更为复杂的关系，这是因为每个残差模块即可什么都不做($F(x)&#x3D;0$)也可以做些什么($F(x)\neq0$)，另一个方面由于残差块可以有效缓解梯度消失问题，这也有助于提升网络的深度，进一步增强网络的复杂性，提升表达能力</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="DenseNet结构分析"><a href="#DenseNet结构分析" class="headerlink" title="DenseNet结构分析"></a>DenseNet结构分析</h2><p>首先来看下ResNet的网络整体是什么样子的：</p>
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806162728956.png" alt="image-20250806162728956"></p>
+<blockquote>
+<p>其中+代表的是元素级相加操作</p>
+</blockquote>
+<p>而DenseNet正是在ResNet的基础上进行了更加稠密的连接:</p>
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/v2-2cb01c1c9a217e56c72f4c24096fe3fe_r.jpg" alt="v2-2cb01c1c9a217e56c72f4c24096fe3fe_r"></p>
+<blockquote>
+<p>其中c代表的是channel级连接操作</p>
+</blockquote>
+<p>这样的网络首先具有特征复用充分的特征，后面的每一层网络都可以使用前面任何一层提取的特征，实现了一定程度上的特征共享。而ResNet是将上以模块的提取的特征进行重新学习后形成自己的特征进行表达输出。但是像DenseNet这样的网络不适合深层设计，因为随着层数增加，连接数急剧增长，带来计算复杂度上升，训练非常深的DenseNet变得困难。</p>
+<p>ResNet是将主干和旁路分支的结果进行相加后融合为自己的特征进行表达输出，而DenseNet是主干和旁路分支的结果进行拼接后融合为自己的特征进行表达输出，这样可以实现上一个模块的特征未经”加工”且可以在这一模块直接使用。</p>
+<h2 id="BottleNeck"><a href="#BottleNeck" class="headerlink" title="BottleNeck"></a>BottleNeck</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/BottleNeck.svg" alt="BottleNeck"></p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>卷积核</th>
+<th>作用</th>
+<th>通道数</th>
+<th>特征图尺寸</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conv1</td>
+<td>1×1</td>
+<td>降维</td>
+<td><code>C_in → C_mid</code></td>
+<td><code>H × W</code>（不变）</td>
+</tr>
+<tr>
+<td>Conv2</td>
+<td>3×3</td>
+<td>特征提取</td>
+<td><code>C_mid → C_mid</code></td>
+<td><code>H/stride × W/stride</code>（可能变）</td>
+</tr>
+<tr>
+<td>Conv3</td>
+<td>1×1</td>
+<td>升维</td>
+<td><code>C_mid → C_out</code></td>
+<td>与上一步相同（不变）</td>
+</tr>
+</tbody></table>
+<p>看起来和ResNet有点像，但其实不一样，主要区别如下：</p>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>ResNet的残差模块</th>
+<th>Bottleneck模块</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主体卷积结构</td>
+<td>3×3 → 3×3</td>
+<td>1×1 → 3×3 → 1×1</td>
+</tr>
+<tr>
+<td>通道是否变换</td>
+<td>保持一致</td>
+<td>中间压缩（降低）再升维</td>
+</tr>
+<tr>
+<td>参数量</td>
+<td>较少</td>
+<td>更多</td>
+</tr>
+<tr>
+<td>计算效率</td>
+<td>一般</td>
+<td>更高（因中间通道更少）</td>
+</tr>
+<tr>
+<td>特征图尺寸变换</td>
+<td>stride 通常在第1个卷积</td>
+<td>stride 通常在中间或最后1个卷积</td>
+</tr>
+<tr>
+<td>残差连接</td>
+<td>输入通道&#x3D;输出通道</td>
+<td>需要升降维（用1×1卷积调整）</td>
+</tr>
+<tr>
+<td>模块结构复杂度</td>
+<td>简单</td>
+<td>更复杂</td>
+</tr>
+<tr>
+<td>表达能力</td>
+<td>一般</td>
+<td>更强（深而窄）</td>
+</tr>
+</tbody></table>
+<p>Bottleneck模块为了中间层卷积的计算量更小，在第一层卷积中将卷积核设置为1x1进行降维，减少通道数，然后使用中间层3x3卷积进行特征提取，最后再使用1x1卷积进行升维度。Bottleneck模块通过降维-提取-升维的设计，既减少计算负担又支持更深的网络，利用更丰富的非线性变换(降维-升维)和特征融合，从而提升了网络捕捉复杂特征的能力，表达能力更强。</p>
+<h2 id="C3结构分析"><a href="#C3结构分析" class="headerlink" title="C3结构分析"></a>C3结构分析</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c3.svg" alt="c3"></p>
+<ul>
+<li><p><strong>C3 模块设计亮点总结</strong>：</p>
 <ol>
-<li>从具有多个卷积核池化的深度网络中获得的固定大小的feature maps；</li>
-<li>一个表示所有 ROI 的 N*5 的矩阵，其中N表示ROI的数目。一列表示图像index，其余四列表示其余的左上角和右下角坐标；</li>
+<li><p><strong>残差结构借鉴（ResNet）</strong>：通过旁路分支实现跳跃连接，改善深层网络的训练稳定性；</p>
+</li>
+<li><p><strong>特征复用（DenseNet 思想）</strong>：主干堆叠多个 Bottleneck 模块，实现连续特征共享；</p>
+</li>
+<li><p><strong>计算优化（Bottleneck 引入）</strong>：使用轻量结构降低模型参数与计算量；</p>
+</li>
+<li><p><strong>先降维后提取</strong>：在 Bottleneck 前引入 3×3 卷积降维，减少后续计算负担同时也进行了一定程度的局部空间特征提取；</p>
+</li>
+<li><p><strong>融合平滑</strong>：主干与旁路融合后使用 3×3 卷积进一步整合特征，提升表达一致性。</p>
+<ul>
+<li><p>解释什么是“一致性”：</p>
+<h4 id="1-语义一致性"><a href="#1-语义一致性" class="headerlink" title="1. 语义一致性"></a>1. <strong>语义一致性</strong></h4><ul>
+<li>融合的两个分支，一个走了 Bottleneck、一个直接跳跃（旁路），它们在语义层次上可能存在差异。</li>
+<li>使用 3×3 卷积可以对融合后的特征做“重新整合”，让这些语义差异减小，最终输出的特征更统一、能更好地表达当前区域的语义信息。</li>
+</ul>
+<h4 id="2-空间一致性"><a href="#2-空间一致性" class="headerlink" title="2. 空间一致性"></a>2. <strong>空间一致性</strong></h4><ul>
+<li>主干分支和旁路分支可能由于卷积、激活、通道数变化等带来不同的空间响应模式。</li>
+<li>使用一个 3×3 卷积后，相邻像素之间的特征会更加平滑和连贯，减少“拼接感”或“突兀的边界”。</li>
+</ul>
+<h4 id="3-统计一致性"><a href="#3-统计一致性" class="headerlink" title="3. 统计一致性"></a>3. <strong>统计一致性</strong></h4><ul>
+<li>两个分支的特征可能具有不同的数值分布（例如均值、方差、通道能量差异），拼接后可能会影响后续网络处理。</li>
+<li>3×3 卷积可以视为一种“局部的归一化 + 重映射”操作，使输出特征的统计属性更加一致，便于下游模块处理。</li>
+</ul>
+</li>
+</ul>
+</li>
 </ol>
-<h2 id="ROI-Pooling-的输出"><a href="#ROI-Pooling-的输出" class="headerlink" title="ROI Pooling 的输出"></a>ROI Pooling 的输出</h2><p>输出是 batch 个 vector，其中 batch 的值等于 roi 的个数，vector的大小为 channel ∗ w ∗ h；ROI Pooling 的过程就是将一个个大小不同的 box 矩形框，都映射成大小为 w ∗ h 的矩形框。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image.png"><br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-1.png"></p>
-<p>如图所示，我们先把 roi 中的坐标映射到 feature map 上，映射规则比较简单，就是把各个坐标除以输入图片与 feature map 的大小的比值，得到了 feature map 上的 box 坐标后，我们使用 pooling 得到输出；由于输入的图片大小不一，所以这里我们使用的 spp pooling（空间金字塔池化），spp pooling 在 pooling 的过程中需要计算 pooling 后的结果对应的像素点反映射到 feature map 上所占的范围，然后在那个范围中进行取 max 或者取 average。理解起来有点绕，看后面，你会豁然开朗。</p>
-<h2 id="ROI-pooling具体操作如下"><a href="#ROI-pooling具体操作如下" class="headerlink" title="ROI pooling具体操作如下"></a>ROI pooling具体操作如下</h2><ol>
-<li>根据输入image，将 ROI 映射到 feature map 对应位置；</li>
-<li>将映射后的区域划分为相同大小的 sections（sections数量与输出的维度相同）；</li>
-<li>对每个 sections 进行 max pooling 操作；</li>
-</ol>
-<p>这样我们就可以从不同大小的方框得到固定大小的相应的 feature maps。值得一提的是，输出的 feature maps 的大小不取决于 ROI 和卷积 feature maps 大小。ROI pooling 最大的好处就在于极大地提高了处理速度。</p>
-<h2 id="ROI-pooling-example"><a href="#ROI-pooling-example" class="headerlink" title="ROI pooling example"></a>ROI pooling example</h2><p>我们有一个 8∗8 大小的 feature map，一个ROI，以及输出大小为2∗2.</p>
-<p>输入的固定大小的feature map<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-2.png"></p>
-<p>region proposal 投影之后位置（左上角，右下角坐标）： (0,3)，(7,8)。 </p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-3.png"></p>
-<p>将其划分为（2<em>2）个 sections（因为输出大小为2</em>2），我们可以得到：  </p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-4.png"></p>
-<p>对每个section做max pooling，可以得到：  </p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/image-5.png"></p>
-<p>整体过程如下：<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/f95107258e128dac79e9bec44cb09941.gif">  </p>
-<p>说明：在此案例中 region proposals 是 5<em>7 大小的，在 pooling 之后需要得到 2</em>2 的，所以在 5<em>7 的特征图划分成 2</em>2 的时候不是等分的，行是 5&#x2F;2，第一行得到2，剩下的那一行是3，列是7&#x2F;2，第一列得到3，剩下那一列是4。</p>
+</li>
+</ul>
 
                 
             </div>
@@ -472,7 +627,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://geiyiren.github.io/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/">https://geiyiren.github.io/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/</a>
+                    <a href="https://geiyiren.github.io/2023/05/29/yolo-chang-yong-zu-jian-fen-xi/">https://geiyiren.github.io/2023/05/29/yolo-chang-yong-zu-jian-fen-xi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -510,12 +665,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">深度学习</span>
+                                <a href="/tags/yolo/">
+                                    <span class="chip bg-color">yolo</span>
                                 </a>
                             
-                                <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-                                    <span class="chip bg-color">基础知识</span>
+                                <a href="/tags/%E7%BB%84%E4%BB%B6/">
+                                    <span class="chip bg-color">组件</span>
                                 </a>
                             
                         </div>
@@ -598,19 +753,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/05/29/yolo-chang-yong-zu-jian-fen-xi/">
+                <a href="/2023/05/29/yolov5-mo-xing-jie-gou-jian-hua-shi-li/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="yolo常用组件分析">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/14.jpg" class="responsive-img" alt="yolov5模型结构简化实例">
                         
-                        <span class="card-title">yolo常用组件分析</span>
+                        <span class="card-title">yolov5模型结构简化实例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            yolo常用组件分析
+                            yolov5模型结构简化实例
                         
                     </div>
                     <div class="publish-info">
@@ -621,8 +776,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/yolo/" class="post-category">
-                                    yolo
+                            <a href="/categories/yolov5/" class="post-category">
+                                    yolov5
                                 </a>
                             
                             
@@ -632,12 +787,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/yolo/">
-                        <span class="chip bg-color">yolo</span>
+                    <a href="/tags/%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">优化</span>
                     </a>
                     
-                    <a href="/tags/%E7%BB%84%E4%BB%B6/">
-                        <span class="chip bg-color">组件</span>
+                    <a href="/tags/yolov5/">
+                        <span class="chip bg-color">yolov5</span>
                     </a>
                     
                 </div>
@@ -651,31 +806,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/05/19/dan-li-mo-shi/">
+                <a href="/2023/05/29/shen-du-xue-xi-ji-chu-zhi-shi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/20.jpg" class="responsive-img" alt="单例模式">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/2.jpg" class="responsive-img" alt="深度学习基础知识">
                         
-                        <span class="card-title">单例模式</span>
+                        <span class="card-title">深度学习基础知识</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            单例模式
+                            深度学习基础知识
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2023-05-19
+                                <i class="far fa-clock fa-fw icon-date"></i>2023-05-29
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-category">
-                                    设计模式
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    深度学习
                                 </a>
                             
                             
@@ -685,12 +840,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
-                        <span class="chip bg-color">设计模式</span>
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
                     </a>
                     
-                    <a href="/tags/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
-                        <span class="chip bg-color">单例模式</span>
+                    <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+                        <span class="chip bg-color">基础知识</span>
                     </a>
                     
                 </div>

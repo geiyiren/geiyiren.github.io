@@ -420,29 +420,33 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a><strong>导读</strong></h2><p><em><strong>*增量学习*</strong></em>(Incremental Learning)，亦称为<em><strong>*持续学习*</strong></em>(Continual Learning)或<em><strong>*终身学习*</strong></em>(Life-Long Learning)，是一种机器学习方法，它允许模型通过对新数据进行持续学习而不是重头训练整个模型。这种方法允许模型不断地学习新的知识，并在不断实际复杂多变的环境变化。</p>
+                <h2 id="导读"><a href="#导读" class="headerlink" title="导读"></a><strong>导读</strong></h2><p><em><strong>增量学习</strong></em>(Incremental Learning)，亦称为<em><strong>持续学习</strong></em>(Continual Learning)或<em><strong>终身学习</strong></em>(Life-Long Learning)，是一种机器学习方法，它允许模型通过对新数据进行持续学习而不是重头训练整个模型。这种方法允许模型不断地学习新的知识，并在不断实际复杂多变的环境变化。</p>
 <p>先前绝大多数增量学习方法均高度依赖于标签数据集，这必然会限制增量学习技术在实际生活中的应用。因此，本文将从高效标签的角度出发，以一种崭新的视角，带领大家从零开始踏入增量学习领域。</p>
-<p>在本文的开始，我们会向大家介绍的介绍下引入增量学习的必要性，继而引出最新的三种能够有效利用有效标签数据范式的增量学习方法，包括半监督学习、小样本学习以及自监督学习。其次，我们将针对这三大范式进行一个全面的调研，让大家对这个领域的整个发展脉络有一个清晰的认识。文章的最后，我们会集中讨论当前增量学习存在的一些局限性以及结合现有的技术给出一些值得探讨的研究方向，同时，为了帮助大家更加深入的学习增量学习，一些必要的增量学习框架(基于Pytorch构建)以及最前沿的增量学习方法也将给到大家去实践，进一步提升自身的能力，形成完整的闭环，非常感谢大家对 CVHub 的支持与鼓励。</p>
+<p>在本文的开始，我们会向大家介绍下引入增量学习的必要性，继而引出最新的三种能够有效利用有效标签数据范式的增量学习方法，包括<strong>半监督学习、小样本学习以及自监督学习</strong>。其次，我们将针对这三大范式进行一个全面的调研，让大家对这个领域的整个发展脉络有一个清晰的认识。文章的最后，我们会集中讨论当前增量学习存在的一些局限性以及结合现有的技术给出一些值得探讨的研究方向，同时，为了帮助大家更加深入的学习增量学习，一些必要的增量学习框架(基于Pytorch构建)以及最前沿的增量学习方法也将给到大家去实践，进一步提升自身的能力，形成完整的闭环，非常感谢大家对 CVHub 的支持与鼓励。</p>
 <h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a><strong>动机</strong></h2><p>聊到增量学习，不得不提的一个反例必然是非增量学习，其假定模型每次都可以同时访问每个类别的所有情况下的图像。显然，这是不切实际的。下面简要概括下它的三大局限性：</p>
-<p><strong>1.</strong> <em><strong>*模型仅能识别固定类别的物体；*</strong></em> </p>
-<p><strong>2.</strong> <em><strong>*模型无法训练所有背景下的数据（例如不同季节、不同天气、不同光照条件等）；*</strong></em> </p>
-<p><strong>3.</strong> <em><strong>*模型一旦部署无法在线利用新数据（除非你重新上线一版）；*</strong></em> </p>
+<p><strong>1.</strong> <em><strong>模型仅能识别固定类别的物体；</strong></em> </p>
+<p><strong>2.</strong> <em><strong>模型无法训练所有背景下的数据（例如不同季节、不同天气、不同光照条件等）；</strong></em> </p>
+<p><strong>3.</strong> <em><strong>模型一旦部署无法在线利用新数据（除非你重新上线一版）；</strong></em> </p>
 <p>由此可见，引入增量学习是非常有必要的。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps1.jpg" alt="img"> </p>
-<p>Incremental learning examples.</p>
 <p>上图提供了三种不同形式的增量学习范式：</p>
-<p><strong>l</strong> <em><strong>*Semi-Supervision*</strong></em> ：半监督可以将有限的标记数据与丰富的未标记数据相结合，通过伪标签监督减少对真实标签的依赖程度； </p>
-<p><strong>l</strong> <em><strong>*Few-shot-Supervision*</strong></em> ：小样本监督学习则可以扩展预训练的分类器来减少标签依赖，仅利用极少的标记实例； </p>
-<p><strong>l</strong> <em><strong>*Self-Supervision*</strong></em> ：自监督学习是通过指定前置文本任务，以舍弃对标签的依赖； </p>
-<p>在这里，目标是通过增量学习匹配同一输入图像的不同视图（例如****裁剪*<em><strong>、</strong></em>*旋转*<em><strong>和</strong></em>*颜色抖动****）来获取表征。说一千道一万，可能许多小伙伴心中都有一个疑问：</p>
+<ul>
+<li><p><em><strong>Semi-Supervision</strong></em> ：<strong>半监督</strong>可以将有限的标记数据与丰富的未标记数据相结合，通过伪标签监督减少对真实标签的依赖程度； </p>
+</li>
+<li><p><em><strong>Few-shot-Supervision</strong></em> ：<strong>小样本监督学习</strong>则可以扩展预训练的分类器来减少标签依赖，仅利用极少的标记实例； </p>
+</li>
+<li><p><em><strong>Self-Supervision</strong></em> ：<strong>自监督学习</strong>是通过指定前置文本任务，以舍弃对标签的依赖；</p>
+</li>
+</ul>
+<p>在这里，目标是通过增量学习匹配同一输入图像的不同视图（例如<em><strong>裁剪</strong></em>、<em><strong>旋转</strong></em>和<em><strong>颜色抖动</strong></em>）来获取表征。说一千道一万，可能许多小伙伴心中都有一个疑问：</p>
 <p>既然增量学习这么有用，为什么实际应用中却鲜有人用？</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps2.jpg" alt="img"> </p>
-<p>学术界通用的解释套路是****灾难性遗忘现象*<em><strong>。怎么理解呢？大致意思就是说在观察更多增量任务时，模型在先前任务上的性能便会下降，中文有个词形容的非常好——</strong></em>*此长彼消****，写到这里不得不感慨古人的智慧。为了解决这个问题，有两种典型方法可以缓解，即正则化(regularization)和经验回放(experience replay)。</p>
+<p>学术界通用的解释套路是<em><strong>灾难性遗忘现象</strong></em>。怎么理解呢？大致意思就是说在观察更多增量任务时，模型在先前任务上的性能便会下降，中文有个词形容的非常好——<em><strong>此长彼消</strong></em>，写到这里不得不感慨古人的智慧。为了解决这个问题，有两种典型方法可以缓解，即正则化(regularization)和经验回放(experience replay)。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps3.jpg" alt="img"> </p>
 <p>OWM方法原理示意图</p>
-<p>引入了****正则化*<em><strong>技术可以有效限制神经网络权重在学习任务中的突然漂移，通俗点理解便是简单地通过 来惩罚变化的范数。而</strong></em>*经验回放*<em><strong>则是将先前的数据适量的加入当前的增量任务来缓解模型的“健忘”程度。然而，还有一个点可能容易被忽略，那便是</strong></em>*可扩展性****。毕竟当前的增量学习仍然需要大量的标注数据才能获得可观的性能。除了以上两种方式，还有基于知识蒸馏的方法，基于特征回放的方法以及基于网络结构的方法等，文章篇幅有限，此处不再描述。</p>
+<p>引入了<em><strong>正则化</strong></em>技术可以有效限制神经网络权重在学习任务中的突然漂移，通俗点理解便是简单地通过 来惩罚变化的范数。而<em><strong>经验回放</strong></em>则是将先前的数据适量的加入当前的增量任务来缓解模型的“健忘”程度。然而，还有一个点可能容易被忽略，那便是<em><strong>可扩展性</strong></em>。毕竟当前的增量学习仍然需要大量的标注数据才能获得可观的性能。除了以上两种方式，还有基于知识蒸馏的方法，基于特征回放的方法以及基于网络结构的方法等，文章篇幅有限，此处不再描述。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps4.jpg" alt="img"> </p>
-<p>因此，如何高效利用标签成为了该领域亟需解决的问题。这一点大家比较熟知的应该是****迁移学习****，该方法建立在大规模预训练模型的基础上，只需利用有限的数据便能有效的将大模型学习到的知识迁移到个人任务上，在实际当中应用非常广泛，几乎成了标配。有了这种成功的典范，我们是否可以思考进一步将这种模式引入到增量学习当中去构建一个更大规模、能够高效利用标签的增量学习器呢？何乐而不为。</p>
+<p>因此，如何高效利用标签成为了该领域亟需解决的问题。这一点大家比较熟知的应该是<em><strong>迁移学习</strong></em>，该方法建立在大规模预训练模型的基础上，只需利用有限的数据便能有效的将大模型学习到的知识迁移到个人任务上，在实际当中应用非常广泛，几乎成了标配。有了这种成功的典范，我们是否可以思考进一步将这种模式引入到增量学习当中去构建一个更大规模、能够高效利用标签的增量学习器呢？何乐而不为。</p>
 <p>在正式介绍这三种范式之前，让我们先简单的了解增量学习任务的主要评估指标。增量学习工作中一般通过绘制增量准确率曲线(incremental accuracy curve)和遗忘率曲线(incremental forgetting curve)来评估性能的优劣。其中涉及到的两个主要指标便是准确率(accuracy)和遗忘率(forgetfulness)。</p>
 <ul>
 <li>Accuracy: 准确率衡量的是所有学习任务的测试准确性。</li>
@@ -452,9 +456,9 @@
 <li>Forgetfulness: 遗忘率衡量的是学习增量任务时平均性能下降程度。</li>
 </ul>
 <p>上述公式我们可以简单的理解为模型在学习完当前任务之后在先前任务上的分类准确率。</p>
-<p><em><strong>*下表*</strong></em>****[1]****简单的总结了几类不同的增量学习方法，下面我们将基于此表为大家详细的介绍关于 IL 的那点事。</p>
+<p><em><strong>下表</strong></em>***[1]***简单的总结了几类不同的增量学习方法，下面我们将基于此表为大家详细的介绍关于 IL 的那点事。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps5.jpg" alt="img"> </p>
-<h2 id="半监督增量学习"><a href="#半监督增量学习" class="headerlink" title="半监督增量学习"></a><strong>半监督增量学习</strong></h2><p>首先，让我们先学习下半监督式的增量学习，其旨在通过利用未标记的数据来减少对标签的依赖。常规的做法是先利用一小部分带有标签的数据集训练出一个深度学习模型，然后利用该模型对未标记的数据打上标签。通常，我们将这种用非人工标注的标签信息称之为——<em><strong>*伪标签*</strong></em>(pseudo labels)。</p>
+<h2 id="半监督增量学习"><a href="#半监督增量学习" class="headerlink" title="半监督增量学习"></a><strong>半监督增量学习</strong></h2><p>首先，让我们先学习下半监督式的增量学习，其旨在通过利用未标记的数据来减少对标签的依赖。常规的做法是先利用一小部分带有标签的数据集训练出一个深度学习模型，然后利用该模型对未标记的数据打上标签。通常，我们将这种用非人工标注的标签信息称之为——<em><strong>伪标签</strong></em>(pseudo labels)。</p>
 <p>因此，据未标记数据的类型，我们可以简单的划分为三种类型：</p>
 <ul>
 <li><p>Within-data ，即属于同一份数据集内的没有打标签的那部分数据； </p>
@@ -466,34 +470,38 @@
 </ul>
 <p>其中，Within-data 需要模型从头开始训练，而另外两种方式则是建立在预训练好的模型基础之上。下面分别为大家介绍下典型的方法。</p>
 <h3 id="Learning-from-Within-Data"><a href="#Learning-from-Within-Data" class="headerlink" title="Learning from Within Data"></a><strong>Learning from Within Data</strong></h3><h4 id="CNNL"><a href="#CNNL" class="headerlink" title="CNNL"></a><strong>CNNL</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps6.jpg" alt="img"> </p>
-<p>CNNL，即****连续神经网络学习****，是半监督和增量学习交叉领域的早期工作之一。作者在标记好的数据集上训练一个基础的卷积神经网络模型，然后将其用于在未标记数据集上生成伪标签。最后，通过在伪标签上微调增量学习器以实现自训练(self-training)的过程。</p>
+<p>CNNL，即<em><strong>连续神经网络学习</strong></em>，是半监督和增量学习交叉领域的早期工作之一。作者在标记好的数据集上训练一个基础的卷积神经网络模型，然后将其用于在未标记数据集上生成伪标签。最后，通过在伪标签上微调增量学习器以实现自训练(self-training)的过程。</p>
 <h4 id="DistillMatch-3"><a href="#DistillMatch-3" class="headerlink" title="DistillMatch[3]"></a><strong>DistillMatch</strong><strong>[3]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps7.jpg" alt="img"> </p>
 <p>与需要大量内存预算的标准回放方案不同，DistillMatch 中探索了无标签数据流作为回放的潜力，并显著降低了所需的内存预算。与之前的工作需要访问与环境无关的外部数据流不同，作者认为数据流是持续学习代理环境的产物。此外，通过对域外检测器进一步的优化，从而识别出与当前增量学习任务无关的数据分布，以减轻对先前类别的遗忘。</p>
-<p>值得注意的是, 知识蒸馏最初是为模型压缩而设计的。随着<em><strong>*LwF*</strong></em><em><strong>*[4]*</strong></em>(Learning without forgetting)方法首次将其应用于增量学习, 知识蒸馏损失已成为了众多增量学习方法的基础模块。如下图所示，后续的工作主要可分为基于重要特征蒸馏，基于样本关系蒸馏和基于辅助数据的蒸馏，这些方法有效的改进类别增量学习中的知识蒸馏策略。</p>
+<p>值得注意的是, 知识蒸馏最初是为模型压缩而设计的。随着<em><strong>LwF</strong></em><em><strong>[4]</strong></em>(Learning without forgetting)方法首次将其应用于增量学习, 知识蒸馏损失已成为了众多增量学习方法的基础模块。如下图所示，后续的工作主要可分为基于重要特征蒸馏，基于样本关系蒸馏和基于辅助数据的蒸馏，这些方法有效的改进类别增量学习中的知识蒸馏策略。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps8.jpg" alt="img"> </p>
 <p>Knowledge distillation strategies in class incremental learning</p>
 <h4 id="ORDisCo-5"><a href="#ORDisCo-5" class="headerlink" title="ORDisCo[5]"></a><strong>ORDisCo</strong><strong>[5]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps9.jpg" alt="img"> </p>
-<p>具有判别器一性的<em><strong>*在线回放*</strong></em>(online replay)遵循生成回放策略来回放数据和标签。ORDisCo利用标记数据来训练条件 GAN 生成器，并采用未标记数据作为区分 real-fake 的额外示例。此外，为了进一步提高增量学习任务的一致性，作者还对判别器权重的突变部分进行了惩罚（可理解为加正则）。</p>
+<p>具有判别器一性的<em><strong>在线回放</strong></em>(online replay)遵循生成回放策略来回放数据和标签。ORDisCo利用标记数据来训练条件 GAN 生成器，并采用未标记数据作为区分 real-fake 的额外示例。此外，为了进一步提高增量学习任务的一致性，作者还对判别器权重的突变部分进行了惩罚（可理解为加正则）。</p>
 <h4 id="MetaCo-6"><a href="#MetaCo-6" class="headerlink" title="MetaCo[6]"></a><strong>MetaCo</strong><strong>[6]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps10.jpg" alt="img"> </p>
-<p>MetaCon, 即Meta-Consolidation，是将 ORDisCO 的生成重放方案扩展到元学习设置。作者没有直接训练条件 GAN 进行生成回放，而是优化了生成 GAN 权重的条件超网络。作者以当前任务的语义词嵌入为条件，将超网络参数化为<em><strong>*变分自编码器*</strong></em>(Variational Auto-Encoder, VAE)。为了稳定超网络，他们存储增量学习类的一阶统计数据以更好的进行数据回放。</p>
+<p>MetaCon, 即Meta-Consolidation，是将 ORDisCO 的生成重放方案扩展到元学习设置。作者没有直接训练条件 GAN 进行生成回放，而是优化了生成 GAN 权重的条件超网络。作者以当前任务的语义词嵌入为条件，将超网络参数化为<em><strong>变分自编码器</strong></em>(Variational Auto-Encoder, VAE)。为了稳定超网络，他们存储增量学习类的一阶统计数据以更好的进行数据回放。</p>
 <p>关于变分自编码器的详细介绍，可关注公众号『CVHub』翻阅历史文章学习。</p>
 <h4 id="PGL-7"><a href="#PGL-7" class="headerlink" title="PGL[7]"></a><strong>PGL</strong><strong>[7]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps11.jpg" alt="img"> </p>
 <p>PGL 全称是 Pseudo Gradient Learners，即伪梯度的学习器，其基于元学习预测每个输入的梯度。作者声称伪标签的使用会给分类器带来负优化，导致梯度的错误累积，同时其性能会随时间下降。因此，本文方法通过预测梯度而非标签，该模型不像伪标签那样与一组预定义的类相关联，同时能够利用分布外的数据来提高性能。</p>
 <h3 id="Learning-from-Auxiliary-Data"><a href="#Learning-from-Auxiliary-Data" class="headerlink" title="Learning from Auxiliary Data"></a><strong>Learning from Auxiliary Data</strong></h3><h4 id="DMC-8"><a href="#DMC-8" class="headerlink" title="DMC[8]"></a><strong>DMC</strong><strong>[8]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps12.jpg" alt="img"> </p>
 <p>DMC，Deep Model Consolidation，即深度模型整合应该是最早利用未标记的辅助数据来减轻灾难性遗忘的代表作之一。作者首先在标记好的数据集上训练深度分类器，然后用于在辅助数据上生成伪标签。其中，伪标签充当当前模型和先前模型之间的正则化器，以减少对先前“看到”的类的遗忘。</p>
 <h4 id="CIL-QUD-9"><a href="#CIL-QUD-9" class="headerlink" title="CIL-QUD[9]"></a><strong>CIL-QUD</strong><strong>[9]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps13.jpg" alt="img"> </p>
-<p>CIL-QUD 是一种使用查询未标记数据的类增量学习方法，其建立在 DMC 的基础上，但是采用基于****检索****的方法。作者在内存中将每个增量类的少量实例存储为查询 Anchor。查询锚用于在辅助数据集中检索视觉上相似的样本，然后用于记忆重放。</p>
+<p>CIL-QUD 是一种使用查询未标记数据的类增量学习方法，其建立在 DMC 的基础上，但是采用基于<em><strong>检索</strong></em>的方法。作者在内存中将每个增量类的少量实例存储为查询 Anchor。查询锚用于在辅助数据集中检索视觉上相似的样本，然后用于记忆重放。</p>
 <h3 id="Learning-from-Test-Data"><a href="#Learning-from-Test-Data" class="headerlink" title="Learning from Test Data"></a><strong>Learning from Test Data</strong></h3><h4 id="CoTTA-10"><a href="#CoTTA-10" class="headerlink" title="CoTTA[10]"></a><strong>CoTTA</strong><strong>[10]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps14.jpg" alt="img"> </p>
-<p>CoTTA，Continual Test-Time Adaptation，即在推理时调整预训练的深度分类器。这种情况是很常见的，以自动驾驶为例，想象一辆自动驾驶汽车在不断变化的天气条件下持续行驶，这种情况下我们无法保证喂给模型的数据能够覆盖各类天气状况。因此，这种自适应的能力是非常有必要的，尤其是当测试数据与原始训练源不同并且源数据不再可用时。为了解决这个新问题，作者提出了一种基于****正则化****的方法，通过在同一输入的多个增强中强制执行一致性正则化，以及对一些网络参数进行选择性微调。</p>
+<p>CoTTA，Continual Test-Time Adaptation，即在推理时调整预训练的深度分类器。这种情况是很常见的，以自动驾驶为例，想象一辆自动驾驶汽车在不断变化的天气条件下持续行驶，这种情况下我们无法保证喂给模型的数据能够覆盖各类天气状况。因此，这种自适应的能力是非常有必要的，尤其是当测试数据与原始训练源不同并且源数据不再可用时。为了解决这个新问题，作者提出了一种基于<em><strong>正则化</strong></em>的方法，通过在同一输入的多个增强中强制执行一致性正则化，以及对一些网络参数进行选择性微调。</p>
 <h4 id="NOTE"><a href="#NOTE" class="headerlink" title="NOTE"></a><strong>NOTE</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps15.png" alt="img"> </p>
-<p>NOTE，即No i.i.d. TEst-time adaptation，即非独立同分布的测试时适应，是将 COTTA 进一步扩展到现实场景的工作，其后续测试示例具有高度的时间相关性。作者声称，在这种情况下，依赖伪标签形式的 BN 统计可能会严重地使学习器偏向当前批次。因此，本文方法采用 IN 替代 BN。值得一提的是，相对 CoTTA 其性能要好得多。此外，相关的工作还有去年发表在 CVPR 2022 上的 <em><strong>*LAME*</strong></em>****[11]****，有兴趣的小伙伴也可以自己的读读原文。</p>
+<p>NOTE，即No i.i.d. TEst-time adaptation，即非独立同分布的测试时适应，是将 COTTA 进一步扩展到现实场景的工作，其后续测试示例具有高度的时间相关性。作者声称，在这种情况下，依赖伪标签形式的 BN 统计可能会严重地使学习器偏向当前批次。因此，本文方法采用 IN 替代 BN。值得一提的是，相对 CoTTA 其性能要好得多。此外，相关的工作还有去年发表在 CVPR 2022 上的 <em><strong>LAME</strong></em>***[11]***，有兴趣的小伙伴也可以自己的读读原文。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps16.jpg" alt="img"> </p>
 <p>Incremental Learning with Semi-Supervision</p>
 <h2 id="小样本增量学习"><a href="#小样本增量学习" class="headerlink" title="小样本增量学习"></a><strong>小样本增量学习</strong></h2><p>在增量学习任务的训练期间，小样本监督学习器使用来自新类别的少量示例更新预训练模型。在这方面，小样本监督方法同时解决了两个基本挑战：</p>
-<p><strong>l</strong> <em><strong>*Overfitting to Novel Categories*</strong></em> </p>
+<ul>
+<li><em><strong>Overfitting to Novel Categories</strong></em></li>
+</ul>
 <p>众所周知，如果我们直接基于这极其有限的训练样本去重头优化模型，那必将导致我们的模型会过度拟合这些样本。为此，我们可以在增量训练期间将已经学习的分类器权重与相关的新类别相关联。这里，根据不同关联机制，我们可以简单的将该任务划分为几大类，即基于图的方法，基于聚类的方法以及基于网络架构的方法。此外，一些技术还涉及到利用语义词嵌入来识别语义相关类别以进行知识的迁移。</p>
-<p><strong>l</strong> <em><strong>*Forgetfulness of Base Categories*</strong></em> </p>
-<p>上面我们提过，学习新的类别可能会导致原有模型权重的“漂移”，从而导致最终的模型性能下降。解决此问题的两种有效技术包括通过度量学习目标进行正则化，例如在 CVPR 2020 曾经发表过的 <em><strong>*anchor loss*</strong></em>****[12]****，或者简单地对基类数据进行内存回放。</p>
+<ul>
+<li><em><strong>Forgetfulness of Base Categories</strong></em></li>
+</ul>
+<p>上面我们提过，学习新的类别可能会导致原有模型权重的“漂移”，从而导致最终的模型性能下降。解决此问题的两种有效技术包括通过度量学习目标进行正则化，例如在 CVPR 2020 曾经发表过的 <em><strong>anchor loss</strong></em>***[12]***，或者简单地对基类数据进行内存回放。</p>
 <h3 id="Graph-Based-Methods"><a href="#Graph-Based-Methods" class="headerlink" title="Graph-Based Methods"></a><strong>Graph-Based Methods</strong></h3><h4 id="TOPIC-13"><a href="#TOPIC-13" class="headerlink" title="TOPIC[13]"></a><strong>TOPIC</strong><strong>[13]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps17.jpg" alt="img"> </p>
 <p>TOPIC，即 TOpology-Preserving knowledge InCrementer 是一种基于图的增量小样本学习器。作者将每个增量类视为一个新节点，将其插入到已存在的基础分类器嵌入的完全连接图中。它们根据成对关系将信息从基础分类器节点传播到新分类器的节点当中，同时通过分类器嵌入的相似度进行衡量。此外，为了防止图漂移并保留初始图拓扑，作者采用了 anchor loss 形式的度量学习进行正则化。</p>
 <h4 id="CEC-14"><a href="#CEC-14" class="headerlink" title="CEC[14]"></a><strong>CEC</strong><strong>[14]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps18.jpg" alt="img"> </p>
@@ -525,14 +533,14 @@
 <p>用于在线持续学习的自监督学习(SSL-OCL)方法提议在通过自监督进行增量训练之前预训练骨干网络的权重。通过这种方式，作者旨在充分利用预训练数据集带来的迁移学习能力。通过采用 MoCo-V2 和 SwAV 等方法的自监督预训练方式，本文方法获得了性能上的提升。</p>
 <h3 id="Auxiliary-trining"><a href="#Auxiliary-trining" class="headerlink" title="Auxiliary-trining"></a><strong>Auxiliary-trining</strong></h3><p>辅助训练指的是在训练期间用自监督的方法提供监督信号，以获得更具辨别力的特征空间。这类方法建立在自监督学习任务可以向学习者提供额外的监督信号以防止过拟合的想法之上。</p>
 <h4 id="PASS-22"><a href="#PASS-22" class="headerlink" title="PASS[22]"></a><strong>PASS</strong><strong>[22]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps26.jpg" alt="img"> </p>
-<p>Prototype-Augmented Self-Supervision(PASS) 是一种基于****正则化****的增量学习技术。该模型优化了每个增量类的单个原型，其中原型是通过原始标签进行监督学习的。为了提高模型的泛化能力并避免过拟合现象，作者引入了更多的数据增强技巧。例如，采用自监督标签增强(SLA)生成原始输入的四种不同变换角度([0°, 90°, 180°, 270°])，然后将其用作额外的前置文本任务来区分模型。作者展示了这种方法减轻了对先前学习的类的过度拟合，从而获得了更好的结果。</p>
+<p>Prototype-Augmented Self-Supervision(PASS) 是一种基于<em><strong>正则化</strong></em>的增量学习技术。该模型优化了每个增量类的单个原型，其中原型是通过原始标签进行监督学习的。为了提高模型的泛化能力并避免过拟合现象，作者引入了更多的数据增强技巧。例如，采用自监督标签增强(SLA)生成原始输入的四种不同变换角度([0°, 90°, 180°, 270°])，然后将其用作额外的前置文本任务来区分模型。作者展示了这种方法减轻了对先前学习的类的过度拟合，从而获得了更好的结果。</p>
 <h3 id="Main-training"><a href="#Main-training" class="headerlink" title="Main-training"></a><strong>Main-training</strong></h3><p>这是一种完全基于自监督学习目标进行训练的方法，并在训练后通过线性探测对其进行评估。此类方法主要的核心思想是认为自监督可以完全取代人工标签。</p>
 <h4 id="Buffer-SSL-23"><a href="#Buffer-SSL-23" class="headerlink" title="Buffer-SSL[23]"></a><strong>Buffer-SSL</strong><strong>[23]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps27.jpg" alt="img"> </p>
 <p>Buffer-SSL 即缓冲自监督学习，是一种基于记忆的方法，它是在现成的自监督算法 SimSiam 进行扩展的并推广到增量学习任务当中。SimSiam 的一个主要弊端是无法保留以前学到的知识，因此 Buffer-SSL 为其补充了一个用于回放的内存缓冲区。一种简单的方法是将所有示例存储在内存中，但是这会导致内存开销太大，并且是对于视频帧这种帧之间存在高度的冗余性。为此，作者只存储簇质心，这减少了内存大小并增加了内存可扩展性。通过构建缓冲区可以显著缓解自监督表示的遗忘。</p>
 <h4 id="LUMP-24"><a href="#LUMP-24" class="headerlink" title="LUMP[24]"></a><strong>LUMP</strong><strong>[24]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps28.jpg" alt="img"> </p>
-<p>Lifelong Unsupervised Mixup 也是一种基于记忆的方法，利用****混合增强****来减轻健忘。具体来说，网络通过学习将输入实例与存储在内存中的先前学习任务中用到的的实例进行混合。这种思想比较简单，说白了就是回放此类示例来达到减少遗忘并提高性能的目的。</p>
+<p>Lifelong Unsupervised Mixup 也是一种基于记忆的方法，利用<em><strong>混合增强</strong></em>来减轻健忘。具体来说，网络通过学习将输入实例与存储在内存中的先前学习任务中用到的的实例进行混合。这种思想比较简单，说白了就是回放此类示例来达到减少遗忘并提高性能的目的。</p>
 <h4 id="CaSSLe-25"><a href="#CaSSLe-25" class="headerlink" title="CaSSLe[25]"></a><strong>CaSSLe</strong><strong>[25]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps29.jpg" alt="img"> </p>
-<p>CaSSLe 是一种基于****正则化****的自监督增量学习方法。由于存储来自先前学习任务的数据会导致内存效率低下并且可能侵犯隐私的动机，本文方法转而学习在当前模型和过去模型之间提取自监督的表示。其中，蒸馏以预测方式执行，当前模型的特征会被投影到先前模型的特征空间。</p>
+<p>CaSSLe 是一种基于<em><strong>正则化</strong></em>的自监督增量学习方法。由于存储来自先前学习任务的数据会导致内存效率低下并且可能侵犯隐私的动机，本文方法转而学习在当前模型和过去模型之间提取自监督的表示。其中，蒸馏以预测方式执行，当前模型的特征会被投影到先前模型的特征空间。</p>
 <h4 id="PFR-26"><a href="#PFR-26" class="headerlink" title="PFR[26]"></a><strong>PFR</strong><strong>[26]</strong></h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps30.jpg" alt="img"> </p>
 <p>PFR，即投影函数正则化同样是一种基于正则化的技术，与 CaSSLe 非常类似。作者使用基于蒸馏的目标扩展了 Barlow-Twins 方法，学习将当前的视觉表示投射到先前的模型表示。此外，论文展示了具有 PFR 目标的 Barlow-Twins 表现出更低的遗忘和更高的准确性。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95%E4%BB%8B%E7%BB%8D/wps31.jpg" alt="img"> </p>

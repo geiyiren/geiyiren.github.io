@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-06
+                    2025-08-07
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.7k
+                    1.9k
                 </div>
                 
 
@@ -423,7 +423,7 @@
                 <blockquote>
 <p>残差网络的核心思想是：每个附加层都应该更容易地包含原始函数作为其元素之一</p>
 </blockquote>
-<h1 id="C3模块分析"><a href="#C3模块分析" class="headerlink" title="C3模块分析"></a>C3模块分析</h1><h2 id="ResNet结构分析"><a href="#ResNet结构分析" class="headerlink" title="ResNet结构分析"></a>ResNet结构分析</h2><p>C3的设计灵感来自ResNet的残差结构，是对残差结构的改进，首先来看下ResNet的残差结构是什么样子的：</p>
+<h1 id="C3模块分析"><a href="#C3模块分析" class="headerlink" title="C3模块分析"></a>C3模块分析</h1><h2 id="ResNet结构分析"><a href="#ResNet结构分析" class="headerlink" title="ResNet结构分析"></a>ResNet结构分析</h2><p>首先来看下ResNet的残差结构是什么样子的：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> torch
 <span class="token keyword">from</span> torch <span class="token keyword">import</span> nn
 <span class="token keyword">from</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">import</span> functional <span class="token keyword">as</span> F
@@ -600,6 +600,14 @@
 </li>
 </ol>
 </li>
+</ul>
+<h1 id="C2f模块分析"><a href="#C2f模块分析" class="headerlink" title="C2f模块分析"></a>C2f模块分析</h1><p>模型结构如下：</p>
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c2f.svg" alt="c2f"></p>
+<p>从结构上对比C2f和C3的不同之处：</p>
+<ul>
+<li>C2f取消了旁路分支的卷积操作。</li>
+<li>C2f在利用特征提取之前首先按照通道将特征划分为两部分，只有一半参与特征提取，另一半与提取后的特征进行融合。这样的操作在参数量上可以明显下降。之所以不说推理速度可以提升是以为C2f使用了通道划分操作，这个操作在不同的设备上进行推理时优化的方法有所不同，甚至在rknn1.6之前都不支持这一操作。而C3的卷积在不同设备上推理时都支持且都进行了优化。</li>
+<li></li>
 </ul>
 
                 

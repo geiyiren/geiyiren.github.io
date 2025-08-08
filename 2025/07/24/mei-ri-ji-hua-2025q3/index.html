@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-07
+                    2025-08-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    1.8k
                 </div>
                 
 
@@ -595,6 +595,27 @@ C3模块适用场景与功能分析</p>
 <h1 id="2025-08-07"><a href="#2025-08-07" class="headerlink" title="2025-08-07"></a>2025-08-07</h1><ul>
 <li><input disabled="" type="checkbox"> C2f、SPPF组件适用场景与功能分析</li>
 <li><input disabled="" type="checkbox"> bsd数据集part3-part4重复素材筛选</li>
+</ul>
+<h1 id="2025-08-08"><a href="#2025-08-08" class="headerlink" title="2025-08-08"></a>2025-08-08</h1><ul>
+<li><p><input disabled="" type="checkbox"> 
+bsd剩余背景数据集重复素材筛选</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+SPPF组件适用场景与功能分析</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+现有BSD数据集问题分析</p>
+<ul>
+<li>目标模糊不清，但已标注，这类情况容易造成误报，建议标签删除或者对目标区域进行模糊处理</li>
+<li>漏标，需要使用大模型对现有数据集进行检查，目前发现有漏标，要看漏标多不多，再决定怎么处理</li>
+<li>背景图像的比例需要从44.4%减低至30%左右，提高前景的占比</li>
+<li>背景中存在贴图的图像需要被清除，因为小范围的贴图会造成新的误检，这个现在是猜测，需要验证</li>
+<li>明显不是目标的东西被识别为目标，猜想可能的原因是很多标注框中有不清晰的目标或误标注</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+<a target="_blank" rel="noopener" href="https://huggingface.co/">Hugging Face – The AI community building the future.</a> 最新模型汇总网站</p>
+</li>
 </ul>
 
                 

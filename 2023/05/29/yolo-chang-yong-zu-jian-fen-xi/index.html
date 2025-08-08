@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-07
+                    2025-08-08
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.9k
+                    2.6k
                 </div>
                 
 
@@ -607,8 +607,57 @@
 <ul>
 <li>C2f取消了旁路分支的卷积操作。</li>
 <li>C2f在利用特征提取之前首先按照通道将特征划分为两部分，只有一半参与特征提取，另一半与提取后的特征进行融合。这样的操作在参数量上可以明显下降。之所以不说推理速度可以提升是以为C2f使用了通道划分操作，这个操作在不同的设备上进行推理时优化的方法有所不同，甚至在rknn1.6之前都不支持这一操作。而C3的卷积在不同设备上推理时都支持且都进行了优化。</li>
-<li></li>
+<li>C3具有的优势C2f就基本上都具有，但是C2f相对更加轻量化</li>
 </ul>
+<h1 id="SPPF"><a href="#SPPF" class="headerlink" title="SPPF"></a>SPPF</h1><h2 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h2><p>首先来看下什么是池化，下面是最大池化：</p>
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/557af0cfa1a5973d911eff9632e0cb16.gif" alt="img"></p>
+<p>首先可以看出池化后特征图的尺寸变小了:</p>
+<ul>
+<li>特征图越小，感受野越大，因此池化可以<strong>增加感受野</strong></li>
+<li>特征图越小，参数量越小，后面对这个特征图进行卷积操作时<strong>计算量就小了</strong></li>
+<li>池化属于降采样，本质是对特征图的缩放，这样图像的细节特征就被隐藏了，因此池化还可以在一定程度上增加特征的缩放不变性和平移不变性</li>
+</ul>
+<h2 id="上下文信息"><a href="#上下文信息" class="headerlink" title="上下文信息"></a>上下文信息</h2><p><strong>上下文信息（Contextual Information）</strong>，简单来说，就是<strong>某个目标、像素或特征所在环境的额外信息</strong>，不仅仅看它自己，还要考虑它周围的空间、场景、结构、语义等多方面的背景。</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>空间上下文</strong></td>
+<td>目标周围的空间结构和布局</td>
+<td>一辆车的轮廓与车身、车窗和轮胎的相对位置</td>
+</tr>
+<tr>
+<td><strong>语义上下文</strong></td>
+<td>目标和环境的语义关系</td>
+<td>行人在道路上更合理，空中漂浮的“行人”可能是假</td>
+</tr>
+<tr>
+<td><strong>全局上下文</strong></td>
+<td>整张图像的整体信息</td>
+<td>图片是室内还是室外，能影响对物体的理解</td>
+</tr>
+<tr>
+<td><strong>时间上下文</strong></td>
+<td>视频或连续帧中时间上的连续性</td>
+<td>行人在前一帧的位置和运动趋势</td>
+</tr>
+</tbody></table>
+<ul>
+<li>池化对上下文信息的影响<ul>
+<li>池化是对图像的缩放，增加了感受野，那么特征图中的每个值所代表的区域信息就更多了，因此池化后的特征图更加关注图像的全局信息，比如目标容易出现在图像中左侧偏黑，右侧偏白的图像中，也就是说感受野越大，图像的整体结构特征越容易被学习到</li>
+<li>类似于均值滤波和最大值滤波，池化也可以减少图像的细节噪声，使得图像的上下文信息更加稳定</li>
+</ul>
+</li>
+</ul>
+<h2 id="SPP"><a href="#SPP" class="headerlink" title="SPP"></a>SPP</h2><p>池化的好处这么多，网络中怎么能没有池化呢？首先看下SPP结构怎么使用池化的:</p>
+<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SPP-1754645001119-50.svg" alt="SPP"></p>
+<p>首先将得到的特征进行卷积,且该卷积为1x1的，只是进行降维，默认通道数减半，然后进行不同尺寸的池化，最后进行拼接后再次进行维度变换。其本质是将不同尺度的上下文信息进行融合。并且这样的结构支持任意通道的特征输入和指定通道的特征输出。</p>
+<h2 id="SPPF-1"><a href="#SPPF-1" class="headerlink" title="SPPF"></a>SPPF</h2><p>SPPF是对SPP的改进，实现的功能是类似的,只是计算量和效果略有不同:</p>
 
                 
             </div>

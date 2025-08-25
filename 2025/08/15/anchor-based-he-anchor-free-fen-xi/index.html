@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-20
+                    2025-08-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    0
+                    8.9k
                 </div>
                 
 
@@ -416,7 +416,214 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                
+                <h1 id="anchor-base"><a href="#anchor-base" class="headerlink" title="anchor base"></a>anchor base</h1><p>什么是anchor-based的目标检测方法呢?如果要让你定一个规则去一个图片上框一个物体，你会怎么做呢？最简单，最暴力的方法，当然就是”定步长搜索法“啦，不知道定步长搜索法是什么，没关系！先让我们轻松一下，假设你的图片中有一只猫，你需要把它从图片中框出来</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/b68ac48530edb2726b6304640c85066d.jpg"></p>
+<p>对于这个问题，一个最简单的思考方式是。你以16个像素为步长，把图片划分成为许多的16×16的许多的小格子（至于为什么是16，我们后面再说）。想象不出来吗？那小时候的拼图你玩过吗？大概就是那种感觉。运气好的话，你家的猫应该大部分的身体恰好出现在某一个16×16的小框里。没错这样我们就至少有一个框可以把你的猫”框”住了。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/3089736c1bf582626a30d46144f30a85.jpg"></p>
+<p>所以，你设计好的第1个定步长搜索物体的算法应该是下面这个样子：</p>
+<p>在图片中以一定的步长画许多个具有固定高度和宽度的框，这里我们先设置为矩形。接下来就希望你的小猫刚好躲在其中的一个框内，如上图。这样你就能把你的猫从图片中框出来了。这时候，对你而言，只需要做两件事：</p>
+<p>step1 按照网格的生成规律，计算所有生成框的四个点的坐标</p>
+<p>step2 对每个框，判断其中是否包含”猫”</p>
+<p>step2 将包含猫的框的坐标返回，这时候你就得到了最终的结果</p>
+<p>像上面那么扫一圈，好像是能够有个框和这个目标挨着个边边，但是问题来了，如果你的物体老大老大了（比如你家的猫猫在图中的”占比“太大了），小框框不住咋办？</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/1eb52abb429f4dc039d39953e1892717.jpg"></p>
+<p>牛逼的同学这时候就要站起来了，”老师，小的框搞不定，那就换大的“ , 嗯，好像最先进的科学家也没有比你的这哥们聪明多少的样子，于是乎，我们就用个大点的框扫一圈，用一个小一点的框扫一圈…</p>
+<p>什么意思呢？意思就是，在上一轮的“网格生成“过程中，每个网格都会有一个自己的中心，每个小格子都可以抽象成为在自己的中心生成了一个指定大小为16个像素的矩形框，在这里，我们把这些中心称之为”锚点“，把每个锚点处的框称之为”锚框“。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/a3d15d10e80d1e8ae2a0da4d43d01b5c.jpg"></p>
+<p>现在，对于每一个锚点，为了检测小猫，你需要在每一个锚点生成一个小框，而为了检测大猫，你可以在每个锚点的位置设置一个尺度更大的框，试图用来框住尺寸比较大的物体：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/db217458141ff071aa208cbbdb541755.jpg"></p>
+<p>这时候你的目标检测算法应该会设计成如下这个样子。</p>
+<p>在图片中以一定的步长选取一定的锚点。以每个中心点为框的中心画多个具有固定高度和宽度的框，接下来就希望你的小猫刚好躲在其中某个尺度的一个框内，这样你就能把你的猫从图片中框出来了。</p>
+<p>这里值得注意的有三点：</p>
+<p>1. 相比于上一次设计的算法，现在我们要求等距生成的内容不再是框本身，而是锚点，我们依旧要求锚点是以16为步长，但是现在我们不要求框是”一个挨着一个的“，我们只要求在每个锚点处生成固定尺寸的框</p>
+<p>2. 框的高度和宽度，与你设定的生成框的中心的步长并不需要一致。其实最好是怎么符合物体在图片中的分布怎么来？（大名鼎鼎的yolo就是这么设计的）</p>
+<p>3. 始终注意，我们的任务是找出图中的物体，框的设计规则始终只是我们自己的一种”设计“</p>
+<p>然后牛逼的学生总是有很多问题，”老师，你说这个猫，他横着趟和竖着趟，我用同样尺度的框合适么？“ ，事实上是这样的情况在现实生活中是普遍存在的，你不可能指望用正方形的框框住所有的物体,于是先进的科学家们说,同学们注意了哈，我要开始变形了!于是乎，著名的anchor-based方法就这么诞生了.</p>
+<p>简单的来说，他们的处理方法是，对于每一个固定高度乘宽度的正方形的框，在保持面积不变的情况下，我可以把框的高度和宽度设置成不同的比例（毕竟你家的猫和照相机距离不变的时候，只会躺着，或者站着，总的面积是不变的嘛，不会面积忽然变大或者变小….），示意如下图：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/0ed7671be887dd6a8acde7f926471a86.jpg"></p>
+<p>这里，我们仍然考虑以16为步长生成锚点，此时，假设图中黄色的锚点处原本会生成一个黄色框示意的锚框，原本是无法框住物体的，但是，如果我们不仅生成这个面积的正方形锚框，还同时在这个锚点处生成一个面积和它一致，但是长宽比为2:1的框，则有可能将猫给框起来了</p>
+<p>说句题外话，这里为了展示只画了几个锚框，实际上锚点以16位步长是非常密集的，下图是真实的样子）</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/3112e554ff3f8d525c0aaf685fdef9e1.jpg"></p>
+<p>在这样的基础之上，最终就得到了如下的anchor base的Anchor的生成方法。</p>
+<p>在图片中以一定的步长选取锚点。以每个中心点为框的中心设计多个具有固定高度和宽度的框，并对于每一个面积的框，衍生出三种不同长宽比的新的框，（以下还是是胡说八道）接下来就希望你的小猫刚好躲在其中某个尺度的某一个长宽比的一个框内，这样你就能把你的猫从图片中框出来了。</p>
+<p>网上对这个过程解释最详细的一张图是这样的：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/7653f94d1521cad9f73b8dc092c9c92f.jpg"></p>
+<p>本质而言，其实这张图具有非常的误导性，仔细解释一下应该是这么理解的：</p>
+<blockquote>
+<p>step1 背景是一张图片，在图片中密集的黑色点点就是按照定步长确定的”锚点“ step2 在每个锚点处，都会生成三种尺寸的正方形的框（红色、绿色、蓝色中的正方形框） step3 对每个正方形框，会生成两种扩展尺度的框（每种颜色的另外两个长方形） step4 所以，在每个锚点处都会生成9个anchor</p>
+</blockquote>
+<p>所以大概是这么个样子</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/464712a1254fd7a7f8a111ea34c35f07.jpg"></p>
+<p>Anchor的生成过程和深度学习没有任何的关系，他的本质只是你设定好一些规则，并依据这些规则，在图像中生成不同尺寸，不同长宽比的框，并希望这些框能够最终覆盖你的物体。</p>
+<p><strong>Anchor base的缺点</strong></p>
+<p>1. 检测表现效果对于锚框的尺寸、长宽比、数目非常敏感，因此锚框相关的超参数需要仔细的调节。</p>
+<p>2. 锚框的尺寸和长宽比是固定的，因此，检测器在处理形变较大的候选对象时比较困难，尤其是对于小目标。预先定义的锚框还限制了检测器的泛化能力，因为，它们需要针对不同对象大小或长宽比进行设计。</p>
+<p>3. 为了提高召回率，需要在图像上放置密集的锚框。而这些锚框大多数属于负样本，这样造成了正负样本之间的不均衡。</p>
+<p>4. 大量的锚框增加了在计算交并比时计算量和内存占用。</p>
+<h1 id="anchor-free"><a href="#anchor-free" class="headerlink" title="anchor free"></a>anchor free</h1><p>基于anchor free的目标检测总共有三种方法</p>
+<p>(1)基于角点的anchor free目标检测</p>
+<p>(2)基于中心点的anchor free目标检测算法</p>
+<p>(3)基于全卷积的anchor free目标检测</p>
+<p><strong>(1)基于角点的anchor free目标检测</strong></p>
+<p>基于角点的目标检测方法通过组合从特征图中学习到的角点对, 来预测边框. 这种方法不需要设计锚框, 减少了对锚框的各种计算, 从而成为生成高质量边框的更有效的方法. 基于角点的anchor free目标检测模型主要有CornerNet和CornerNet的优化CornerNet-Lite.</p>
+<p>CornerNet网络的整体思路是，首先通过Hourglass Network网络进行特征提取，紧接着将网络得到的特征输入到两个模块：Top-left Corner pooling和Bottom-right Corner pooling提取关键点的特征，对于每个Corner Pooling模块都会进行目标框的左上角关键点和右下角关键点的类别分类（Heatmaps），并找到每个目标的一对关键点（Embeddings），以及减少基于坐标回算目标目标位置时的偏置（offsets）。网络的整体结构图如下：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/cec6489c4c0883f3f6f170375e03ba1b.png"></p>
+<p>很显然，CornerNet的核心是四个部分：</p>
+<p><strong>· 两个Corner Pooling</strong></p>
+<p>下图展示的是Top-left corner pooling的示意图，为了使得关键点的特征能够表征左上角和右下角关键点所包含的目标区域的特征，作者提出了如下所示的corner pooling的策略，比如下图所示，为求左上角关键点特征，需要求当前关键点同一行中的左边区域的最大值，和同一列中的下面区域的最大值，并将两个最大值相加才是当前位置的左上角关键点特征。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/807d05b1002c6199fd71bd809805fb96.png"></p>
+<p><strong>· Heatmaps模块</strong></p>
+<p>通过Heatmaps模块，网络会预测每一个关键点所属于的类别，该过程中使用的损失函数如下：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/ebd2ac0476a27faf11059ff3b20122ee.png"></p>
+<blockquote>
+<p>上述公式是针对角点预测（headmaps）的损失函数，整体上是改良版的focal loss。几个参数的含义：</p>
+</blockquote>
+<p>$P_{cij}$表示预测的heatmaps在第c个通道（类别c）$(i,j)$的位置的值，$y_{cij}$表示对应位置的ground truth，N表示目标的数量$y_{cij}&#x3D;1$时候的损失函数容易理解，就是focal loss，α参数用来控制难易分类样本的损失权重；$y_{cij}$等于其他值时表示$(i,j)$点不是类别c的目标角点，照理说此时$y_{cij}$应该是0（大部分算法都是这样处理的），但是这里$y_{cij}$不是0，而是用基于ground truth角点的高斯分布计算得到，因此距离ground truth比较近的$(i,j)$点的$y_{cij}$接近1，这部分通过β参数控制权重，这是和focal loss的差别。为什么对不同的负样本点用不同权重的损失函数呢？这是因为靠近ground truth的误检角点组成的预测框仍会和ground truth有较大的重叠面积，如下图所示所示。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/456e0775f7ccb0855c3a55079e31d423.png"></p>
+<blockquote>
+<p>图中，红色实线框是ground truth；橘色圆圈是根据ground truth的左上角角点、右下角角点和设定的半径值画出来的，半径是根据圆圈内的角点组成的框和ground truth的IOU值大于0.7而设定的，圆圈内的点的数值是以圆心往外呈二维的高斯分布；绿色虚线是一个预测框，可以看出这个预测框的两个角点和ground truth并不重合，但是该预测框基本框住了目标，因此是有用的预测框，所以要有一定权重的损失返回，这就是为什么要对不同负样本点的损失函数采取不同权重值的原因</p>
+</blockquote>
+<p><strong>· Embeddings模块</strong></p>
+<p>在Headmaps模块中对关键点类别的预测是没办法知道哪两个关键点能够构成一个目标，因此如何找到一个目标的两个关键点就是模块embedding做的工作。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/869d69572bd21e65f14c3ab12bed4ad6.png"></p>
+<p>embedding这部分的训练是通过两个损失函数实现的， 表示属于k类目标的左上角角点的embedding vector， 表示属于k类目标的右下角关键点的embedding vector， 表示 和的均值。公式4用来缩小属于同一个目标（k类目标）的两个关键点的embedding vector（和距离。公式5用来扩大不属于同一个目标的两个角点的embedding vector距离。</p>
+<p><strong>· Offsets模块</strong></p>
+<p>该模块主要用于弥补由于网络降采样得到的特征图，在反算关键点原始位置时的精度丢失。如下公式所示，由于向下取整，所以会导致精度丢失，而作者利用L1损失来减少这种精度损失。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/6edc6369f169f36957aa286ce852e59c.png"></p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/87d985331d918666fce78732b66bd045.png"></p>
+<p>最终，如下图所示，上半支路的网络结果如下所示，网络最终是由两条支路组成的。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/6102b17db509bda5d830e16840680111.png"></p>
+<p><strong>(2)基于中心点的anchor free目标检测算法</strong></p>
+<p>基于中心点的目标检测方法是对特征图的每个位置预测它是目标中心点的概率, 并且在没有锚框先验的情况下进行边框的预测. 基于中心点的Anchor free目标检测模型主要有CenterNet (中心点和角点)和CenterNet (中心点)</p>
+<p>CenterNet (中心点和角点)网络主要是基于CornerNet网络存在的问题，而提出的基于关键点目标检测的网络。其实现了目前为止在one-stage系类算法中最高的MAP。CenterNet的作者发现，CornerNet是通过检测物体的左上角点和右下角点来确定目标，但在此过程中CornetNet使用corner pooling仅仅能够提取到目标边缘的特征，而导致CornetNet会产生很多的误检。基于此，CenterNet利用关键点三元组即中心点、左上角关键点和右下角关键点三个关键点而不是两个点来确定一个目标，使得网络能够获取到目标内部的特征。而CornerNet在论文中也说道了，约束其网络性能最重要的部分是关键点的提取，因此CenterNet提出了Center Pooling和cascade corner Pooling用来更好的提取本文提出的三个关键点。</p>
+<p>1）三元组预测</p>
+<p>如下图所示，网络通过 cascade corner pooling得到左上角，右下角的关键点类别。并通过center pooling得到中心点的关键点类别。随后通过 offsets 将三个关键点位置尽可能精确的映射到输入图片的对应位置，最后通过 embedings 判断三个点是否属于同一个目标。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/43ce7220e827d9482b347e33ff2c3af4.png"></p>
+<p>在预测中心点特征时，对每个预测框定义一个中心区域，通过判断每个目标框的中心区域是否含有中心点，若有则保留，并且此时预测框的 confidence 为中心点，左上角关键点和右下角关键点的confidence的平均，若无则去除。而很显然，对于每个预测框的中心区域，我们需要其和预测框的大小进行适应，因为中心区面积过小会使得小尺度的错误预测框无法被去除，而中心区过大会导致大尺度的错误预测框无法被去除。因此作者提出如下策略：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/5dd5369ad792996bf9a06de28bbde05c.png"></p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/7181245142e0152fa2c84ccc50f12074.png"></p>
+<p>如上图所示，当预测框的尺寸较大时，我们得到的中心区域面积也会变小，而与之对应的，当预测框的尺寸较小时，中心区域的面积也会变大。</p>
+<p>2）Center Pooling</p>
+<p>作者基于Corner Pooling的系列思想，提出了Center Pooling的思想，使得网络提取到的中心点特征能够更好的表征目标物体。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/d01825986152eda6e08d6ef91270faea.png"></p>
+<p>一个物体的中心并不一定含有很强的，易于区分于其他类别的语义信息。例如，一个人的头部含有很强的，易于区分于其他类别的语义信息，但是其中心往往位于人的中部。我们提出了center pooling 来丰富中心点特征。上图为该方法原理，center pooling提取中心点水平方向和垂直方向的最大值并相加，以此给中心点提供所处位置以外的信息。这一操作使中心点有机会获得更易于区分于其他类别的语义信息。Center pooling 可通过不同方向上的 corner pooling 的组合实现。一个水平方向上的取最大值操作可由 left pooling 和 right pooling通过串联实现，同理，一个垂直方向上的取最大值操作可由 top pooling 和 bottom pooling通过串联实现，如图6所示。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/2a777d66ea1c14b2b35fdb9ea295db93.png"></p>
+<p>3）cascade corner Pooling</p>
+<p>作者基于Corner Pooling的系列思想，提出了cascade corner Pooling的思想，使得网络提取到的中心点特征能够更好的表征目标物体。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/0527481e534554fa611079a300dd39f7.png"></p>
+<p>一般情况下角点位于物体外部，所处位置并不含有关联物体的语义信息，这为角点的检测带来了困难。上图(b) 为传统做法，称为 corner pooling。它提取物体边界最大值并相加，该方法只能提供关联物体边缘语义信息，对于更加丰富的物体内部语义信息则很难提取到。上图(c)为cascade corner pooling 原理，它首先提取物体边界最大值，然后在边界最大值处继续向内部(图中沿虚线方向)提取提最大值，并与边界最大值相加，以此给角点特征提供更加丰富的关联物体语义信息。Cascade corner pooling 也可通过不同方向上的 corner pooling 的组合实现，如图8 所示，图8展示了cascade left corner pooling 原理。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/17fdbca3b82a250e66801a616e3cb01b.png"></p>
+<p>最终，CenterNet在CornerNet的基础上增加了中心点的预测，以及修改了关键点特征的提取方式，大大减小了网络的误检，并且实现了one-stage系列算法中的最好效果。</p>
+<p><strong>(3) 基于全卷积的anchor free目标检测</strong></p>
+<p><strong>FCOS详细介绍</strong></p>
+<p>1)FCOS优势</p>
+<p>1. FCOS与许多基于FCN的思想是统一的，因此可以更轻松的重复使用这些任务的思路。</p>
+<p>2. 检测器实现了proposal free和anchor free，显著的减少了设计参数的数目。设计参数通常需要启发式调整，并且设计许多技巧。另外，通过消除锚框，新探测器完全避免了复杂的IOU计算以及训练期间锚框和真实边框之间的匹配，并将总训练内存占用空间减少了2倍左右。</p>
+<p>3. FCOS可以作为二阶检测器的区域建议网络(RPN)，其性能明显优于基于锚点的RPN算法。</p>
+<p>4. FCOS可以经过最小的修改便可扩展到其他的视觉任务，包括实例分割、关键点检测。</p>
+<p><strong>2)算法详细介绍</strong></p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/197b9210428cb121bfce386809046233.png"></p>
+<p>1.全卷积一阶检测器</p>
+<p>FCOS首先使用Backone CNN(用于提取特征的主干架构CNN)，另 � 为feature map之前的总steps。</p>
+<p><em>与anchor-based检测器的区别</em></p>
+<p><em>第一点</em></p>
+<p>· anchor-based算法将输入图像上的位置作为锚框的中心点，并且对这些锚框进行回归。</p>
+<p>· FCOS直接对feature map中每个位置对应原图的边框都进行回归，换句话说FCOS直接把每个位置都作为训练样本，这一点和FCN用于语义分割相同。</p>
+<p>FCOS算法feature map中位置与原图对应的关系，如果feature map中位置为(x,y),,映射到输入图像的位置是</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/36af143323dfdeb65323f30976c9ab6d.png"></p>
+<p><em>第二点</em></p>
+<p>· 在训练过程中，anchor-based算法对样本的标记方法是，如果anchor对应的边框与真实边框(ground truth)交并比大于一定阈值，就设为正样本，并且把交并比最大的类别作为这个位置的类别。</p>
+<p>· 在FCOS中，如果位置（x，y）落入任何真实边框，就认为它是一个正样本，它的类别标记为这个真实边框的类别。</p>
+<p>这样会带来一个问题，如果标注的真实边框重叠，位置（x，y）映射到原图中落到多个真实边框，这个位置被认为是模糊样本，后面会讲到用多级预测的方式解决的方式解决模糊样本的问题。</p>
+<p><em>第三点</em></p>
+<p>· 以往算法都是训练一个多元分类器</p>
+<p>· FCOS训练<em>C</em>个二元分类器(<em>C</em>是类别的数目)</p>
+<p><em>与anchor-based检测器相似之处</em></p>
+<p>与anchor-based算法的相似之处是FCOS算法训练的目标同样包括两个部分：位置和类别。</p>
+<p>FCOS算法的损失函数为：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/88bfba5bf9e084a271370787e6217d64.png"></p>
+<p>其中L_cls类别损失， L_reg交并比的损失。</p>
+<p><strong>2.用FPN对FCOS进行多级预测</strong></p>
+<p>首先明确两个问题：</p>
+<p>1. anchor-base的检测器由于大的步伐(stride)导致低召回率，需要通过降低正的anchor所需的交并比分数来进行补偿：在FCOS算法中表明，及时是大的步伐(stride)，也可以获取较好的召回率，甚至效果可以优于anchor-base的检测器。</p>
+<p>1. 真实边框中的重叠可能会在训练过程中造成难以处理的歧义，这种模糊性导致基于fcn的检测器性能下降：在FCOSzhong ，采用多级预测方法可以有效地解决模糊问题，与anchor-base的模糊检测器相比，基于模糊控制器的模糊检测器具有更好的性能。</p>
+<p>前面提到，为了解决真实边框重叠带来的模糊性和低召回率，FCOS采用类似FPN中的多级检测，就是在不同级别的特征层检测不同尺寸的目标。</p>
+<p><em>与基于锚框不同的地方</em></p>
+<p>· 基于锚框的检测器将不同尺寸的锚框分配到不同级别的特征层</p>
+<p>· FCOS通过直接限定不同特征级别的边界框的回归范围来进行分配</p>
+<p>此外，FCOS在不同的特征层之间共享信息，不仅使检测器的参数效率更高，而且提高了检测性能。</p>
+<p>3.Center-ness</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/89dd619e306770bd37b8bf799e341528.png"></p>
+<p>通过多级预测之后发现FCOS和基于锚框的检测器之间仍然存在着一定的距离，主要原因是距离目标中心较远的位置产生很多低质量的预测边框。</p>
+<p>在FCOS中提出了一种简单而有效的策略来抑制这些低质量的预测边界框，而且不引入任何超参数。具体来说，FCOS添加单层分支，与分类分支并行，以预测”Center-ness”位置。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/4e38ba71299d9d9dc06139266c298db8.png"></p>
+<p>center-ness(可以理解为一种具有度量作用的概念，在这里称之为”中心度”)，中心度取值为0,1之间，使用交叉熵损失进行训练。并把损失加入前面提到的损失函数中。测试时，将预测的中心度与相应的分类分数相乘，计算最终得分(用于对检测到的边界框进行排序)。因此，中心度可以降低远离对象中心的边界框的权重。因此，这些低质量边界框很可能被最终的非最大抑制（NMS）过程滤除，从而显着提高了检测性能。</p>
+<p><strong>3.基于分割</strong></p>
+<p><strong>Mask-RCNN</strong></p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/fdc1ffab8c6f447d32bb3f0d7f820e0f.jpg"></p>
+<p>创新点是什么？</p>
+<p>· 对RoI做出改进并提出了RoIAlign</p>
+<p>· 针对像素点偏移的问题，使用了双线性插值来更精确地找到每个块的对应特征</p>
+<p>总的来说，RoI Align的作用主要就是剔除了RoI Pooling的取整操作，并且使得为每个RoI取得的特征能够更好地对齐原图上的RoI区域。</p>
+<p>· 可以方便的扩展到其他任务，比如人的姿态估计 等；</p>
+<p>· 不借助 Trick，在每个任务上，效果优于目前所有的 single-model entries；</p>
+<p>问题或者背景是什么？</p>
+<p>· 从输入图上的RoI到特征图上的RoI feature，RoI Pooling是直接通过四舍五入取整得到的结果，这样会造成什么后果？</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/3c65d919eda504dc33abed02ef76659d.jpg"></p>
+<p>右图中蓝色部分表示包含了轿车主体的的信息的方格，RoI Pooling Layer的四舍五入取整操作导致其进行了偏移。</p>
+<p>在将每个RoI对应的特征转化为固定大小的维度时，又采用了取整操作，这样会造成什么后果？</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/2bbbbcc3abb0c2605b9e1acd294b1ae3.jpg"></p>
+<p>在从RoI得到对应的特征图时，进行了问题1描述的取整，在得到特征图后，如何得到一个6×6的全连接层的输入呢？RoI Pooling这样做：将RoI对应的特征图分成6×6块，然后直接从每块中找到最大值。在上图中的例子中，比如原图上的的RoI大小是280×480，得到对应的特征图是18×30。将特征图分成6块，每块大小是3×5，然后在每一块中分别选择最大值放入6×6的对应区域中。</p>
+<p>这种取整操作(在Mask R-CNN中被称为quantization)对RoI分类影响不大，可是对逐像素的预测目标是有害的，因为对每个RoI取得的特征并没有与RoI对齐。因此，Mask R-CNN对RoI Pooling做了改进并提出了RoI Align。</p>
+<p>Quantization是什么？</p>
+<p>量化、数字化，在Pooling中代表整数化。</p>
+<p><strong>Mask R-CNN</strong></p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/affcd7d9b58d5cc2d9ccc2ca889ac587.jpg"></p>
+<p>如上图所示，为了产生对应的Mask，文中提出了两种架构，即左边的Faster R-CNN &#x2F;ResNet和右边的Faster R-CNN&#x2F;FPN。对于左边的架构，我们的backbone使用的是预训练好的ResNet，使用了ResNet倒数第4层的网络。输入的ROI首先获得7x7x1024的ROI feature，然后将其升维到2048个通道（这里修改了原始的ResNet网络架构），然后有两个分支，上面的分支负责分类和回归，下面的分支负责生成对应的mask。由于前面进行了多次卷积和池化，减小了对应的分辨率，mask分支开始利用反卷积进行分辨率的提升，同时减少通道的个数，变为14x14x256，最后输出了14x14x80的mask模板。</p>
+<p>而右边使用到的backbone是FPN网络，这是一个新的网络，通过输入单一尺度的图片，最后可以对应的特征金字塔，如果想要了解它的细节，请参考该论文。得到证实的是，该网络可以在一定程度上面提高检测的精度，当前很多的方法都用到了它。由于FPN网络已经包含了res5，可以更加高效的使用特征，因此这里使用了较少的filters。该架构也分为两个分支，作用于前者相同，但是分类分支和mask分支和前者相比有很大的区别。可能是因为FPN网络可以在不同尺度的特征上面获得许多有用信息，因此分类时使用了更少的滤波器。而mask分支中进行了多次卷积操作，首先将ROI变化为14x14x256的feature，然后进行了5次相同的操作（不清楚这里的原理，期待着你的解释），然后进行反卷积操作，最后输出28x28x80的mask。即输出了更大的mask，与前者相比可以获得更细致的mask。</p>
+<p>RoIAlign</p>
+<p>· 能否RoIPooling 和 RoIAlign比较一下？</p>
+<p>1)ROI Pooling</p>
+<p>ROI Pooling和ROIAlign最大的区别是：前者使用了两次量化操作，而后者并没有采用量化操作，使用了线性插值算法，具体的解释如下所示</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/73e1fa68c4e25cbe798d52f511fb6fcd.jpg"></p>
+<p>如上图所示：为了得到固定大小（7X7）的feature map，我们需要做两次量化操作：1）图像坐标 — feature map坐标，2）feature map坐标 — ROI feature坐标。我们来说一下具体的细节，如图我们输入的是一张800x800的图像，在图像中有两个目标（猫和狗），狗的BB(bounding box)大小为665x665，经过VGG16网络后，我们可以获得对应的feature map，如果我们对卷积层进行Padding操作，我们的图片经过卷积层后保持原来的大小，但是由于池化层的存在，我们最终获得feature map 会比原图缩小一定的比例，这和Pooling层的个数和大小有关。在该VGG16中，我们使用了5个池化操作，每个池化操作都是2Pooling，因此我们最终获得feature map的大小为800&#x2F;32 x 800&#x2F;32 &#x3D; 25x25（是整数），但是将狗的BB(bounding box)对应到feature map上面，我们得到的结果是665&#x2F;32 x 665&#x2F;32 &#x3D; 20.78 x 20.78，结果是浮点数，含有小数，但是我们的像素值可没有小数，那么作者就对其进行了量化操作（即取整操作），即其结果变为20 x 20，在这里引入了第一次的量化误差；然而我们的feature map中有不同大小的ROI，但是我们后面的网络却要求我们有固定的输入，因此，我们需要将不同大小的ROI转化为固定的ROI feature，在这里使用的是7x7的ROI feature，那么我们需要将20 x 20的ROI映射成7 x 7的ROI feature，其结果是 20 &#x2F;7 x 20&#x2F;7 &#x3D; 2.86 x 2.86，同样是浮点数，含有小数点，我们采取同样的操作对其进行取整吧，在这里引入了第二次量化误差。其实，这里引入的误差会导致图像中的像素和特征中的像素的偏差，即将feature空间的ROI对应到原图上面会出现很大的偏差。原因如下：比如用我们第二次引入的误差来分析，本来是2.86，我们将其量化为2，这期间引入了0.86的误差，看起来是一个很小的误差呀，但是你要记得这是在feature空间，我们的feature空间和图像空间是有比例关系的，在这里是1:32，那么对应到原图上面的差距就是0.86 x 32 &#x3D; 27.52。这个差距不小吧，这还是仅仅考虑了第二次的量化误差。这会大大影响整个检测算法的性能，因此是一个严重的问题。</p>
+<p>2)ROIAlign</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/55fb9d6331de8896c9934c7aa6ba5ac7.jpg"></p>
+<p>如图所示：为了得到为了得到固定大小（7X7）的feature map，ROIAlign技术并没有使用量化操作，即我们不想引入量化误差，比如665 &#x2F; 32 &#x3D; 20.78，我们就用20.78，不用什么20来替代它，比如20.78 &#x2F; 7 &#x3D; 2.97，我们就用2.97，而不用2来代替它。这就是ROIAlign的初衷。那么我们如何处理这些浮点数呢，我们的解决思路是使用“双线性插值”算法。双线性插值是一种比较好的图像缩放算法，它充分的利用了原图中虚拟点（比如20.56这个浮点数，像素位置都是整数值，没有浮点值）四周的四个真实存在的像素值来共同决定目标图中的一个像素值，即可以将20.56这个虚拟的位置点对应的像素值估计出来。</p>
+<p>具体做法如下图所示：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/458a1576250e60dc9418f2edf0031c23.png"></p>
+<p>1. 将bbox区域按输出要求的size进行等分，很可能等分后各顶点落不到真实的像素点上</p>
+<p>2. 在每个bin中再取固定的4个点(作者实验后发现取4效果较好)，也就是图二右侧的蓝色点</p>
+<p>3. 针对每一个蓝点，距离它最近的4个真实像素点的值加权(双线性插值)，求得这个蓝点的值</p>
+<p>4. 一个bin内会算出4个新值，在这些新值中取max，作为这个bin的输出值</p>
+<p>5. 最后就能得到2x2的输出</p>
+<p>双线性插值</p>
+<p>1)线性插值</p>
+<p>已知数据 与 ，要计算 区间内某一位置x在直线上的y值，如下图所示。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/af790593c2c47304043b52eb76bf5dff.jpg"></p>
+<p>计算方法很简单，通过斜率相等就可以构建y和x之间的关系，如下：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/834f417cb20c76c3e55af291a56a8974.png"></p>
+<p>仔细看就是用和 , 的距离作为一个权重（除以 是归一化的作用），用于</p>
+<p>和 的加权。这个思想很重要，因为知道了这个思想，理解双线性插值就非常简单了。</p>
+<p>2)双线性插值</p>
+<p>双线性插值本质上就是在两个方向上做线性插值。</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/5b3c0b744073b2029387379e13dd1667.png"></p>
+<p>如图，假设我们想得到P点的插值，我们可以先在x方向上，对 和 之间做线性插值得到 ， 同理可得。然后在y方向上对和 进行线性插值就可以得到最终的P。其实知道这个就已经理解了双线性插值的意思了，如果用公式表达则如下（注意 f 前面的系数看成权重就很好理解了）。</p>
+<p>首先在 <em>x</em> 方向进行线性插值，得到</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/4b09c9d99dcc704b98554afaa81f119f.jpg"></p>
+<p>然后在 <em>y</em> 方向进行线性插值，得到</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/132a06988873d0f2bd1a6967de6fdc11.png"></p>
+<p>这样就得到所要的结果 �(�,�)</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/6473eecd8e79b5aa72630a2dc11f5305.png"></p>
+<p>参考：维基百科：双线性插值</p>
+<p>LOSS中Lmask的计算原理是什么？</p>
+<p>由于增加了mask分支，每个ROI的Loss函数如下所示：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/17d465e70358ca46e5311a096feb357a.png"></p>
+<p>其中和 和Faster r-cnn中定义的相同。对于每一个ROI，mask分支有维度的输出，其对个大小为的mask进行编码，每一个mask有K个类别。我们使用了per-pixel sigmoid，并且将 定义为the average binary cross-entropy loss 。对应一个属于GT中的第k类的ROI， 仅仅在第k个mask上面有定义（其它的k-1个mask输出对整个Loss没有贡献）。</p>
+<p>我们定义的 允许网络为每一类生成一个mask，而不用和其它类进行竞争；我们依赖于分类分支所预测的类别标签来选择输出的mask。这样将分类和mask生成分解开来。这与利用FCN进行语义分割的有所不同，它通常使用一个per-pixel sigmoid和一个multinomial cross-entropy loss ，在这种情况下mask之间存在竞争关系；而由于我们使用了一个per-pixel sigmoid 和一个binary loss ，不同的mask之间不存在竞争关系。经验表明，这可以提高实例分割的效果。</p>
+<p>一个mask对一个目标的输入空间布局进行编码，与类别标签和BB(bounding box)偏置不同，它们通常需要通过FC层而导致其以短向量的形式输出。我们可以通过由卷积提供的像素和像素的对应关系来获得mask的空间结构信息。具体的来说，我们使用FCN从每一个ROI中预测出一个大小的mask，这使得mask分支中的每个层能够明确的保持空间布局，而不将其折叠成缺少空间维度的向量表示。</p>
+<p>和以前用fc层做mask预测的方法不同的是，我们的实验表明我们的mask表示需要更少的参数，而且更加准确。这些像素到像素的行为需要我们的ROI特征，而我们的ROI特征通常是比较小的feature map，其已经进行了对其操作，为了一致的较好的保持明确的单像素空间对应关系，我们提出了ROIAlign操作。</p>
+
                 
             </div>
             <hr/>

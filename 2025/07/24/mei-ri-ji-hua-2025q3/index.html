@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-26
+                    2025-08-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.3k
+                    2.7k
                 </div>
                 
 
@@ -714,12 +714,63 @@ bsd前处理代码移植和版本号增加</p>
 <li><input checked="" disabled="" type="checkbox"> 华菱802 bsd算法rknn模型和推理分数异常问题排查<ul>
 <li>box置信度在0.4-0.8之间，浮动较大</li>
 <li>class置信度几乎为0，单类别</li>
+<li>pc端推理rknn时输出的最大box置信度不超过0.1，且类别置信度永远为0.99以上，没有目标的时候类别的置信度也是0.99以上</li>
 </ul>
 </li>
 </ul>
 <h1 id="2025-08-27"><a href="#2025-08-27" class="headerlink" title="2025-08-27"></a>2025-08-27</h1><ul>
 <li><input disabled="" type="checkbox"> bsd测试集整理</li>
-<li><input disabled="" type="checkbox"> </li>
+<li><input disabled="" type="checkbox"> 历史版本bsd模型和当前bss模型精度测试与分析</li>
+<li><input checked="" disabled="" type="checkbox"> yolov5 loss计算方法熟悉与分析</li>
+<li><input checked="" disabled="" type="checkbox"> dsm相机误报遮挡问题排查：模型复测与后处理流程梳理</li>
+</ul>
+<h1 id="2025-08-28"><a href="#2025-08-28" class="headerlink" title="2025-08-28"></a>2025-08-28</h1><ul>
+<li><input checked="" disabled="" type="checkbox"> bsd测试集整理</li>
+<li><input checked="" disabled="" type="checkbox"> 历史版本bsd模型和当前bss模型精度测试与分析</li>
+</ul>
+<h1 id="2025-08-29"><a href="#2025-08-29" class="headerlink" title="2025-08-29"></a>2025-08-29</h1><ul>
+<li><p><input disabled="" type="checkbox"> 
+bsd测试结果分类分析</p>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+误报类型分析</p>
+<ul>
+<li><p>漏标注</p>
+</li>
+<li><p>无人电动车误报行人</p>
+</li>
+<li><p>无人三轮车误报行人</p>
+</li>
+<li><p>无人机动车误报驾驶位有人</p>
+</li>
+<li><p>车身反光误报</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://172.20.1.106:17281/source/bsd_normal/v3.1.0.0/2025-08-29_08-45-36/%E6%BC%8F%E6%A0%87/2407011125090.jpg">2407011125090.jpg</a></li>
+</ul>
+</li>
+<li><p>打伞的人</p>
+</li>
+<li><p>悬挂的媳衣服误报</p>
+</li>
+<li><p>贴图误报</p>
+</li>
+<li><p>栏杆类、低矮柱类误报</p>
+</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+IOU匹配的现存问题</p>
+<ul>
+<li>标签的框和预测的大小不一致，位置有偏移，导致预测框只是框到了物体的一部分或多框了，因此匹配时只是使用iou阈值很难匹配到人认为理想的目标。</li>
+<li>小目标，比较远，预测的框会多框，导致iou过滤时被剔除</li>
+</ul>
+</li>
+<li><p><input disabled="" type="checkbox"> 
+框的分数比较低的原因分析</p>
+<ul>
+<li>从预测结果来看就是框不准，容易多框或少框，这样模型不能把iou损失降低，不能增加预测的置信度，因为模型认为框到目标但是和标签框差异比较大，loss就会比较大</li>
+</ul>
+</li>
 </ul>
 
                 

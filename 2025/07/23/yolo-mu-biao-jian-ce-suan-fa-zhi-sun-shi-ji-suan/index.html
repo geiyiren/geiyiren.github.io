@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-26
+                    2025-08-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    3.6k
+                    5.3k
                 </div>
                 
 
@@ -420,7 +420,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="损失函数的调用关系"><a href="#损失函数的调用关系" class="headerlink" title="损失函数的调用关系"></a>损失函数的调用关系</h2><p>ultralytics代码中创建模型后顺手做了对应模型架构的加载，根据输入的 yaml文件将对应的模型加载为torch.nn.Module,同时也根据模型的类型对损失函数进行了选择。因此要想知道模型实际计算损失时使用了哪些损失计算方法就要从<code>model = YOLO(&quot;yolo12n.yaml&quot;)</code>开始入手，因此这一行代码过后模型的损失计算方法就已经设定好了，下面看下具体的流程：</p>
+                <h1 id="Ultralytics系列"><a href="#Ultralytics系列" class="headerlink" title="Ultralytics系列"></a>Ultralytics系列</h1><h2 id="损失函数的调用关系"><a href="#损失函数的调用关系" class="headerlink" title="损失函数的调用关系"></a>损失函数的调用关系</h2><p>ultralytics代码中创建模型后顺手做了对应模型架构的加载，根据输入的 yaml文件将对应的模型加载为torch.nn.Module,同时也根据模型的类型对损失函数进行了选择。因此要想知道模型实际计算损失时使用了哪些损失计算方法就要从<code>model = YOLO(&quot;yolo12n.yaml&quot;)</code>开始入手，因此这一行代码过后模型的损失计算方法就已经设定好了，下面看下具体的流程：</p>
 <ul>
 <li><p>1.创建模型</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">model <span class="token operator">=</span> YOLO<span class="token punctuation">(</span><span class="token string">"yolo12n.yaml"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -794,7 +794,7 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 <span class="token key atrule">cls</span><span class="token punctuation">:</span> <span class="token number">0.5</span> <span class="token comment"># (float) cls loss gain (scale with pixels)</span>
 <span class="token key atrule">dfl</span><span class="token punctuation">:</span> <span class="token number">1.5</span> <span class="token comment"># (float) dfl loss gain</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="v5ComputeLoss"><a href="#v5ComputeLoss" class="headerlink" title="v5ComputeLoss"></a>v5ComputeLoss</h2><p>首先给出目标检测算法的loss，计算公式如下：<br>$$<br>loss&#x3D;batchSize * (boxLoss<em>A+objLoss</em>B+classLoss*C)<br>$$<br>其中A,B,C为各个损失的权重</p>
+<h1 id="YOLO-V5系列"><a href="#YOLO-V5系列" class="headerlink" title="YOLO-V5系列"></a>YOLO-V5系列</h1><h2 id="v5ComputeLoss"><a href="#v5ComputeLoss" class="headerlink" title="v5ComputeLoss"></a>v5ComputeLoss</h2><p>首先给出目标检测算法的loss，计算公式如下：<br>$$<br>loss&#x3D;batchSize * (boxLoss<em>A+objLoss</em>B+classLoss*C)<br>$$<br>其中A,B,C为各个损失的权重</p>
 <p>yolo训练时使用三个输出，三个输出为不同尺寸特征图，即：不同大小anchor的检测结果</p>
 <p>评估时使用一个输出，合并不同anchor的检测结果，缩放到原图尺寸进行输出</p>
 <p>因此，训练时计算的loss时循环计算了所有anchor下的所有推理box的损失，对应代码如下：</p>
@@ -815,7 +815,125 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
             pwh <span class="token operator">=</span> <span class="token punctuation">(</span>pwh<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">*</span> anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>其中<code>for i, pi in enumerate(p): </code>就是访问不同尺寸特征图下的预测结果，yolo默认为3个分支，其中：<code>i</code>表示对应层的序号，<code>pi</code>表示该层的预测结果。</p>
-<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box loss"></a>box loss</h3><h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><h3 id="class-loss"><a href="#class-loss" class="headerlink" title="class loss"></a>class loss</h3>
+<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pbox<span class="token punctuation">,</span> tbox<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>通过这一行源码可以看出yolov5默认使用CIoU进行预测框的损失计算</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">lbox <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>通过这一行源码可以看出yolov5将每一张图像的所有预测框的iou求了均值作为该图像的目标框推理损失，因为一个图像中可能有多个目标。突然想起来，模型推理的时候batch size设置为256，那么同时会推理256张图像的，也就是说这里的iou是当前batch的256张图像同时推理得到结果进行求均值得到的标量<code>lbox</code>。那这里可能就是batch size对训练影响的源头：</p>
+<ul>
+<li><p>推理单张图：</p>
+<ul>
+<li><p>每个预测框直接计算 IoU&#x2F;score</p>
+</li>
+<li><p>loss 或指标只针对该图</p>
+</li>
+<li><p>输出更直观，能看到单图性能</p>
+</li>
+</ul>
+</li>
+<li><p>batch 训练：</p>
+<ul>
+<li><p>平均到整个 batch</p>
+</li>
+<li><p>对应梯度是 batch 上的整体平均</p>
+</li>
+<li><p>优势是稳定和高效，缺点是掩盖单图差异，可以避免极端目标的loss对梯度的回传造成影响</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>pbox和tbox是怎么匹配上的？预测到的但是标签中没有的目标框怎么计算iou：</p>
+<p>首先回答第一个问题，这个匹配方法在<code>loss.py</code>的<code>build_targets</code>函数中实现的，后面单独分析。</p>
+<p>第二个问题，这里计算IoU loss时候其实不计算匹配不到的目标框的，包括漏检和误检。这一点可以从<code>build_targets</code>函数中可以看出:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">indices<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span> a<span class="token punctuation">,</span> gj<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> shape<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> gi<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> shape<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这里返回了预测框和标签框是成对的，另外计算iou时传入的也是成对的匹配结果，在实际计算的时候也没有对漏检和误检的iou进行计算。</p>
+<h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>首先看下什么是二元交叉熵损失：</p>
+<p><strong><code>nn.BCEWithLogitsLoss</code></strong></p>
+<ul>
+<li><p>这是 PyTorch 提供的 <strong>带 sigmoid 的二元交叉熵损失函数</strong>。</p>
+</li>
+<li><p>公式等价于：<br>$$<br>BCE(x, y) &#x3D; - \big[ y \cdot \log(\sigma(x)) + (1-y)\cdot\log(1-\sigma(x)) \big]<br>$$<br>其中 $\sigma(x)&#x3D;\frac{1}{1+e^{-x}}$ 是 sigmoid。$\sigma(x)$就是预测分数</p>
+<p>当y&#x3D;0时：<br>$$<br>BCE(x, y) &#x3D; - log(1-\sigma(x))<br>$$</p>
+<p>当y&#x3D;1时：<br>$$<br>BCE(x, 1) &#x3D; - \log(\sigma(x))<br>$$</p>
+</li>
+<li><p><strong>$y$</strong></p>
+<ul>
+<li>真实标签 (ground truth)，这里的标签是转换后的标签</li>
+<li>只能取 <code>0</code> 或 <code>1</code></li>
+<li>0 → 表示“负样本”</li>
+<li>1 → 表示“正样本”</li>
+</ul>
+</li>
+<li><p><strong>$x$</strong></p>
+<ul>
+<li>模型预测值，经过sigmoid后转换为概率</li>
+<li>范围为任意的网络输出</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/image-20250827202928632.png" alt="image-20250827202928632"></p>
+<p>根据曲线可以看出：</p>
+<ul>
+<li>如果标签中给的gride无目标，即y&#x3D;0时，预测的分数越大，损失越大；这就会对误报进行惩罚</li>
+<li>如果标签中给的gride有目标，即y&#x3D;1时，预测的分数越大，损失越小；这就会对漏报进行惩罚</li>
+</ul>
+<p>现在来看obj_loss如何计算，源码中的计算公式如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">self<span class="token punctuation">.</span>balance <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span>m<span class="token punctuation">.</span>nl<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token number">0.06</span><span class="token punctuation">,</span> <span class="token number">0.02</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># P3-P7</span>
+<span class="token comment"># 省略无关代码 ...</span>
+tobj<span class="token punctuation">[</span>b<span class="token punctuation">,</span> a<span class="token punctuation">,</span> gj<span class="token punctuation">,</span> gi<span class="token punctuation">]</span> <span class="token operator">=</span> iou
+<span class="token comment"># 省略无关代码 ...</span>
+obji <span class="token operator">=</span> self<span class="token punctuation">.</span>BCEobj<span class="token punctuation">(</span>pi<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> tobj<span class="token punctuation">)</span>
+lobj <span class="token operator">+=</span> obji <span class="token operator">*</span> self<span class="token punctuation">.</span>balance<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># obj loss</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中tobj为根据Iou得到的标签中对应的各个gride是否有目标的0-1矩阵，这里作为交叉熵损失的$y$进行输入。</p>
+<p><code>pi[..., 4]</code>表示box的位置置信度，<code>pi</code>中存储的元素如下所示：</p>
+<ul>
+<li><code>pi[..., 0:4]</code> → 边界框 (bbox) 的偏移量或参数</li>
+<li><code>pi[..., 4]</code> → <strong>objectness (有无物体的置信度)</strong></li>
+<li><code>pi[..., 5:]</code> → 各类别的分数</li>
+</ul>
+<p>因此这里的obji就是位置预测分数和标签的二元交叉熵损失。然后进行加权累加：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">lobj <span class="token operator">+=</span> obji <span class="token operator">*</span> self<span class="token punctuation">.</span>balance<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># obj loss</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这里可以看出漏报和误报在这个损失中都有体现，因为<code>pi</code>中存储了所有的预测结果，<code>tobj</code>中存储了所有的标签，然后转换为各个gride的预测和标签值，如果标签与某个gride有交集这个<code>gride</code>的tobj就是被置1，对于<code>pi</code>预测的是各个gride的目标框的置信度，因此这个损失不仅考虑匹配成功的预测结果吗，还会考虑漏报和误报。</p>
+<h3 id="class-loss"><a href="#class-loss" class="headerlink" title="class loss"></a>class loss</h3><p>类别的损失同样使用的是二元交叉熵损失，方法类似，直接看代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">if</span> self<span class="token punctuation">.</span>nc <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">:</span>  <span class="token comment"># cls loss (only if multiple classes)</span>
+                   t <span class="token operator">=</span> torch<span class="token punctuation">.</span>full_like<span class="token punctuation">(</span>pcls<span class="token punctuation">,</span> self<span class="token punctuation">.</span>cn<span class="token punctuation">,</span> device<span class="token operator">=</span>self<span class="token punctuation">.</span>device<span class="token punctuation">)</span>  <span class="token comment"># targets</span>
+                   t<span class="token punctuation">[</span><span class="token builtin">range</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">,</span> tcls<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>cp
+                   lcls <span class="token operator">+=</span> self<span class="token punctuation">.</span>BCEcls<span class="token punctuation">(</span>pcls<span class="token punctuation">,</span> t<span class="token punctuation">)</span>  <span class="token comment"># BCE</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>不同是这里是有条件的，对于单类的目标不计算类别损失，这是为什么？我们来分析一下：</p>
+<p>对于boss的BCEobj损失和类别的BCEcls损失输入的y都是根据标签进行转换的0,1矩阵，两个loss的标签值是相同的，BCEobj使用的预测<code>pi[..., 4]</code>进行计算的，而BCEcls是使用<code>pi[..., 5]</code>进行计算的，也就是说此完全可以使用一个共同的分数同时预测box的置信度和类别的置信度：</p>
+<p>单类目标检测中保留 BCEcls 有什么影响：</p>
+<ul>
+<li><p><strong>冗余监督</strong>：<br> BCEcls 和 BCEobj 本质上学的是同一个东西，增加一个 BCEcls 并不会增加信息量，反而会让模型在两个分支上分散梯度。</p>
+</li>
+<li><p><strong>梯度冲突</strong>：<br> BCEobj 和 BCEcls 都在学习“是否有目标”，可能会出现一个分支学习更快，另一个分支被迫去拟合同样的分布 → 有时会造成收敛更慢。</p>
+</li>
+<li><p><strong>推理时仍然合并</strong>：<br> YOLO 最终的 score 是<br>$$<br>\text{score} &#x3D; \text{obj} \times \text{cls}<br>$$<br>单类时就是<br>$$<br>\text{score} &#x3D; \text{obj} \times \text{1类概率}<br>$$<br>如果 obj&#x3D;0.9，cls&#x3D;0.9，最终还是 0.81 → 实际上比分开时更低，不一定“更准确”，反而可能错过一些框。</p>
+</li>
+</ul>
+<p>也就是说，如果单类目标检测中保留 BCEcls 只要能保证训练的收敛，最终使用$\text{score} &#x3D; \text{obj} \times \text{cls}$计算预测分数，此时预测精度更高， 这样相当于“二次确认”，只要训练充分收敛，最终的预测精度会更高，尤其是减少假阳性。</p>
+<h3 id="loss"><a href="#loss" class="headerlink" title="loss"></a>loss</h3><p>最终计算的loss是加权的结果：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">lbox <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">[</span><span class="token string">'box'</span><span class="token punctuation">]</span>
+lobj <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">[</span><span class="token string">'obj'</span><span class="token punctuation">]</span>
+lcls <span class="token operator">*=</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">[</span><span class="token string">'cls'</span><span class="token punctuation">]</span>
+bs <span class="token operator">=</span> tobj<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>  <span class="token comment"># batch size</span>
+
+<span class="token keyword">return</span> <span class="token punctuation">(</span>lbox <span class="token operator">+</span> lobj <span class="token operator">+</span> lcls<span class="token punctuation">)</span> <span class="token operator">*</span> bs<span class="token punctuation">,</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">(</span>lbox<span class="token punctuation">,</span> lobj<span class="token punctuation">,</span> lcls<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>detach<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中:</p>
+<ul>
+<li>训练的超参数来自训练时的<code>--hyp</code>配置的超参数<code>yml</code>文件,默认使用<code>data/hyps/hyp.scratch-high.yaml</code>文件</li>
+<li>$*bs$是因为计算的时候使用的都是均值，这里为了得到所有图像的损失<ul>
+<li>如果 batch size 固定，乘或不乘 不会改变训练方向&#x2F;收敛趋势</li>
+<li>乘上 batch size 只是改变了 loss 和梯度的绝对值大小，需要对应调整学习率或优化器参数</li>
+</ul>
+</li>
+</ul>
+
                 
             </div>
             <hr/>

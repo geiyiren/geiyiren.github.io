@@ -384,14 +384,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-26
+                    2025-08-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    8.9k
+                    9.9k
                 </div>
                 
 
@@ -460,6 +460,83 @@
 <p>2. 锚框的尺寸和长宽比是固定的，因此，检测器在处理形变较大的候选对象时比较困难，尤其是对于小目标。预先定义的锚框还限制了检测器的泛化能力，因为，它们需要针对不同对象大小或长宽比进行设计。</p>
 <p>3. 为了提高召回率，需要在图像上放置密集的锚框。而这些锚框大多数属于负样本，这样造成了正负样本之间的不均衡。</p>
 <p>4. 大量的锚框增加了在计算交并比时计算量和内存占用。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在网络进行预测时需要提前配置合适的anchor，例如：</p>
+<p><code>5,5, 5,11, 10,8, 17,14, 12,28, 30,23, 33,66, 60,44, 98,108</code></p>
+<p>这个就是三个分支，每个分支3个anchor的参数，可以按照如下理解：</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>Anchor #</th>
+<th>尺寸 (w,h)</th>
+<th>主要检测目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高分辨率分支</td>
+<td>1,2,3</td>
+<td>(5,5),(5,11),(10,8)</td>
+<td>小目标</td>
+</tr>
+<tr>
+<td>中分辨率分支</td>
+<td>4,5,6</td>
+<td>(17,14),(12,28),(30,23)</td>
+<td>中目标</td>
+</tr>
+<tr>
+<td>低分辨率分支</td>
+<td>7,8,9</td>
+<td>(33,66),(60,44),(98,108)</td>
+<td>大目标</td>
+</tr>
+</tbody></table>
+<p>那么这个anchor参数是什么意思呢？其实这个是缩放系数，网络会预测不同特征图上的目标检测框的“特殊归一化”尺寸，然后乘以给定的anchor参数就可以得到对应特征图上的预测框的尺寸，具体如下所示：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">pwh <span class="token operator">=</span> <span class="token punctuation">(</span>pwh<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">*</span> anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>其中pwh为网络的预测结果，然后进行归一化{<code>.sigmoid()</code>}得到[0,1]的预测结果并进行缩放{<code>*2</code>}缩放到[0,2]，然后为了避免出现负数和增加网络的非线性能力又对输出结果进行平方运算{<code>** 2</code>}，最后再缩放{<code>* anchors[i]</code>}到特征图上对应的尺寸。</p>
+<blockquote>
+<p>网络输出的结果经过缩放和平方运算后再乘以实际的缩放系数怎么感觉怪怪的？其实可以把<code>(pwh.sigmoid() * 2) ** 2</code>都当作网络的一部分，这样就可以看作是直接对网络输出的结果进行缩放后得到特征图尺度下不同的目标检测框，由于损失的约束会使得网络预测的结果符合这个缩放的逻辑的。</p>
+</blockquote>
+<p>至此，我们已经得到特征图尺度下的不同大小的目标检测框的<code>w</code>和<code>h</code>了，那么尺寸确定后位置如何确定呢？</p>
+<p>根据上面的anchor base的原理，我们可以看出不同特征图像下预测框的初始位置在各个特征图上是固定的，就是特征图的像素索引，如何理解？</p>
+<p>以480*288的输入图像为例，经过stride为8，16，32的降采样后得到的特征图的尺寸分别为：</p>
+<table>
+<thead>
+<tr>
+<th>stride</th>
+<th>特征图尺寸 (H×W)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8</td>
+<td>36 × 60</td>
+</tr>
+<tr>
+<td>16</td>
+<td>18 × 30</td>
+</tr>
+<tr>
+<td>32</td>
+<td>9 × 15</td>
+</tr>
+</tbody></table>
+<p>以9 × 15的特征图为例，其实就是把480*288的输入图像分为9 × 15个方格，每个方格中都以一定的概率存在物体，那么方格的位置其实就很大程度上决定了物体中心点的位置，但是可以微调，这个微调靠网络预测微调参数，因此不同特征图上只需要预测物体中心点位置微调参数就可以，程序中也是这样实现的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">pxy <span class="token operator">=</span> pxy<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">0.5</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>可见微调的范围为[-0.5,1.5],因此物体中心点的位置其实就是（特征图尺度下的坐标*stride）就可以恢复到原图尺寸,示意图如下：</p>
+<p><img src="/../../../MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/anchor-1756278459214-92.svg" alt="anchor"></p>
+<p>这里为什么pxy的范围为[-0.5,1.5]？其实这里是相对于特征图而言的，特征图上的每个点都代表原图上的一个方格区域，就是上图的黑色方格，这里是说微调的范围为[-0.5,1.5]*方格的尺寸，如果为[0,1]就表示必须在方格内部。为什么左边只有 -0.5，而右边到 1.5？</p>
+<p>这是因为 <strong>基准点选择在 cell 的左上角</strong>。</p>
+<ul>
+<li><p>当前 cell 的有效范围本来就是 [0,1]</p>
+</li>
+<li><p>往左走，最多允许跨出半个 cell → $-0.5$</p>
+</li>
+<li><p>往右走，可以走到 1.5，这其实就是 <strong>跨到下一个 cell 的 0.5 位置</strong></p>
+</li>
+</ul>
+<p>至此我们就可以明白网络如果预测目标的位置并根据anchor进行预测结果的缩放了。</p>
 <h1 id="anchor-free"><a href="#anchor-free" class="headerlink" title="anchor free"></a>anchor free</h1><p>基于anchor free的目标检测总共有三种方法</p>
 <p>(1)基于角点的anchor free目标检测</p>
 <p>(2)基于中心点的anchor free目标检测算法</p>

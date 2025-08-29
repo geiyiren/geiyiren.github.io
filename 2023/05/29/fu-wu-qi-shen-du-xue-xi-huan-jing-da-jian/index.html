@@ -392,14 +392,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-08-26
+                    2025-08-29
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    476
+                    809
                 </div>
                 
 
@@ -470,7 +470,14 @@ python <span class="token parameter variable">-c</span> <span class="token strin
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">apt</span> update --allow-insecure-repositories<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h1 id="apt-清华源镜像"><a href="#apt-清华源镜像" class="headerlink" title="apt 清华源镜像"></a>apt 清华源镜像</h1><p><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/">ubuntu 清华大学开源软件镜像站</a></p>
-
+<p>root@hopechart:&#x2F;workspace# wget <a target="_blank" rel="noopener" href="https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C">https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C</a><br>–2025-08-28 02:54:29–  <a target="_blank" rel="noopener" href="https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C">https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C</a><br>Resolving keys.openpgp.org (keys.openpgp.org)… 195.201.47.43, 2a01:4f8:1c0c:81be::1<br>Connecting to keys.openpgp.org (keys.openpgp.org)|195.201.47.43|:443… connected.<br>HTTP request sent, awaiting response… 200 OK<br>Length: 854 [application&#x2F;pgp-keys]<br>Saving to: ‘F6ECB3762474EDA9D21B7022871920D1991BC93C’</p>
+<p>F6ECB3762474EDA9D21B7022871920D1991BC93C     100%[&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&gt;]     854  –.-KB&#x2F;s    in 0s      </p>
+<p>2025-08-28 02:54:30 (626 MB&#x2F;s) - ‘F6ECB3762474EDA9D21B7022871920D1991BC93C’ saved [854&#x2F;854]</p>
+<p>root@hopechart:&#x2F;workspace# ls<br>F6ECB3762474EDA9D21B7022871920D1991BC93C<br>root@hopechart:&#x2F;workspace# gpg –import F6ECB3762474EDA9D21B7022871920D1991BC93C<br>gpg: key 871920D1991BC93C: new key but contains no user ID - skipped<br>gpg: Total number processed: 1<br>gpg:           w&#x2F;o user IDs: 1</p>
+<p>export CUDA_DEVICE_ORDER&#x3D;”PCI_BUS_ID”<br>export PYTORCH_NVML_BASED_CUDA_CHECK&#x3D;1<br>export CUDA_VISIBLE_DEVICES&#x3D;0,1</p>
+<p>export OPENBLAS_NUM_THREADS&#x3D;1<br>export OMP_NUM_THREADS&#x3D;1<br>export MKL_NUM_THREADS&#x3D;1</p>
+<h1 id="gt-gt-gt-conda-initialize-gt-gt-gt"><a href="#gt-gt-gt-conda-initialize-gt-gt-gt" class="headerlink" title="&gt;&gt;&gt; conda initialize &gt;&gt;&gt;"></a>&gt;&gt;&gt; conda initialize &gt;&gt;&gt;</h1><h1 id="Contents-within-this-block-are-managed-by-‘conda-init’"><a href="#Contents-within-this-block-are-managed-by-‘conda-init’" class="headerlink" title="!! Contents within this block are managed by ‘conda init’ !!"></a>!! Contents within this block are managed by ‘conda init’ !!</h1><p>__conda_setup&#x3D;”$(‘&#x2F;opt&#x2F;conda&#x2F;bin&#x2F;conda’ ‘shell.bash’ ‘hook’ 2&gt; &#x2F;dev&#x2F;null)”<br>if [ $? -eq 0 ]; then<br>    eval “$__conda_setup”<br>else<br>    if [ -f “&#x2F;opt&#x2F;conda&#x2F;etc&#x2F;profile.d&#x2F;conda.sh” ]; then<br>        . “&#x2F;opt&#x2F;conda&#x2F;etc&#x2F;profile.d&#x2F;conda.sh”<br>    else<br>        export PATH&#x3D;”&#x2F;opt&#x2F;conda&#x2F;bin:$PATH”<br>    fi<br>fi<br>unset __conda_setup</p>
+<h1 id="lt-lt-lt-conda-initialize-lt-lt-lt"><a href="#lt-lt-lt-conda-initialize-lt-lt-lt" class="headerlink" title="&lt;&lt;&lt; conda initialize &lt;&lt;&lt;"></a>&lt;&lt;&lt; conda initialize &lt;&lt;&lt;</h1>
                 
             </div>
             <hr/>

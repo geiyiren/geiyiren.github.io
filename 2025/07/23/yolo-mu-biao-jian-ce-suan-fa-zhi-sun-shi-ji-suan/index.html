@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-02
+                    2025-09-04
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    5.3k
+                    7k
                 </div>
                 
 
@@ -820,7 +820,8 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 <p>通过这一行源码可以看出yolov5默认使用CIoU进行预测框的损失计算</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">lbox <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>通过这一行源码可以看出yolov5将每一张图像的所有预测框的iou求了均值作为该图像的目标框推理损失，因为一个图像中可能有多个目标。突然想起来，模型推理的时候batch size设置为256，那么同时会推理256张图像的，也就是说这里的iou是当前batch的256张图像同时推理得到结果进行求均值得到的标量<code>lbox</code>。那这里可能就是batch size对训练影响的源头：</p>
+<p>通过这一行源码可以看出yolov5将每一张图像的所有预测框的iou求了均值作为该图像的目标框推理损失，因为一个图像中可能有多个目标。</p>
+<p>模型推理的时候batch size设置为256，那么同时会推理256张图像的，也就是说这里的iou是当前batch的256张图像同时推理得到结果进行求均值得到的标量<code>lbox</code>。那这里可能就是batch size对训练影响的源头：</p>
 <ul>
 <li><p>推理单张图：</p>
 <ul>
@@ -834,21 +835,157 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 </li>
 <li><p>batch 训练：</p>
 <ul>
-<li><p>平均到整个 batch</p>
-</li>
-<li><p>对应梯度是 batch 上的整体平均</p>
-</li>
-<li><p>优势是稳定和高效，缺点是掩盖单图差异，可以避免极端目标的loss对梯度的回传造成影响</p>
-</li>
+<li>平均到整个 batch</li>
+<li>对应梯度是 batch 上的整体平均</li>
+<li>优势是稳定和高效，缺点是掩盖单图差异，可以避免极端目标的loss对梯度的回传造成影响</li>
 </ul>
 </li>
 </ul>
-<p>pbox和tbox是怎么匹配上的？预测到的但是标签中没有的目标框怎么计算iou：</p>
-<p>首先回答第一个问题，这个匹配方法在<code>loss.py</code>的<code>build_targets</code>函数中实现的，后面单独分析。</p>
-<p>第二个问题，这里计算IoU loss时候其实不计算匹配不到的目标框的，包括漏检和误检。这一点可以从<code>build_targets</code>函数中可以看出:</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">indices<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span> a<span class="token punctuation">,</span> gj<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> shape<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> gi<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> shape<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>再看<code>bbox_iou</code>函数的输入数据是什么样子的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span>box1<span class="token punctuation">,</span> box2<span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> GIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> DIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> eps<span class="token operator">=</span><span class="token number">1e-7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Returns Intersection over Union (IoU) of box1(1,4) to box2(n,4)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p>这里返回了预测框和标签框是成对的，另外计算iou时传入的也是成对的匹配结果，在实际计算的时候也没有对漏检和误检的iou进行计算。</p>
+<p>可以看出这里如果预测框有一个，但是标签框就是多个，也就是说预测框会和所有适合该分支的标签框(后面说明如何为每个分支挑选合适的标签框…)进行Iou计算，漏检和误检的iou会是0，box loss就会比较大。实际每个分支不会只预测一个框，也就是说box1的维度为(m,4),box2的维度为(n,4)，得到的iou的维度为(m,n)。</p>
+<p><strong>yolo为了不同的分支可以预测不同尺度的目标，他是怎么通过loss实现的？</strong></p>
+<p>首先需要将标签框转换到不同的尺寸，然后根据大小为不同分支分配不同的标签框用于计算损失，具体方法可以分为：尺度变化和标签分配：</p>
+<hr>
+<p><strong>首先来看尺度变换是如果进行的？</strong></p>
+<p>这里还有一个疑问，特征图其实不是图，也就是是说特征图上不能直接绘制目标框，也不是原图缩放指定倍率后得到的缩放图，而是一个多维张量，其中存贮了想要的预测结果。那yolo为什么要将标签框映射到不同的特征图尺寸下进行box loss计算，其实这里特征图的w,h不仅仅表示预测框的个数，也表示网格尺寸。特征图像的shape为(batch, anchors_per_cell, grid_h, grid_w, channels)，那么对于任意输入的一张待检测图像而言，可以得到的框的个数为<code>anchors_per_cell * grid_h * grid_w</code>，而每个框的参数为<code>channels</code>个，一般包括<code>x,y,w,h,box_score,label_1_scoer,...</code>。</p>
+<p>另一方面，yolo的设计初衷是为了让不同的分支得到不同尺度的预测框，这个尺度和分支的配合就是通过loss来控制的，前面的分支进行小目标检测，后面的分支进行大目标检测。</p>
+<blockquote>
+<p>…为什么小目标要在前面的分支进行计算？每次降采样其实是对特征的融合，比如开始时图像为480*288，物体站中间的64x64个像素，随着降采样，这64x64个像素逐渐变为8x8，然后逐级变小，甚至不足1x1，后面的分支获得来自物体所在区域的像素特征的影响越来越少，但获得来自全局的信息越来越多(这就是感受野变大了)。当然每次降采样不是简单的使用类似均值这样的直观特征进行简化物体特征的，而是一个可以学习的矩阵参数，这些参数将在训练过程中逐渐生成。换句话说，降采样就是将图像矩阵按照指定的步长和一个可以学习的卷积核进行卷积操作。那么随着降采样的不断进行，后面分支的特征图中存储的来自物体本身的像素信息越来越少，因此才要使用降采样倍率低的特征图像预测小目标，因为这里可以更多的获得物体本身的信息。</p>
+</blockquote>
+<p>那么这里的grid_h * grid_w也可以被认为是图像的大小，可以理解为在尺寸为grid_h * grid_w的图像上绘制目标框，以特征图像上的每个’’像素”为框的左上角，绘制若干个大小不一的框，这些框中都以一定的概率框中目标，这个概率就是box score。后面的分支特征图越来越小，每两个”像素”之间的距离在原图上的对应距离也越远了，此时绘制框也要更大，要不绘制框的个数有限的情况下，所有的框无法覆盖整个图像，也就是说框会很稀疏，会有很多地方没有框，因此后面的分支特征图在变小，anchor框的尺寸在增大。</p>
+<blockquote>
+<p>注意这里的anchor已经被缩放了，模型训练的时候给的anchor是相对于输入图像的，这里需要缩放到对应特征图上进行绘制。</p>
+</blockquote>
+<p>这里看下代码中是如何对目标框进行缩放的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">build_targets</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> p<span class="token punctuation">,</span> targets<span class="token punctuation">)</span><span class="token punctuation">:</span> 
+    <span class="token comment">#省略无关代码</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>nl<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            anchors<span class="token punctuation">,</span> shape <span class="token operator">=</span> self<span class="token punctuation">.</span>anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> p<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>shape
+            gain<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span>shape<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">]</span>  <span class="token comment"># xyxy gain</span>
+
+            <span class="token comment"># Match targets to anchors</span>
+            t <span class="token operator">=</span> targets <span class="token operator">*</span> gain  <span class="token comment"># shape(3,n,7)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里的<code>self.anchors[i]</code>是对应特征尺度下的anchor,<code>shape</code>为对应分支特征图的尺寸，第2维为$w$,第三维为$h$,<code>gain[2:6]</code>中存储的是标签框的$[x,y,w,h]$的缩放系数: 特征图的$[w,h,w,h]$，即：$x,w$缩放倍数为特征图的$w$，$y,h$缩放倍数为特征图的$h$。这样得到的<code>t[..., 4:6]</code>就是标签框在特征图尺度下的$w,h$。</p>
+<hr>
+<p><strong>然后看如何将大目标标签分配给后面的分支，把小目标标签框分配给前面的分支的，这就是标签分配：</strong></p>
+<p>在<code>loss.py</code>的<code>build_targets</code>函数中将标签坐标转换为不同的anchor中，便于后面与不同分支的各个anchor对应的框进行IoU计算，其实没有匹配过程，这里是是直接计算的匹配损失，即一个检测框和所有标签框计算损失，然后求平均得到这个batch的损失，那么漏检和误检在这里计算的IOU都为0。那如果全为漏检，则iou为0,如果全为误检，那么iou也为0，二者对损失的贡献是相同的。</p>
+<p>在<code>build_targets</code>也做了对应的过滤，方法如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">build_targets</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> p<span class="token punctuation">,</span> targets<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 省略不相关代码</span>
+    <span class="token comment"># Matches</span>
+    r <span class="token operator">=</span> t<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">:</span><span class="token number">6</span><span class="token punctuation">]</span> <span class="token operator">/</span> anchors<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span>  <span class="token comment"># wh ratio</span>
+    j <span class="token operator">=</span> torch<span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span>r<span class="token punctuation">,</span> <span class="token number">1</span> <span class="token operator">/</span> r<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> self<span class="token punctuation">.</span>hyp<span class="token punctuation">[</span><span class="token string">'anchor_t'</span><span class="token punctuation">]</span>  <span class="token comment"># compare</span>
+    <span class="token comment"># j = wh_iou(anchors, t[:, 4:6]) > model.hyp['iou_t']  # iou(3,n)=wh_iou(anchors(3,2), gwh(n,2))</span>
+    t <span class="token operator">=</span> t<span class="token punctuation">[</span>j<span class="token punctuation">]</span>  <span class="token comment"># filter</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>标签框的尺寸大于<code>anchor</code>的尺寸，$r&gt;1&#x2F;r$，条件为：<br>$$<br>r&lt;anchor_t \\<br>\frac{label_{wh}}{anchor_{wh}}&lt;anchor_t \\<br>label_{wh}&lt;anchor_t \cdot anchor_t<br>$$</p>
+</li>
+<li><p>标签框的尺寸小于<code>anchor</code>的尺寸，$r&lt;1&#x2F;r$，条件为：<br>$$<br>1&#x2F;r&lt;anchor_t \\<br>\frac{anchor_{wh}}{label_{wh}}&lt;anchor_t \\<br>\frac{anchor_{wh}}{anchor_t} &lt;label_{wh}\\<br>$$</p>
+</li>
+</ul>
+<p>综上可得：<br>$$<br>\frac{anchor_{wh}}{anchor_t} &lt;label_{wh}&lt;anchor_t \cdot anchor_t<br>$$</p>
+<p>以输入特征图为480*288，anchor_t &#x3D;4.0为例，标签框在不同分支的分布如下：</p>
+<table>
+<thead>
+<tr>
+<th>特征层</th>
+<th>anchors (w,h)</th>
+<th>分辨率</th>
+<th>stride</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P3&#x2F;8</td>
+<td>(5,5), (5,11), (10,8)</td>
+<td>480×288 &#x2F; 8 &#x3D; 60×36</td>
+<td>8</td>
+</tr>
+<tr>
+<td>P4&#x2F;16</td>
+<td>(17,14), (12,28), (30,23)</td>
+<td>480×288 &#x2F; 16 &#x3D; 30×18</td>
+<td>16</td>
+</tr>
+<tr>
+<td>P5&#x2F;32</td>
+<td>(33,66), (60,44), (98,108)</td>
+<td>480×288 &#x2F; 32 &#x3D; 15×9</td>
+<td>32</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>特征层</th>
+<th>Anchor (w,h)</th>
+<th>标签框最小尺寸</th>
+<th>标签框最大尺寸 (anchor_t&#x3D;4)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P3&#x2F;8</td>
+<td>(5,5)</td>
+<td>1 × 1</td>
+<td>20 × 20</td>
+</tr>
+<tr>
+<td>P3&#x2F;8</td>
+<td>(5,11)</td>
+<td>1 × 2</td>
+<td>20 × 44</td>
+</tr>
+<tr>
+<td>P3&#x2F;8</td>
+<td>(10,8)</td>
+<td>2 × 2</td>
+<td>40 × 32</td>
+</tr>
+<tr>
+<td>P4&#x2F;16</td>
+<td>(17,14)</td>
+<td>4 × 3</td>
+<td>68 × 56</td>
+</tr>
+<tr>
+<td>P4&#x2F;16</td>
+<td>(12,28)</td>
+<td>3 × 7</td>
+<td>48 × 112</td>
+</tr>
+<tr>
+<td>P4&#x2F;16</td>
+<td>(30,23)</td>
+<td>7 × 5</td>
+<td>120 × 92</td>
+</tr>
+<tr>
+<td>P5&#x2F;32</td>
+<td>(33,66)</td>
+<td>8 × 16</td>
+<td>132 × 264</td>
+</tr>
+<tr>
+<td>P5&#x2F;32</td>
+<td>(60,44)</td>
+<td>15 × 11</td>
+<td>240 × 176</td>
+</tr>
+<tr>
+<td>P5&#x2F;32</td>
+<td>(98,108)</td>
+<td>24 × 27</td>
+<td>392 × 432</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>这里的尺寸都是相对于输入图像的尺寸480x288的</p>
+</blockquote>
+<p>看这个表可以看出，anchor的设置直接决定了哪些分支可以预测什么尺寸的目标，在冻结层进行训练时具有较好的参考意义。</p>
 <h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>首先看下什么是二元交叉熵损失：</p>
 <p><strong><code>nn.BCEWithLogitsLoss</code></strong></p>
 <ul>
@@ -887,7 +1024,7 @@ tobj<span class="token punctuation">[</span>b<span class="token punctuation">,</
 obji <span class="token operator">=</span> self<span class="token punctuation">.</span>BCEobj<span class="token punctuation">(</span>pi<span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> tobj<span class="token punctuation">)</span>
 lobj <span class="token operator">+=</span> obji <span class="token operator">*</span> self<span class="token punctuation">.</span>balance<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># obj loss</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>其中tobj为根据Iou得到的标签中对应的各个gride是否有目标的0-1矩阵，这里作为交叉熵损失的$y$进行输入。</p>
+<p>其中tobj为根据Iou得到的标签中对应的各个gride是否有目标的0-1矩阵，iou大于0说明对应标签框的位置有预测目标框，iou&#x3D;0的位置说明对应标签框的位置没有预测目标框，就是漏检。这里作为交叉熵损失的$y$进行输入。</p>
 <p><code>pi[..., 4]</code>表示box的位置置信度，<code>pi</code>中存储的元素如下所示：</p>
 <ul>
 <li><code>pi[..., 0:4]</code> → 边界框 (bbox) 的偏移量或参数</li>

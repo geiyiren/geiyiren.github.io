@@ -392,14 +392,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-04
+                    2025-09-11
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    809
+                    850
                 </div>
                 
 
@@ -424,7 +424,87 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="torch-cuda-is-available-x3D-False"><a href="#torch-cuda-is-available-x3D-False" class="headerlink" title="torch.cuda.is_available()&#x3D;False"></a>torch.cuda.is_available()&#x3D;False</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"CUDA 是否可用:"</span><span class="token punctuation">,</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <h2 id="apt-镜像源"><a href="#apt-镜像源" class="headerlink" title="apt 镜像源"></a>apt 镜像源</h2><h3 id="清华源"><a href="#清华源" class="headerlink" title="清华源"></a>清华源</h3><p><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/">ubuntu 清华大学开源软件镜像站</a></p>
+<h3 id="阿里源"><a href="#阿里源" class="headerlink" title="阿里源"></a>阿里源</h3><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/mirror/ubuntu?spm=a2c6h.13651102.0.0.304d1b11sHO6vA">ubuntu 阿里巴巴开源镜像站</a></p>
+<ul>
+<li>ubuntu 20.04</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"deb https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse
+
+# deb https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
+# deb-src https://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse
+
+deb https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse
+deb-src https://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse"</span> <span class="token operator">></span> /etc/apt/sources.list<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="conda安装"><a href="#conda安装" class="headerlink" title="conda安装"></a>conda安装</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 安装目录创建</span>
+<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> ~/miniconda3
+<span class="token comment"># 下载[/wsy_10/6_docker/Miniconda3-latest-Linux-x86_64.sh]</span>
+<span class="token function">wget</span> https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh <span class="token parameter variable">-O</span> ~/miniconda3/miniconda.sh
+<span class="token comment"># 安装</span>
+<span class="token function">bash</span> Miniconda3-latest-Linux-x86_64.sh <span class="token parameter variable">-b</span> <span class="token parameter variable">-u</span> <span class="token parameter variable">-p</span> ~/miniconda3
+<span class="token comment"># 激活</span>
+<span class="token builtin class-name">source</span> ~/miniconda3/bin/activate
+<span class="token comment"># 初始化</span>
+conda init <span class="token parameter variable">--all</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>qignhua</li>
+</ul>
+<h2 id="torch安装"><a href="#torch安装" class="headerlink" title="torch安装"></a>torch安装</h2><ul>
+<li><p>官网安装指令</p>
+<p><a target="_blank" rel="noopener" href="https://pytorch.org/get-started/previous-versions/">Previous PyTorch Versions</a></p>
+</li>
+<li><p>GPU可用性检查</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">python <span class="token parameter variable">-c</span> <span class="token string">"import torch;print(torch.cuda.is_available());"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h2 id="gcc安装"><a href="#gcc安装" class="headerlink" title="gcc安装"></a>gcc安装</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">apt</span> <span class="token function">install</span> gcc-9 g++-9 <span class="token parameter variable">-y</span>
+
+<span class="token comment"># 配置系统默认 gcc / g++</span>
+update-alternatives <span class="token parameter variable">--install</span> /usr/bin/gcc gcc /usr/bin/gcc-9 <span class="token number">90</span>
+update-alternatives <span class="token parameter variable">--install</span> /usr/bin/g++ g++ /usr/bin/g++-9 <span class="token number">90</span>
+
+update-alternatives <span class="token parameter variable">--config</span> gcc
+update-alternatives <span class="token parameter variable">--config</span> g++
+
+gcc <span class="token parameter variable">--version</span>
+g++ <span class="token parameter variable">--version</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="cuda安装"><a href="#cuda安装" class="headerlink" title="cuda安装"></a>cuda安装</h2><ul>
+<li><p>下载</p>
+<p><a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-toolkit-archive">CUDA Toolkit Archive | NVIDIA Developer</a></p>
+</li>
+<li><p>安装</p>
+</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./cuda_xx.x.run
+<span class="token builtin class-name">echo</span> <span class="token string">'export PATH=/usr/local/cuda-12.4/bin:$PATH'</span> <span class="token operator">>></span> ~/.bashrc
+<span class="token builtin class-name">echo</span> <span class="token string">'export LD_LIBRARY_PATH=/usr/local/cuda-12.4/lib64:$LD_LIBRARY_PATH'</span> <span class="token operator">>></span> ~/.bashrc
+<span class="token builtin class-name">source</span> ~/.bashrc
+nvcc <span class="token parameter variable">--version</span>
+nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="nvidia驱动安装"><a href="#nvidia驱动安装" class="headerlink" title="nvidia驱动安装"></a>nvidia驱动安装</h2><ul>
+<li>下载</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://www.nvidia.com/en-us/drivers/">Download The Official NVIDIA Drivers | NVIDIA</a></p>
+<ul>
+<li>安装</li>
+</ul>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./NVIDIA-Linux-x86_64-xxx.xxx.xxx.run<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<h2 id="常见问题与解决办法"><a href="#常见问题与解决办法" class="headerlink" title="常见问题与解决办法"></a>常见问题与解决办法</h2><h3 id="torch-cuda-is-available-x3D-False"><a href="#torch-cuda-is-available-x3D-False" class="headerlink" title="torch.cuda.is_available()&#x3D;False"></a>torch.cuda.is_available()&#x3D;False</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"CUDA 是否可用:"</span><span class="token punctuation">,</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
 <span class="token operator">/</span>opt<span class="token operator">/</span>conda<span class="token operator">/</span>lib<span class="token operator">/</span>python3<span class="token punctuation">.</span><span class="token number">11</span><span class="token operator">/</span>site<span class="token operator">-</span>packages<span class="token operator">/</span>torch<span class="token operator">/</span>cuda<span class="token operator">/</span>__init__<span class="token punctuation">.</span>py<span class="token punctuation">:</span><span class="token number">182</span><span class="token punctuation">:</span> UserWarning<span class="token punctuation">:</span> CUDA initialization<span class="token punctuation">:</span> Unexpected error <span class="token keyword">from</span> cudaGetDeviceCount<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span> Did you run some cuda functions before calling NumCudaDevices<span class="token punctuation">(</span><span class="token punctuation">)</span> that might have already <span class="token builtin">set</span> an error? Error <span class="token number">304</span><span class="token punctuation">:</span> OS call failed <span class="token keyword">or</span> operation <span class="token keyword">not</span> supported on this OS <span class="token punctuation">(</span>Triggered internally at <span class="token operator">/</span>pytorch<span class="token operator">/</span>c10<span class="token operator">/</span>cuda<span class="token operator">/</span>CUDAFunctions<span class="token punctuation">.</span>cpp<span class="token punctuation">:</span><span class="token number">109.</span><span class="token punctuation">)</span>
 <span class="token keyword">return</span> torch<span class="token punctuation">.</span>_C<span class="token punctuation">.</span>_cuda_getDeviceCount<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span>
 CUDA 是否可用<span class="token punctuation">:</span> <span class="token boolean">False</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
@@ -466,18 +546,14 @@ python <span class="token parameter variable">-c</span> <span class="token strin
 </li>
 <li><strong>应用场景</strong>：多用户或多任务共享服务器时，限制某个程序使用特定 GPU，避免占满全部显卡。</li>
 </ul>
-<h1 id="apt-update-报错NO-PUBKEY"><a href="#apt-update-报错NO-PUBKEY" class="headerlink" title="apt update 报错NO_PUBKEY"></a>apt update 报错<code>NO_PUBKEY</code></h1><p>apt 忽略key缺失警告</p>
+<h3 id="apt-update-报错NO-PUBKEY"><a href="#apt-update-报错NO-PUBKEY" class="headerlink" title="apt update 报错NO_PUBKEY"></a>apt update 报错<code>NO_PUBKEY</code></h3><p>apt 忽略key缺失警告</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">apt</span> update --allow-insecure-repositories<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h1 id="apt-清华源镜像"><a href="#apt-清华源镜像" class="headerlink" title="apt 清华源镜像"></a>apt 清华源镜像</h1><p><a target="_blank" rel="noopener" href="https://mirror.tuna.tsinghua.edu.cn/help/ubuntu/">ubuntu 清华大学开源软件镜像站</a></p>
-<p>root@hopechart:&#x2F;workspace# wget <a target="_blank" rel="noopener" href="https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C">https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C</a><br>–2025-08-28 02:54:29–  <a target="_blank" rel="noopener" href="https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C">https://keys.openpgp.org/vks/v1/by-fingerprint/F6ECB3762474EDA9D21B7022871920D1991BC93C</a><br>Resolving keys.openpgp.org (keys.openpgp.org)… 195.201.47.43, 2a01:4f8:1c0c:81be::1<br>Connecting to keys.openpgp.org (keys.openpgp.org)|195.201.47.43|:443… connected.<br>HTTP request sent, awaiting response… 200 OK<br>Length: 854 [application&#x2F;pgp-keys]<br>Saving to: ‘F6ECB3762474EDA9D21B7022871920D1991BC93C’</p>
-<p>F6ECB3762474EDA9D21B7022871920D1991BC93C     100%[&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&gt;]     854  –.-KB&#x2F;s    in 0s      </p>
-<p>2025-08-28 02:54:30 (626 MB&#x2F;s) - ‘F6ECB3762474EDA9D21B7022871920D1991BC93C’ saved [854&#x2F;854]</p>
-<p>root@hopechart:&#x2F;workspace# ls<br>F6ECB3762474EDA9D21B7022871920D1991BC93C<br>root@hopechart:&#x2F;workspace# gpg –import F6ECB3762474EDA9D21B7022871920D1991BC93C<br>gpg: key 871920D1991BC93C: new key but contains no user ID - skipped<br>gpg: Total number processed: 1<br>gpg:           w&#x2F;o user IDs: 1</p>
-<p>export CUDA_DEVICE_ORDER&#x3D;”PCI_BUS_ID”<br>export PYTORCH_NVML_BASED_CUDA_CHECK&#x3D;1<br>export CUDA_VISIBLE_DEVICES&#x3D;0,1</p>
-<p>export OPENBLAS_NUM_THREADS&#x3D;1<br>export OMP_NUM_THREADS&#x3D;1<br>export MKL_NUM_THREADS&#x3D;1</p>
-<h1 id="gt-gt-gt-conda-initialize-gt-gt-gt"><a href="#gt-gt-gt-conda-initialize-gt-gt-gt" class="headerlink" title="&gt;&gt;&gt; conda initialize &gt;&gt;&gt;"></a>&gt;&gt;&gt; conda initialize &gt;&gt;&gt;</h1><h1 id="Contents-within-this-block-are-managed-by-‘conda-init’"><a href="#Contents-within-this-block-are-managed-by-‘conda-init’" class="headerlink" title="!! Contents within this block are managed by ‘conda init’ !!"></a>!! Contents within this block are managed by ‘conda init’ !!</h1><p>__conda_setup&#x3D;”$(‘&#x2F;opt&#x2F;conda&#x2F;bin&#x2F;conda’ ‘shell.bash’ ‘hook’ 2&gt; &#x2F;dev&#x2F;null)”<br>if [ $? -eq 0 ]; then<br>    eval “$__conda_setup”<br>else<br>    if [ -f “&#x2F;opt&#x2F;conda&#x2F;etc&#x2F;profile.d&#x2F;conda.sh” ]; then<br>        . “&#x2F;opt&#x2F;conda&#x2F;etc&#x2F;profile.d&#x2F;conda.sh”<br>    else<br>        export PATH&#x3D;”&#x2F;opt&#x2F;conda&#x2F;bin:$PATH”<br>    fi<br>fi<br>unset __conda_setup</p>
-<h1 id="lt-lt-lt-conda-initialize-lt-lt-lt"><a href="#lt-lt-lt-conda-initialize-lt-lt-lt" class="headerlink" title="&lt;&lt;&lt; conda initialize &lt;&lt;&lt;"></a>&lt;&lt;&lt; conda initialize &lt;&lt;&lt;</h1>
+<h3 id="pip域名解析异常"><a href="#pip域名解析异常" class="headerlink" title="pip域名解析异常"></a>pip域名解析异常</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"nameserver 8.8.8.8"</span> <span class="token operator">></span> /etc/resolv.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+
                 
             </div>
             <hr/>

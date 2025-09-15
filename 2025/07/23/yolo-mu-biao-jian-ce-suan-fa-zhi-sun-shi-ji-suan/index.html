@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-12
+                    2025-09-15
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    11.3k
+                    13k
                 </div>
                 
 
@@ -764,53 +764,43 @@
 <tr>
 <th>张量名称</th>
 <th>Shape</th>
-<th>维度解释 &#x2F; 含义</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>pred_scores</code></td>
 <td><code>[16, 4725, 1]</code></td>
-<td>预测分类分数，batch_size&#x3D;16，每张图 4725 个 anchor，每个 anchor 1 个分数（二分类）</td>
 </tr>
 <tr>
 <td><code>pred_bboxes</code></td>
 <td><code>[16, 4725, 4]</code></td>
-<td>预测框坐标，batch_size&#x3D;16，每张图 4725 个 anchor，每个 anchor 4 个坐标 <code>[x1,y1,x2,y2]</code></td>
 </tr>
 <tr>
 <td><code>anchor_points</code></td>
 <td><code>[4725, 2]</code></td>
-<td>anchor 的中心点坐标，每张图 4725 个 anchor</td>
 </tr>
 <tr>
 <td><code>gt_labels</code></td>
 <td><code>[16, 7, 1]</code></td>
-<td>每张图最多 7 个 GT 框的类别标签，batch_size&#x3D;16</td>
 </tr>
 <tr>
 <td><code>gt_bboxes</code></td>
 <td><code>[16, 7, 4]</code></td>
-<td>每张图最多 7 个 GT 框坐标，batch_size&#x3D;16</td>
 </tr>
 <tr>
 <td><code>mask_gt</code></td>
 <td><code>[16, 7, 1]</code></td>
-<td>GT 框有效性掩码，标记哪些 GT 框存在</td>
 </tr>
 <tr>
 <td><code>target_bboxes</code></td>
 <td><code>[16, 4725, 4]</code></td>
-<td>每个 anchor 对应的目标框（经过匹配后），batch_size&#x3D;16</td>
 </tr>
 <tr>
 <td><code>target_scores</code></td>
 <td><code>[16, 4725, 1]</code></td>
-<td>每个 anchor 对应的目标分数（匹配后的 GT 类别概率）</td>
 </tr>
 <tr>
 <td><code>fg_mask</code></td>
 <td><code>[16, 4725]</code></td>
-<td>前景掩码，标记哪些 anchor 被选为正样本</td>
 </tr>
 </tbody></table>
 <p>然后看一下具体是如何实现的，整体过程如下所示：</p>
@@ -835,7 +825,196 @@
         <span class="token keyword">return</span> target_labels<span class="token punctuation">,</span> target_bboxes<span class="token punctuation">,</span> target_scores<span class="token punctuation">,</span> fg_mask<span class="token punctuation">.</span><span class="token builtin">bool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> target_gt_idx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>首先是<code>get_pos_mask</code>函数：</p>
-<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box  loss"></a>box  loss</h3><p>这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_pos_mask</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pd_scores<span class="token punctuation">,</span> pd_bboxes<span class="token punctuation">,</span> gt_labels<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> anc_points<span class="token punctuation">,</span> mask_gt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    mask_in_gts <span class="token operator">=</span> self<span class="token punctuation">.</span>select_candidates_in_gts<span class="token punctuation">(</span>anc_points<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">)</span>
+    <span class="token comment"># Get anchor_align metric, (b, max_num_obj, h*w)</span>
+    align_metric<span class="token punctuation">,</span> overlaps <span class="token operator">=</span> self<span class="token punctuation">.</span>get_box_metrics<span class="token punctuation">(</span>pd_scores<span class="token punctuation">,</span> pd_bboxes<span class="token punctuation">,</span> gt_labels<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> mask_in_gts <span class="token operator">*</span> mask_gt<span class="token punctuation">)</span>
+    <span class="token comment"># Get topk_metric mask, (b, max_num_obj, h*w)</span>
+    mask_topk <span class="token operator">=</span> self<span class="token punctuation">.</span>select_topk_candidates<span class="token punctuation">(</span>align_metric<span class="token punctuation">,</span> topk_mask<span class="token operator">=</span>mask_gt<span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>topk<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">bool</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># Merge all mask to a final mask, (b, max_num_obj, h*w)</span>
+    mask_pos <span class="token operator">=</span> mask_topk <span class="token operator">*</span> mask_in_gts <span class="token operator">*</span> mask_gt
+
+    <span class="token keyword">return</span> mask_pos<span class="token punctuation">,</span> align_metric<span class="token punctuation">,</span> overlaps<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后分别分析<code>select_candidates_in_gts</code>函数、<code>get_box_metrics</code>函数、<code>select_topk_candidates</code>函数分别做了什么：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">select_candidates_in_gts</span><span class="token punctuation">(</span>xy_centers<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> eps<span class="token operator">=</span><span class="token number">1e-9</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    n_anchors <span class="token operator">=</span> xy_centers<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    bs<span class="token punctuation">,</span> n_boxes<span class="token punctuation">,</span> _ <span class="token operator">=</span> gt_bboxes<span class="token punctuation">.</span>shape
+    lt<span class="token punctuation">,</span> rb <span class="token operator">=</span> gt_bboxes<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">.</span>chunk<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>  <span class="token comment"># left-top, right-bottom</span>
+    bbox_deltas <span class="token operator">=</span> torch<span class="token punctuation">.</span>cat<span class="token punctuation">(</span><span class="token punctuation">(</span>xy_centers<span class="token punctuation">[</span><span class="token boolean">None</span><span class="token punctuation">]</span> <span class="token operator">-</span> lt<span class="token punctuation">,</span> rb <span class="token operator">-</span> xy_centers<span class="token punctuation">[</span><span class="token boolean">None</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>bs<span class="token punctuation">,</span> n_boxes<span class="token punctuation">,</span> n_anchors<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> bbox_deltas<span class="token punctuation">.</span>amin<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span>gt_<span class="token punctuation">(</span>eps<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里的<code>xy_centers</code>是特征图上每个<code>gride</code>的中心点，这里叫<code>anchor</code>中心点，<code>gt_bboxes</code>中存储的是标签框的<code>(x1,y1),(x2,y2)</code>,即：左上顶点和右下顶点，如果一个点在坐标在标签框的内部，这这个点必定满足：</p>
+<ul>
+<li>(这个点的坐标-标签框左上顶点坐标) 的值为负值或小于小于很小的值</li>
+<li>(标签框右下顶点坐标-这个点的坐标) 的值为负值或小于小于很小的值</li>
+</ul>
+<p>因此，这里的<code>torch.cat</code>后为$\Delta x_1,\Delta y_1,\Delta x_2,\Delta y_2$，也是维度变换后的第3维，故<code>bbox_deltas.amin(3)</code>就是求这些$\Delta$d的最小值都比很小的值大，说明这些<code>anchor</code>的中心点都在标签框内。</p>
+<p><mark>select_candidates_in_gts函数得到的是一个0，1矩阵，1表示对应的anchor中心点在标签框内部</mark></p>
+<p>然后再看<code>get_box_metrics</code>函数：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_box_metrics</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pd_scores<span class="token punctuation">,</span> pd_bboxes<span class="token punctuation">,</span> gt_labels<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> mask_gt<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    na <span class="token operator">=</span> pd_bboxes<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>
+    mask_gt <span class="token operator">=</span> mask_gt<span class="token punctuation">.</span><span class="token builtin">bool</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj, h*w</span>
+    overlaps <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> na<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>pd_bboxes<span class="token punctuation">.</span>dtype<span class="token punctuation">,</span> device<span class="token operator">=</span>pd_bboxes<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+    bbox_scores <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> na<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>pd_scores<span class="token punctuation">.</span>dtype<span class="token punctuation">,</span> device<span class="token operator">=</span>pd_scores<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+
+    ind <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">)</span>  <span class="token comment"># 2, b, max_num_obj</span>
+    ind<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>end<span class="token operator">=</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+    ind<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> gt_labels<span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+    <span class="token comment"># Get the scores of each grid for each gt cls</span>
+    bbox_scores<span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span> <span class="token operator">=</span> pd_scores<span class="token punctuation">[</span>ind<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> ind<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>  <span class="token comment"># b, max_num_obj, h*w</span>
+
+    <span class="token comment"># (b, max_num_obj, 1, 4), (b, 1, h*w, 4)</span>
+    pd_boxes <span class="token operator">=</span> pd_bboxes<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>n_max_boxes<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>
+    gt_boxes <span class="token operator">=</span> gt_bboxes<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> na<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span>
+    overlaps<span class="token punctuation">[</span>mask_gt<span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>iou_calculation<span class="token punctuation">(</span>gt_boxes<span class="token punctuation">,</span> pd_boxes<span class="token punctuation">)</span>
+
+    align_metric <span class="token operator">=</span> bbox_scores<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>alpha<span class="token punctuation">)</span> <span class="token operator">*</span> overlaps<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>beta<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> align_metric<span class="token punctuation">,</span> overlaps<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先要知道这里使用的读了指标的计算公式，根据代码可以看出计算公式如下：<br>$$<br>metric&#x3D;box_score^{\alpha}*IoU^{\beta}<br>$$<br>这里似乎是综合考虑了网络预测框的置信度和预测框与标签框的IoU值来得到框的预测精度指标，那么为什么这么做：</p>
+<p>在目标检测中，匹配正负样本时，如果只看 <strong>IoU</strong>：</p>
+<ul>
+<li>可能选到和 GT 位置重叠高，但box预测分数很低或错误的框。</li>
+</ul>
+<p>如果只看 <strong>分类得分</strong>：</p>
+<ul>
+<li>可能box预测分数高，但位置和 GT 偏差很大的框。</li>
+</ul>
+<p>所以，需要一个 <strong>同时考虑分类和定位的指标</strong>，这就是 alignment metric。</p>
+<ul>
+<li><p>当 $\alpha &gt; 1$：box预测准确性占比更大，弱化了 IoU 的影响。</p>
+</li>
+<li><p>当 $\alpha &lt; 1$：放大了低box预测分数的影响，减少box预测偏差对匹配的负面作用。</p>
+</li>
+<li><p>当 $\beta &gt; 1$：更强调定位精度（IoU 高的框更容易被选中）。</p>
+</li>
+<li><p>当 $\beta &lt; 1$：允许 IoU 不高但box预测分数高的框被选中。</p>
+</li>
+</ul>
+<p>在实际代码中：$\alpha&#x3D;0.5,\beta&#x3D;6.0$，这就说明这里更加强调使用IoU作为预测精度的评估，但如果IoU很小，预测框的分数很高的情况下这个对齐指标不至于太低。至于这里使用二者指标的乘积是为了让任意一个指标近乎为0是，最终的对齐指标也接近0。</p>
+<p><mark>get_box_metrics函数得到的是一个两个预测框的精度值：IoU和对齐指标</mark></p>
+<p>最后看<code>select_topk_candidates</code>函数：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">select_topk_candidates</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> metrics<span class="token punctuation">,</span> topk_mask<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># (b, max_num_obj, topk)</span>
+    topk_metrics<span class="token punctuation">,</span> topk_idxs <span class="token operator">=</span> torch<span class="token punctuation">.</span>topk<span class="token punctuation">(</span>metrics<span class="token punctuation">,</span> self<span class="token punctuation">.</span>topk<span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> largest<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">if</span> topk_mask <span class="token keyword">is</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        topk_mask <span class="token operator">=</span> <span class="token punctuation">(</span>topk_metrics<span class="token punctuation">.</span><span class="token builtin">max</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">></span> self<span class="token punctuation">.</span>eps<span class="token punctuation">)</span><span class="token punctuation">.</span>expand_as<span class="token punctuation">(</span>topk_idxs<span class="token punctuation">)</span>
+    <span class="token comment"># (b, max_num_obj, topk)</span>
+    topk_idxs<span class="token punctuation">.</span>masked_fill_<span class="token punctuation">(</span><span class="token operator">~</span>topk_mask<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># (b, max_num_obj, topk, h*w) -> (b, max_num_obj, h*w)</span>
+    count_tensor <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>metrics<span class="token punctuation">.</span>shape<span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span>int8<span class="token punctuation">,</span> device<span class="token operator">=</span>topk_idxs<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+    ones <span class="token operator">=</span> torch<span class="token punctuation">.</span>ones_like<span class="token punctuation">(</span>topk_idxs<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span>int8<span class="token punctuation">,</span> device<span class="token operator">=</span>topk_idxs<span class="token punctuation">.</span>device<span class="token punctuation">)</span>
+    <span class="token keyword">for</span> k <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>self<span class="token punctuation">.</span>topk<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># Expand topk_idxs for each value of k and add 1 at the specified positions</span>
+        count_tensor<span class="token punctuation">.</span>scatter_add_<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> topk_idxs<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> k <span class="token punctuation">:</span> k <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> ones<span class="token punctuation">)</span>
+    <span class="token comment"># Filter invalid bboxes</span>
+    count_tensor<span class="token punctuation">.</span>masked_fill_<span class="token punctuation">(</span>count_tensor <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> count_tensor<span class="token punctuation">.</span>to<span class="token punctuation">(</span>metrics<span class="token punctuation">.</span>dtype<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先看下如果<code>count_tensor[b_idx, obj_idx, anchor_idx] = 1</code>表示什么意思？这表示这个<code>batch</code>中 第 <code>b_idx</code> 张图像的第 <code>obj_idx</code> 个目标中<code>anchor_idx</code> 对应的 <code>anchor</code> 被选为 <code>top-k</code> 候选。因此这里就是挑选哪些anchor是有对应标定框的，挑选的topk指标就是前面计算的对齐指标。</p>
+<p>这个挑选首先在<code>count_tensor.scatter_add_(-1, topk_idxs[:, :, k : k + 1], ones)</code>这里可以看到，这里是对<code>topk_idxs</code> 指定的索引位置做<code>+1</code>,那么<code>topk_idxs</code>中是什么东西？首先看&#96;&#96;topk_idxs<code>的维度:[16,3,10]，即：</code>topk_idxs<code>中存储了16张图像，每张图像最多3个标签框，每个标签框选定的10个anchor索引，其实就是有效标签框中心的10个最大可能位置。之所以说是有效位置是因为这里是最多3个标签框，实际有几个要看</code>topk_mask&#96;如何指定哪些是有效的。</p>
+<p>同时一个标签框对应的<code>topk</code>个位置不能是重复的，因为不能一个位置和一个标签对应的可能性还有多个，这不合常理，因此这样的数据应该被剔除<code>count_tensor.masked_fill_(count_tensor &gt; 1, 0)</code>。因此这里就定性了什么是正样本。因此这里的正样本就是和<code>topk_idxs</code>紧密相关的。</p>
+<p><mark>select_topk_candidates返回了一个存储了所有anchor为正负样本的01张量</mark></p>
+<p>现在回到<code>get_pos_mask</code>函数：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_pos <span class="token operator">=</span> mask_topk <span class="token operator">*</span> mask_in_gts <span class="token operator">*</span> mask_gt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>mask_pos存储了所有正样本的索引，即：正样本对应的anchor索引为1,正样本同时满足以下三个条件：</p>
+<ul>
+<li>这个<code>anchor</code>在标签的topk中<code>mask_topk[,,,]=1</code></li>
+<li>这个<code>anchor</code>在有对应的标签<code>mask_in_gts[,,,]=1</code></li>
+<li>这个<code>anchor</code>在有对应的标签是有效的<code>mask_gt,,,[]=1</code></li>
+</ul>
+<p><mark>get_pos_mask返回正样本anchor的索引和所有anchor的对齐指标和IoU</mark></p>
+<p>按照上述的方法，一个标签框可以获得topk个anchor与之对应即：一个标签框可以有topk个可能的位置，那么每个anchor就可能对应多个标签，这个在count_tensor.masked_fill_(count_tensor &gt; 1, 0)中进行了处理，使得一个anchor只能和一个标签框唯一对应</p>
+<ul>
+<li>保证训练 loss 的 <strong>明确性</strong>。</li>
+<li>避免梯度冲突。</li>
+<li>避免同一 anchor 对多个 gt 的重复惩罚。</li>
+<li>对 anchor-free 方法来说，每个 grid 只预测一个类别的 gt box 是自然约束</li>
+</ul>
+<p>而这个筛选是由函数<code>select_highest_overlaps</code>实现的，此函数的输入和输出如下所示：</p>
+<ul>
+<li>输入</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>形状</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mask_pos</code></td>
+<td><code>torch.Tensor</code></td>
+<td><code>[b, n_max_boxes, h*w]</code></td>
+<td>初始正样本 mask，每个 anchor 是否匹配 gt</td>
+<td>batch&#x3D;2, n_max_boxes&#x3D;3, h*w&#x3D;4 → 每个 anchor 对应 3 个 gt 的 mask</td>
+</tr>
+<tr>
+<td><code>overlaps</code></td>
+<td><code>torch.Tensor</code></td>
+<td><code>[b, n_max_boxes, h*w]</code></td>
+<td>anchor 与 gt 的 IoU 重叠</td>
+<td>同上，数值表示 IoU</td>
+</tr>
+<tr>
+<td><code>n_max_boxes</code></td>
+<td><code>int</code></td>
+<td><code>-</code></td>
+<td>每个图像最大 gt 数量</td>
+<td>3</td>
+</tr>
+</tbody></table>
+<hr>
+<ul>
+<li>输出</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>形状</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>target_gt_idx</code></td>
+<td><code>torch.Tensor</code></td>
+<td><code>[b, h*w]</code></td>
+<td>每个 grid 对应的最终分配 gt 索引</td>
+<td>batch&#x3D;2, h*w&#x3D;4 → <code>[[0,2,1,0],[1,0,2,2]]</code></td>
+</tr>
+<tr>
+<td><code>fg_mask</code></td>
+<td><code>torch.Tensor</code></td>
+<td><code>[b, h*w]</code></td>
+<td>前景 mask，每个 grid 是否有正样本</td>
+<td><code>[[1,1,1,0],[1,1,1,1]]</code></td>
+</tr>
+<tr>
+<td><code>mask_pos</code></td>
+<td><code>torch.Tensor</code></td>
+<td><code>[b, n_max_boxes, h*w]</code></td>
+<td>更新后的正样本 mask，解决一个 anchor 对多个 gt</td>
+<td>形状不变，但同一 grid 最多只有一个 gt 为 1</td>
+</tr>
+</tbody></table>
+<p>统计每个 grid 被多少 gt 占用。</p>
+<p>如果有多 gt 占用：</p>
+<ul>
+<li>找到最大 IoU 的 gt。</li>
+<li>只保留该 gt，更新 mask。</li>
+</ul>
+<p>返回每个 grid 最终分配的 gt 索引和前景 mask。</p>
+<p>这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
 <span class="token keyword">class</span> <span class="token class-name">BboxLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token triple-quoted-string string">"""Criterion class for computing training losses for bounding boxes."""</span>
@@ -1085,7 +1264,7 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 </ul>
 </li>
 </ul>
-<h3 id="box-loss-1"><a href="#box-loss-1" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pbox<span class="token punctuation">,</span> tbox<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pbox<span class="token punctuation">,</span> tbox<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>通过这一行源码可以看出yolov5默认使用CIoU进行预测框的损失计算</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">lbox <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>

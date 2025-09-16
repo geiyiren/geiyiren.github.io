@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-15
+                    2025-09-16
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    13k
+                    13.2k
                 </div>
                 
 
@@ -893,6 +893,7 @@
 </li>
 </ul>
 <p>在实际代码中：$\alpha&#x3D;0.5,\beta&#x3D;6.0$，这就说明这里更加强调使用IoU作为预测精度的评估，但如果IoU很小，预测框的分数很高的情况下这个对齐指标不至于太低。至于这里使用二者指标的乘积是为了让任意一个指标近乎为0是，最终的对齐指标也接近0。</p>
+<p>然后再来看下<code>align_metric</code>和<code>overlaps</code>中都存储了什么，它们的维度为[batch_size,n_max_boxes,num_anchors]，也就是说他们存储了n_max_boxes个预测框在每个位置(anchor)的对齐指标(align_metric)和该位置(anchor)预测框与标签框的iou分数(overlaps)，当然对于无效预测框和无效标签框的位置这些值都是0。</p>
 <p><mark>get_box_metrics函数得到的是一个两个预测框的精度值：IoU和对齐指标</mark></p>
 <p>最后看<code>select_topk_candidates</code>函数：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">select_topk_candidates</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> metrics<span class="token punctuation">,</span> topk_mask<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -914,28 +915,27 @@
 
     <span class="token keyword">return</span> count_tensor<span class="token punctuation">.</span>to<span class="token punctuation">(</span>metrics<span class="token punctuation">.</span>dtype<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>首先看下如果<code>count_tensor[b_idx, obj_idx, anchor_idx] = 1</code>表示什么意思？这表示这个<code>batch</code>中 第 <code>b_idx</code> 张图像的第 <code>obj_idx</code> 个目标中<code>anchor_idx</code> 对应的 <code>anchor</code> 被选为 <code>top-k</code> 候选。因此这里就是挑选哪些anchor是有对应标定框的，挑选的topk指标就是前面计算的对齐指标。</p>
-<p>这个挑选首先在<code>count_tensor.scatter_add_(-1, topk_idxs[:, :, k : k + 1], ones)</code>这里可以看到，这里是对<code>topk_idxs</code> 指定的索引位置做<code>+1</code>,那么<code>topk_idxs</code>中是什么东西？首先看&#96;&#96;topk_idxs<code>的维度:[16,3,10]，即：</code>topk_idxs<code>中存储了16张图像，每张图像最多3个标签框，每个标签框选定的10个anchor索引，其实就是有效标签框中心的10个最大可能位置。之所以说是有效位置是因为这里是最多3个标签框，实际有几个要看</code>topk_mask&#96;如何指定哪些是有效的。</p>
-<p>同时一个标签框对应的<code>topk</code>个位置不能是重复的，因为不能一个位置和一个标签对应的可能性还有多个，这不合常理，因此这样的数据应该被剔除<code>count_tensor.masked_fill_(count_tensor &gt; 1, 0)</code>。因此这里就定性了什么是正样本。因此这里的正样本就是和<code>topk_idxs</code>紧密相关的。</p>
-<p><mark>select_topk_candidates返回了一个存储了所有anchor为正负样本的01张量</mark></p>
-<p>现在回到<code>get_pos_mask</code>函数：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_pos <span class="token operator">=</span> mask_topk <span class="token operator">*</span> mask_in_gts <span class="token operator">*</span> mask_gt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>mask_pos存储了所有正样本的索引，即：正样本对应的anchor索引为1,正样本同时满足以下三个条件：</p>
-<ul>
-<li>这个<code>anchor</code>在标签的topk中<code>mask_topk[,,,]=1</code></li>
-<li>这个<code>anchor</code>在有对应的标签<code>mask_in_gts[,,,]=1</code></li>
-<li>这个<code>anchor</code>在有对应的标签是有效的<code>mask_gt,,,[]=1</code></li>
-</ul>
-<p><mark>get_pos_mask返回正样本anchor的索引和所有anchor的对齐指标和IoU</mark></p>
-<p>按照上述的方法，一个标签框可以获得topk个anchor与之对应即：一个标签框可以有topk个可能的位置，那么每个anchor就可能对应多个标签，这个在count_tensor.masked_fill_(count_tensor &gt; 1, 0)中进行了处理，使得一个anchor只能和一个标签框唯一对应</p>
+<p>首先看下如果<code>count_tensor[b_idx, obj_idx, anchor_idx] = 1</code>表示什么意思？这表示这个<code>batch</code>中 第 <code>b_idx</code> 张图像的第 <code>obj_idx</code> 个目标中<code>anchor_idx</code> 对应的 <code>anchor</code> 被选为 <code>top-k</code> 候选。因此这里就是挑选哪些anchor是有对应标定框的，挑选的topk指标就是前面计算的对齐指标。<code>torch.topk</code>中指定了对最后一个维度进行挑选，也就是说这里是为每个预测框选中对齐指标最大的topk个anchor.，因此<code>topk_metrics, topk_idxs</code>的维度均为<code>[batch_size,n_max_boxes,topk]</code>,也就是得到了每张图<code>n_max_boxes</code>个框，每个框<code>topk</code>个位置(anchor)。</p>
+<p>这个挑选首先在<code>count_tensor.scatter_add_(-1, topk_idxs[:, :, k : k + 1], ones)</code>这里可以看到，这里是对<code>topk_idxs</code> 指定的索引位置做<code>+1</code>,那么<code>topk_idxs</code>中是什么东西？首先看&#96;&#96;topk_idxs<code>的维度:[batch_size,n_max_boxes,topk]，即：</code>topk_idxs<code>中存储了batch_size张图像，每张图像最多n_max_boxes个标签框，每个标签框选定的topk个anchor索引，其实就是有效标签框中心的topk个最大可能位置。之所以说是有效位置是因为这里是最多3个标签框，实际有几个要看</code>topk_mask&#96;如何指定哪些是有效的。</p>
+<p><code>count_tensor</code>中如果一个索引处的值为n，说明这个anchor在某个预测框下被选中了n次数，换句话说就是这个位置是多个预测框的中心，这种情况下作者的处理是直接舍弃这些位置(anchor)。感觉有点暴力，如果两个预测框对应的topk个anchor不是完全重复的情况下，每个预测框还会留下几个anchor，但是如果两个预测框的topk个anchor完全重复，此时会直接让这两个预测框都没有anchor,或者说刚好是对齐指标最大的那几个anchor出现重复，这个预测框会失去最大可能性的位置。这里目前先存疑….，直接来看下这样的暴力操作有什么好处：</p>
 <ul>
 <li>保证训练 loss 的 <strong>明确性</strong>。</li>
 <li>避免梯度冲突。</li>
 <li>避免同一 anchor 对多个 gt 的重复惩罚。</li>
 <li>对 anchor-free 方法来说，每个 grid 只预测一个类别的 gt box 是自然约束</li>
 </ul>
-<p>而这个筛选是由函数<code>select_highest_overlaps</code>实现的，此函数的输入和输出如下所示：</p>
+<p><mark>select_topk_candidates返回了一个存储了对于每个预测框对应的anchor为正负样本的0-1张量</mark></p>
+<p>现在回到<code>get_pos_mask</code>函数：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_pos <span class="token operator">=</span> mask_topk <span class="token operator">*</span> mask_in_gts <span class="token operator">*</span> mask_gt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>mask_pos存储了所有正样本的索引，且<strong>正样本需要同时满足以下三个条件</strong>：</p>
+<ul>
+<li>这个<code>anchor</code>在预测框的topk中<code>mask_topk[,,,]=1</code></li>
+<li>这个<code>anchor</code>在有对应的标签框内<code>mask_in_gts[,,,]=1</code></li>
+<li>这个<code>anchor</code>在有对应的标签是有效的<code>mask_gt,,,[]=1</code></li>
+</ul>
+<p><mark>get_pos_mask返回正样本anchor的索引和所有anchor的对齐指标和IoU</mark></p>
+<p>至此我们已经得到每个预测框对应的的topk个对齐指标最大的位置，现在需要确定哪个位置才是最终预测框的位置，这里选择IoU最大的位置作为最终的预测框位置，实现方法由函数<code>select_highest_overlaps</code>实现的，此函数的输入和输出如下所示：</p>
 <ul>
 <li>输入</li>
 </ul>
@@ -982,29 +982,25 @@
 <th>类型</th>
 <th>形状</th>
 <th>含义</th>
-<th>示例</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>target_gt_idx</code></td>
 <td><code>torch.Tensor</code></td>
 <td><code>[b, h*w]</code></td>
-<td>每个 grid 对应的最终分配 gt 索引</td>
-<td>batch&#x3D;2, h*w&#x3D;4 → <code>[[0,2,1,0],[1,0,2,2]]</code></td>
+<td>每个 anchor对应的最终分配 gt 索引</td>
 </tr>
 <tr>
 <td><code>fg_mask</code></td>
 <td><code>torch.Tensor</code></td>
 <td><code>[b, h*w]</code></td>
-<td>前景 mask，每个 grid 是否有正样本</td>
-<td><code>[[1,1,1,0],[1,1,1,1]]</code></td>
+<td>前景 mask，存储每个 anchor处正样本的个数</td>
 </tr>
 <tr>
 <td><code>mask_pos</code></td>
 <td><code>torch.Tensor</code></td>
 <td><code>[b, n_max_boxes, h*w]</code></td>
-<td>更新后的正样本 mask，解决一个 anchor 对多个 gt</td>
-<td>形状不变，但同一 grid 最多只有一个 gt 为 1</td>
+<td>更新后的正样本 mask，一个预测框对应一个具有最大统计指标的anchor</td>
 </tr>
 </tbody></table>
 <p>统计每个 grid 被多少 gt 占用。</p>

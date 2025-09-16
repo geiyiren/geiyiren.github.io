@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-15
+                    2025-09-16
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    768
+                    1.4k
                 </div>
                 
 
@@ -474,7 +474,48 @@ sr0                        1024M
 nvme0n1                   <span class="token number">953</span>.9G                                                                
 └─nvme0n1p1               <span class="token number">953</span>.9G ext4        docker_data 721ccbe1-8e82-4fdd-90a2-77b7ba92c1be   /mnt/ssddisk<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="权限配置"><a href="#权限配置" class="headerlink" title="权限配置"></a>权限配置</h3><p><code>递归</code>配置挂载文件的权限：755</p>
+<h3 id="权限配置"><a href="#权限配置" class="headerlink" title="权限配置"></a>权限配置</h3><h4 id="smb文件共享"><a href="#smb文件共享" class="headerlink" title="smb文件共享"></a>smb文件共享</h4><ul>
+<li><p>安装smb服务</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> samba <span class="token parameter variable">-y</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>配置共享文件夹</p>
+<pre class="line-numbers language-ini" data-language="ini"><code class="language-ini">hopechart@hopechart:~$ cat /etc/samba/smb.conf
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">global</span><span class="token punctuation">]</span></span>
+   <span class="token key attr-name">workgroup</span> <span class="token punctuation">=</span> <span class="token value attr-value">dlsusers</span>
+   <span class="token key attr-name">server string</span> <span class="token punctuation">=</span> <span class="token value attr-value">deep-learning-server share</span>
+   <span class="token key attr-name">dns proxy</span> <span class="token punctuation">=</span> <span class="token value attr-value">no</span>
+   <span class="token key attr-name">log file</span> <span class="token punctuation">=</span> <span class="token value attr-value">/var/log/samba/log.%m</span>
+   <span class="token key attr-name">max log size</span> <span class="token punctuation">=</span> <span class="token value attr-value">1000</span>
+   <span class="token key attr-name">syslog</span> <span class="token punctuation">=</span> <span class="token value attr-value">0</span>
+   <span class="token key attr-name">panic action</span> <span class="token punctuation">=</span> <span class="token value attr-value">/usr/share/samba/panic-action %d</span>
+   <span class="token key attr-name">server role</span> <span class="token punctuation">=</span> <span class="token value attr-value">standalone server</span>
+   <span class="token key attr-name">passdb backend</span> <span class="token punctuation">=</span> <span class="token value attr-value">tdbsam</span>
+   <span class="token key attr-name">obey pam restrictions</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">unix password sync</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">passwd program</span> <span class="token punctuation">=</span> <span class="token value attr-value">/usr/bin/passwd %u</span>
+   <span class="token key attr-name">passwd chat</span> <span class="token punctuation">=</span> <span class="token value attr-value">*Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .</span>
+   <span class="token key attr-name">pam password change</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">map to guest</span> <span class="token punctuation">=</span> <span class="token value attr-value">bad user</span>
+   <span class="token key attr-name">usershare allow guests</span> <span class="token punctuation">=</span> <span class="token value attr-value">no</span>
+   <span class="token comment"># for share directary soft links</span>
+   <span class="token key attr-name">follow symlinks</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">wide links</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">unix extensions</span> <span class="token punctuation">=</span> <span class="token value attr-value">no</span>
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">shares</span><span class="token punctuation">]</span></span>
+   <span class="token key attr-name">path</span> <span class="token punctuation">=</span> <span class="token value attr-value">/home/shares</span>
+   <span class="token key attr-name">browseable</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">writable</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">available</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">public</span> <span class="token punctuation">=</span> <span class="token value attr-value">yes</span>
+   <span class="token key attr-name">create mask</span> <span class="token punctuation">=</span> <span class="token value attr-value">0744</span>
+   <span class="token key attr-name">directory mask</span> <span class="token punctuation">=</span> <span class="token value attr-value">0755</span>
+   <span class="token key attr-name">valid users</span> <span class="token punctuation">=</span> <span class="token value attr-value">@dlsusers</span>
+   <span class="token comment">#valid users = sunxing</span>
+   <span class="token comment">#force user = sunxing</span>
+   <span class="token comment">#force group = dlsusers</span>
+   <span class="token key attr-name">comment</span> <span class="token punctuation">=</span> <span class="token value attr-value">smb share for deeplearning</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<h4 id="数据盘权限配置"><a href="#数据盘权限配置" class="headerlink" title="数据盘权限配置"></a>数据盘权限配置</h4><p><code>递归</code>配置挂载文件的权限：755</p>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@delldls:/home/dls<span class="token comment"># cat auto-chown.sh </span>
 <span class="token comment">#!/bin/bash</span>
 
@@ -503,27 +544,115 @@ nvme0n1                   <span class="token number">953</span>.9G
 <span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">root@delldls:/home/dls<span class="token comment"># nohup bash auto-chown.sh > auto-chown.log 2>&amp;1 &amp;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
+<h2 id="nfs文件共享"><a href="#nfs文件共享" class="headerlink" title="nfs文件共享"></a>nfs文件共享</h2><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><p>1、安装nfs服务</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> nfs-kernel-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>2、配置共享文件夹</p>
+<p>在<code>/etc/exports</code>文件中增加如下配置：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">/home/shares/rknn_toolkit_common *<span class="token punctuation">(</span>rw,sync,no_root_squash,no_subtree_check<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>3、启动nfs服务</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> systemctl start nfs-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><p>1、安装nfs客户端</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> nfs-common<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>2、添加如下配置到<code>~/.bashrc</code>中</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token variable"><span class="token variable">`</span><span class="token function">ls</span> /rknn_toolkit_common<span class="token operator">|</span><span class="token function">wc</span> <span class="token parameter variable">-w</span><span class="token variable">`</span></span>
+
+<span class="token assign-left variable">work_dir</span><span class="token operator">=</span>/rknn_toolkit_common
+
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token variable">$count</span> <span class="token parameter variable">-gt</span> <span class="token number">0</span> <span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"already mount:<span class="token variable">$&#123;work_dir&#125;</span>"</span>
+<span class="token keyword">else</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"mount:<span class="token variable">$&#123;work_dir&#125;</span>"</span>
+    <span class="token function">mount</span> <span class="token parameter variable">-t</span> nfs <span class="token parameter variable">-o</span> nolock <span class="token number">172.20</span>.1.103:/home/shares/rknn_toolkit_common <span class="token variable">$&#123;work_dir&#125;</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="win多用户挂载同一目录"><a href="#win多用户挂载同一目录" class="headerlink" title="win多用户挂载同一目录"></a>win多用户挂载同一目录</h3><p>win在同一个网络共享路径（UNC 路径，比如 <code>\\server\share</code>），不能同时用多个用户名连接，但是可以修改配置给服务器起别名，方法如下：</p>
+<ul>
+<li><p>1、使用终端管理员打开<code>C:\Windows\System32\drivers\etc\hosts</code></p>
+<pre class="line-numbers language-powershell" data-language="powershell"><code class="language-powershell">notepad C:\Windows\System32\drivers\etc\hosts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>2、在文件尾部增加服务器别名，示例如下：</p>
+</li>
+</ul>
+  <pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token number">172.20</span>.1.10 hqguest
+<span class="token number">172.20</span>.1.10 wangshuaiyang<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>3、映射网络驱动器</p>
+<p><code>\\wangshuaiyang\shares</code></p>
+<p><code>\\hqguest\shares</code></p>
+</li>
+</ul>
+<p>同时需要保证服务器上该目录允许两个用户访问共享文件，可修改访问者为指定组的所有成员：</p>
+<pre class="line-numbers language-none"><code class="language-none">[shares]
+   path &#x3D; &#x2F;home&#x2F;shares
+   browseable &#x3D; yes
+   writable &#x3D; yes
+   available &#x3D; yes
+   public &#x3D; yes
+   create mask &#x3D; 0744
+   directory mask &#x3D; 0755
+   valid users &#x3D; @dlsusers
+   #valid users &#x3D; sunxing
+   #force user &#x3D; sunxing
+   #force group &#x3D; dlsusers
+   comment &#x3D; smb share for deeplearning<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
 <h2 id="docker安装"><a href="#docker安装" class="headerlink" title="docker安装"></a>docker安装</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>1、检查卸载老版本Docker</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu">sudo apt-get remove docker docker-engine docker.io containerd runc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> remove <span class="token function">docker</span> docker-engine docker.io containerd runc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>2、更新软件包</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu"># 小凹兔助你快速部署安装Docker
-sudo apt-get update
-sudo apt-get upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 小凹兔助你快速部署安装Docker</span>
+<span class="token function">sudo</span> <span class="token function">apt-get</span> update
+<span class="token function">sudo</span> <span class="token function">apt-get</span> upgrade<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>3、安装docker依赖</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu">sudo apt-get install ca-certificates curl gnupg lsb-release<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ca-certificates <span class="token function">curl</span> gnupg lsb-release<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>4、添加docker密钥</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu">curl -fsSL http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;ubuntu&#x2F;gpg | sudo apt-key add -<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">curl</span> <span class="token parameter variable">-fsSL</span> http://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg <span class="token operator">|</span> <span class="token function">sudo</span> apt-key <span class="token function">add</span> -<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>5、添加阿里云docker软件源</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu">sudo add-apt-repository &quot;deb [arch&#x3D;amd64] http:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;ubuntu $(lsb_release -cs) stable&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> add-apt-repository <span class="token string">"deb [arch=amd64] http://mirrors.aliyun.com/docker-ce/linux/ubuntu <span class="token variable"><span class="token variable">$(</span>lsb_release <span class="token parameter variable">-cs</span><span class="token variable">)</span></span> stable"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>6、安装docker</p>
-<pre class="line-numbers language-ubuntu" data-language="ubuntu"><code class="language-ubuntu">sudo apt-get install docker-ce docker-ce-cli containerd.io<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> docker-ce docker-ce-cli containerd.io<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3>
+<p>7.安装nvidia-container-runtime</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt</span> <span class="token function">install</span> nvidia-container-runtime<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><ul>
+<li><p>修改docker启动命令</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">vi</span> /lib/systemd/system/docker.service<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>找到ExecStart关键字，按照如下配置进行修改</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">ExecStart</span><span class="token operator">=</span>/usr/bin/dockerd <span class="token parameter variable">--tlsverify</span> <span class="token parameter variable">--tlscacert</span><span class="token operator">=</span>/etc/docker/certs.d/ca-dls.pem <span class="token parameter variable">--tlscert</span><span class="token operator">=</span>/etc/docker/certs.d/server-cert-dls.pem <span class="token parameter variable">--tlskey</span><span class="token operator">=</span>/etc/docker/certs.d/server-key-dls.pem <span class="token parameter variable">-H</span> unix:///var/run/docker.sock <span class="token parameter variable">-H</span> tcp://0.0.0.0:2376<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>修改docker配置文件</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">vi</span> /etc/docker/daemon.json<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>修改后的内容如下所示：</p>
+<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
+    <span class="token property">"default-runtime"</span><span class="token operator">:</span> <span class="token string">"nvidia"</span><span class="token punctuation">,</span>
+    <span class="token property">"runtimes"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+        <span class="token property">"nvidia"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+            <span class="token property">"path"</span><span class="token operator">:</span> <span class="token string">"nvidia-container-runtime"</span><span class="token punctuation">,</span>
+            <span class="token property">"runtimeArgs"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    <span class="token property">"insecure-registries"</span><span class="token operator">:</span><span class="token punctuation">[</span><span class="token string">"172.20.1.10:10086"</span><span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+
                 
             </div>
             <hr/>

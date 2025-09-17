@@ -388,14 +388,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-09-16
+                    2025-09-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    13.2k
+                    15.5k
                 </div>
                 
 
@@ -547,7 +547,7 @@
 <tr>
 <td><code>pred_scores</code></td>
 <td><code>[16, 4725, 1]</code></td>
-<td>分类预测分数，每个 anchor 对应一个类别得分（这里假设单类）</td>
+<td>分类预测分数，每个 gride 对应一个类别得分（这里假设单类）</td>
 </tr>
 </tbody></table>
 <p>也就是说网络预测了<code>4725</code>个目标框用于后期的损失计算和筛选。</p>
@@ -747,8 +747,8 @@
 <li><code>pred_scores</code>：这个是预测框的置信度，同时进行了归一化，使得每个<code>batch</code>内所有预测框的概率之和为1。</li>
 <li><code>pred_bboxes</code>：这个是预测框的<code>xyxy</code>，同时进行了缩放，将其缩放到输入图像尺度。</li>
 <li><code>anchor_points</code>：这个是每个特征图上对应<code>gride</code>的中心点，同时进行了缩放，将其缩放到输入图像尺度。</li>
-<li><code>gt_labels</code>：这个是预测框的标签</li>
-<li><code>gt_bboxes</code>：这个是预测框的<code>xyxy</code>，且在输入图像尺度下。</li>
+<li><code>gt_labels</code>：这个是标签id</li>
+<li><code>gt_bboxes</code>：这个是标签的位置<code>xyxy</code>，且在输入图像尺度下。</li>
 <li><code>mask_gt</code>：这个是哪些标签框是有效的，因为这里得到的每个图像的标签框个数被强制设置为整个<code>batch</code>中各个图像中标签框个数的最大值，不够的被填充0，这里是得到非0的标签框的索引</li>
 </ul>
 </li>
@@ -849,8 +849,8 @@
 <li>(这个点的坐标-标签框左上顶点坐标) 的值为负值或小于小于很小的值</li>
 <li>(标签框右下顶点坐标-这个点的坐标) 的值为负值或小于小于很小的值</li>
 </ul>
-<p>因此，这里的<code>torch.cat</code>后为$\Delta x_1,\Delta y_1,\Delta x_2,\Delta y_2$，也是维度变换后的第3维，故<code>bbox_deltas.amin(3)</code>就是求这些$\Delta$d的最小值都比很小的值大，说明这些<code>anchor</code>的中心点都在标签框内。</p>
-<p><mark>select_candidates_in_gts函数得到的是一个0，1矩阵，1表示对应的anchor中心点在标签框内部</mark></p>
+<p>因此，这里的<code>torch.cat</code>后为$\Delta x_1,\Delta y_1,\Delta x_2,\Delta y_2$，也是维度变换后的第3维，故<code>bbox_deltas.amin(3)</code>就是求这些$\Delta$d的最小值都比很小的值大，说明这些<code>gride</code>的中心点都在标签框内。</p>
+<p><mark>select_candidates_in_gts函数得到的是一个0，1矩阵，1表示对应的gride中心点在标签框内部</mark></p>
 <p>然后再看<code>get_box_metrics</code>函数：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">get_box_metrics</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pd_scores<span class="token punctuation">,</span> pd_bboxes<span class="token punctuation">,</span> gt_labels<span class="token punctuation">,</span> gt_bboxes<span class="token punctuation">,</span> mask_gt<span class="token punctuation">)</span><span class="token punctuation">:</span>
     na <span class="token operator">=</span> pd_bboxes<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">]</span>
@@ -892,9 +892,9 @@
 <li><p>当 $\beta &lt; 1$：允许 IoU 不高但box预测分数高的框被选中。</p>
 </li>
 </ul>
-<p>在实际代码中：$\alpha&#x3D;0.5,\beta&#x3D;6.0$，这就说明这里更加强调使用IoU作为预测精度的评估，但如果IoU很小，预测框的分数很高的情况下这个对齐指标不至于太低。至于这里使用二者指标的乘积是为了让任意一个指标近乎为0是，最终的对齐指标也接近0。</p>
-<p>然后再来看下<code>align_metric</code>和<code>overlaps</code>中都存储了什么，它们的维度为[batch_size,n_max_boxes,num_anchors]，也就是说他们存储了n_max_boxes个预测框在每个位置(anchor)的对齐指标(align_metric)和该位置(anchor)预测框与标签框的iou分数(overlaps)，当然对于无效预测框和无效标签框的位置这些值都是0。</p>
-<p><mark>get_box_metrics函数得到的是一个两个预测框的精度值：IoU和对齐指标</mark></p>
+<p>在实际代码中：$\alpha&#x3D;0.5,\beta&#x3D;6.0$，这就说明这里更加强调使用IoU作为预测精度的评估，但如果IoU很小，预测框的分数很高的情况下这个匹配分数不至于太低。至于这里使用二者指标的乘积是为了让任意一个指标近乎为0是，最终的匹配分数也接近0。</p>
+<p>然后再来看下<code>align_metric</code>和<code>overlaps</code>中都存储了什么，它们的维度为[batch_size,n_max_boxes,num_anchors]，也就是说他们存储了n_max_boxes个标签框在每个位置(gride)的匹配分数(align_metric)和该位置(gride)预测框与标签框的iou分数(overlaps)，当然对于无效预测框和无效标签框的位置这些值都是0。</p>
+<p><mark>get_box_metrics函数得到的是标签框在对应预测位置的精度值：IoU和匹配分数</mark></p>
 <p>最后看<code>select_topk_candidates</code>函数：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">select_topk_candidates</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> metrics<span class="token punctuation">,</span> topk_mask<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token comment"># (b, max_num_obj, topk)</span>
@@ -915,27 +915,27 @@
 
     <span class="token keyword">return</span> count_tensor<span class="token punctuation">.</span>to<span class="token punctuation">(</span>metrics<span class="token punctuation">.</span>dtype<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>首先看下如果<code>count_tensor[b_idx, obj_idx, anchor_idx] = 1</code>表示什么意思？这表示这个<code>batch</code>中 第 <code>b_idx</code> 张图像的第 <code>obj_idx</code> 个目标中<code>anchor_idx</code> 对应的 <code>anchor</code> 被选为 <code>top-k</code> 候选。因此这里就是挑选哪些anchor是有对应标定框的，挑选的topk指标就是前面计算的对齐指标。<code>torch.topk</code>中指定了对最后一个维度进行挑选，也就是说这里是为每个预测框选中对齐指标最大的topk个anchor.，因此<code>topk_metrics, topk_idxs</code>的维度均为<code>[batch_size,n_max_boxes,topk]</code>,也就是得到了每张图<code>n_max_boxes</code>个框，每个框<code>topk</code>个位置(anchor)。</p>
-<p>这个挑选首先在<code>count_tensor.scatter_add_(-1, topk_idxs[:, :, k : k + 1], ones)</code>这里可以看到，这里是对<code>topk_idxs</code> 指定的索引位置做<code>+1</code>,那么<code>topk_idxs</code>中是什么东西？首先看&#96;&#96;topk_idxs<code>的维度:[batch_size,n_max_boxes,topk]，即：</code>topk_idxs<code>中存储了batch_size张图像，每张图像最多n_max_boxes个标签框，每个标签框选定的topk个anchor索引，其实就是有效标签框中心的topk个最大可能位置。之所以说是有效位置是因为这里是最多3个标签框，实际有几个要看</code>topk_mask&#96;如何指定哪些是有效的。</p>
-<p><code>count_tensor</code>中如果一个索引处的值为n，说明这个anchor在某个预测框下被选中了n次数，换句话说就是这个位置是多个预测框的中心，这种情况下作者的处理是直接舍弃这些位置(anchor)。感觉有点暴力，如果两个预测框对应的topk个anchor不是完全重复的情况下，每个预测框还会留下几个anchor，但是如果两个预测框的topk个anchor完全重复，此时会直接让这两个预测框都没有anchor,或者说刚好是对齐指标最大的那几个anchor出现重复，这个预测框会失去最大可能性的位置。这里目前先存疑….，直接来看下这样的暴力操作有什么好处：</p>
+<p>首先看下如果<code>count_tensor[b_idx, obj_idx, anchor_idx] = 1</code>表示什么意思？这表示这个<code>batch</code>中 第 <code>b_idx</code> 张图像的第 <code>obj_idx</code> 个目标中<code>anchor_idx</code> 对应的 <code>gride</code> 被选为 <code>top-k</code> 候选。因此这里就是挑选哪些gride是有对应标定框的，挑选的topk指标就是前面计算的匹配分数。<code>torch.topk</code>中指定了对最后一个维度进行挑选，也就是说这里是为每个标签框选中匹配分数最大的topk个gride.，因此<code>topk_metrics, topk_idxs</code>的维度均为<code>[batch_size,n_max_boxes,topk]</code>,也就是得到了每张图<code>n_max_boxes</code>个框，每个框<code>topk</code>个位置(gride)。</p>
+<p>这个挑选首先在<code>count_tensor.scatter_add_(-1, topk_idxs[:, :, k : k + 1], ones)</code>这里可以看到，这里是对<code>topk_idxs</code> 指定的索引位置做<code>+1</code>,那么<code>topk_idxs</code>中是什么东西？首先看&#96;&#96;topk_idxs<code>的维度:[batch_size,n_max_boxes,topk]，即：</code>topk_idxs<code>中存储了batch_size张图像，每张图像最多n_max_boxes个标签框，每个标签框选定的topk个gride索引，其实就是有效标签框中心的topk个最大可能位置。之所以说是有效位置是因为这里是最多3个标签框，实际有几个要看</code>topk_mask&#96;如何指定哪些是有效的。</p>
+<p><code>count_tensor</code>中如果一个索引处的值为n，说明这个gride在某个标签框下被选中了n次数，换句话说就是这个位置是多个标签框的中心，这种情况下作者的处理是直接舍弃这些位置(gride)。感觉有点暴力，如果两个标签框对应的topk个gride不是完全重复的情况下，每个标签框还会留下几个gride，但是如果两个标签框的topk个gride完全重复，此时会直接让这两个标签框都没有gride,或者说刚好是匹配分数最大的那几个gride出现重复，这个标签框会失去最大可能性的位置。这里目前先存疑….，直接来看下这样的暴力操作有什么好处：</p>
 <ul>
 <li>保证训练 loss 的 <strong>明确性</strong>。</li>
 <li>避免梯度冲突。</li>
-<li>避免同一 anchor 对多个 gt 的重复惩罚。</li>
+<li>避免同一 gride 对多个 gt 的重复惩罚。</li>
 <li>对 anchor-free 方法来说，每个 grid 只预测一个类别的 gt box 是自然约束</li>
 </ul>
-<p><mark>select_topk_candidates返回了一个存储了对于每个预测框对应的anchor为正负样本的0-1张量</mark></p>
+<p><mark>select_topk_candidates返回了一个存储了对于每个标签框对应的gride为正负样本的0-1张量</mark></p>
 <p>现在回到<code>get_pos_mask</code>函数：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_pos <span class="token operator">=</span> mask_topk <span class="token operator">*</span> mask_in_gts <span class="token operator">*</span> mask_gt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>mask_pos存储了所有正样本的索引，且<strong>正样本需要同时满足以下三个条件</strong>：</p>
 <ul>
-<li>这个<code>anchor</code>在预测框的topk中<code>mask_topk[,,,]=1</code></li>
-<li>这个<code>anchor</code>在有对应的标签框内<code>mask_in_gts[,,,]=1</code></li>
-<li>这个<code>anchor</code>在有对应的标签是有效的<code>mask_gt,,,[]=1</code></li>
+<li>这个<code>gride</code>在标签框的topk中<code>mask_topk[,,,]=1</code></li>
+<li>这个<code>gride</code>在有对应的标签框内<code>mask_in_gts[,,,]=1</code></li>
+<li>这个<code>gride</code>对应的标签框是有效的<code>mask_gt,,,[]=1</code></li>
 </ul>
-<p><mark>get_pos_mask返回正样本anchor的索引和所有anchor的对齐指标和IoU</mark></p>
-<p>至此我们已经得到每个预测框对应的的topk个对齐指标最大的位置，现在需要确定哪个位置才是最终预测框的位置，这里选择IoU最大的位置作为最终的预测框位置，实现方法由函数<code>select_highest_overlaps</code>实现的，此函数的输入和输出如下所示：</p>
+<p><mark>get_pos_mask返回正样本gride的索引和所有gride的匹配分数和IoU</mark></p>
+<p>至此我们已经得到每个标签框对应的的topk个匹配分数最大的位置，现在需要确定哪个位置才是最终标签框的位置，这里选择IoU最大的位置作为最终的标签框的位置，实现方法由函数<code>select_highest_overlaps</code>实现的，此函数的输入和输出如下所示：</p>
 <ul>
 <li>输入</li>
 </ul>
@@ -946,32 +946,57 @@
 <th>类型</th>
 <th>形状</th>
 <th>含义</th>
-<th>示例</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>mask_pos</code></td>
 <td><code>torch.Tensor</code></td>
 <td><code>[b, n_max_boxes, h*w]</code></td>
-<td>初始正样本 mask，每个 anchor 是否匹配 gt</td>
-<td>batch&#x3D;2, n_max_boxes&#x3D;3, h*w&#x3D;4 → 每个 anchor 对应 3 个 gt 的 mask</td>
+<td>初始正样本 mask，存储每个目标框的topk个gride位置信息</td>
 </tr>
 <tr>
 <td><code>overlaps</code></td>
 <td><code>torch.Tensor</code></td>
 <td><code>[b, n_max_boxes, h*w]</code></td>
-<td>anchor 与 gt 的 IoU 重叠</td>
-<td>同上，数值表示 IoU</td>
+<td>预测框与标签框的iou分数</td>
 </tr>
 <tr>
 <td><code>n_max_boxes</code></td>
 <td><code>int</code></td>
 <td><code>-</code></td>
-<td>每个图像最大 gt 数量</td>
-<td>3</td>
+<td>每个图像最大标签框数量，取值为当前batch中每张图中最多的标签框个数</td>
 </tr>
 </tbody></table>
-<hr>
+<p>然后看第1个关键代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">max_overlaps_idx <span class="token operator">=</span> overlaps<span class="token punctuation">.</span>argmax<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><code>overlaps</code>的维度为<code>[batch_size,n_max_boxes,grides]</code>,因此第一个维度为标签框的索引，这里对这个维度取最大值的意思解释如下：</p>
+<p>比如<code>n_max_boxes=2</code>，<code>grides=4725</code>，意思是每个标签框有<code>4725</code>个预测位置与之对应，其<code>iou</code>分数存储在<code>overlaps</code>中，那么按照<code>n_max_boxes</code>所在的维度取最大值后这个维度就会变为1，即<code>max_overlaps_idx</code>的维度为<code>[batch_size,n_max_boxes,grides]</code>，此时<code>max_overlaps_idx</code>中存储的是框的id，即4725个位置中每个位置都对应了3个框，现在把iou最大的那个框的<code>id</code>取出来存储在<code>max_overlaps_idx</code>。因此<code>max_overlaps_idx</code>就是以<code>iou</code>为指标，为每个位置分配一个最大可能性的框。</p>
+<p>然后看第2个关键代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">fg_mask <span class="token operator">=</span> mask_pos<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><code>mask_pos</code>中存储了正样本的位置信息，即：每个标签框最多topk(排序指标为匹配分数)个满足条件的(位置在标签框区域内、标签框有效)预测位置，因此这里沿着倒数第二个维度进行进行求和就相当于n_max_boxes个正样本的位置信息对应相加，得到的是每个正样本位置处标签框的个数，数值越大说明对应位置出现标签框的次数越多，因此fg_mask其实可以作为前景区域的mask。</p>
+<p>然后看第3个关键代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">is_max_overlaps<span class="token punctuation">.</span>scatter_<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> max_overlaps_idx<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+mask_pos <span class="token operator">=</span> torch<span class="token punctuation">.</span>where<span class="token punctuation">(</span>mask_multi_gts<span class="token punctuation">,</span> is_max_overlaps<span class="token punctuation">,</span> mask_pos<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># (b, n_max_boxes, h*w)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>第一行的意思是在is_max_overlaps的第1维度上将max_overlaps_idx不为0的位置写1，其实得到一个[batch_size,n_max_boxes,grides]的张量对每个框具有最大iou的位置至1。</p>
+<p>然后看第4个关键代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_multi_gts <span class="token operator">=</span> <span class="token punctuation">(</span>fg_mask<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>expand<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> n_max_boxes<span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>如果有个位置不止一个标签框，就将这些位置置1，其他位置为0，说白了如果一个位置有多个标签框，我们就要选择合适的那个，这里mask_multi_gts就标记了哪里不合适，然后就是不合适的位置是否要保留：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask_pos <span class="token operator">=</span> torch<span class="token punctuation">.</span>where<span class="token punctuation">(</span>mask_multi_gts<span class="token punctuation">,</span> is_max_overlaps<span class="token punctuation">,</span> mask_pos<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">float</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>如果一个位置(mask_multi_gts)存在多一个标签框(fg_mask.unsqueeze(1) &gt; 1),就分如下情况处理：</p>
+<ul>
+<li>这个位置是只能是具有最大iou的那个标签框的(max_overlaps_idx)，比如对于第1000个gride位置，同时是第0、1、2个标签框的正样本位置，那么第1000个gride位置只能属于具有最大iou那个标签框，假设是第0个标签框，那么其他框的第1000个gride位置都置0。</li>
+<li>如果这个位置只有一个标签框预期对应，那就不修改</li>
+</ul>
+<p>再看最后1个关键代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">target_gt_idx <span class="token operator">=</span> mask_pos<span class="token punctuation">.</span>argmax<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>mask_pos中存储了所有标签框的唯一正样本位置，这里沿着倒数第2个维度取最大值，取到的就是一堆标签框的索引值，即某个gride位置是哪个框的正样本。</p>
+<p>综上我们可以得到select_highest_overlaps的输出都是什么含义：</p>
 <ul>
 <li>输出</li>
 </ul>
@@ -979,38 +1004,143 @@
 <thead>
 <tr>
 <th>参数</th>
-<th>类型</th>
 <th>形状</th>
 <th>含义</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>target_gt_idx</code></td>
-<td><code>torch.Tensor</code></td>
 <td><code>[b, h*w]</code></td>
-<td>每个 anchor对应的最终分配 gt 索引</td>
+<td>更新后的正样本对应的最终分配的标签框的索引</td>
 </tr>
 <tr>
 <td><code>fg_mask</code></td>
-<td><code>torch.Tensor</code></td>
 <td><code>[b, h*w]</code></td>
-<td>前景 mask，存储每个 anchor处正样本的个数</td>
+<td>前景 mask，存储每个 gride处正样本的个数</td>
 </tr>
 <tr>
 <td><code>mask_pos</code></td>
-<td><code>torch.Tensor</code></td>
 <td><code>[b, n_max_boxes, h*w]</code></td>
-<td>更新后的正样本 mask，一个预测框对应一个具有最大统计指标的anchor</td>
+<td>更新后的正样本 mask，一个标签框对应唯一一个具有最大统计指标的gride位置</td>
 </tr>
 </tbody></table>
-<p>统计每个 grid 被多少 gt 占用。</p>
-<p>如果有多 gt 占用：</p>
+<p><mark>select_highest_overlap函数就是以最大iou为依据使得每个标签的正样本位置存在且唯一</mark></p>
+<p>现在已经得到了真正的正样本位置，接下来就要确定正样本的标签框的位置和类别，这些在<code>get_targets</code>函数中实现：</p>
+<p>这里的<code>target_labels, target_bboxes</code>很容易理解就是每个正样本位置的标签框的类别<code>id</code>和位置<code>xyxy</code>：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">batch_ind <span class="token operator">=</span> torch<span class="token punctuation">.</span>arange<span class="token punctuation">(</span>end<span class="token operator">=</span>self<span class="token punctuation">.</span>bs<span class="token punctuation">,</span> dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span>int64<span class="token punctuation">,</span> device<span class="token operator">=</span>gt_labels<span class="token punctuation">.</span>device<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span>
+target_gt_idx <span class="token operator">=</span> target_gt_idx <span class="token operator">+</span> batch_ind <span class="token operator">*</span> self<span class="token punctuation">.</span>n_max_boxes  <span class="token comment"># (b, h*w)</span>
+target_labels <span class="token operator">=</span> gt_labels<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>flatten<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span>target_gt_idx<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <ul>
-<li>找到最大 IoU 的 gt。</li>
-<li>只保留该 gt，更新 mask。</li>
+<li><p><code>batch_ind=[0,1,2,3,...,batch_size-1]</code>,维度为<code>[batch_size,1]</code></p>
+</li>
+<li><p><code>batch_ind * self.n_max_boxes=[0,n_max_boxes,2*n_max_boxes,3*n_max_boxes,...,(batch_size-1)*n_max_boxes]</code>,维度为<code>[batch_size,1]</code></p>
+</li>
+<li><p><code>target_gt_idx</code>的维度为<code>[batch_size,h*w]</code>，最终的<code>target_gt_idx</code>的每个<code>batch</code>分别加上一个固定值得到。<code>target_gt_idx</code>中为每个正样本<code>gride</code>对应标签框序号，即：第几个标签框，也就是说如果这个正样本是第<code>n</code>个<code>batch</code>的，对应的标签框序号需要统一加上<code>n-1</code>,为什么要这样？</p>
+</li>
+<li><p><code>gt_labels</code>的维度为<code>[batch_size,n_max_boxes,1]</code>,这里存储了目标框的类别<code>ID</code>，经过<code>flatten()</code>展平后$[ID^0_{box_0},ID^0_{box_1},ID^0_{box_2},…,ID^0_{box_{max}},…,ID^{b-1}<em>{box_0},ID^{b-1}</em>{box_1},ID^1_{box_2},…,ID^{b-1}<em>{box</em>{max}}]$，长度为<code>batch_size*n_max_boxes</code>，其实就是依次存储了所有batch的n_max_boxes个标签的类别ID</p>
+</li>
 </ul>
-<p>返回每个 grid 最终分配的 gt 索引和前景 mask。</p>
-<p>这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
+<p>这里是高级索引，首先距离解释一下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">gt_labels_flat <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">11</span><span class="token punctuation">,</span><span class="token number">12</span><span class="token punctuation">,</span><span class="token number">20</span><span class="token punctuation">,</span><span class="token number">21</span><span class="token punctuation">,</span><span class="token number">22</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+target_gt_idx <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># shape [2,2]</span>
+
+gt_labels_flat<span class="token punctuation">[</span>target_gt_idx<span class="token punctuation">]</span>
+<span class="token comment"># tensor([[10,12],</span>
+<span class="token comment">#         [21,20]])</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这样就明白了，从gt_labels中取ID的时候，第一个bacth的无需向后偏移，第2个batch的就需要向后偏移n_max_boxes,依次类推。</p>
+<p>因此<code>target_labels</code>中存储的是所有batch中正样本gride对应的标签类别ID。同理<code>target_bboxes</code>中存储的是所有batch中正样本gride对应的标签框位置<code>xyxy</code>。</p>
+<p>但是这里的<code>target_scores</code>需要解释一下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">target_scores <span class="token operator">=</span> torch<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span>
+    <span class="token punctuation">(</span>target_labels<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> target_labels<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>num_classes<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    dtype<span class="token operator">=</span>torch<span class="token punctuation">.</span>int64<span class="token punctuation">,</span>
+    device<span class="token operator">=</span>target_labels<span class="token punctuation">.</span>device<span class="token punctuation">,</span>
+<span class="token punctuation">)</span>  <span class="token comment"># (b, h*w, 80)</span>
+target_scores<span class="token punctuation">.</span>scatter_<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> target_labels<span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里首先将<code>target_scores</code>初始化为全0张量，然后沿着维度2将正样本位置置1，<code>target_scores</code>的维度为<code>[batch_size,n_max_boxes,1]</code>且目标正样本对应的分数都是1。而下面的代码是防御性编程，确保每个正样本必须属于前景区域：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">fg_scores_mask <span class="token operator">=</span> fg_mask<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token boolean">None</span><span class="token punctuation">]</span><span class="token punctuation">.</span>repeat<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>num_classes<span class="token punctuation">)</span>  <span class="token comment"># (b, h*w, 80)</span>
+target_scores <span class="token operator">=</span> torch<span class="token punctuation">.</span>where<span class="token punctuation">(</span>fg_scores_mask <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">,</span> target_scores<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>因此，这里的target_scores是一个0-1张量或者叫one-hot标签，是说每个gride的预测分数是否有效。还并没有得到具体的分数值，下面我们就继续看如何得到分数值的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">align_metric <span class="token operator">*=</span> mask_pos
+pos_align_metrics <span class="token operator">=</span> align_metric<span class="token punctuation">.</span>amax<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+pos_overlaps <span class="token operator">=</span> <span class="token punctuation">(</span>overlaps <span class="token operator">*</span> mask_pos<span class="token punctuation">)</span><span class="token punctuation">.</span>amax<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>  <span class="token comment"># b, max_num_obj</span>
+norm_align_metric <span class="token operator">=</span> <span class="token punctuation">(</span>align_metric <span class="token operator">*</span> pos_overlaps <span class="token operator">/</span> <span class="token punctuation">(</span>pos_align_metrics <span class="token operator">+</span> self<span class="token punctuation">.</span>eps<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span>amax<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+target_scores <span class="token operator">=</span> target_scores <span class="token operator">*</span> norm_align_metric<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>第1行是匹配分数的挑选，只保留正样本的匹配分数</p>
+</li>
+<li><p>第2行是将匹配分数沿着最后一个维度取最大值，得到的每个标签框对应最大匹配分数,<code>pos_align_metrics</code>的维度为[batch_size,n_max_boxes,1]</p>
+</li>
+<li><p>第3行同理，<code>pos_overlaps</code>为每个标签框对应最大IoU分数维度为[batch_size,n_max_boxes,1]</p>
+</li>
+<li><p>第4行首先看，这是一个公式：<br>$$<br>norm_align_metric&#x3D;\frac{align_metric * pos_overlaps}{pos_align_metrics + self.eps}<br>$$</p>
+</li>
+</ul>
+<p>$$<br>norm_align_metric&#x3D;\frac{匹配分数 * IoU}{最大匹配分数 + 很小的数}<br>$$</p>
+<ul>
+<li>现在来看第4行，这个就是一种归一化，对匹配分数和IoU的乘积进行归一化，然后取了标签框对应的正样本中最大的归一化分数作为所有正样本的归一化分数</li>
+<li>第5行得到的是最终的归一化的标签框的匹配分数</li>
+</ul>
+<p>这里有个疑惑，经过select_highest_overlaps函数后所有的正样本将指挥保留具有最大iou的正样本，那么这里的第2，3，4行都使用了<code>amax</code>都是对一个值取最大值，这有什么意义？似乎只是为了降维，将最后一维从<code>h*w</code>降维至<code>1</code>。最后我们得到了如下的正样本筛选结果：</p>
+<table>
+<thead>
+<tr>
+<th align="center">变量</th>
+<th align="center">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><code>target_labels</code></td>
+<td align="center">所有batch中每个标签对应的预测框的类别ID</td>
+</tr>
+<tr>
+<td align="center"><code>target_bboxes</code></td>
+<td align="center">所有batch中每个标签对应的预测框的位置<code>xyxy</code></td>
+</tr>
+<tr>
+<td align="center"><code>target_scores</code></td>
+<td align="center">所有batch中每个标签对应的预测框的匹配分数</td>
+</tr>
+<tr>
+<td align="center"><code>fg_mask</code></td>
+<td align="center">具有最大iou的正样本mask</td>
+</tr>
+<tr>
+<td align="center"><code>target_gt_idx</code></td>
+<td align="center">具有最大iou的正样本对应的标签框的序号</td>
+</tr>
+</tbody></table>
+<h3 id="class-loss"><a href="#class-loss" class="headerlink" title="class  loss"></a>class  loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">loss<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>bce<span class="token punctuation">(</span>pred_scores<span class="token punctuation">,</span> target_scores<span class="token punctuation">.</span>to<span class="token punctuation">(</span>dtype<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> target_scores_sum  <span class="token comment"># BCE</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>类别的损失计算方法是<code>nn.BCEWithLogitsLoss</code>,计算方法如下：</p>
+<p>假设：</p>
+<ul>
+<li>$\hat{y} \in (0, 1)$：模型预测的概率（<strong>已经经过 Sigmoid 函数</strong>）</li>
+<li>$y \in {0, 1}$：真实标签（0 或 1）</li>
+</ul>
+<p>那么 BCELoss 的公式是：<br>$$<br>\text{BCELoss}(\hat{y}, y) &#x3D; -[y \cdot \log(\hat{y}) + (1 - y) \cdot \log(1 - \hat{y})]<br>$$</p>
+<blockquote>
+<p>注意：输入必须是概率（0~1 之间），即通常需要先用 <code>sigmoid</code>。</p>
+</blockquote>
+<p>但是这里的预测类别分数并没有进行归一化，而是得到所有正样本的类别bce loss之和后除以所有标签框的匹配分数之和(<code>target_scores_sum</code>)进行了类似的归一化。</p>
+<p>然后我们再分析一下什么时候才会计算类别损失：</p>
+<ul>
+<li>首先，计算<code>class loss</code>前并没有显式的if语句进行控制</li>
+<li>然后，需要看下什么时候<code>class loss</code>为0，从公式上来看就是<code>target_scores_sum=0</code>，那么什么时候<code>target_scores_sum=0</code>。如果所有gride中的预测框都没有匹配到标签框，此时<code>target_scores_sum=0</code>,也就是说全是负样本，没有正样本。</li>
+</ul>
+<p>因此只有正样本才会计算<code>class loss</code>。</p>
+<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># Bbox loss</span>
+        <span class="token keyword">if</span> fg_mask<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            target_bboxes <span class="token operator">/=</span> stride_tensor
+            loss<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> loss<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> self<span class="token punctuation">.</span>bbox_loss<span class="token punctuation">(</span>
+                pred_distri<span class="token punctuation">,</span> pred_bboxes<span class="token punctuation">,</span> anchor_points<span class="token punctuation">,</span> target_bboxes<span class="token punctuation">,</span> target_scores<span class="token punctuation">,</span> target_scores_sum<span class="token punctuation">,</span> fg_mask
+            <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先，这里可以看出之前存在前景目标(fg_mask.sum()!&#x3D;0)的才会计算<code>Bbox loss</code>，然后看下具体如何计算：这里的box预测损失使用了<code>BboxLoss</code>方法，该方法的实现细节如下:</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
 <span class="token keyword">class</span> <span class="token class-name">BboxLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token triple-quoted-string string">"""Criterion class for computing training losses for bounding boxes."""</span>
@@ -1037,180 +1167,17 @@
         <span class="token keyword">return</span> loss_iou<span class="token punctuation">,</span> loss_dfl
 <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h4 id="IOU计算"><a href="#IOU计算" class="headerlink" title="IOU计算"></a>IOU计算</h4><p>这里使用了<code>bbox_iou()</code>函数进行iou计算，详细内容如下：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/metrics.py</span>
-<span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span><span class="token comment"># ......省略无关代码......)</span>
-	<span class="token comment"># ......省略无关代码......</span>
-    <span class="token comment"># IoU</span>
-    iou <span class="token operator">=</span> inter <span class="token operator">/</span> union
-    <span class="token keyword">if</span> CIoU <span class="token keyword">or</span> DIoU <span class="token keyword">or</span> GIoU<span class="token punctuation">:</span>
-        cw <span class="token operator">=</span> b1_x2<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>b2_x2<span class="token punctuation">)</span> <span class="token operator">-</span> b1_x1<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>b2_x1<span class="token punctuation">)</span>  <span class="token comment"># convex (smallest enclosing box) width</span>
-        ch <span class="token operator">=</span> b1_y2<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>b2_y2<span class="token punctuation">)</span> <span class="token operator">-</span> b1_y1<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>b2_y1<span class="token punctuation">)</span>  <span class="token comment"># convex height</span>
-        <span class="token keyword">if</span> CIoU <span class="token keyword">or</span> DIoU<span class="token punctuation">:</span>  <span class="token comment"># Distance or Complete IoU https://arxiv.org/abs/1911.08287v1</span>
-            c2 <span class="token operator">=</span> cw<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> ch<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> eps  <span class="token comment"># convex diagonal squared</span>
-            rho2 <span class="token operator">=</span> <span class="token punctuation">(</span>
-                <span class="token punctuation">(</span>b2_x1 <span class="token operator">+</span> b2_x2 <span class="token operator">-</span> b1_x1 <span class="token operator">-</span> b1_x2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>b2_y1 <span class="token operator">+</span> b2_y2 <span class="token operator">-</span> b1_y1 <span class="token operator">-</span> b1_y2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
-            <span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">4</span>  <span class="token comment"># center dist**2</span>
-            <span class="token keyword">if</span> CIoU<span class="token punctuation">:</span>  <span class="token comment"># https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47</span>
-                v <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">/</span> math<span class="token punctuation">.</span>pi<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>w2 <span class="token operator">/</span> h2<span class="token punctuation">)</span><span class="token punctuation">.</span>atan<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token punctuation">(</span>w1 <span class="token operator">/</span> h1<span class="token punctuation">)</span><span class="token punctuation">.</span>atan<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
-                <span class="token keyword">with</span> torch<span class="token punctuation">.</span>no_grad<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                    alpha <span class="token operator">=</span> v <span class="token operator">/</span> <span class="token punctuation">(</span>v <span class="token operator">-</span> iou <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">+</span> eps<span class="token punctuation">)</span><span class="token punctuation">)</span>
-                <span class="token keyword">return</span> iou <span class="token operator">-</span> <span class="token punctuation">(</span>rho2 <span class="token operator">/</span> c2 <span class="token operator">+</span> v <span class="token operator">*</span> alpha<span class="token punctuation">)</span>  <span class="token comment"># CIoU</span>
-            <span class="token keyword">return</span> iou <span class="token operator">-</span> rho2 <span class="token operator">/</span> c2  <span class="token comment"># DIoU</span>
-        c_area <span class="token operator">=</span> cw <span class="token operator">*</span> ch <span class="token operator">+</span> eps  <span class="token comment"># convex area</span>
-        <span class="token keyword">return</span> iou <span class="token operator">-</span> <span class="token punctuation">(</span>c_area <span class="token operator">-</span> union<span class="token punctuation">)</span> <span class="token operator">/</span> c_area  <span class="token comment"># GIoU https://arxiv.org/pdf/1902.09630.pdf</span>
-    <span class="token keyword">return</span> iou  <span class="token comment"># IoU</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>可以看出box_loss就是加权IoU损失，IoU的计算方法使用了CIoU,权重为所有标签框的匹配分数之和。其中<code>pred_bboxes</code>为所有gride的预测框，<code>pred_bboxes[fg_mask]</code>为最终挑选的前景正样本的gride的预测框。同时对loss_iou除以所有标签框的匹配分数之和(target_scores_sum)进行了归一化。</p>
+<p>CIoU的计算方法参见:<a href="#IOU(%E4%BA%A4%E5%B9%B6%E6%AF%94%E6%8D%9F%E5%A4%B1)">CIoU</a></p>
+<h3 id="dfl-loss"><a href="#dfl-loss" class="headerlink" title="dfl loss"></a>dfl loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># DFL loss</span>
+<span class="token keyword">if</span> self<span class="token punctuation">.</span>dfl_loss<span class="token punctuation">:</span>
+    target_ltrb <span class="token operator">=</span> bbox2dist<span class="token punctuation">(</span>anchor_points<span class="token punctuation">,</span> target_bboxes<span class="token punctuation">,</span> self<span class="token punctuation">.</span>dfl_loss<span class="token punctuation">.</span>reg_max <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    loss_dfl <span class="token operator">=</span> self<span class="token punctuation">.</span>dfl_loss<span class="token punctuation">(</span>pred_dist<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>dfl_loss<span class="token punctuation">.</span>reg_max<span class="token punctuation">)</span><span class="token punctuation">,</span> target_ltrb<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> weight
+    loss_dfl <span class="token operator">=</span> loss_dfl<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> target_scores_sum
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+    loss_dfl <span class="token operator">=</span> torch<span class="token punctuation">.</span>tensor<span class="token punctuation">(</span><span class="token number">0.0</span><span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">(</span>pred_dist<span class="token punctuation">.</span>device<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-
-
-<ul>
-<li><strong>IoU（Intersection over Union）交并比</strong></li>
-</ul>
-<p>公式：<br>$$<br>\text{IoU} &#x3D; \frac{\text{Area}<em>{\text{intersection}}}{\text{Area}</em>{\text{union}}}<br>$$<br>表示预测框和真实框重叠区域占联合区域的比例，范围 $[0, 1]$。</p>
-<ul>
-<li><strong>GIoU（Generalized IoU）</strong></li>
-</ul>
-<p>改进目标： 当预测框与真实框没有重叠时，IoU 为 0，无法反映预测框相对位置。GIoU 引入了最小闭包框（convex hull）进行补偿。</p>
-<p>公式：<br>$$<br>\text{GIoU} &#x3D; \text{IoU} - \frac{|\text{C} - (\text{A} \cup \text{B})|}{|\text{C}|}<br>$$</p>
-<ul>
-<li>$\text{C}$：包含预测框 A 和真实框 B 的最小闭包矩形面积</li>
-<li>$\text{A} \cup \text{B}$：预测框与真实框的并集</li>
-</ul>
-<p>范围： $[-1, 1]$，值越大说明预测越准。</p>
-<ul>
-<li><strong>DIoU（Distance IoU）</strong></li>
-</ul>
-<p>改进目标： 考虑中心点之间的距离。</p>
-<p>公式：<br>$$<br>\text{DIoU} &#x3D; \text{IoU} - \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2}<br>$$</p>
-<ul>
-<li>$\rho(\cdot)$：预测框中心点和真实框中心点之间的欧几里得距离</li>
-<li>$c$：包含两个框的最小闭包矩形的对角线长度</li>
-</ul>
-<p>特点： 既考虑重叠面积，又考虑中心点远近。</p>
-<ul>
-<li><strong>CIoU（Complete IoU）</strong></li>
-</ul>
-<p>改进目标： 进一步引入了宽高比一致性。</p>
-<p>公式：<br>$$<br>\text{CIoU} &#x3D; \text{IoU} - \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2} - \alpha v<br>$$<br>其中：</p>
-<ul>
-<li>$v &#x3D; \frac{4}{\pi^2} \left( \arctan\left(\frac{w^{gt}}{h^{gt}}\right) - \arctan\left(\frac{w}{h}\right) \right)^2$：宽高比差异</li>
-<li>$\alpha &#x3D; \frac{v}{1 - \text{IoU} + v}$：权重因子</li>
-</ul>
-<p>特点： 同时考虑重叠面积、中心点距离和长宽比差异。</p>
-<p><strong>在v8DetectionLoss方法中默认使用了CIoU方法对IoU进行计算</strong>，具体计算方法如下：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pred_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> target_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
-loss_iou <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span> <span class="token operator">*</span> weight<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> target_scores_sum<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>这里的权重是指<code>TaskAlignedAssigner</code>算法计算的匹配权重(后面详细解释该方法)，<code>target_scores_sum</code>为所有前景目标的匹配分数之和，这里是进行了归一化，这样计算损失是为了避免训练时梯度消失和有利于训练收敛：</p>
-<ul>
-<li>高分框惩罚更大，影响更强</li>
-<li>所有正样本的损失进行归一平均，防止不同 batch 样本不均衡导致训练不稳定</li>
-<li>另一方面<code>1.0 - iou</code>是一个张量，里面存储了这个bach_size中所有框的iou损失，如果不进行归一化，无法进行损失回传且loss的量级不稳定</li>
-</ul>
-<h3 id="class-loss"><a href="#class-loss" class="headerlink" title="class  loss"></a>class  loss</h3><p>类别的损失计算方法是<code>nn.BCEWithLogitsLoss</code>,计算方法如下：</p>
-<p>假设：</p>
-<ul>
-<li>$\hat{y} \in (0, 1)$：模型预测的概率（<strong>已经经过 Sigmoid 函数</strong>）</li>
-<li>$y \in {0, 1}$：真实标签（0 或 1）</li>
-</ul>
-<p>那么 BCELoss 的公式是：<br>$$<br>\text{BCELoss}(\hat{y}, y) &#x3D; -[y \cdot \log(\hat{y}) + (1 - y) \cdot \log(1 - \hat{y})]<br>$$</p>
-<blockquote>
-<p>注意：输入必须是概率（0~1 之间），即通常需要先用 <code>sigmoid</code>。</p>
-</blockquote>
-<h3 id="dfl-loss"><a href="#dfl-loss" class="headerlink" title="dfl loss"></a>dfl loss</h3><p>DFL损失，全称为Distribution Focal Loss：它主要应用在目标检测任务中的边界框回归（bounding box regression）过程。 DFL损失的主要作用是用于校正模型在预测物体边界框时的误差，优化后的效果可以在一定程度上针对有些模糊或者焦点不集中的图片提升对象检测的精度。 在训练过程中DFL损失越低，说明模型在预测边界框方面的性能越好。</p>
-<ul>
-<li><strong>DFL和IoULoss的区别</strong></li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>对比点</th>
-<th>DFL（距离精度）</th>
-<th>IoU Loss（重叠度）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>关注对象</strong></td>
-<td>每个方向的偏移量（ltrb）</td>
-<td>整体框与 GT 框的 IoU</td>
-</tr>
-<tr>
-<td><strong>误差表现</strong></td>
-<td>数值上与 GT 偏差</td>
-<td>重叠面积比例</td>
-</tr>
-<tr>
-<td><strong>可解释性</strong></td>
-<td>“我左边预测错了 2 像素”</td>
-<td>“我框和目标只有 60% 重叠”</td>
-</tr>
-<tr>
-<td><strong>优化引导方向</strong></td>
-<td>优化边界精度、贴近真实距离</td>
-<td>优化整体框覆盖目标</td>
-</tr>
-<tr>
-<td><strong>结果解码方式</strong></td>
-<td>解码后再计算框</td>
-<td>已解码框直接参与计算</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p> 预测框的anchor_point只有落在标签框的区域内才会进行Iou损失和DFL损失计算</p>
-</blockquote>
-<p>DFL损失计算的步骤如下：</p>
-<ul>
-<li>计算anchor_point和标签框边界的距离，得到$ltrb &#x3D; [左距离，顶距离，右距离，下距离]$</li>
-<li>对这些距离进行限制，强制限制在(0, reg_max - 0.01)范围内</li>
-<li>计算左右 bin 索引和权重</li>
-<li>计算交叉熵损失</li>
-</ul>
-<p>计算公式如下所示:<br>$$<br>\begin{array}{c}<br>\mathrm{DFL}(p,t)&#x3D;w_l\cdot\mathrm{CE}(p,t_l)+w_r\cdot\mathrm{CE}(p,t_r)<br>\end{array}<br>$$<br>其中：</p>
-<ul>
-<li>$t$：目标边界框的连续坐标值（如偏移量）</li>
-<li>$t_l &#x3D; \lfloor t \rfloor$：目标值左侧的整数 bin 索引</li>
-<li>$t_r &#x3D; t_l + 1$：目标值右侧的整数 bin 索引</li>
-<li>$w_l &#x3D; t_r - t$：左侧 bin 的权重</li>
-<li>$w_r &#x3D; t - t_l &#x3D; 1 - w_l$：右侧 bin 的权重</li>
-<li>$p$：模型预测的离散概率分布（长度为 $reg_max + 1$）</li>
-<li>$\text{CE}(p, y) &#x3D; -\log(p_y)$：交叉熵损失（当 $p$ 为概率）或标准交叉熵形式（当 $p$ 为 logits）</li>
-</ul>
-<p>举个例子:</p>
-<p>假设 <code>reg_max=5</code>，GT <code>target=2.6</code>，<code>pred_dist=[0.1, 0.1, 0.2, 0.3, 0.3]</code>，则：</p>
-<ul>
-<li><p><code>tl=2</code>, <code>tr=3</code></p>
-</li>
-<li><p><code>wl=0.4</code>, <code>wr=0.6</code></p>
-<blockquote>
-<p>40% 属于桶 2</p>
-<p>60% 属于桶 3</p>
-</blockquote>
-</li>
-<li><p>loss &#x3D; 0.4 × CrossEntropy(pred, 2) + 0.6 × CrossEntropy(pred, 3)</p>
-</li>
-</ul>
-<p><code>pred_dist</code> 是模型输出的 <strong>分布式回归预测</strong>，即：<strong>每个 bbox 边界（left&#x2F;top&#x2F;right&#x2F;bottom）对某个离散距离桶的概率分布预测。</strong></p>
-<p>DFLoss的实现程序如下所示:</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
-<span class="token keyword">class</span> <span class="token class-name">DFLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token triple-quoted-string string">"""Criterion class for computing Distribution Focal Loss (DFL)."""</span>
-    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> reg_max<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""Initialize the DFL module with regularization maximum."""</span>
-        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
-        self<span class="token punctuation">.</span>reg_max <span class="token operator">=</span> reg_max
-
-    <span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pred_dist<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> target<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">:</span>
-        <span class="token triple-quoted-string string">"""Return sum of left and right DFL losses from https://ieeexplore.ieee.org/document/9792391."""</span>
-        target <span class="token operator">=</span> target<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>reg_max <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> <span class="token number">0.01</span><span class="token punctuation">)</span>
-        tl <span class="token operator">=</span> target<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># target left</span>
-        tr <span class="token operator">=</span> tl <span class="token operator">+</span> <span class="token number">1</span>  <span class="token comment"># target right</span>
-        wl <span class="token operator">=</span> tr <span class="token operator">-</span> target  <span class="token comment"># weight left</span>
-        wr <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> wl  <span class="token comment"># weight right</span>
-        <span class="token keyword">return</span> <span class="token punctuation">(</span>
-            F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tl<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wl
-            <span class="token operator">+</span> F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tr<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wr
-        <span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
+<p>这里可以看出dfl loss的权重和归一化方法与box loss一样，具体的DFL loss计算方法参见：[dls loss](#DFL loss(分布式焦点损失))</p>
 <h3 id="损失加权计算"><a href="#损失加权计算" class="headerlink" title="损失加权计算"></a>损失加权计算</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/loss.py</span>
 <span class="token keyword">class</span> <span class="token class-name">v8DetectionLoss</span><span class="token punctuation">:</span>
      <span class="token comment"># ......省略无关代码......</span>
@@ -1260,7 +1227,7 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 </ul>
 </li>
 </ul>
-<h3 id="box-loss"><a href="#box-loss" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pbox<span class="token punctuation">,</span> tbox<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="box-loss-1"><a href="#box-loss-1" class="headerlink" title="box loss"></a>box loss</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pbox<span class="token punctuation">,</span> tbox<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">.</span>squeeze<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>通过这一行源码可以看出yolov5默认使用CIoU进行预测框的损失计算</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">lbox <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -1556,36 +1523,7 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 </li>
 </ul>
 <p><mark>只有正样本会被计算box loss</mark></p>
-<h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>首先看下什么是二元交叉熵损失：</p>
-<p><strong><code>nn.BCEWithLogitsLoss</code></strong></p>
-<ul>
-<li><p>这是 PyTorch 提供的 <strong>带 sigmoid 的二元交叉熵损失函数</strong>。</p>
-</li>
-<li><p>公式等价于：<br>$$<br>BCE(x, y) &#x3D; - \big[ y \cdot \log(\sigma(x)) + (1-y)\cdot\log(1-\sigma(x)) \big]<br>$$<br>其中 $\sigma(x)&#x3D;\frac{1}{1+e^{-x}}$ 是 sigmoid。$\sigma(x)$就是预测分数</p>
-<p>当y&#x3D;0时：<br>$$<br>BCE(x, y) &#x3D; - log(1-\sigma(x))<br>$$</p>
-<p>当y&#x3D;1时：<br>$$<br>BCE(x, 1) &#x3D; - \log(\sigma(x))<br>$$</p>
-</li>
-<li><p><strong>$y$</strong></p>
-<ul>
-<li>真实标签 (ground truth)，这里的标签是转换后的标签</li>
-<li>只能取 <code>0</code> 或 <code>1</code></li>
-<li>0 → 表示“负样本”</li>
-<li>1 → 表示“正样本”</li>
-</ul>
-</li>
-<li><p><strong>$x$</strong></p>
-<ul>
-<li>模型预测值，经过sigmoid后转换为概率</li>
-<li>范围为任意的网络输出</li>
-</ul>
-</li>
-</ul>
-<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/image-20250827202928632.png" alt="image-20250827202928632"></p>
-<p>根据曲线可以看出：</p>
-<ul>
-<li>如果标签中给的gride无目标，即y&#x3D;0时，预测的分数越大，损失越大；这就会对误报进行惩罚</li>
-<li>如果标签中给的gride有目标，即y&#x3D;1时，预测的分数越大，损失越小；这就会对漏报进行惩罚</li>
-</ul>
+<h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>- </p>
 <p>现在来看obj_loss如何计算，源码中的计算公式如下：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">self<span class="token punctuation">.</span>balance <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span>m<span class="token punctuation">.</span>nl<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token number">0.06</span><span class="token punctuation">,</span> <span class="token number">0.02</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># P3-P7</span>
 <span class="token comment"># 省略无关代码 ...</span>
@@ -1708,17 +1646,199 @@ bs <span class="token operator">=</span> tobj<span class="token punctuation">.</
 
 
 
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><h2 id="IOU-交并比损失"><a href="#IOU-交并比损失" class="headerlink" title="IOU(交并比损失)"></a>IOU(交并比损失)</h2><p>这里使用了<code>bbox_iou()</code>函数进行iou计算，详细内容如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/metrics.py</span>
+<span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span><span class="token comment"># ......省略无关代码......)</span>
+	<span class="token comment"># ......省略无关代码......</span>
+    <span class="token comment"># IoU</span>
+    iou <span class="token operator">=</span> inter <span class="token operator">/</span> union
+    <span class="token keyword">if</span> CIoU <span class="token keyword">or</span> DIoU <span class="token keyword">or</span> GIoU<span class="token punctuation">:</span>
+        cw <span class="token operator">=</span> b1_x2<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>b2_x2<span class="token punctuation">)</span> <span class="token operator">-</span> b1_x1<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>b2_x1<span class="token punctuation">)</span>  <span class="token comment"># convex (smallest enclosing box) width</span>
+        ch <span class="token operator">=</span> b1_y2<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>b2_y2<span class="token punctuation">)</span> <span class="token operator">-</span> b1_y1<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>b2_y1<span class="token punctuation">)</span>  <span class="token comment"># convex height</span>
+        <span class="token keyword">if</span> CIoU <span class="token keyword">or</span> DIoU<span class="token punctuation">:</span>  <span class="token comment"># Distance or Complete IoU https://arxiv.org/abs/1911.08287v1</span>
+            c2 <span class="token operator">=</span> cw<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> ch<span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> eps  <span class="token comment"># convex diagonal squared</span>
+            rho2 <span class="token operator">=</span> <span class="token punctuation">(</span>
+                <span class="token punctuation">(</span>b2_x1 <span class="token operator">+</span> b2_x2 <span class="token operator">-</span> b1_x1 <span class="token operator">-</span> b1_x2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token punctuation">(</span>b2_y1 <span class="token operator">+</span> b2_y2 <span class="token operator">-</span> b1_y1 <span class="token operator">-</span> b1_y2<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+            <span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">4</span>  <span class="token comment"># center dist**2</span>
+            <span class="token keyword">if</span> CIoU<span class="token punctuation">:</span>  <span class="token comment"># https://github.com/Zzh-tju/DIoU-SSD-pytorch/blob/master/utils/box/box_utils.py#L47</span>
+                v <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">4</span> <span class="token operator">/</span> math<span class="token punctuation">.</span>pi<span class="token operator">**</span><span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>w2 <span class="token operator">/</span> h2<span class="token punctuation">)</span><span class="token punctuation">.</span>atan<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> <span class="token punctuation">(</span>w1 <span class="token operator">/</span> h1<span class="token punctuation">)</span><span class="token punctuation">.</span>atan<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">pow</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+                <span class="token keyword">with</span> torch<span class="token punctuation">.</span>no_grad<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    alpha <span class="token operator">=</span> v <span class="token operator">/</span> <span class="token punctuation">(</span>v <span class="token operator">-</span> iou <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">+</span> eps<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token keyword">return</span> iou <span class="token operator">-</span> <span class="token punctuation">(</span>rho2 <span class="token operator">/</span> c2 <span class="token operator">+</span> v <span class="token operator">*</span> alpha<span class="token punctuation">)</span>  <span class="token comment"># CIoU</span>
+            <span class="token keyword">return</span> iou <span class="token operator">-</span> rho2 <span class="token operator">/</span> c2  <span class="token comment"># DIoU</span>
+        c_area <span class="token operator">=</span> cw <span class="token operator">*</span> ch <span class="token operator">+</span> eps  <span class="token comment"># convex area</span>
+        <span class="token keyword">return</span> iou <span class="token operator">-</span> <span class="token punctuation">(</span>c_area <span class="token operator">-</span> union<span class="token punctuation">)</span> <span class="token operator">/</span> c_area  <span class="token comment"># GIoU https://arxiv.org/pdf/1902.09630.pdf</span>
+    <span class="token keyword">return</span> iou  <span class="token comment"># IoU</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
+<ul>
+<li><strong>IoU（Intersection over Union）交并比</strong></li>
+</ul>
+<p>公式：<br>$$<br>\text{IoU} &#x3D; \frac{\text{Area}<em>{\text{intersection}}}{\text{Area}</em>{\text{union}}}<br>$$<br>表示预测框和真实框重叠区域占联合区域的比例，范围 $[0, 1]$。</p>
+<ul>
+<li><strong>GIoU（Generalized IoU）</strong></li>
+</ul>
+<p>改进目标： 当预测框与真实框没有重叠时，IoU 为 0，无法反映预测框相对位置。GIoU 引入了最小闭包框（convex hull）进行补偿。</p>
+<p>公式：<br>$$<br>\text{GIoU} &#x3D; \text{IoU} - \frac{|\text{C} - (\text{A} \cup \text{B})|}{|\text{C}|}<br>$$</p>
+<ul>
+<li>$\text{C}$：包含预测框 A 和真实框 B 的最小闭包矩形面积</li>
+<li>$\text{A} \cup \text{B}$：预测框与真实框的并集</li>
+</ul>
+<p>范围： $[-1, 1]$，值越大说明预测越准。</p>
+<ul>
+<li><strong>DIoU（Distance IoU）</strong></li>
+</ul>
+<p>改进目标： 考虑中心点之间的距离。</p>
+<p>公式：<br>$$<br>\text{DIoU} &#x3D; \text{IoU} - \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2}<br>$$</p>
+<ul>
+<li>$\rho(\cdot)$：预测框中心点和真实框中心点之间的欧几里得距离</li>
+<li>$c$：包含两个框的最小闭包矩形的对角线长度</li>
+</ul>
+<p>特点： 既考虑重叠面积，又考虑中心点远近。</p>
+<ul>
+<li><strong>CIoU（Complete IoU）</strong></li>
+</ul>
+<p>改进目标： 进一步引入了宽高比一致性。</p>
+<p>公式：<br>$$<br>\text{CIoU} &#x3D; \text{IoU} - \frac{\rho^2(\mathbf{b}, \mathbf{b}^{gt})}{c^2} - \alpha v<br>$$<br>其中：</p>
+<ul>
+<li>$v &#x3D; \frac{4}{\pi^2} \left( \arctan\left(\frac{w^{gt}}{h^{gt}}\right) - \arctan\left(\frac{w}{h}\right) \right)^2$：宽高比差异</li>
+<li>$\alpha &#x3D; \frac{v}{1 - \text{IoU} + v}$：权重因子</li>
+</ul>
+<p>特点： 同时考虑重叠面积、中心点距离和长宽比差异。</p>
+<p><strong>在v8DetectionLoss方法中默认使用了CIoU方法对IoU进行计算</strong>，具体计算方法如下：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">iou <span class="token operator">=</span> bbox_iou<span class="token punctuation">(</span>pred_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> target_bboxes<span class="token punctuation">[</span>fg_mask<span class="token punctuation">]</span><span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+loss_iou <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">-</span> iou<span class="token punctuation">)</span> <span class="token operator">*</span> weight<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">/</span> target_scores_sum<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
+<p>这里的权重是指<code>TaskAlignedAssigner</code>算法计算的匹配权重(后面详细解释该方法)，<code>target_scores_sum</code>为所有前景目标的匹配分数之和，这里是进行了归一化，这样计算损失是为了避免训练时梯度消失和有利于训练收敛：</p>
+<ul>
+<li>高分框惩罚更大，影响更强</li>
+<li>所有正样本的损失进行归一平均，防止不同 batch 样本不均衡导致训练不稳定</li>
+<li>另一方面<code>1.0 - iou</code>是一个张量，里面存储了这个bach_size中所有框的iou损失，如果不进行归一化，无法进行损失回传且loss的量级不稳定</li>
+</ul>
+<h2 id="BCE-loos-二元交叉熵损失"><a href="#BCE-loos-二元交叉熵损失" class="headerlink" title="BCE loos(二元交叉熵损失)"></a>BCE loos(二元交叉熵损失)</h2><p>首先看下什么是二元交叉熵损失：</p>
+<p><strong><code>nn.BCEWithLogitsLoss</code></strong></p>
+<ul>
+<li><p>这是 PyTorch 提供的 <strong>带 sigmoid 的二元交叉熵损失函数</strong>。</p>
+</li>
+<li><p>公式等价于：<br>$$<br>BCE(x, y) &#x3D; - \big[ y \cdot \log(\sigma(x)) + (1-y)\cdot\log(1-\sigma(x)) \big]<br>$$<br>其中 $\sigma(x)&#x3D;\frac{1}{1+e^{-x}}$ 是 sigmoid。$\sigma(x)$就是预测分数</p>
+<p>当y&#x3D;0时：<br>$$<br>BCE(x, y) &#x3D; - log(1-\sigma(x))<br>$$</p>
+<p>当y&#x3D;1时：<br>$$<br>BCE(x, 1) &#x3D; - \log(\sigma(x))<br>$$</p>
+</li>
+<li><p><strong>$y$</strong></p>
+<ul>
+<li>真实标签 (ground truth)，这里的标签是转换后的标签</li>
+<li>只能取 <code>0</code> 或 <code>1</code></li>
+<li>0 → 表示“负样本”</li>
+<li>1 → 表示“正样本”</li>
+</ul>
+</li>
+<li><p><strong>$x$</strong></p>
+<ul>
+<li>模型预测值，经过sigmoid后转换为概率</li>
+<li>范围为任意的网络输出</li>
+</ul>
+</li>
+</ul>
+<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/image-20250827202928632.png" alt="image-20250827202928632"></p>
+<p>根据曲线可以看出：</p>
+<ul>
+<li>如果标签中给的gride无目标，即y&#x3D;0时，预测的分数越大，损失越大；这就会对误报进行惩罚</li>
+<li>如果标签中给的gride有目标，即y&#x3D;1时，预测的分数越大，损失越小；这就会对漏报进行惩罚</li>
+</ul>
+<h2 id="DFL-loss-分布式焦点损失"><a href="#DFL-loss-分布式焦点损失" class="headerlink" title="DFL loss(分布式焦点损失)"></a>DFL loss(分布式焦点损失)</h2><p>DFL损失，全称为Distribution Focal Loss(焦点分布损失)：它主要应用在目标检测任务中的边界框回归（bounding box regression）过程。 DFL损失的主要作用是用于校正模型在预测物体边界框时的误差，优化后的效果可以在一定程度上针对有些模糊或者焦点不集中的图片提升对象检测的精度。 在训练过程中DFL损失越低，说明模型在预测边界框方面的性能越好。<strong>DFL损失的计算方法由<a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2006.04388">论文</a>提出。</strong></p>
+<ul>
+<li><strong>DFL和IoULoss的区别</strong></li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>对比点</th>
+<th>DFL（距离精度）</th>
+<th>IoU Loss（重叠度）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>关注对象</strong></td>
+<td>每个方向的偏移量（ltrb）</td>
+<td>整体框与 GT 框的 IoU</td>
+</tr>
+<tr>
+<td><strong>误差表现</strong></td>
+<td>数值上与 GT 偏差</td>
+<td>重叠面积比例</td>
+</tr>
+<tr>
+<td><strong>可解释性</strong></td>
+<td>“我左边预测错了 2 像素”</td>
+<td>“我框和目标只有 60% 重叠”</td>
+</tr>
+<tr>
+<td><strong>优化引导方向</strong></td>
+<td>优化边界精度、贴近真实距离</td>
+<td>优化整体框覆盖目标</td>
+</tr>
+<tr>
+<td><strong>结果解码方式</strong></td>
+<td>解码后再计算框</td>
+<td>已解码框直接参与计算</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p> 预测框的anchor_point只有落在标签框的区域内才会进行Iou损失和DFL损失计算</p>
+</blockquote>
+<p>DFL损失计算的步骤如下：</p>
+<ul>
+<li>计算anchor_point和标签框边界的距离，得到$ltrb &#x3D; [左距离，顶距离，右距离，下距离]$</li>
+<li>对这些距离进行限制，强制限制在(0, reg_max - 0.01)范围内</li>
+<li>计算左右 bin 索引和权重</li>
+<li>计算交叉熵损失</li>
+</ul>
+<p>计算公式如下所示:<br>$$<br>\begin{array}{c}<br>\mathrm{DFL}(p,t)&#x3D;w_l\cdot\mathrm{CE}(p,t_l)+w_r\cdot\mathrm{CE}(p,t_r)<br>\end{array}<br>$$<br>其中：</p>
+<ul>
+<li>$t$：目标边界框的连续坐标值（如偏移量）</li>
+<li>$t_l &#x3D; \lfloor t \rfloor$：目标值左侧的整数 bin 索引</li>
+<li>$t_r &#x3D; t_l + 1$：目标值右侧的整数 bin 索引</li>
+<li>$w_l &#x3D; t_r - t$：左侧 bin 的权重</li>
+<li>$w_r &#x3D; t - t_l &#x3D; 1 - w_l$：右侧 bin 的权重</li>
+<li>$p$：模型预测的离散概率分布（长度为 $reg_max + 1$）</li>
+<li>$\text{CE}(p, y) &#x3D; -\log(p_y)$：交叉熵损失（当 $p$ 为概率）或标准交叉熵形式（当 $p$ 为 logits）</li>
+</ul>
+<p>举个例子:</p>
+<p>假设 <code>reg_max=5</code>，GT <code>target=2.6</code>，<code>pred_dist=[0.1, 0.1, 0.2, 0.3, 0.3]</code>，则：</p>
+<ul>
+<li><p><code>tl=2</code>, <code>tr=3</code></p>
+</li>
+<li><p><code>wl=0.4</code>, <code>wr=0.6</code></p>
+<blockquote>
+<p>40% 属于桶 2</p>
+<p>60% 属于桶 3</p>
+</blockquote>
+</li>
+<li><p>loss &#x3D; 0.4 × CrossEntropy(pred, 2) + 0.6 × CrossEntropy(pred, 3)</p>
+</li>
+</ul>
+<p><code>pred_dist</code> 是模型输出的 <strong>分布式回归预测</strong>，即：<strong>每个 bbox 边界（left&#x2F;top&#x2F;right&#x2F;bottom）对某个离散距离桶的概率分布预测。</strong></p>
+<p>DFLoss的实现程序如下所示:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#ultralytics/utils/loss.py</span>
 
-
-
-
-
-
-
+<span class="token keyword">class</span> <span class="token class-name">DFLoss</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Criterion class for computing Distribution Focal Loss (DFL)."""</span>
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> reg_max<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""Initialize the DFL module with regularization maximum."""</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>reg_max <span class="token operator">=</span> reg_max
+<span class="token keyword">def</span> <span class="token function">__call__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> pred_dist<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> target<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Return sum of left and right DFL losses from https://ieeexplore.ieee.org/document/9792391."""</span>
+    target <span class="token operator">=</span> target<span class="token punctuation">.</span>clamp_<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> self<span class="token punctuation">.</span>reg_max <span class="token operator">-</span> <span class="token number">1</span> <span class="token operator">-</span> <span class="token number">0.01</span><span class="token punctuation">)</span>
+    tl <span class="token operator">=</span> target<span class="token punctuation">.</span><span class="token builtin">long</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># target left</span>
+    tr <span class="token operator">=</span> tl <span class="token operator">+</span> <span class="token number">1</span>  <span class="token comment"># target right</span>
+    wl <span class="token operator">=</span> tr <span class="token operator">-</span> target  <span class="token comment"># weight left</span>
+    wr <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> wl  <span class="token comment"># weight right</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tl<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wl
+        <span class="token operator">+</span> F<span class="token punctuation">.</span>cross_entropy<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> tr<span class="token punctuation">.</span>view<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> reduction<span class="token operator">=</span><span class="token string">"none"</span><span class="token punctuation">)</span><span class="token punctuation">.</span>view<span class="token punctuation">(</span>tl<span class="token punctuation">.</span>shape<span class="token punctuation">)</span> <span class="token operator">*</span> wr
+    <span class="token punctuation">)</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> keepdim<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 

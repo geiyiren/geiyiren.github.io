@@ -649,7 +649,7 @@
     <span class="token keyword">return</span> dist2bbox<span class="token punctuation">(</span>pred_dist<span class="token punctuation">,</span> anchor_points<span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>都行大概看一下这里在干什么，<code>pred_dist</code>为网络直接的预测结果，首先进行维度变换<code>view</code>,然后对第3个维度的数据进行了归一化<code>softmax</code>:</p>
-<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/Softmax.png" alt="Softmax"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/Softmax.png" alt="Softmax"></p>
 <p>最后又和某个矩阵进行了矩阵乘法运算<code>matmul</code>，最终得到了<code>pred_dist</code>。看起来这里是有一个数学公式在支持，那我们就看下这个数学运算在干什么：</p>
 <ul>
 <li><h3 id="1️⃣-定义"><a href="#1️⃣-定义" class="headerlink" title="1️⃣ 定义"></a>1️⃣ 定义</h3></li>
@@ -1219,7 +1219,7 @@ target_scores <span class="token operator">=</span> target_scores <span class="t
 </li>
 <li><p><code>pwh</code>为<code>特征图尺度下</code>预测框的宽度</p>
 <p>然后我们分析一下<code>pxy</code>和<code>pwh</code>的范围：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/sigmoid-1757560625430-3.png" alt="sigmoid"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/sigmoid-1757560625430-3.png" alt="sigmoid"></p>
 <p>通过这个图像可以看出:</p>
 <ul>
 <li>$pxy \in [0.5,1.5]$</li>
@@ -1740,7 +1740,7 @@ loss_iou <span class="token operator">=</span> <span class="token punctuation">(
 </ul>
 </li>
 </ul>
-<p><img src="/../../../MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/image-20250827202928632.png" alt="image-20250827202928632"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B%E7%AE%97%E6%B3%95%E4%B9%8B%E6%8D%9F%E5%A4%B1%E8%AE%A1%E7%AE%97/image-20250827202928632.png" alt="image-20250827202928632"></p>
 <p>根据曲线可以看出：</p>
 <ul>
 <li>如果标签中给的gride无目标，即y&#x3D;0时，预测的分数越大，损失越大；这就会对误报进行惩罚</li>

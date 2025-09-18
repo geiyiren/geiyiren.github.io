@@ -391,7 +391,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    1.7k
                 </div>
                 
 
@@ -416,8 +416,8 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>![在这里插入图片描述](..&#x2F;..&#x2F;..&#x2F;MyBlogImage1&#x2F;0_模板 (copy)&#x2F;37bae19a8207a9f9a8ffa087b36ac48d.png)<br>本文由同济大学和北京大学合作发表于CVPR2018，聚焦于loss层面，为遮挡情况下的行人检测问题提供了一种行之有效的解决方案。<br>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.07752">https://arxiv.org/abs/1711.07752</a></p>
-<h2 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h2><p>![在这里插入图片描述](..&#x2F;..&#x2F;..&#x2F;MyBlogImage1&#x2F;0_模板 (copy)&#x2F;8b2d3278e970406e472d438e715e2c3f.png)</p>
+                <p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;37bae19a8207a9f9a8ffa087b36ac48d.png)<br>本文由同济大学和北京大学合作发表于CVPR2018，聚焦于loss层面，为遮挡情况下的行人检测问题提供了一种行之有效的解决方案。<br>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.07752">https://arxiv.org/abs/1711.07752</a></p>
+<h2 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h2><p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;8b2d3278e970406e472d438e715e2c3f.png)</p>
 <h4 id="行人遮挡会造成什么问题"><a href="#行人遮挡会造成什么问题" class="headerlink" title="行人遮挡会造成什么问题"></a>行人遮挡会造成什么问题</h4><p><strong>当我们在做行人检测时，人与人之间会存在互相遮挡。遮挡会造成2个问题：</strong></p>
 <p>1.设红色框为目标框T（man）的预测框P，旁边也有个真实框B（woman），我们的P可能会被往B去移动（shift）。</p>
 <p>2.检测器对NMS的阈值的选取更为敏感。如果NMS阈值选取过小，周围的目标框会被<strong>过滤</strong>掉；如果NMS阈值选取过大，会带更多的<strong>虚检</strong>。</p>
@@ -437,7 +437,7 @@
 <span class="token number">6</span>、每次获取到的最大置信率的region proposals就是我们筛选出来的目标。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>那么问题来了，对于有遮挡的行人数据集，这里过滤掉的检测框有没有对隔壁检测目标IoU最高却被我们这个检测目标的检测框给抑制掉的呢？看图。</p>
-<p>![在这里插入图片描述](..&#x2F;..&#x2F;..&#x2F;MyBlogImage1&#x2F;0_模板 (copy)&#x2F;a0068cc853c8c3b049bec3bfdda76098.png)<br><strong>NMS阈值选取过小</strong>：针对目标T（man），检测框$P$与T的IoU最大，P会视为T的预测框。如果NMS选取过小，旁边目标B的预测框（woman)假设为K,那么K会被选作T的检测框，然后被P抑制掉。</p>
+<p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;a0068cc853c8c3b049bec3bfdda76098.png)<br><strong>NMS阈值选取过小</strong>：针对目标T（man），检测框$P$与T的IoU最大，P会视为T的预测框。如果NMS选取过小，旁边目标B的预测框（woman)假设为K,那么K会被选作T的检测框，然后被P抑制掉。</p>
 <p><strong>NMS阈值选取过大</strong>：与上面是同样的道理，会多出许多检测框，带来更多的假正例。</p>
 <h2 id="Repulsion-loss"><a href="#Repulsion-loss" class="headerlink" title="Repulsion loss"></a>Repulsion loss</h2><p>既然已经清楚影响是怎样造成的，来看看解决方案。Repulsion loss的作用在于，<strong>要求预测框P靠近（吸引）自己的真实目标T的同时，还要求P远离（排斥）T旁边的其他真实框（例如B）</strong>。</p>
 <p>Replusion loss如下：<br>$$<br>L&#x3D;L_{\text{Attr}}+\alpha<em>L_{\text{RepGT}}+\beta</em>L_{\text{RepBox}}<br>$$<br>可以看到该损失函数中包含3个模块，下面来分别作解释。</p>

@@ -454,7 +454,7 @@
         Y <span class="token operator">+=</span> X
         <span class="token keyword">return</span> F<span class="token punctuation">.</span>relu<span class="token punctuation">(</span>Y<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806161119151.png" alt="image-20250806161119151"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806161119151.png" alt="image-20250806161119151"></p>
 <blockquote>
 <p>1x1卷积是为了调整通道和分辨率</p>
 </blockquote>
@@ -473,18 +473,18 @@
 </li>
 </ul>
 <h2 id="DenseNet结构分析"><a href="#DenseNet结构分析" class="headerlink" title="DenseNet结构分析"></a>DenseNet结构分析</h2><p>首先来看下ResNet的网络整体是什么样子的：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806162728956.png" alt="image-20250806162728956"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/image-20250806162728956.png" alt="image-20250806162728956"></p>
 <blockquote>
 <p>其中+代表的是元素级相加操作</p>
 </blockquote>
 <p>而DenseNet正是在ResNet的基础上进行了更加稠密的连接:</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/v2-2cb01c1c9a217e56c72f4c24096fe3fe_r.jpg" alt="v2-2cb01c1c9a217e56c72f4c24096fe3fe_r"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/v2-2cb01c1c9a217e56c72f4c24096fe3fe_r.jpg" alt="v2-2cb01c1c9a217e56c72f4c24096fe3fe_r"></p>
 <blockquote>
 <p>其中c代表的是channel级连接操作</p>
 </blockquote>
 <p>这样的网络首先具有特征复用充分的特征，后面的每一层网络都可以使用前面任何一层提取的特征，实现了一定程度上的特征共享。而ResNet是将上以模块的提取的特征进行重新学习后形成自己的特征进行表达输出。但是像DenseNet这样的网络不适合深层设计，因为随着层数增加，连接数急剧增长，带来计算复杂度上升，训练非常深的DenseNet变得困难。</p>
 <p>ResNet是将主干和旁路分支的结果进行相加后融合为自己的特征进行表达输出，而DenseNet是主干和旁路分支的结果进行拼接后融合为自己的特征进行表达输出，这样可以实现上一个模块的特征未经”加工”且可以在这一模块直接使用。</p>
-<h2 id="BottleNeck"><a href="#BottleNeck" class="headerlink" title="BottleNeck"></a>BottleNeck</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/BottleNeck.svg" alt="BottleNeck"></p>
+<h2 id="BottleNeck"><a href="#BottleNeck" class="headerlink" title="BottleNeck"></a>BottleNeck</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/BottleNeck.svg" alt="BottleNeck"></p>
 <table>
 <thead>
 <tr>
@@ -568,7 +568,7 @@
 </tr>
 </tbody></table>
 <p>Bottleneck模块为了中间层卷积的计算量更小，在第一层卷积中将卷积核设置为1x1进行降维，减少通道数，然后使用中间层3x3卷积进行特征提取，最后再使用1x1卷积进行升维度。Bottleneck模块通过降维-提取-升维的设计，既减少计算负担又支持更深的网络，利用更丰富的非线性变换(降维-升维)和特征融合，从而提升了网络捕捉复杂特征的能力，表达能力更强。</p>
-<h2 id="C3结构分析"><a href="#C3结构分析" class="headerlink" title="C3结构分析"></a>C3结构分析</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c3.svg" alt="c3"></p>
+<h2 id="C3结构分析"><a href="#C3结构分析" class="headerlink" title="C3结构分析"></a>C3结构分析</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c3.svg" alt="c3"></p>
 <ul>
 <li><p><strong>C3 模块设计亮点总结</strong>：</p>
 <ol>
@@ -602,7 +602,7 @@
 </li>
 </ul>
 <h1 id="C2f模块分析"><a href="#C2f模块分析" class="headerlink" title="C2f模块分析"></a>C2f模块分析</h1><p>模型结构如下：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c2f.svg" alt="c2f"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/c2f.svg" alt="c2f"></p>
 <p>从结构上对比C2f和C3的不同之处：</p>
 <ul>
 <li>C2f取消了旁路分支的卷积操作。</li>
@@ -610,7 +610,7 @@
 <li>C3具有的优势C2f就基本上都具有，但是C2f相对更加轻量化</li>
 </ul>
 <h1 id="SPPF"><a href="#SPPF" class="headerlink" title="SPPF"></a>SPPF</h1><h2 id="池化"><a href="#池化" class="headerlink" title="池化"></a>池化</h2><p>首先来看下什么是池化，下面是最大池化：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/557af0cfa1a5973d911eff9632e0cb16.gif" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/557af0cfa1a5973d911eff9632e0cb16.gif" alt="img"></p>
 <p>首先可以看出池化后特征图的尺寸变小了:</p>
 <ul>
 <li>特征图越小，感受野越大，因此池化可以<strong>增加感受野</strong></li>
@@ -655,9 +655,9 @@
 </li>
 </ul>
 <h2 id="SPP"><a href="#SPP" class="headerlink" title="SPP"></a>SPP</h2><p>池化的好处这么多，网络中怎么能没有池化呢？首先看下SPP结构怎么使用池化的:</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SPP-1754645001119-50.svg" alt="SPP"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SPP-1754645001119-50.svg" alt="SPP"></p>
 <p>首先将得到的特征进行卷积,且该卷积为1x1的，只是进行降维，默认通道数减半，然后进行不同尺寸的池化，最后进行拼接后再次进行维度变换。其本质是将不同尺度的上下文信息进行融合。并且这样的结构支持任意通道的特征输入和指定通道的特征输出。</p>
-<h2 id="SPPF-1"><a href="#SPPF-1" class="headerlink" title="SPPF"></a>SPPF</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SPPF.svg" alt="SPPF"></p>
+<h2 id="SPPF-1"><a href="#SPPF-1" class="headerlink" title="SPPF"></a>SPPF</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SPPF.svg" alt="SPPF"></p>
 <p>SPPF是对SPP的改进，实现的功能是类似的,只是计算量和效果略有不同:</p>
 <ul>
 <li><p>用 SPPF 结构，把一个大池化核拆成连续的3次5×5 max-pooling，减少了计算，提升了速度。池化为降采样，串联的池化相对于并联的池化计算量更大，因此SPPF相对于SPP计算量有所降低。</p>
@@ -697,19 +697,19 @@
 <h1 id="C2fCIB"><a href="#C2fCIB" class="headerlink" title="C2fCIB"></a>C2fCIB</h1><h2 id="深度可分离卷积和普通卷积"><a href="#深度可分离卷积和普通卷积" class="headerlink" title="深度可分离卷积和普通卷积"></a>深度可分离卷积和普通卷积</h2><ul>
 <li>普通卷积</li>
 </ul>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/cf040026445713c65aa05b63a2c0432b.png" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/cf040026445713c65aa05b63a2c0432b.png" alt="img"></p>
 <p>可以看出普通卷积是将各个通道和各自对应的卷积核进行卷积后逐元素相加后组成了新的特征图，且输入通道和输出通道可以不同，<code>卷积核的个数=输出通道数x输入通道数</code></p>
 <ul>
 <li><p>深度可分离卷积</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/1f53d5ab1feb51abc0066e8bb660595b.png" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/1f53d5ab1feb51abc0066e8bb660595b.png" alt="img"></p>
 </li>
 </ul>
 <p>深度可分离卷积的首要特征就是每个通道使用独立的卷积核，且输入通道数等于输出通道数，计算量大大降低，毫无疑卷积核的个数&#x3D;输出通道数&#x3D;输入通道数</p>
 <p>深度可分离卷积的明显特征就是计算量大大下降，这是因为卷积核的个数下降，权重参数自然也下降了。</p>
-<h2 id="CIB"><a href="#CIB" class="headerlink" title="CIB"></a>CIB</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/CIB-1755227701379-6.svg" alt="CIB"></p>
+<h2 id="CIB"><a href="#CIB" class="headerlink" title="CIB"></a>CIB</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/CIB-1755227701379-6.svg" alt="CIB"></p>
 <p>注意：不同版本中RepVGGDW也可以换为普通的深度可分离卷积</p>
 <p>可以看出CIB结构就是对BottleNeck结构的改进，将部分的普通卷积换为了深度可分离卷积，使用深度可分离卷积+1x1卷积构成一个完整的深度可分离卷积结构(DW+PW结构)，同时给出了一个可以替换的RepVGGDW模块:</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/RepVGGDW.svg" alt="RepVGGDW"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/RepVGGDW.svg" alt="RepVGGDW"></p>
 <p>RepVGGDW 的优点就是可以使用卷积融合方法，就是把训练阶段多条卷积路径和残差，通过权重叠加，合并成一个普通卷积核，保证推理阶段的输出与训练阶段一致，同时大幅提升推理效率。那么为什么可以进行卷积融合呢？</p>
 <ul>
 <li><p>卷积的线性特性</p>
@@ -729,10 +729,10 @@
 <p>​	输出为：<br>$$<br>Y &#x3D; X<em>W_1 + X</em>W_2<br>$$<br>​	根据卷积的线性特性，可以直接合并为：<br>$$<br>Y &#x3D; X*(W_1 + W_2)<br>$$</p>
 <p>​	偏置也可以直接相加：<br>$$<br>b_{\text{fused}} &#x3D; b_1 + b_2<br>$$<br>那么就可以在训练时使用多分支，增加网络的表达能力在推理时使用单分支不降低任何性能。</p>
 <h2 id="C2fCIB-1"><a href="#C2fCIB-1" class="headerlink" title="C2fCIB"></a>C2fCIB</h2><p>现在再来看C2fCIB模块就很明了：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C2fCIB-1755229133098-10.svg" alt="C2fCIB"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C2fCIB-1755229133098-10.svg" alt="C2fCIB"></p>
 <p>与C2f结构的不同之处就是，C2fCIB将BottleNeck模块换为了CIB模块，其目的就是为了降低计算量</p>
 <h1 id="SCDown"><a href="#SCDown" class="headerlink" title="SCDown"></a>SCDown</h1><p>先看结构：</p>
-<p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SCDown.svg" alt="SCDown"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/SCDown.svg" alt="SCDown"></p>
 <p>看完这个结构图，有点懵逼，前面使用CIB的时候不是说DW+PW是经典的深度可分离卷积吗？这里怎么又开始PW+DW组合了，这是想怎么组合就怎么组合？那么先来看看ChatGPT怎么说：</p>
 <table>
 <thead>
@@ -837,9 +837,9 @@
 </ul>
 <p>再回头分析一下CIB中的深度可分离卷积是没有进行降采样的，而SCDown中的深度可分离卷积是进行了降采样。到这里恍然大悟，原来C3、C2f,C2fCIB都不进行将采样，都是通过卷积进行特征提取的，如果这个卷积是经过设计的那么就可以提取边缘信息比如Sobel算子、Laplacian算子。而深度学习中的卷积的权重信息是在训练的过程中自动调整的，所以会根据损失反向调整权重使其提取想要的高层语义信息。</p>
 <h1 id="C3K2"><a href="#C3K2" class="headerlink" title="C3K2"></a>C3K2</h1><h2 id="C3K"><a href="#C3K" class="headerlink" title="C3K"></a>C3K</h2><p>首先开看一下C3K，这个就比较水了，在C3中Bottleneck 中的卷积核的尺寸固定为3x3，C3K就是Bottleneck的卷积核可指定配置为5x5或7x7等自定义的卷积核。看代码就知道C3K继承自C3,只是重定义了Bottleneck 。</p>
-<h2 id="C3K2-1"><a href="#C3K2-1" class="headerlink" title="C3K2"></a>C3K2</h2><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C3K2.svg" alt="C3K2"></p>
+<h2 id="C3K2-1"><a href="#C3K2-1" class="headerlink" title="C3K2"></a>C3K2</h2><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C3K2.svg" alt="C3K2"></p>
 <p>这个异曲同工，同样是偷梁换柱，C3K2继承自C3只是配置可以将Bottleneck换为C3k，增加模块的多样性而已。</p>
-<h1 id="C2PSA"><a href="#C2PSA" class="headerlink" title="C2PSA"></a>C2PSA</h1><p><img src="/../../../MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C2PSA.svg" alt="C2PSA"></p>
+<h1 id="C2PSA"><a href="#C2PSA" class="headerlink" title="C2PSA"></a>C2PSA</h1><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo%E5%B8%B8%E7%94%A8%E7%BB%84%E4%BB%B6%E5%88%86%E6%9E%90/C2PSA.svg" alt="C2PSA"></p>
 <p>这个C2PSA不会是继承自C2f然后将Bottleneck换为PSA吧？不是的，只是代码中没有继承，但是结构上确实是如此，那么我们就来看下PSA是个什么结构:</p>
 
                 
@@ -993,19 +993,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/05/29/yolov1-dao-yolov11-xi-tong-xue-xi/">
+                <a href="/2023/05/29/yolov5-mo-xing-jie-gou-jian-hua-shi-li/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="yoloV1到yoloV11系统学习">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/14.jpg" class="responsive-img" alt="yolov5模型结构简化实例">
                         
-                        <span class="card-title">yoloV1到yoloV11系统学习</span>
+                        <span class="card-title">yolov5模型结构简化实例</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            yoloV1到yoloV11系统学习
+                            yolov5模型结构简化实例
                         
                     </div>
                     <div class="publish-info">
@@ -1016,8 +1016,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/yolo/" class="post-category">
-                                    yolo
+                            <a href="/categories/yolov5/" class="post-category">
+                                    yolov5
                                 </a>
                             
                             
@@ -1027,8 +1027,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/yolo/">
-                        <span class="chip bg-color">yolo</span>
+                    <a href="/tags/%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">优化</span>
+                    </a>
+                    
+                    <a href="/tags/yolov5/">
+                        <span class="chip bg-color">yolov5</span>
                     </a>
                     
                 </div>

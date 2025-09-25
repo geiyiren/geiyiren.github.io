@@ -395,7 +395,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    18.6k
+                    18.9k
                 </div>
                 
 
@@ -460,7 +460,7 @@
 <p>论文《Multi-scale context aggregation by dilated convolutions》的作者用多个扩张卷积层构建了一个网络,其中扩张率 l 每层都按指数增大。由此,有效的感受野大小随层而指数增长,而参数的数量仅线性增长。</p>
 <p>这篇论文中<strong>扩张卷积的作用是系统性地聚合多个比例的形境信息,而不丢失分辨率</strong>。这篇论文表明其提出的模块能够提升那时候(2016 年)的当前最佳形义分割系统的准确度。请参阅那篇论文了解更多信息。</p>
 <h2 id="可分卷积"><a href="#可分卷积" class="headerlink" title="可分卷积"></a>可分卷积</h2><p>某些神经网络架构使用了可分卷积,比如 <strong>MobileNets</strong>。可分卷积有<em>空间可分卷积和深度可分卷积</em>。</p>
-<h3 id="空间可分卷积"><a href="#空间可分卷积" class="headerlink" title="空间可分卷积"></a>空间可分卷积</h3><p>空间可分卷积操作的是图像的 2D 空间维度,即高和宽。从概念上看,空间可分卷积是将一个卷积分解为两个单独的运算。对于下面的示例,3×3 的 Sobel 核被分成了一个 3×1 核和一个 1×3 核。<br>$$<br>\begin{bmatrix}-1&amp;0&amp;1\-2&amp;0&amp;2\-1&amp;0&amp;1\end{bmatrix}\begin{array}{ccc}&#x3D;&amp;\begin{bmatrix}1\2\1\end{bmatrix}&amp;\times&amp;[-1&amp;0&amp;1]\end{array}<br>$$<br>Sobel 核可分为一个 3x1 和一个 1x3 核在卷积中,3×3 核直接与图像卷积。在空间可分卷积中,3×1 核首先与图像卷积,然后再应用 1×3 核。这样,执行同样的操作时仅需 6 个参数,而不是 9 个。</p>
+<h3 id="空间可分卷积"><a href="#空间可分卷积" class="headerlink" title="空间可分卷积"></a>空间可分卷积</h3><p>空间可分卷积操作的是图像的 2D 空间维度,即高和宽。从概念上看,空间可分卷积是将一个卷积分解为两个单独的运算。对于下面的示例,3×3 的 Sobel 核被分成了一个 3×1 核和一个 1×3 核。<br>$$<br>\begin{bmatrix}-1&amp;0&amp;1\\-2&amp;0&amp;2\\-1&amp;0&amp;1\end{bmatrix}\begin{array}{ccc}&#x3D;&amp;\begin{bmatrix}1\\2\\1\end{bmatrix}&amp;\times&amp;[-1&amp;0&amp;1]\end{array}<br>$$<br>Sobel 核可分为一个 3x1 和一个 1x3 核在卷积中,3×3 核直接与图像卷积。在空间可分卷积中,3×1 核首先与图像卷积,然后再应用 1×3 核。这样,执行同样的操作时仅需 6 个参数,而不是 9 个。</p>
 <p>此外,使用空间可分卷积时所需的矩阵乘法也更少。给一个具体的例子,5×5 图像与 3×3 核的卷积(步幅&#x3D;1,填充&#x3D;0)要求在 3 个位置水平地扫描核(还有 3 个垂直的位置)。总共就是 9 个位置,表示为下图中的点。在每个位置,会应用 9 次逐元素乘法。总共就是 9×9&#x3D;81 次乘法。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-9.png" alt="具有 1 个通道的标准卷积"></p>
 <p>另一方面,对于空间可分卷积,我们首先在 5×5 的图像上应用一个 3×1 的过滤器。我们可以在水平 5 个位置和垂直 3 个位置扫描这样的核。总共就是 5×3&#x3D;15 个位置,表示为下图中的点。在每个位置,会应用 3 次逐元素乘法。总共就是 15×3&#x3D;45 次乘法。现在我们得到了一个 3×5 的矩阵。这个矩阵再与一个 1×3 核卷积,即在水平 3 个位置和垂直 3 个位置扫描这个矩阵。对于这 9 个位置中的每一个,应用 3 次逐元素乘法。这一步需要 9×3&#x3D;27 次乘法。因此,总体而言,空间可分卷积需要 45+27&#x3D;72 次乘法,少于普通卷积。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-10.png" alt="具有 1 个通道的空间可分卷积"></p>
 <p>我们稍微推广一下上面的例子。假设我们现在将卷积应用于一张 N×N 的图像上,卷积核为 m×m,步幅为 1,填充为 0。传统卷积需要 $(N-2) * (N-2) * m * m$ 次乘法,空间可分卷积需要 $N * (N-2) * m + (N-2) * (N-2) * m &#x3D; (2N-2) * (N-2) * m$ 次乘法。空间可分卷积与标准卷积的计算成本比为:<br>$$<br>\frac2m+\frac2{m(N-2)}<br>$$</p>
@@ -581,6 +581,52 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
  <span class="token comment"># Summary of the model</span>
  model<span class="token punctuation">.</span>summary<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
+<table>
+<thead>
+<tr>
+<th>特点</th>
+<th>前馈神经网络 (FNN)</th>
+<th>卷积神经网络 (CNN)</th>
+<th>循环神经网络 (RNN)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>基本结构</strong></td>
+<td>全连接层为主，层与层之间前向传递</td>
+<td>卷积层 + 池化层 + 全连接层</td>
+<td>循环单元（如 RNN, LSTM, GRU）</td>
+</tr>
+<tr>
+<td><strong>参数共享</strong></td>
+<td>❌ 无参数共享，每层权重独立</td>
+<td>✅ 卷积核参数共享，减少参数量</td>
+<td>一定程度共享，时间步之间权重共享</td>
+</tr>
+<tr>
+<td><strong>适用数据</strong></td>
+<td>一般向量数据</td>
+<td>空间结构数据（图像、视频）</td>
+<td>序列数据（文本、语音、时间序列）</td>
+</tr>
+<tr>
+<td><strong>是否有环路</strong></td>
+<td>❌ 无环路，信息单向流动</td>
+<td>❌ 无环路，前向传播为主</td>
+<td>✅ 有环路（时间维度回传），隐藏状态循环</td>
+</tr>
+<tr>
+<td><strong>记忆能力</strong></td>
+<td>❌ 无记忆，输入输出独立</td>
+<td>❌ 无记忆，只提取局部特征</td>
+<td>✅ 有记忆，可以保留历史信息</td>
+</tr>
+<tr>
+<td><strong>典型应用</strong></td>
+<td>分类、回归</td>
+<td>图像分类、目标检测、语义分割</td>
+<td>语言建模、机器翻译、语音识别</td>
+</tr>
+</tbody></table>
 <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer与注意力机制已经彻底改变了深度学习领域,为处理序列数据并捕捉长距离依赖关系提供了一种强大的方式。<br>在本文中,我们将深入探讨Transformer的基本原理,以及注意力机制在提升模型性能和连贯性方面的重要性。</p>
 <h3 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h3><ul>
 <li>注意力机制在Transformer中至关重要,它允许<strong>根据重要性为不同的标记(token)分配权重</strong>,从而增强模型的上下文和输出质量。 </li>
@@ -885,7 +931,14 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>近期进展显示,Transformer已应用于多种医学影像任务,展示了其多功能性和提高诊断准确性的潜力。</p>
 <p>例如,视觉Transformer已用于通过放射学筛查COVID-19、肺癌预后和视网膜血管分割。下表概述了一些关键应用及其参考文献:<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-35.png"></p>
 <p>Transformer融入计算机视觉不仅是技术演进,更是重塑了该领域可能性的格局。<br>随着我们不断探索和完善这些模型,可以期待看到更多突破性的应用,不断拓展机器感知和理解能力的边界。</p>
-<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><p>问:Transformer中的注意力机制有何重要性？<br>答:注意力机制在Transformer中至关重要,因为它允许根据重要性对输入中的不同tokens赋予不同权重,从而考虑语境,提高输出的质量和连贯性。<br>问:Transformer在处理序列数据时与RNN和LSTM有何不同？<br>答:与RNN和LSTM顺序处理数据不同,Transformer使用自注意力机制同时处理整个序列。这种并行处理能力有助于提高其有效性。<br>问:Transformer的关键组件是什么？<br>答:Transformer的架构包括自注意力机制、多头注意力和前馈神经网络。<br>问:Transformer在深度学习中有哪些应用？<br>答:Transformer广泛应用于NLP、语言建模、计算机视觉和开发最先进的模型。<br>问:Transformer如何在数据处理中捕捉长距离依赖？<br>答:Transformer利用自注意力机制衡量不同输入令牌的重要性,使其能够在无需顺序处理的情况下捕捉长距离依赖。<br>问:Transformer网络的架构是什么？<br>答:Transformer网络由包含多头自注意力机制和前馈神经网络的编码器和解码器层组成,用于有效处理序列数据。</p>
+<h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><ul>
+<li>问:Transformer中的注意力机制有何重要性？<br>答:注意力机制在Transformer中至关重要,因为它允许根据重要性对输入中的不同tokens赋予不同权重,从而考虑语境,提高输出的质量和连贯性。</li>
+<li>问:Transformer在处理序列数据时与RNN和LSTM有何不同？<br>答:与RNN和LSTM顺序处理数据不同,Transformer使用自注意力机制同时处理整个序列。这种并行处理能力有助于提高其有效性。</li>
+<li>问:Transformer的关键组件是什么？<br>答:Transformer的架构包括自注意力机制、多头注意力和前馈神经网络。</li>
+<li>问:Transformer在深度学习中有哪些应用？<br>答:Transformer广泛应用于NLP、语言建模、计算机视觉和开发最先进的模型。</li>
+<li>问:Transformer如何在数据处理中捕捉长距离依赖？<br>答:Transformer利用自注意力机制衡量不同输入令牌的重要性,使其能够在无需顺序处理的情况下捕捉长距离依赖。</li>
+<li>问:Transformer网络的架构是什么？<br>答:Transformer网络由包含多头自注意力机制和前馈神经网络的编码器和解码器层组成,用于有效处理序列数据。</li>
+</ul>
 <p>问：transformer中的attention为什么要除以根号$\sqrt{d_k}$<br>答：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43827595/article/details/125800615">https://blog.csdn.net/qq_43827595/article/details/125800615</a></p>
 <h1 id="实战-基于Transformer生成文章标题"><a href="#实战-基于Transformer生成文章标题" class="headerlink" title="实战-基于Transformer生成文章标题"></a>实战-基于Transformer生成文章标题</h1><p>整个模型结构如下，通过执行main.py文件运行整个模型<br>1 project&#x2F;<br>2 │<br>3 ├── transformer&#x2F;<br>4 │   ├── <strong>init</strong>.py<br>5 │   ├── DataLoader.py<br>6 │   ├── Translator.py<br>7 │   └── Modules.py<br>8 │<br>9 ├── config.py<br>10 ├── loader.py<br>11 ├── evaluate.py<br>12 └── main.py</p>
 <h2 id="Transformer框架"><a href="#Transformer框架" class="headerlink" title="Transformer框架"></a>Transformer框架</h2><p>Transformer整体分为以下几个部分：</p>

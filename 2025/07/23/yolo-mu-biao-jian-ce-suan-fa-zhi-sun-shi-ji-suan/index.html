@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-17
+                    2025-10-18
                 </div>
                 
 
@@ -1523,8 +1523,7 @@ target_scores <span class="token operator">=</span> target_scores <span class="t
 </li>
 </ul>
 <p><mark>只有正样本会被计算box loss</mark></p>
-<h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>- </p>
-<p>现在来看obj_loss如何计算，源码中的计算公式如下：</p>
+<h3 id="obj-loss"><a href="#obj-loss" class="headerlink" title="obj_loss"></a>obj_loss</h3><p>现在来看obj_loss如何计算，源码中的计算公式如下：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">self<span class="token punctuation">.</span>balance <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token number">3</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.4</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span>m<span class="token punctuation">.</span>nl<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">4.0</span><span class="token punctuation">,</span> <span class="token number">1.0</span><span class="token punctuation">,</span> <span class="token number">0.25</span><span class="token punctuation">,</span> <span class="token number">0.06</span><span class="token punctuation">,</span> <span class="token number">0.02</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># P3-P7</span>
 <span class="token comment"># 省略无关代码 ...</span>
 tobj<span class="token punctuation">[</span>b<span class="token punctuation">,</span> a<span class="token punctuation">,</span> gj<span class="token punctuation">,</span> gi<span class="token punctuation">]</span> <span class="token operator">=</span> iou
@@ -1539,7 +1538,7 @@ lobj <span class="token operator">+=</span> obji <span class="token operator">*<
 <li><code>pi[..., 4]</code> → <strong>objectness (有无物体的置信度)</strong></li>
 <li><code>pi[..., 5:]</code> → 各类别的分数</li>
 </ul>
-<p>因此这里的obji就是位置预测分数和标签的二元交叉熵损失。然后进行加权累加：</p>
+<p>因此这里的obj就是位置预测分数和标签的二元交叉熵损失。然后进行加权累加：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">lobj <span class="token operator">+=</span> obji <span class="token operator">*</span> self<span class="token punctuation">.</span>balance<span class="token punctuation">[</span>i<span class="token punctuation">]</span>  <span class="token comment"># obj loss</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>这里可以看出漏报和误报在这个损失中都有体现，因为<code>pi</code>中存储了所有的预测结果，<code>tobj</code>中存储了所有正样本的iou，其他框(负样本)的iou均为0，然后转换为各个gride的预测和标签值，如果标签与某个gride有交集这个<code>gride</code>的tobj就是被置1，对于<code>pi</code>预测的是各个gride的目标框的置信度，因此这个损失不仅考虑匹配成功的预测结果吗，还会考虑漏报和误报。</p>

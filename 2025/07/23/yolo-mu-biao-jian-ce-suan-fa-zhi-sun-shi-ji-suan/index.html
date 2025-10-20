@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-18
+                    2025-10-20
                 </div>
                 
 
@@ -1085,7 +1085,7 @@ target_scores <span class="token operator">=</span> target_scores <span class="t
 <li>现在来看第4行，这个就是一种归一化，对匹配分数和IoU的乘积进行归一化，然后取了标签框对应的正样本中最大的归一化分数作为所有正样本的归一化分数</li>
 <li>第5行得到的是最终的归一化的标签框的匹配分数</li>
 </ul>
-<p>这里有个疑惑，经过select_highest_overlaps函数后所有的正样本将指挥保留具有最大iou的正样本，那么这里的第2，3，4行都使用了<code>amax</code>都是对一个值取最大值，这有什么意义？似乎只是为了降维，将最后一维从<code>h*w</code>降维至<code>1</code>。最后我们得到了如下的正样本筛选结果：</p>
+<p>这里有个疑惑，经过select_highest_overlaps函数后所有的正样本将保留具有最大iou的正样本，那么这里的第2，3，4行都使用了<code>amax</code>都是对一个值取最大值，这有什么意义？似乎只是为了降维，将最后一维从<code>h*w</code>降维至<code>1</code>。最后我们得到了如下的正样本筛选结果：</p>
 <table>
 <thead>
 <tr>

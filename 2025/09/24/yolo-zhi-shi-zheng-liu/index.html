@@ -384,7 +384,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-31
+                    2025-11-03
                 </div>
                 
 
@@ -426,10 +426,10 @@
 </ul>
 <p>首先看下，chart_GPT如何回答：</p>
 <p><strong>1️⃣ 知识蒸馏必须是教师-学生模型的形式吗？</strong></p>
-<p><strong>结论：</strong>严格来说，知识蒸馏通常采用教师-学生形式，但核心是“从一个已有的模型中提取信息引导另一个模型训练”。</p>
+<p>**结论：**严格来说，知识蒸馏通常采用教师-学生形式，但核心是“从一个已有的模型中提取信息引导另一个模型训练”。</p>
 <ul>
 <li>经典KD（Hinton et al., 2015）确实是<strong>大模型 → 小模型</strong>，用教师模型的soft label（logits softmax后的概率分布）指导学生模型训练。</li>
-<li>扩展形式：<ul>
+<li>扩展形式： <ul>
 <li><strong>自蒸馏（Self-Distillation）</strong>：模型自身不同时期或不同分支的输出相互蒸馏。</li>
 <li><strong>对等蒸馏（Peer Distillation）</strong>：多个相同级别模型互相指导。</li>
 </ul>
@@ -465,21 +465,16 @@
 <p><strong>3️⃣ 教师模型和学生模型在相同结构时，各层的loss怎么计算？不同层输出只是张量，没有明确物理意义？</strong></p>
 <p>确实，你说的对，中间层输出通常没有直接物理含义，但它们包含<strong>特征表达能力</strong>。常用方法：</p>
 <ol>
-<li><p><strong>特征匹配（Feature Map Distillation）</strong></p>
-<ul>
-<li><p>将教师和学生某层的输出特征张量进行匹配，例如L2 loss：<br>$$<br>L_{\text{feature}} &#x3D; | F_T - F_S |_2^2<br>$$</p>
-</li>
-<li><p>这里的张量是特征分布的表示，而不是直接物理量。</p>
-</li>
+<li><strong>特征匹配（Feature Map Distillation）</strong><ul>
+<li>将教师和学生某层的输出特征张量进行匹配，例如L2 loss：<br>$$<br>L_{\text{feature}} &#x3D; | F_T - F_S |_2^2<br>$$</li>
+<li>这里的张量是特征分布的表示，而不是直接物理量。</li>
 </ul>
 </li>
-<li><p><strong>注意力蒸馏（Attention-based Distillation）</strong></p>
-<ul>
+<li><strong>注意力蒸馏（Attention-based Distillation）</strong><ul>
 <li>将中间特征转成注意力图，再做loss，减少对空间维度的直接依赖。</li>
 </ul>
 </li>
-<li><p><strong>隐藏层logits蒸馏</strong></p>
-<ul>
+<li><strong>隐藏层logits蒸馏</strong><ul>
 <li>可以把每一层输出经过线性或卷积映射到相同维度，再计算loss。</li>
 </ul>
 </li>
@@ -488,7 +483,7 @@
 <p><strong>4️⃣ 结构不同的教师学生模型，如果训练时评估指标相近，还有蒸馏必要性吗？</strong></p>
 <ul>
 <li>如果学生模型已经在目标指标上与教师相近，<strong>蒸馏带来的提升可能很小</strong>。</li>
-<li>但蒸馏仍可能带来：<ul>
+<li>但蒸馏仍可能带来： <ul>
 <li>学生模型的<strong>训练更稳定</strong></li>
 <li>更快收敛</li>
 <li>某些任务下<strong>泛化能力略微提升</strong></li>
@@ -500,7 +495,7 @@
 <p>这是最关键也最容易被误解的地方。</p>
 <ul>
 <li>KD的核心作用是<strong>让学生学习教师的soft distribution或特征分布</strong>，相当于给了额外的正则化信号。</li>
-<li><strong>泛化提升情况</strong>：<ul>
+<li><strong>泛化提升情况</strong>： <ul>
 <li><strong>小幅提升</strong>：在数据不足或噪声存在的情况下，KD可以让学生学习到教师在类别间的相对关系，从而提高泛化。</li>
 <li><strong>受限</strong>：如果学生模型容量本身太小，无法真正表达教师知识，即使在训练集上提升指标，泛化提升有限。</li>
 </ul>

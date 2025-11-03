@@ -4,8 +4,8 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Transform基础常识, geiyiren">
-    <meta name="description" content="Transform基础常识">
+    <meta name="keywords" content="Transformer基础常识, geiyiren">
+    <meta name="description" content="Transformer基础常识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -17,7 +17,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Transform基础常识 | geiyiren</title>
+    <title>Transformer基础常识 | geiyiren</title>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
     
 
@@ -325,12 +325,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Transform基础常识</h1>
+                    <h1 class="description center-align post-title">Transformer基础常识</h1>
                 </div>
             </div>
         </div>
@@ -352,8 +352,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Transform/">
-                                <span class="chip bg-color">Transform</span>
+                            <a href="/tags/Transformer/">
+                                <span class="chip bg-color">Transformer</span>
                             </a>
                         
                             <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
@@ -368,8 +368,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/Transform/" class="post-category">
-                                Transform
+                            <a href="/categories/Transformer/" class="post-category">
+                                Transformer
                             </a>
                         
                     </div>
@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-31
+                    2025-11-03
                 </div>
                 
 
@@ -449,12 +449,12 @@
 <p>转置矩阵的算术解释可参阅:<br><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1603.07285">https://arxiv.org/abs/1603.07285</a></p>
 <h2 id="扩张卷积-Atrous-卷积"><a href="#扩张卷积-Atrous-卷积" class="headerlink" title="扩张卷积(Atrous 卷积)"></a>扩张卷积(Atrous 卷积)</h2><p>扩张卷积由这两篇引入:</p>
 <p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1412.7062%EF%BC%9B">https://arxiv.org/abs/1412.7062；</a></p>
-<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1511.07122">https://arxiv.org/abs/1511.07122</a> </p>
+<p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1511.07122">https://arxiv.org/abs/1511.07122</a></p>
 <p>这是一个标准的离散卷积:</p>
 <p>$$<br>(F*k)(\boldsymbol{p})&#x3D;\sum_{s+t&#x3D;p}F(\boldsymbol{s})k(\boldsymbol{t})<br>$$</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-6.png" alt="标准卷积"></p>
 <p>扩张卷积如下:</p>
-<p>$$<br>(F*_{l}k)(\boldsymbol{p})&#x3D;\sum_{s+lt&#x3D;p}F(\boldsymbol{s})k(\boldsymbol{t})<br>$$</p>
+<p>$$<br>(F**{l}k)(\boldsymbol{p})&#x3D;\sum*{s+lt&#x3D;p}F(\boldsymbol{s})k(\boldsymbol{t})<br>$$</p>
 <p>当 l&#x3D;1 时,扩张卷积会变得和标准卷积一样。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-7.png" alt="扩张卷积"><br>直观而言,扩张卷积就是通过在核元素之间插入空格来使核「膨胀」。新增的参数 l(扩张率)表示我们希望将核加宽的程度。具体实现可能各不相同,但<strong>通常是在核元素之间插入 l-1 个空格</strong>。下面展示了 l &#x3D; 1, 2, 4 时的核大小。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-8.png" alt="扩张卷积的感受野"></p>
 <p>在这张图像中,3×3 的红点表示经过卷积后,输出图像是 3×3 像素。尽管所有这三个扩张卷积的输出都是同一尺寸,但模型观察到的感受野有很大的不同。l&#x3D;1 时感受野为 3×3,l&#x3D;2 时为 7×7。l&#x3D;3 时,感受野的大小就增加到了 15×15。有趣的是,与这些操作相关的参数的数量是相等的。我们「观察」更大的感受野不会有额外的成本。因此,<strong>扩张卷积可用于廉价地增大输出单元的感受野,而不会增大其核大小</strong>,这在多个扩张卷积彼此堆叠时尤其有效。</p>
 <p>论文《Multi-scale context aggregation by dilated convolutions》的作者用多个扩张卷积层构建了一个网络,其中扩张率 l 每层都按指数增大。由此,有效的感受野大小随层而指数增长,而参数的数量仅线性增长。</p>
@@ -487,7 +487,7 @@
 <p>在分组卷积中,过滤器会被分为不同的组。每一组都负责特定深度的典型 2D 卷积。下面的例子能让你更清楚地理解。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-19.png" alt="具有两个过滤器分组的分组卷积"></p>
 <p>上图展示了具有两个过滤器分组的分组卷积。在每个过滤器分组中,每个过滤器的深度仅有名义上的 2D 卷积的一半。它们的深度是 Din&#x2F;2。每个过滤器分组包含 Dout&#x2F;2 个过滤器。第一个过滤器分组(红色)与输入层的前一半([:, :, 0:Din&#x2F;2])卷积,而第二个过滤器分组(橙色)与输入层的后一半([:, :, Din&#x2F;2:Din])卷积。因此,每个过滤器分组都会创建 Dout&#x2F;2 个通道。整体而言,两个分组会创建 2×Dout&#x2F;2 &#x3D; Dout 个通道。然后我们将这些通道堆叠在一起,得到有 Dout 个通道的输出层。</p>
 <ul>
-<li>分组卷积与深度卷积<br>你可能会注意到分组卷积与深度可分卷积中使用的深度卷积之间存在一些联系和差异。如果过滤器分组的数量与输入层通道的数量相同,则每个过滤器的深度都为 Din&#x2F;Din&#x3D;1。这样的过滤器深度就与深度卷积中的一样了。</li>
+<li>分组卷积与深度卷积 你可能会注意到分组卷积与深度可分卷积中使用的深度卷积之间存在一些联系和差异。如果过滤器分组的数量与输入层通道的数量相同,则每个过滤器的深度都为 Din&#x2F;Din&#x3D;1。这样的过滤器深度就与深度卷积中的一样了。</li>
 </ul>
 <p>另一方面,现在每个过滤器分组都包含 Dout&#x2F;Din 个过滤器。整体而言,输出层的深度为 Dout。这不同于深度卷积的情况——深度卷积并不会改变层的深度。在深度可分卷积中,层的深度之后通过 1×1 卷积进行扩展。</p>
 <p>分组卷积有几个优点。</p>
@@ -503,7 +503,7 @@
 <p>AlexNet conv1 过滤器分解:正如作者指出的那样,过滤器分组似乎会将学习到的过滤器结构性地组织成两个不同的分组。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-23.png"><br>此外,每个过滤器分组都会学习数据的一个独特表征。正如 AlexNet 的作者指出的那样,过滤器分组似乎会将学习到的过滤器结构性地组织成两个不同的分组——黑白过滤器和彩色过滤器。</p>
 <h1 id="神经网络的类型"><a href="#神经网络的类型" class="headerlink" title="神经网络的类型"></a>神经网络的类型</h1><h2 id="前馈神经网络-FNN"><a href="#前馈神经网络-FNN" class="headerlink" title="前馈神经网络(FNN)"></a>前馈神经网络(FNN)</h2><p>前馈神经网络 (FNN) 是最简单的人工神经网络,其中信息只朝一个方向移动,即向前移动,从输入节点,经过隐藏节点(如果有),最后到达输出节点。</p>
 <p>网络中没有循环或环路,因此是一种简单的架构。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-24.png"><br>工作原理<br>1.输入层: 输入特征(例如,图像的像素值)被输入到网络中。<br>2.隐藏层 每个隐藏层由处理来自前一层的输入的神经元组成。 每个神经元计算其输入的加权和,添加偏差,并将结果传递给激活函数(例如 ReLU、sigmoid)。<br>3.输出层 最后一层提供网络的输出(例如,分类中的类概率或回归中的连续值)。 </p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-24.png"><br>工作原理<br>1.输入层: 输入特征(例如,图像的像素值)被输入到网络中。<br>2.隐藏层 每个隐藏层由处理来自前一层的输入的神经元组成。 每个神经元计算其输入的加权和,添加偏差,并将结果传递给激活函数(例如 ReLU、sigmoid)。<br>3.输出层 最后一层提供网络的输出(例如,分类中的类概率或回归中的连续值)。</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>keras<span class="token punctuation">.</span>models <span class="token keyword">import</span> Sequential
 <span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>keras<span class="token punctuation">.</span>layers <span class="token keyword">import</span> Dense
 
@@ -523,11 +523,11 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <h2 id="卷积神经网络-CNN"><a href="#卷积神经网络-CNN" class="headerlink" title="卷积神经网络(CNN)"></a>卷积神经网络(CNN)</h2><p>卷积神经网络 (CNN) 是一类深度神经网络,专门用于处理结构化网格状数据(例如图像)。</p>
 <p>它们使用卷积层自动且自适应地从输入数据中学习特征的空间层次结构。</p>
 <ul>
-<li>卷积层 将一组过滤器(核)应用于输入,这些过滤器在输入数据上滑动以生成特征图。 </li>
+<li>卷积层 将一组过滤器(核)应用于输入,这些过滤器在输入数据上滑动以生成特征图。</li>
 <li>池化层 降低特征图的维数,使得网络的计算效率更高,并且对输入中的小平移具有不变性。</li>
 </ul>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-25.png"></p>
-<p>工作原理<br>1.输入层 CNN 的输入通常是以像素值矩阵表示的图像。 对于彩色图像,这通常是 3D 矩阵(高度 × 宽度 × 通道)。<br>2.卷积层 CNN 的核心思想是卷积运算,其中一个称为过滤器或内核的小矩阵在输入图像上滑动,并计算过滤器与其覆盖的图像块之间的点积。 此操作生成特征图。<br>3.池化层 池化层减少了特征图的空间维度(高度和宽度),使计算更易于管理,并允许网络专注于最重要的特征。 最常见的类型是最大池化,它从特征图的每个块中获取最大值。<br>4.全连接层 经过几个卷积层和池化层之后,神经网络中的高级推理通过全连接层完成。<br>5.输出层 输出层使用特定的激活函数(对于分类任务,通常是 Softmax)来产生最终预测。输出是所有可能类别的概率分布。 </p>
+<p>工作原理<br>1.输入层 CNN 的输入通常是以像素值矩阵表示的图像。 对于彩色图像,这通常是 3D 矩阵(高度 × 宽度 × 通道)。<br>2.卷积层 CNN 的核心思想是卷积运算,其中一个称为过滤器或内核的小矩阵在输入图像上滑动,并计算过滤器与其覆盖的图像块之间的点积。 此操作生成特征图。<br>3.池化层 池化层减少了特征图的空间维度(高度和宽度),使计算更易于管理,并允许网络专注于最重要的特征。 最常见的类型是最大池化,它从特征图的每个块中获取最大值。<br>4.全连接层 经过几个卷积层和池化层之后,神经网络中的高级推理通过全连接层完成。<br>5.输出层 输出层使用特定的激活函数(对于分类任务,通常是 Softmax)来产生最终预测。输出是所有可能类别的概率分布。</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>keras<span class="token punctuation">.</span>datasets <span class="token keyword">import</span> mnist
 <span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>keras<span class="token punctuation">.</span>utils <span class="token keyword">import</span> to_categorical
 
@@ -563,7 +563,7 @@ X_test <span class="token operator">=</span> X_test<span class="token punctuatio
 
 <h2 id="循环神经网络-RNN"><a href="#循环神经网络-RNN" class="headerlink" title="循环神经网络(RNN)"></a>循环神经网络(RNN)</h2><p>循环神经网络 (RNN) 是一类用于<em>处理顺序数据</em>的神经网络。与标准神经网络不同,RNN 具有循环,可让其保留先前输入的“记忆”,因此非常适合处理涉及序列的任务。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-26.png"></p>
 <ul>
-<li>LSTM(长短期记忆) 一种 RNN,可以通过维护随每次输入更新的记忆单元来学习长期依赖关系。LSTM 解决了标准 RNN 的梯度消失问题。 </li>
+<li>LSTM(长短期记忆) 一种 RNN,可以通过维护随每次输入更新的记忆单元来学习长期依赖关系。LSTM 解决了标准 RNN 的梯度消失问题。</li>
 <li>GRU(门控循环单元) LSTM 的简化版本,将遗忘门和输入门组合成单个更新门。 GRU 计算效率高,性能通常与 LSTM 一样好。</li>
 </ul>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> tensorflow<span class="token punctuation">.</span>keras<span class="token punctuation">.</span>models <span class="token keyword">import</span> Sequential
@@ -629,10 +629,10 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 </tbody></table>
 <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer与注意力机制已经彻底改变了深度学习领域,为处理序列数据并捕捉长距离依赖关系提供了一种强大的方式。<br>在本文中,我们将深入探讨Transformer的基本原理,以及注意力机制在提升模型性能和连贯性方面的重要性。</p>
 <h3 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h3><ul>
-<li>注意力机制在Transformer中至关重要,它允许<strong>根据重要性为不同的标记(token)分配权重</strong>,从而增强模型的上下文和输出质量。 </li>
-<li>Transformer通过<strong>自注意力机制</strong>运作,能够在不进行序列处理的情况下捕捉长距离依赖关系。 </li>
-<li>Transformer中的<strong>多头注意力机制</strong>允许模型同时关注输入数据的不同方面,从而提升模型性能。 </li>
-<li>由于其<strong>并行处理能力</strong>,Transformer在处理序列数据时优于循环神经网络(RNN)和长短时记忆网络(LSTM)。 </li>
+<li>注意力机制在Transformer中至关重要,它允许<strong>根据重要性为不同的标记(token)分配权重</strong>,从而增强模型的上下文和输出质量。</li>
+<li>Transformer通过<strong>自注意力机制</strong>运作,能够在不进行序列处理的情况下捕捉长距离依赖关系。</li>
+<li>Transformer中的<strong>多头注意力机制</strong>允许模型同时关注输入数据的不同方面,从而提升模型性能。</li>
+<li>由于其<strong>并行处理能力</strong>,Transformer在处理序列数据时优于循环神经网络(RNN)和长短时记忆网络(LSTM)。</li>
 <li>Transformer的应用范围涵盖自然语言处理(NLP)、计算机视觉以及最先进的模型开发。</li>
 </ul>
 <h3 id="深度学习中的Transformer演进"><a href="#深度学习中的Transformer演进" class="headerlink" title="深度学习中的Transformer演进"></a>深度学习中的Transformer演进</h3><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-27.png"></p>
@@ -645,8 +645,8 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <p>这不仅仅是人类注意力的复制,而是增强,使机器能够在某些任务上超越人类表现。</p>
 <p>以下是强调注意力机制重要性的几个要点:</p>
 <ul>
-<li>它们通过关注最相关的部分来处理<em>可变大小的输入</em>。 </li>
-<li>基于注意力的模型能够捕捉早期模型(如RNN)难以处理的<em>长距离依赖关系</em>。 </li>
+<li>它们通过关注最相关的部分来处理<em>可变大小的输入</em>。</li>
+<li>基于注意力的模型能够捕捉早期模型(如RNN)难以处理的<em>长距离依赖关系</em>。</li>
 <li>它们促进了输入数据的<em>并行处理</em>,从而显著提高了计算效率。</li>
 </ul>
 <p>注意力机制简洁而强大,通过使模型能够考虑输入的整个上下文,它们为机器学习开辟了新的可能性,推动了自然语言处理等领域的突破。</p>
@@ -668,8 +668,8 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <p>重要的是要注意,Transformer的架构并非一成不变,它可以表现为仅编码器、仅解码器或经典的编码器-解码器模型。</p>
 <p>每种架构变体都针对特定的学习目标和任务进行了定制,以下是指导Transformer层组织的架构问题的简洁表示:</p>
 <ul>
-<li>架构类型是什么(仅编码器、仅解码器、编码器-解码器)？ </li>
-<li>Nx模块是如何组织的？ </li>
+<li>架构类型是什么(仅编码器、仅解码器、编码器-解码器)？</li>
+<li>Nx模块是如何组织的？</li>
 <li>提出的架构设计如何支持学习目标(任务)？</li>
 </ul>
 <p>Transformer架构的优势是多方面的,其并行处理能力极大地加速了训练和推理时间。<br>结合自注意力机制,该架构能够巧妙地处理长距离依赖关系,捕捉数据中跨越相当长的序列长度的复杂关系。</p>
@@ -693,7 +693,7 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <h4 id="多头注意力"><a href="#多头注意力" class="headerlink" title="多头注意力"></a>多头注意力</h4><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-32.png"></p>
 <p>多头注意力机制的巧妙之处在于,它能够通过多个具有独特视角<br>的自注意力层同时处理数据。</p>
 <p>这种并行处理使模型能够捕捉到输入的更丰富表示。通过将注意力过程划分为“头”,该机制能够以不同的方式关注输入序列的不同部分,类似于一组专家分析复杂问题的各个方面。</p>
-<p>想象一个团队正在合作完成一个复杂的项目,比如开发一款软件。每个团队成员都有自己擅长的领域:<br>1.前端开发人员:专注于用户界面和用户体验。<br>2.后端开发人员:负责服务器逻辑和数据库管理。<br>3.测试工程师:专注于软件的质量保证和错误检测。<br>4.产品经理:负责整体项目规划和需求分析。 </p>
+<p>想象一个团队正在合作完成一个复杂的项目,比如开发一款软件。每个团队成员都有自己擅长的领域:<br>1.前端开发人员:专注于用户界面和用户体验。<br>2.后端开发人员:负责服务器逻辑和数据库管理。<br>3.测试工程师:专注于软件的质量保证和错误检测。<br>4.产品经理:负责整体项目规划和需求分析。</p>
 <p>每个团队成员从自己的专业角度出发,关注项目的不同方面。他们各自独立工作,但最终将各自的成果整合在一起,形成一个完整的软件产品。</p>
 <p>同样,多头注意力结合来自多个注意力“专家”的见解,形成对输入数据的完整理解。</p>
 <p>多头注意力的精髓在于,它能够在不显著增加参数数量的情况下,增强注意力层的表达能力。</p>
@@ -710,7 +710,7 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <p>Decoder将Encoder的输出和目标序列(如翻译后的句子)作为输入，生成目标序列中每个元素的概率分布，由多个相同的层组成。每层有三个子层构成，分别是自注意力层、编码器-解码器注意力层(Encoder-Decoder Attention Layer)和前馈全连接层。其中自注意力层和前馈全连接层作用与Encoder相同，而编码器-解码器注意力层则将Encoder当前位置的输入与Decoder所有位置计算注意力分数来获得与目标序列有关的信息</p>
 <p>整个模型可以抽象为以下结构<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-38.png"></p>
 <h4 id="编码器-Encoder"><a href="#编码器-Encoder" class="headerlink" title="编码器(Encoder)"></a>编码器(Encoder)</h4><p>编码器的主要作用是将输入编码处理为带有注意力信息的连续表示，可以将编码器堆叠N次使得每一层都有机会学习不同的注意力表示，从而提高Transformer的预测能力</p>
-<p>Encoder部分主要包括： </p>
+<p>Encoder部分主要包括：</p>
 <ul>
 <li>input Embedding输入嵌入</li>
 <li>Position Encoding位置编码</li>
@@ -720,7 +720,9 @@ model <span class="token operator">=</span> Sequential<span class="token punctua
 <h5 id="input-Embedding输入嵌入"><a href="#input-Embedding输入嵌入" class="headerlink" title="input Embedding输入嵌入"></a>input Embedding输入嵌入</h5><p>因计算机本身并不能处理文字信息，故将输入文本转换成固定维度的向量表示，使其能够被模型处理<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-39.png"></p>
 <p>例：输入文本&#x3D;“how are you？”，input Embedding层将每个单词映射到长度相等的向量<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-40.png"></p>
 <h5 id="Position-Encoding位置编码"><a href="#Position-Encoding位置编码" class="headerlink" title="Position Encoding位置编码"></a>Position Encoding位置编码</h5><ul>
-<li>为何需要位置编码?<br>由于transformer中使用的都是线性层，编码过程中没有明显的位置信息，字词位置的交换，仅相当于矩阵中行位置的交换。这带来并行计算的优势，但是也弱化了语序信息，因此需要引入位置编码来弥补，具体，我们来看一个例子:<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#假设线性层w</span>
+<li>为何需要位置编码? 由于transformer中使用的都是线性层，编码过程中没有明显的位置信息，字词位置的交换，仅相当于矩阵中行位置的交换。这带来并行计算的优势，但是也弱化了语序信息，因此需要引入位置编码来弥补，具体，我们来看一个例子:</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment">#假设线性层w</span>
 w <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 x <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
 <span class="token keyword">print</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>w<span class="token punctuation">)</span><span class="token punctuation">)</span>
@@ -739,13 +741,13 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 [[49, 64]
  [76, 100]
  [22, 28]]
-"""</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-</ul>
+"""</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h5 id="transformer中位置编码"><a href="#transformer中位置编码" class="headerlink" title="transformer中位置编码"></a>transformer中位置编码</h5><p>位置编码通常是一组与input Embedding维度相同的向量，通过特定方式生成</p>
 <p>在transformer中，采用正余弦位置编码:<br>$$<br>PosEnc_{(pos,2i)}&#x3D;sin(\frac{pos}{10000^{\frac{2i}{d_{model}}}})\PosEnc_{(pos,2i+1)}&#x3D;cos(\frac{pos}{10000^{\frac{2i}{d_{model}}}})<br>$$</p>
 <p>其中，$d_{model}$是input Embedding嵌入向量的维度，$pos$是单词在序列中的位置，$i$是嵌入向量中的维度索引，输入句子为“I am a robot”，那么其位置编码如下：<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-41.png"></p>
 <h5 id="Multi-Head-Attention多头注意力机制"><a href="#Multi-Head-Attention多头注意力机制" class="headerlink" title="Multi-Head Attention多头注意力机制"></a>Multi-Head Attention多头注意力机制</h5><ul>
-<li>注意力机制的产生<br>注意力机制从本质上讲和人类的选择性注意力机制类似，核心目标是从众多信息中选择对当前任务目标更加关键的信息，它允许模型对输入序列的不同位置分配不同的权重，以便在处理每个序列元素时关注最相关的部分<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-42.png" alt="自注意力机制"></li>
+<li>注意力机制的产生 注意力机制从本质上讲和人类的选择性注意力机制类似，核心目标是从众多信息中选择对当前任务目标更加关键的信息，它允许模型对输入序列的不同位置分配不同的权重，以便在处理每个序列元素时关注最相关的部分 <img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-42.png" alt="自注意力机制"></li>
 </ul>
 <p>用公式表示为：<br>$$<br>Attention(Q,K,V)&#x3D;softmax(\frac{QK^T}{\sqrt{d}})V<br>$$<br>注：除以是因为点积数量级增长很大，因此将softmax函数推向梯度极小区域反向传播时导致梯度消失而无法学习</p>
 <p>如上图，注意力分数计算分为三步：<br>1、将一个token embedding分别与三个矩阵做矩阵乘后得到这个token对应的三个向量</p>
@@ -757,7 +759,7 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 </blockquote>
 <p>举例说明：<br>假设我们有句子 “I love deep learning” 作为输入 X，以下是如何通过注意力机制生成 Q、K 和 V 的详细过程。</p>
 <ul>
-<li>输入 X<br>首先，句子 “I love deep learning” 会被转换成一个矩阵 X，每个单词被映射为一个词向量。假设我们使用的是 4 维嵌入空间（为了简化举例），那么 X 可能如下所示：</li>
+<li>输入 X 首先，句子 “I love deep learning” 会被转换成一个矩阵 X，每个单词被映射为一个词向量。假设我们使用的是 4 维嵌入空间（为了简化举例），那么 X 可能如下所示：</li>
 </ul>
 <table>
 <thead>
@@ -785,7 +787,7 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 </tbody></table>
 <p>因此，输入矩阵 X 的形状为 (4, 4)，其中 4 是句子的长度（4 个词），每个词是一个 4 维的词向量。</p>
 <ul>
-<li>生成 Q、K 和 V<br>接下来，通过对 X 进行线性变换，我们分别得到查询（Q）、键（K）和值（V）：</li>
+<li>生成 Q、K 和 V 接下来，通过对 X 进行线性变换，我们分别得到查询（Q）、键（K）和值（V）：</li>
 </ul>
 <p>Q &#x3D; X * W_Q<br>K &#x3D; X * W_K<br>V &#x3D; X * W_V<br>其中，W_Q、W_K 和 W_V 是模型训练过程中学习到的权重矩阵。它们的维度通常是 (4, d_k) 和 (4, d_v)，其中 d_k 是每个头的键的维度，d_v 是每个头的值的维度。</p>
 <p>假设我们设置：</p>
@@ -867,17 +869,15 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 </tr>
 </tbody></table>
 <ul>
-<li><p>注意力计算<br>查询（Q）和键（K）的相似度： 我们计算 Q 和 K 之间的相似度，通常使用点积来衡量相似度。对于每个查询 Q[i] 和所有键 K[j]，我们计算点积（Q[i] 与 K[j] 的点积）。<br>加权值（V）的加权和： 在计算完相似度后，我们使用 softmax 来将相似度转换为注意力权重（概率）。然后，将这些权重应用到 V 上，通过加权和得到最终的输出。</p>
-</li>
-<li><p>总结<br>在这个例子中：<br>X 是输入的词向量矩阵，表示句子 “I love deep learning”。<br>通过线性变换，得到查询（Q）、键（K）和值（V），它们的维度会根据头数（multi-head）和模型设置（如 d_k、d_v）有所不同。<br>Q 代表每个词的查询，K 代表知识库中所有词的特征，V 是包含词的实际信息的矩阵。<br>通过这种方式，模型能够计算每个词（查询）和其他所有词（键）之间的相关性，然后从其他词（值）中提取相关信息，从而动态地调整每个词的表示。</p>
-</li>
+<li>注意力计算<br>查询（Q）和键（K）的相似度： 我们计算 Q 和 K 之间的相似度，通常使用点积来衡量相似度。对于每个查询 Q[i] 和所有键 K[j]，我们计算点积（Q[i] 与 K[j] 的点积）。<br>加权值（V）的加权和： 在计算完相似度后，我们使用 softmax 来将相似度转换为注意力权重（概率）。然后，将这些权重应用到 V 上，通过加权和得到最终的输出。</li>
+<li>总结<br>在这个例子中：<br>X 是输入的词向量矩阵，表示句子 “I love deep learning”。<br>通过线性变换，得到查询（Q）、键（K）和值（V），它们的维度会根据头数（multi-head）和模型设置（如 d_k、d_v）有所不同。<br>Q 代表每个词的查询，K 代表知识库中所有词的特征，V 是包含词的实际信息的矩阵。<br>通过这种方式，模型能够计算每个词（查询）和其他所有词（键）之间的相关性，然后从其他词（值）中提取相关信息，从而动态地调整每个词的表示。</li>
 </ul>
 <h5 id="残差连接"><a href="#残差连接" class="headerlink" title="残差连接"></a>残差连接</h5><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-44.png"><br>残差连接：将多头注意力机制的输出向量加到原始输入向量上，再做层归一化</p>
 <h5 id="Norm层归一化"><a href="#Norm层归一化" class="headerlink" title="Norm层归一化"></a>Norm层归一化</h5><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-45.png"></p>
 <p>Transformer中主要利用Layer-normal层归一化而不是批归一化，有助于避免训练过程中的梯度消失问题，提高模型稳定性</p>
 <ul>
-<li>为什么使用层归一化?<br>在NLP任务中序列长度通常是变化的，层归一化是对单个样本中所有特征进行归一化使得能够更好处理可变长度的情况 </li>
-<li>什么时候使用?<br>在残差(Residual Connection)之后，Transformer模型中每个子层都有一个残差连接，紧接着做层归一化</li>
+<li>为什么使用层归一化? 在NLP任务中序列长度通常是变化的，层归一化是对单个样本中所有特征进行归一化使得能够更好处理可变长度的情况</li>
+<li>什么时候使用? 在残差(Residual Connection)之后，Transformer模型中每个子层都有一个残差连接，紧接着做层归一化</li>
 </ul>
 <h5 id="Feed-Forward前馈网络层"><a href="#Feed-Forward前馈网络层" class="headerlink" title="Feed Forward前馈网络层"></a>Feed Forward前馈网络层</h5><p>在Transformer中称作Position-wise Feed-Forward Networks(点对点前馈神经网络，简称FFN)</p>
 <p>实质上为两个全连接层：第一个层将输入维度拓展(如从512维升到2048维)，之后过激活函数(一般为ReLU或GELU)；第二个层将升维后的输出缩减到原始维度(如从2048维缩减回512维)</p>
@@ -902,8 +902,8 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>最后，由一个线性层和一个softmax得到当前词概率</p>
 <h5 id="生成序列停止"><a href="#生成序列停止" class="headerlink" title="生成序列停止"></a>生成序列停止</h5><p>在模型输出”eos”时停止生成<br>至此，整个Transformer模型全部拆解完毕，具体解决了如下问题：</p>
 <ul>
-<li>长距离依赖关系长期依赖问题： 遇到长文本时，传统RNN难以捕捉序列的远距离依赖关系。Transformer通过自注意力机制，能够在不同位置对序列中的每个元素赋予不同的重要性，从而有效地捕捉长距离依赖关系 </li>
-<li>并行计算问题： 传统的RNN训练时需按序列顺序依次进行，无法并行计算导致计算效率低。Transformer采用编码器-解码器框架，允许模型在输入序列上进行编码，然后在输出序列上进行解码，从而实现并行计算，大大提高模型训练的速度 </li>
+<li>长距离依赖关系长期依赖问题： 遇到长文本时，传统RNN难以捕捉序列的远距离依赖关系。Transformer通过自注意力机制，能够在不同位置对序列中的每个元素赋予不同的重要性，从而有效地捕捉长距离依赖关系</li>
+<li>并行计算问题： 传统的RNN训练时需按序列顺序依次进行，无法并行计算导致计算效率低。Transformer采用编码器-解码器框架，允许模型在输入序列上进行编码，然后在输出序列上进行解码，从而实现并行计算，大大提高模型训练的速度</li>
 <li>特征抽取问题： Transformer通过自注意力机制和多层神经网络结构，能够有效地从输入序列中抽取丰富的特征信息，为后续的任务提供更好的支持</li>
 </ul>
 <h3 id="Transformer与RNN的比较"><a href="#Transformer与RNN的比较" class="headerlink" title="Transformer与RNN的比较"></a>Transformer与RNN的比较</h3><p>顺序处理与并行处理<br><strong>Transformer的出现标志着序列建模方式的范式转变</strong>。Transformer摒弃了RNN的顺序依赖性,能够并行处理整个序列。这一架构创新充分利用了现代计算硬件(如GPU和TPU)的强大功能,显著加速了训练和推理时间。<br>然而,Transformer的并行处理能力并非没有折衷。一个显著的缺点是参数数量增加,这需要更多的内存和计算资源。</p>
@@ -914,8 +914,8 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>这对于需要合成整个序列中分布的信息的任务(如文档摘要或问答)而言,是革命性的。</p>
 <p>下面详细阐述了Transformer在处理长距离依赖方面相对于RNN的优势:</p>
 <ul>
-<li>Transformer:利用自注意力来衡量序列中每个元素的重要性,不受距离影响。 </li>
-<li>RNN:顺序处理可能导致早期元素的影响减弱,尤其是在长序列中。 </li>
+<li>Transformer:利用自注意力来衡量序列中每个元素的重要性,不受距离影响。</li>
+<li>RNN:顺序处理可能导致早期元素的影响减弱,尤其是在长序列中。</li>
 <li>LSTM:通过引入门控机制来更好地随时间保留信息,但在处理非常长的序列时仍然面临挑战。</li>
 </ul>
 <p>本质而言,Transformer架构通过为长期存在的长距离依赖问题提供了稳健的解决方案,从而<strong>重新定义了序列建模的格局</strong>。</p>
@@ -932,22 +932,22 @@ x <span class="token operator">=</span> np<span class="token punctuation">.</spa
 <p>例如,视觉Transformer已用于通过放射学筛查COVID-19、肺癌预后和视网膜血管分割。下表概述了一些关键应用及其参考文献:<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9/image-35.png"></p>
 <p>Transformer融入计算机视觉不仅是技术演进,更是重塑了该领域可能性的格局。<br>随着我们不断探索和完善这些模型,可以期待看到更多突破性的应用,不断拓展机器感知和理解能力的边界。</p>
 <h3 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h3><ul>
-<li>问:Transformer中的注意力机制有何重要性？<br>答:注意力机制在Transformer中至关重要,因为它允许根据重要性对输入中的不同tokens赋予不同权重,从而考虑语境,提高输出的质量和连贯性。</li>
-<li>问:Transformer在处理序列数据时与RNN和LSTM有何不同？<br>答:与RNN和LSTM顺序处理数据不同,Transformer使用自注意力机制同时处理整个序列。这种并行处理能力有助于提高其有效性。</li>
-<li>问:Transformer的关键组件是什么？<br>答:Transformer的架构包括自注意力机制、多头注意力和前馈神经网络。</li>
-<li>问:Transformer在深度学习中有哪些应用？<br>答:Transformer广泛应用于NLP、语言建模、计算机视觉和开发最先进的模型。</li>
-<li>问:Transformer如何在数据处理中捕捉长距离依赖？<br>答:Transformer利用自注意力机制衡量不同输入令牌的重要性,使其能够在无需顺序处理的情况下捕捉长距离依赖。</li>
-<li>问:Transformer网络的架构是什么？<br>答:Transformer网络由包含多头自注意力机制和前馈神经网络的编码器和解码器层组成,用于有效处理序列数据。</li>
+<li>问:Transformer中的注意力机制有何重要性？ 答:注意力机制在Transformer中至关重要,因为它允许根据重要性对输入中的不同tokens赋予不同权重,从而考虑语境,提高输出的质量和连贯性。</li>
+<li>问:Transformer在处理序列数据时与RNN和LSTM有何不同？ 答:与RNN和LSTM顺序处理数据不同,Transformer使用自注意力机制同时处理整个序列。这种并行处理能力有助于提高其有效性。</li>
+<li>问:Transformer的关键组件是什么？ 答:Transformer的架构包括自注意力机制、多头注意力和前馈神经网络。</li>
+<li>问:Transformer在深度学习中有哪些应用？ 答:Transformer广泛应用于NLP、语言建模、计算机视觉和开发最先进的模型。</li>
+<li>问:Transformer如何在数据处理中捕捉长距离依赖？ 答:Transformer利用自注意力机制衡量不同输入令牌的重要性,使其能够在无需顺序处理的情况下捕捉长距离依赖。</li>
+<li>问:Transformer网络的架构是什么？ 答:Transformer网络由包含多头自注意力机制和前馈神经网络的编码器和解码器层组成,用于有效处理序列数据。</li>
 </ul>
 <p>问：transformer中的attention为什么要除以根号$\sqrt{d_k}$<br>答：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43827595/article/details/125800615">https://blog.csdn.net/qq_43827595/article/details/125800615</a></p>
 <h1 id="实战-基于Transformer生成文章标题"><a href="#实战-基于Transformer生成文章标题" class="headerlink" title="实战-基于Transformer生成文章标题"></a>实战-基于Transformer生成文章标题</h1><p>整个模型结构如下，通过执行main.py文件运行整个模型<br>1 project&#x2F;<br>2 │<br>3 ├── transformer&#x2F;<br>4 │   ├── <strong>init</strong>.py<br>5 │   ├── DataLoader.py<br>6 │   ├── Translator.py<br>7 │   └── Modules.py<br>8 │<br>9 ├── config.py<br>10 ├── loader.py<br>11 ├── evaluate.py<br>12 └── main.py</p>
 <h2 id="Transformer框架"><a href="#Transformer框架" class="headerlink" title="Transformer框架"></a>Transformer框架</h2><p>Transformer整体分为以下几个部分：</p>
 <ul>
-<li>1.SubLayers.py： 实现多头注意力机制（MultiHeadAttention）和位置wise前向传播网络（PositionwiseFeedForward） </li>
-<li>2.Modules.py： 实现缩放点积注意力机制（ScaledDotProductAttention） </li>
-<li>3.Layers.py： 基于SubLayers.py实现Encoder和Decoder中的基本层 </li>
-<li>4.Models.py： 实现位置编码，并基于Layers.py实现Encoder和Decoder，并集成Transformer model </li>
-<li>5.Optim.py： 实现优化器调度，原理详见 </li>
+<li>1.SubLayers.py： 实现多头注意力机制（MultiHeadAttention）和位置wise前向传播网络（PositionwiseFeedForward）</li>
+<li>2.Modules.py： 实现缩放点积注意力机制（ScaledDotProductAttention）</li>
+<li>3.Layers.py： 基于SubLayers.py实现Encoder和Decoder中的基本层</li>
+<li>4.Models.py： 实现位置编码，并基于Layers.py实现Encoder和Decoder，并集成Transformer model</li>
+<li>5.Optim.py： 实现优化器调度，原理详见</li>
 <li>6.Translator.py： 实现篱笆墙解码，提高生成序列质量</li>
 </ul>
 <h2 id="实现多头注意力机制"><a href="#实现多头注意力机制" class="headerlink" title="实现多头注意力机制"></a>实现多头注意力机制</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token triple-quoted-string string">'''SubLayers.py'''</span>
@@ -1049,6 +1049,7 @@ output_tensor<span class="token punctuation">,</span> attn <span class="token op
 positionwise_feedforward <span class="token operator">=</span> PositionwiseFeedForward<span class="token punctuation">(</span>d_model<span class="token punctuation">,</span> d_inner<span class="token punctuation">,</span> dropout<span class="token punctuation">)</span>
 output_tensor <span class="token operator">=</span> positionwise_feedforward<span class="token punctuation">(</span>output_tensor<span class="token punctuation">)</span>
 <span class="token keyword">print</span><span class="token punctuation">(</span>output_tensor<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>  <span class="token comment"># 输出形状: (1, 10, 512)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="实现缩放点积注意力机制"><a href="#实现缩放点积注意力机制" class="headerlink" title="实现缩放点积注意力机制"></a>实现缩放点积注意力机制</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> torch
 <span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
 <span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>functional <span class="token keyword">as</span> F
@@ -1069,8 +1070,6 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
          attn <span class="token operator">=</span> self<span class="token punctuation">.</span>dropout<span class="token punctuation">(</span>F<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>attn<span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
          output <span class="token operator">=</span> torch<span class="token punctuation">.</span>matmul<span class="token punctuation">(</span>attn<span class="token punctuation">,</span> v<span class="token punctuation">)</span>
          <span class="token keyword">return</span> output<span class="token punctuation">,</span> attn<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
 
 <h2 id="实现Encoder和Decoder中的基本层"><a href="#实现Encoder和Decoder中的基本层" class="headerlink" title="实现Encoder和Decoder中的基本层"></a>实现Encoder和Decoder中的基本层</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token triple-quoted-string string">''' Define the Layers '''</span>
 <span class="token number">2</span> <span class="token keyword">import</span> torch<span class="token punctuation">.</span>nn <span class="token keyword">as</span> nn
@@ -1136,6 +1135,7 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
 <span class="token number">62</span> <span class="token keyword">print</span><span class="token punctuation">(</span>output_tensor<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>  <span class="token comment"># 输出形状: (1, 10, 512)</span>
 <span class="token number">63</span> <span class="token keyword">print</span><span class="token punctuation">(</span>slf_attn<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>  <span class="token comment"># 输出形状: (1, 8, 10, 10)</span>
 <span class="token number">64</span> <span class="token keyword">print</span><span class="token punctuation">(</span>enc_attn<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>  <span class="token comment"># 输出形状: (1, 8, 10, 10)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="实现位置编码，并基于Layers-py实现Encoder和Decoder，并集成Transformer-model"><a href="#实现位置编码，并基于Layers-py实现Encoder和Decoder，并集成Transformer-model" class="headerlink" title="实现位置编码，并基于Layers.py实现Encoder和Decoder，并集成Transformer model"></a>实现位置编码，并基于Layers.py实现Encoder和Decoder，并集成Transformer model</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token comment">#生成填充掩码</span>
 <span class="token number">2</span> <span class="token keyword">def</span> <span class="token function">get_pad_mask</span><span class="token punctuation">(</span>seq<span class="token punctuation">,</span> pad_idx<span class="token punctuation">)</span><span class="token punctuation">:</span>
 <span class="token number">3</span>     <span class="token keyword">return</span> <span class="token punctuation">(</span>seq <span class="token operator">!=</span> pad_idx<span class="token punctuation">)</span><span class="token punctuation">.</span>unsqueeze<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">)</span>
@@ -1327,10 +1327,12 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
 <span class="token number">19</span>     <span class="token string">"valid_data_path"</span><span class="token punctuation">:</span> <span class="token string">"sample_data.json"</span><span class="token punctuation">,</span>
 <span class="token number">20</span>     <span class="token string">"beam_size"</span><span class="token punctuation">:</span><span class="token number">5</span>
 <span class="token number">21</span>     <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h2><p>在这里，我们使用一份104篇包含文章内容和标题的新闻数据sample_data.json，部分示例如下：</p>
 <pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token number">1</span> <span class="token punctuation">&#123;</span><span class="token property">"title"</span><span class="token operator">:</span> <span class="token string">"广州农业局长回应与王林蛇缠脖合影：只是玩游戏"</span><span class="token punctuation">,</span> 
 <span class="token number">2</span> <span class="token property">"content"</span><span class="token operator">:</span> <span class="token string">"照片上王林上身着黑色透视装，下身仅穿白色内裤，右手抓了三条蛇缠在广州农业局党委书记、局长汤锦华脖子上。汤锦华称2000年与朋友一起去深圳，应邀去见王林时所拍。“那是十多年前的事了，之后再无联系” 大师着装好奇特！ "</span>
 <span class="token number">3</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
 <p>首先需要加载数据集loader.py</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token keyword">import</span> json
 <span class="token number">2</span> <span class="token keyword">import</span> re
@@ -1416,6 +1418,7 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
 <span class="token number">82</span> <span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
 <span class="token number">83</span>     <span class="token keyword">from</span> config <span class="token keyword">import</span> Config
 <span class="token number">84</span>     dl <span class="token operator">=</span> load_data<span class="token punctuation">(</span>Config<span class="token punctuation">[</span><span class="token string">"train_data_path"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> Config<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="模型效果测试"><a href="#模型效果测试" class="headerlink" title="模型效果测试"></a>模型效果测试</h2><p>通过验证数据集完成模型效果评估类的定义</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token keyword">class</span> <span class="token class-name">Evaluator</span><span class="token punctuation">:</span>
 <span class="token number">2</span>     <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> config<span class="token punctuation">,</span> model<span class="token punctuation">,</span> logger<span class="token punctuation">)</span><span class="token punctuation">:</span>
@@ -1448,6 +1451,7 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
 <span class="token number">29</span> 
 <span class="token number">30</span>     <span class="token keyword">def</span> <span class="token function">decode_seq</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> seq<span class="token punctuation">)</span><span class="token punctuation">:</span>
 <span class="token number">31</span>         <span class="token keyword">return</span><span class="token string">""</span><span class="token punctuation">.</span>join<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>reverse_vocab<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>idx<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">for</span> idx <span class="token keyword">in</span> seq<span class="token punctuation">]</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 <h2 id="模型主程序"><a href="#模型主程序" class="headerlink" title="模型主程序"></a>模型主程序</h2><p>整个模型我们通过执行main.py文件运行模型</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span> <span class="token triple-quoted-string string">"""
 2 模型训练主程序
@@ -1547,7 +1551,7 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="https://geiyiren.github.io/2025/03/13/transform-ji-chu-chang-shi/">https://geiyiren.github.io/2025/03/13/transform-ji-chu-chang-shi/</a>
+                    <a href="https://geiyiren.github.io/2025/03/13/transformer-ji-chu-chang-shi/">https://geiyiren.github.io/2025/03/13/transformer-ji-chu-chang-shi/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -1585,8 +1589,8 @@ output_tensor <span class="token operator">=</span> positionwise_feedforward<spa
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Transform/">
-                                    <span class="chip bg-color">Transform</span>
+                                <a href="/tags/Transformer/">
+                                    <span class="chip bg-color">Transformer</span>
                                 </a>
                             
                                 <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">

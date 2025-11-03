@@ -368,8 +368,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/nms/" class="post-category">
-                                nms
+                            <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                深度学习
                             </a>
                         
                     </div>
@@ -388,7 +388,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-31
+                    2025-11-03
                 </div>
                 
 
@@ -421,10 +421,10 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h1><ul>
-<li><h3 id="NMS-算法流程"><a href="#NMS-算法流程" class="headerlink" title="NMS 算法流程"></a>NMS 算法流程</h3><ol>
+<li>NMS 算法流程<ol>
 <li>按照置信度 <code>score</code> 降序排列所有候选框</li>
 <li>初始化 <code>keep = []</code></li>
-<li>依次：<ul>
+<li>依次： <ul>
 <li>取出当前最高分框 <code>B0</code></li>
 <li>将其加入 <code>keep</code></li>
 <li>计算 <code>B0</code> 与其他所有框的 IoU</li>
@@ -436,26 +436,17 @@
 </li>
 </ul>
 <h2 id="Soft-NMS-算法流程"><a href="#Soft-NMS-算法流程" class="headerlink" title="Soft-NMS 算法流程"></a>Soft-NMS 算法流程</h2><ol>
-<li><p>初始化候选框集合 <code>D</code></p>
-</li>
-<li><p>重复直到 <code>D</code> 为空：</p>
-<ul>
-<li><p>从 <code>D</code> 中选出最高分框 <code>B0</code></p>
-</li>
-<li><p>将 <code>B0</code> 加入输出列表 <code>keep</code></p>
-</li>
-<li><p>对于 <code>D</code> 中的其他框 <code>Bi</code>，计算与 <code>B0</code> 的 IoU</p>
-</li>
-<li><p>根据 IoU 衰减 <code>score</code>：</p>
-<ul>
-<li><p><strong>Linear</strong>:<br>$$<br>s_i &#x3D; s_i \cdot (1 - \text{IoU}_{0i})<br>$$</p>
-</li>
-<li><p><strong>Gaussian</strong>:<br>$$<br>s_i &#x3D; s_i \cdot \exp\left(- \frac{\text{IoU}_{0i}^2}{\sigma} \right)<br>$$</p>
-</li>
+<li>初始化候选框集合 <code>D</code></li>
+<li>重复直到 <code>D</code> 为空：<ul>
+<li>从 <code>D</code> 中选出最高分框 <code>B0</code></li>
+<li>将 <code>B0</code> 加入输出列表 <code>keep</code></li>
+<li>对于 <code>D</code> 中的其他框 <code>Bi</code>，计算与 <code>B0</code> 的 IoU</li>
+<li>根据 IoU 衰减 <code>score</code>：<ul>
+<li><strong>Linear</strong>:<br>$$<br>s_i &#x3D; s_i \cdot (1 - \text{IoU}_{0i})<br>$$</li>
+<li><strong>Gaussian</strong>:<br>$$<br>s_i &#x3D; s_i \cdot \exp\left(- \frac{\text{IoU}_{0i}^2}{\sigma} \right)<br>$$</li>
 </ul>
 </li>
-<li><p>删除 <code>score&lt; score_thresh</code> 的框</p>
-</li>
+<li>删除 <code>score&lt; score_thresh</code> 的框</li>
 </ul>
 </li>
 </ol>
@@ -614,8 +605,6 @@ Boxes <span class="token operator">=</span> np<span class="token punctuation">.<
     cv2<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span><span class="token string">"NMS (Red) vs Soft-NMS (Blue)"</span><span class="token punctuation">,</span> combined<span class="token punctuation">)</span>
     cv2<span class="token punctuation">.</span>waitKey<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
     cv2<span class="token punctuation">.</span>destroyAllWindows<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-
                 
             </div>
             <hr/>

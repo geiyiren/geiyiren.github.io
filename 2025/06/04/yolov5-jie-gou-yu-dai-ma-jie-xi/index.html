@@ -364,8 +364,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/yolov5/" class="post-category">
-                                yolov5
+                            <a href="/categories/yolov/" class="post-category">
+                                yolov
                             </a>
                         
                     </div>
@@ -384,7 +384,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-10-31
+                    2025-11-03
                 </div>
                 
 
@@ -478,27 +478,15 @@
 
 <h2 id="anchors-解读"><a href="#anchors-解读" class="headerlink" title="anchors 解读"></a>anchors 解读</h2><p>yolov5 初始化了 9 个 anchors，分别在三个特征图 （feature map）中使用，每个 feature map 的每个 grid cell 都有三个 anchor 进行预测。 分配规则：</p>
 <ul>
-<li><p>尺度越大的 feature map 越靠前，相对原图的下采样率越小，感受野越小， 所以相对可以预测一些尺度比较小的物体(小目标)，分配到的 anchors 越小。</p>
-</li>
-<li><p>尺度越小的 feature map 越靠后，相对原图的下采样率越大，感受野越大， 所以可以预测一些尺度比较大的物体(大目标)，所以分配到的 anchors 越大。</p>
-</li>
-<li><p>即在小特征图（feature map）上检测大目标，中等大小的特征图上检测中等目标， 在大特征图上检测小目标。</p>
-</li>
+<li>尺度越大的 feature map 越靠前，相对原图的下采样率越小，感受野越小， 所以相对可以预测一些尺度比较小的物体(小目标)，分配到的 anchors 越小。</li>
+<li>尺度越小的 feature map 越靠后，相对原图的下采样率越大，感受野越大， 所以可以预测一些尺度比较大的物体(大目标)，所以分配到的 anchors 越大。</li>
+<li>即在小特征图（feature map）上检测大目标，中等大小的特征图上检测中等目标， 在大特征图上检测小目标。</li>
 </ul>
 <h1 id="backbone-amp-head解读"><a href="#backbone-amp-head解读" class="headerlink" title="backbone &amp; head解读"></a>backbone &amp; head解读</h1><h2 id="from-number-module-args-参数"><a href="#from-number-module-args-参数" class="headerlink" title="[from, number, module, args] 参数"></a>[from, number, module, args] 参数</h2><p>四个参数的意义分别是：</p>
 <ul>
-<li><ol>
 <li>第一个参数 from ：从哪一层获得输入，-1表示从上一层获得，[-1, 6]表示从上层和第6层两层获得。</li>
-</ol>
-</li>
-<li><ol start="2">
 <li>第二个参数 number：表示有几个相同的模块，如果为9则表示有9个相同的模块。</li>
-</ol>
-</li>
-<li><ol start="3">
 <li>第三个参数 module：模块的名称，这些模块写在common.py中。 4. 第四个参数 args：类的初始化参数，用于解析作为 moudle 的传入参数。</li>
-</ol>
-</li>
 </ul>
 <p>下面以第一个模块Conv 为例介绍下common.py中的模块</p>
 <p>Conv 模块定义如下:</p>
@@ -529,6 +517,7 @@
 <p>卷积层的过程为:输入-&gt;卷积层-&gt;归一化层-&gt;激活层-&gt;输出</p>
 <h2 id="关于调整网络大小的详解说明"><a href="#关于调整网络大小的详解说明" class="headerlink" title="关于调整网络大小的详解说明"></a>关于调整网络大小的详解说明</h2><p>在<a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolo.py">yolo.py</a>的 286 行有对yaml 文件的nc,depth_multiple等参数读取，具体代码如下:</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">anchors<span class="token punctuation">,</span> nc<span class="token punctuation">,</span> gd<span class="token punctuation">,</span> gw <span class="token operator">=</span> d<span class="token punctuation">[</span><span class="token string">'anchors'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> d<span class="token punctuation">[</span><span class="token string">'nc'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> d<span class="token punctuation">[</span><span class="token string">'depth_multiple'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> d<span class="token punctuation">[</span><span class="token string">'width_multiple'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> d<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"activation"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <blockquote>
 <p>如果把width_multiple设置为了0.5，那么第一个 [64, 6, 2, 2] 就会被解析为 [3,64*0.5&#x3D;32,6,2,2]，其中第一个 3 为输入channel，32 为输出channel。</p>
 </blockquote>
@@ -544,7 +533,7 @@
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image-1.png"></p>
 <h2 id="Conv模块解读"><a href="#Conv模块解读" class="headerlink" title="Conv模块解读"></a>Conv模块解读</h2><h2 id="网络结构预览"><a href="#网络结构预览" class="headerlink" title="网络结构预览"></a>网络结构预览</h2><p>下面是根据<a target="_blank" rel="noopener" href="https://github.com/Oneflow-Inc/one-yolov5/blob/main/models/yolov5s.yaml">yolov5s.yaml</a>绘制的网络整体结构简化版。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolov5%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/image.png"></p>
-<p> 详细结构如下所示：<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogFile1/yolo/yolov5%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90.drawio">yolov5结构解析</a></p>
+<p>详细结构如下所示：<br><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogFile1/yolo/yolov5%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90.drawio">yolov5结构解析</a></p>
 <p>三个分支的输出[1, 128, 80, 80],[1, 256, 40, 40],[1, 512, 20, 20] 作为输入经过Detect的forward, 接着flow.cat()函数拼接成为output: [1, 25200, 85]。</p>
 <p>Detect层第一个操作为二维卷积，将得到的三个分支的输出转换为通道数为3x(类别数+5)的特征图，然后将特征图进行view和通道顺序变化并进行框的位置解析。</p>
 <h1 id="yolo-py解读"><a href="#yolo-py解读" class="headerlink" title="yolo.py解读"></a>yolo.py解读</h1><p>文件主要包含 三大部分 Detect类， Model类，和 parse_model 函数</p>

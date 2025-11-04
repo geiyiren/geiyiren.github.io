@@ -1,35 +1,1204 @@
-extends includes/layout.pug
+<!DOCTYPE HTML>
+<html lang="zh-CN">
 
-block content
-  #post
-    if top_img === false
-      include includes/header/post-info.pug
 
-    article#article-container.container.post-content
-      if theme.noticeOutdate.enable && page.noticeOutdate !== false
-        include includes/post/outdate-notice.pug
-      else
-        !=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (page.tags.length > 0 && theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/third-party/share/index.pug
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="anchor-based和anchor-free分析, geiyiren">
+    <meta name="description" content="anchor-based和anchor-free分析">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
 
-    if theme.reward.enable && theme.reward.QR_code
-      !=partial('includes/post/reward', {}, {cache: true})
 
-    //- ad
-    if theme.ad && theme.ad.post
-      .ads-wrap!=theme.ad.post
+    <title>anchor-based和anchor-free分析 | geiyiren</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
+    
 
-    if theme.post_pagination
-      include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
 
-    if page.comments !== false && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/third-party/comments/index', {}, {cache: true})
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/matery.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/my.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/post.css">
+
+
+
+    
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/reward.css">
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">geiyiren</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+      
+      <i class="fas fa-edit" style="zoom: 0.6;"></i>
+      
+      <span>编辑</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">geiyiren</div>
+        <div class="logo-desc">
+            
+            geiyiren的博客
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-edit"></i>
+			
+			编辑
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/geiyiren" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/geiyiren" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/19.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">anchor-based和anchor-free分析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="container content">
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/anchor/">
+                                <span class="chip bg-color">anchor</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/yolo/" class="post-category">
+                                yolo
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2025-08-15
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2025-11-04
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.2k
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
+                <h1 id="anchor-base"><a href="#anchor-base" class="headerlink" title="anchor base"></a>anchor base</h1><p>什么是anchor-based的目标检测方法呢?如果要让你定一个规则去一个图片上框一个物体，你会怎么做呢？最简单，最暴力的方法，当然就是”定步长搜索法“啦，不知道定步长搜索法是什么，没关系！先让我们轻松一下，假设你的图片中有一只猫，你需要把它从图片中框出来</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/b68ac48530edb2726b6304640c85066d.jpg"></p>
+<p>对于这个问题，一个最简单的思考方式是。你以16个像素为步长，把图片划分成为许多的16×16的许多的小格子（至于为什么是16，我们后面再说）。想象不出来吗？那小时候的拼图你玩过吗？大概就是那种感觉。运气好的话，你家的猫应该大部分的身体恰好出现在某一个16×16的小框里。没错这样我们就至少有一个框可以把你的猫”框”住了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/3089736c1bf582626a30d46144f30a85.jpg"></p>
+<p>所以，你设计好的第1个定步长搜索物体的算法应该是下面这个样子：</p>
+<p>在图片中以一定的步长画许多个具有固定高度和宽度的框，这里我们先设置为矩形。接下来就希望你的小猫刚好躲在其中的一个框内，如上图。这样你就能把你的猫从图片中框出来了。这时候，对你而言，只需要做两件事：</p>
+<p>step1 按照网格的生成规律，计算所有生成框的四个点的坐标</p>
+<p>step2 对每个框，判断其中是否包含”猫”</p>
+<p>step2 将包含猫的框的坐标返回，这时候你就得到了最终的结果</p>
+<p>像上面那么扫一圈，好像是能够有个框和这个目标挨着个边边，但是问题来了，如果你的物体老大老大了（比如你家的猫猫在图中的”占比“太大了），小框框不住咋办？</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/1eb52abb429f4dc039d39953e1892717.jpg"></p>
+<p>牛逼的同学这时候就要站起来了，”老师，小的框搞不定，那就换大的“ , 嗯，好像最先进的科学家也没有比你的这哥们聪明多少的样子，于是乎，我们就用个大点的框扫一圈，用一个小一点的框扫一圈…</p>
+<p>什么意思呢？意思就是，在上一轮的“网格生成“过程中，每个网格都会有一个自己的中心，每个小格子都可以抽象成为在自己的中心生成了一个指定大小为16个像素的矩形框，在这里，我们把这些中心称之为”锚点“，把每个锚点处的框称之为”锚框“。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/a3d15d10e80d1e8ae2a0da4d43d01b5c.jpg"></p>
+<p>现在，对于每一个锚点，为了检测小猫，你需要在每一个锚点生成一个小框，而为了检测大猫，你可以在每个锚点的位置设置一个尺度更大的框，试图用来框住尺寸比较大的物体：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/db217458141ff071aa208cbbdb541755.jpg"></p>
+<p>这时候你的目标检测算法应该会设计成如下这个样子。</p>
+<p>在图片中以一定的步长选取一定的锚点。以每个中心点为框的中心画多个具有固定高度和宽度的框，接下来就希望你的小猫刚好躲在其中某个尺度的一个框内，这样你就能把你的猫从图片中框出来了。</p>
+<p>这里值得注意的有三点：</p>
+<p>1. 相比于上一次设计的算法，现在我们要求等距生成的内容不再是框本身，而是锚点，我们依旧要求锚点是以16为步长，但是现在我们不要求框是”一个挨着一个的“，我们只要求在每个锚点处生成固定尺寸的框</p>
+<p>2. 框的高度和宽度，与你设定的生成框的中心的步长并不需要一致。其实最好是怎么符合物体在图片中的分布怎么来？（大名鼎鼎的yolo就是这么设计的）</p>
+<p>3. 始终注意，我们的任务是找出图中的物体，框的设计规则始终只是我们自己的一种”设计“</p>
+<p>然后牛逼的学生总是有很多问题，”老师，你说这个猫，他横着趟和竖着趟，我用同样尺度的框合适么？“ ，事实上是这样的情况在现实生活中是普遍存在的，你不可能指望用正方形的框框住所有的物体,于是先进的科学家们说,同学们注意了哈，我要开始变形了!于是乎，著名的anchor-based方法就这么诞生了.</p>
+<p>简单的来说，他们的处理方法是，对于每一个固定高度乘宽度的正方形的框，在保持面积不变的情况下，我可以把框的高度和宽度设置成不同的比例（毕竟你家的猫和照相机距离不变的时候，只会躺着，或者站着，总的面积是不变的嘛，不会面积忽然变大或者变小….），示意如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/0ed7671be887dd6a8acde7f926471a86.jpg"></p>
+<p>这里，我们仍然考虑以16为步长生成锚点，此时，假设图中黄色的锚点处原本会生成一个黄色框示意的锚框，原本是无法框住物体的，但是，如果我们不仅生成这个面积的正方形锚框，还同时在这个锚点处生成一个面积和它一致，但是长宽比为2:1的框，则有可能将猫给框起来了</p>
+<p>说句题外话，这里为了展示只画了几个锚框，实际上锚点以16位步长是非常密集的，下图是真实的样子）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/3112e554ff3f8d525c0aaf685fdef9e1.jpg"></p>
+<p>在这样的基础之上，最终就得到了如下的anchor base的Anchor的生成方法。</p>
+<p>在图片中以一定的步长选取锚点。以每个中心点为框的中心设计多个具有固定高度和宽度的框，并对于每一个面积的框，衍生出三种不同长宽比的新的框，（以下还是是胡说八道）接下来就希望你的小猫刚好躲在其中某个尺度的某一个长宽比的一个框内，这样你就能把你的猫从图片中框出来了。</p>
+<p>网上对这个过程解释最详细的一张图是这样的：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/7653f94d1521cad9f73b8dc092c9c92f.jpg"></p>
+<p>本质而言，其实这张图具有非常的误导性，仔细解释一下应该是这么理解的：</p>
+<blockquote>
+<p>step1 背景是一张图片，在图片中密集的黑色点点就是按照定步长确定的”锚点“ step2 在每个锚点处，都会生成三种尺寸的正方形的框（红色、绿色、蓝色中的正方形框） step3 对每个正方形框，会生成两种扩展尺度的框（每种颜色的另外两个长方形） step4 所以，在每个锚点处都会生成9个anchor</p>
+</blockquote>
+<p>所以大概是这么个样子</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/464712a1254fd7a7f8a111ea34c35f07.jpg"></p>
+<p>Anchor的生成过程和深度学习没有任何的关系，他的本质只是你设定好一些规则，并依据这些规则，在图像中生成不同尺寸，不同长宽比的框，并希望这些框能够最终覆盖你的物体。</p>
+<p><strong>Anchor base的缺点</strong></p>
+<ul>
+<li>1. 检测表现效果对于锚框的尺寸、长宽比、数目非常敏感，因此锚框相关的超参数需要仔细的调节。</li>
+<li>2. 锚框的尺寸和长宽比是固定的，因此，检测器在处理形变较大的候选对象时比较困难，尤其是对于小目标。预先定义的锚框还限制了检测器的泛化能力，因为，它们需要针对不同对象大小或长宽比进行设计。</li>
+<li>3. 为了提高召回率，需要在图像上放置密集的锚框。而这些锚框大多数属于负样本，这样造成了正负样本之间的不均衡。</li>
+<li>4. 大量的锚框增加了在计算交并比时计算量和内存占用。</li>
+</ul>
+<p>在网络进行预测时需要提前配置合适的anchor，例如：</p>
+<p><code>5,5, 5,11, 10,8, 17,14, 12,28, 30,23, 33,66, 60,44, 98,108</code></p>
+<p>这个就是三个分支，每个分支3个anchor的参数，可以按照如下理解：</p>
+<table>
+<thead>
+<tr>
+<th>分支</th>
+<th>Anchor #</th>
+<th>尺寸 (w,h)</th>
+<th>主要检测目标</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>高分辨率分支</td>
+<td>1,2,3</td>
+<td>(5,5),(5,11),(10,8)</td>
+<td>小目标</td>
+</tr>
+<tr>
+<td>中分辨率分支</td>
+<td>4,5,6</td>
+<td>(17,14),(12,28),(30,23)</td>
+<td>中目标</td>
+</tr>
+<tr>
+<td>低分辨率分支</td>
+<td>7,8,9</td>
+<td>(33,66),(60,44),(98,108)</td>
+<td>大目标</td>
+</tr>
+</tbody></table>
+<p>那么这个anchor参数是什么意思呢？其实这个是缩放系数，网络会预测不同特征图上的目标检测框的“特殊归一化”尺寸，然后乘以给定的anchor参数就可以得到对应特征图上的预测框的尺寸，具体如下所示：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">pwh <span class="token operator">=</span> <span class="token punctuation">(</span>pwh<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">*</span> anchors<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>其中pwh为网络的预测结果，然后进行归一化{<code>.sigmoid()</code>}得到[0,1]的预测结果并进行缩放{<code>*2</code>}缩放到[0,2]，然后为了避免出现负数和增加网络的非线性能力又对输出结果进行平方运算{<code>** 2</code>}，最后再缩放{<code>* anchors[i]</code>}到特征图上对应的尺寸。</p>
+<blockquote>
+<p>网络输出的结果经过缩放和平方运算后再乘以实际的缩放系数怎么感觉怪怪的？其实可以把<code>(pwh.sigmoid() * 2) ** 2</code>都当作网络的一部分，这样就可以看作是直接对网络输出的结果进行缩放后得到特征图尺度下不同的目标检测框，由于损失的约束会使得网络预测的结果符合这个缩放的逻辑的。</p>
+</blockquote>
+<p>至此，我们已经得到特征图尺度下的不同大小的目标检测框的<code>w</code>和<code>h</code>了，那么尺寸确定后位置如何确定呢？</p>
+<p>根据上面的anchor base的原理，我们可以看出不同特征图像下预测框的初始位置在各个特征图上是固定的，就是特征图的像素索引，如何理解？</p>
+<p>以480*288的输入图像为例，经过stride为8，16，32的降采样后得到的特征图的尺寸分别为：</p>
+<table>
+<thead>
+<tr>
+<th>stride</th>
+<th>特征图尺寸 (H×W)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8</td>
+<td>36 × 60</td>
+</tr>
+<tr>
+<td>16</td>
+<td>18 × 30</td>
+</tr>
+<tr>
+<td>32</td>
+<td>9 × 15</td>
+</tr>
+</tbody></table>
+<p>以9 × 15的特征图为例，其实就是把480*288的输入图像分为9 × 15个方格，每个方格中都以一定的概率存在物体，那么方格的位置其实就很大程度上决定了物体中心点的位置，但是可以微调，这个微调靠网络预测微调参数，因此不同特征图上只需要预测物体中心点位置微调参数就可以，程序中也是这样实现的：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">pxy <span class="token operator">=</span> pxy<span class="token punctuation">.</span>sigmoid<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span> <span class="token operator">-</span> <span class="token number">0.5</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>可见微调的范围为[-0.5,1.5],因此物体中心点的位置其实就是（特征图尺度下的坐标*stride）就可以恢复到原图尺寸,示意图如下：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/anchor-based%E5%92%8Canchor-free%E5%88%86%E6%9E%90/anchor-1756278459214-92.svg" alt="anchor"></p>
+<p>这里为什么pxy的范围为[-0.5,1.5]？其实这里是相对于特征图而言的，特征图上的每个点都代表原图上的一个方格区域，就是上图的黑色方格，这里是说微调的范围为[-0.5,1.5]*方格的尺寸，如果为[0,1]就表示必须在方格内部。为什么左边只有 -0.5，而右边到 1.5？</p>
+<p>这是因为 <strong>基准点选择在 cell 的左上角</strong>。</p>
+<ul>
+<li>当前 cell 的有效范围本来就是 [0,1]</li>
+<li>往左走，最多允许跨出半个 cell → $-0.5$</li>
+<li>往右走，可以走到 1.5，这其实就是 <strong>跨到下一个 cell 的 0.5 位置</strong></li>
+</ul>
+<p>至此我们就可以明白网络如果预测目标的位置并根据anchor进行预测结果的缩放了。需要特别说明的是yolo模型训练的时候给定的anchor是相对于输入图像而言的，在实际使用的时候需要缩放到对应的特征图尺寸下进行使用，对应关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>特征图层</th>
+<th>Stride</th>
+<th>Grid 尺度 Anchor (w,h)</th>
+<th>原图尺度 Anchor (w,h)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P3</td>
+<td>8</td>
+<td>[0.625, 0.625]</td>
+<td>[5.0, 5.0]</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>8</td>
+<td>[0.625, 1.375]</td>
+<td>[5.0, 11.0]</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>8</td>
+<td>[1.25, 1.0]</td>
+<td>[10.0, 8.0]</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>16</td>
+<td>[1.0625, 0.875]</td>
+<td>[17.0, 14.0]</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>16</td>
+<td>[0.75, 1.75]</td>
+<td>[12.0, 28.0]</td>
+</tr>
+<tr>
+<td>P4</td>
+<td>16</td>
+<td>[1.875, 1.4375]</td>
+<td>[30.0, 23.0]</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>32</td>
+<td>[1.03125, 2.0625]</td>
+<td>[33.0, 66.0]</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>32</td>
+<td>[1.875, 1.375]</td>
+<td>[60.0, 44.0]</td>
+</tr>
+<tr>
+<td>P5</td>
+<td>32</td>
+<td>[3.0625, 3.375]</td>
+<td>[98.0, 108.0]</td>
+</tr>
+</tbody></table>
+<h1 id="anchor-free"><a href="#anchor-free" class="headerlink" title="anchor free"></a>anchor free</h1>
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">geiyiren</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://geiyiren.github.io/2025/08/15/anchor-based-he-anchor-free-fen-xi/">https://geiyiren.github.io/2025/08/15/anchor-based-he-anchor-free-fen-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">geiyiren</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/anchor/">
+                                    <span class="chip bg-color">anchor</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/reward/wechat.jpg" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2025/09/10/gpu-diao-xian-yi-chang-wen-ti-pai-cha/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/3.jpg" class="responsive-img" alt="GPU掉线异常问题排查">
+                        
+                        <span class="card-title">GPU掉线异常问题排查</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            GPU掉线异常问题排查
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2025-09-10
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/GPU/" class="post-category">
+                                    GPU
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/GPU/">
+                        <span class="chip bg-color">GPU</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2025/08/06/zeng-liang-xue-xi-chang-yong-fang-fa-jie-shao/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="增量学习常用方法介绍">
+                        
+                        <span class="card-title">增量学习常用方法介绍</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            增量学习常用方法介绍
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2025-08-06
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0/" class="post-category">
+                                    增量学习
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%A2%9E%E9%87%8F%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">增量学习</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%A6%82%E8%BF%B0/">
+                        <span class="chip bg-color">概述</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: geiyiren<br />'
+            + '文章作者: geiyiren<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。详细内容请访问https://geiyiren.github.io';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+
+
+    
+
+</main>
+
+<!--  -->
+
+
+
+    
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+</script>
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022-2025</span>
+            
+            <a href="/about" target="_blank">geiyiren</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/geiyiren" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:geiyiren@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+    <a href="/medias/geiyiren.jpg" class="tooltipped" target="_blank" data-tooltip="关注我的公众号" data-position="top" data-delay="50">
+        <i class="fab fa-weixin"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

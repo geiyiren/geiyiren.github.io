@@ -399,6 +399,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h1 id="gdb工具使用"><a href="#gdb工具使用" class="headerlink" title="gdb工具使用"></a>gdb工具使用</h1><ul>
 <li>配置程序段错误生成文件的路径<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"/userdata/core-%e-%p-%t"</span> <span class="token operator">|</span>  <span class="token function">tee</span> /proc/sys/kernel/core_pattern<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
 <li>运行<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">gdb adas_app core-%e-%p-%t<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>

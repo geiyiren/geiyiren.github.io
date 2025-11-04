@@ -399,6 +399,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h1 id="正篇"><a href="#正篇" class="headerlink" title="正篇"></a>正篇</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>g2o（General Graphic Optimization）是一个基于图优化的库，将非线性优化与图论结合起来的理论，我们可以<strong>利用g2o求解任何可以表示为图优化的最小二乘问题</strong>。图优化就是把优化问题表现成图的方式。图由顶点和边组成，其中<em>顶点表示优化变量</em>，<em>边表示误差项</em>，对任意一个非线性最小二乘问题，我们都可以构建与之对应的图。</p>
 <p>g2o的核里带有各种各样的求解器，而它的顶点、边的类型则多种多样。通过自定义顶点和边，事实上，只要一个优化问题能够表达成图，那么就可以用g2o去求解它。常见的，比如bundle adjustment，ICP，数据拟合，都可以用g2o来做。</p>
 <p>从代码层面来说，g2o是一个c++编写的项目，用cmake构建。它的github地址在：<a target="_blank" rel="noopener" href="https://github.com/RainerKuemmerle/g2o">https://github.com/RainerKuemmerle/g2o</a> </p>

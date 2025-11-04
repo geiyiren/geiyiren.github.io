@@ -403,6 +403,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h1 id="世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v-的变换关系"><a href="#世界坐标系-X-w-Y-w-Z-w-到图像坐标系-u-v-的变换关系" class="headerlink" title="世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$的变换关系"></a>世界坐标系$(X_w,Y_w,Z_w)$到图像坐标系$(u,v)$的变换关系</h1><p>相机外参中的旋转和平移的方向为相机坐标系中各个轴的方向，而不是世界坐标系各个轴的方向，以相机先绕相机的$x$轴旋转$pitch$弧度，然后再绕相机的$y$轴旋转$yaw$弧度，最后绕相机的$z$轴旋转$roll$弧度得到新的相机位置为例，每次旋转时的旋转矩阵的计算如下所示：<br>$$<br>R_x&#x3D;<br>\begin{bmatrix}<br>1 &amp; 0 &amp; 0 \\<br>0 &amp; \cos(pitch) &amp; -\sin(pitch) \\<br>0 &amp; \sin(pitch) &amp; \cos(pitch)<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>R_{y}&#x3D;<br>\begin{bmatrix}<br>\cos(yaw) &amp; 0 &amp; \sin(yaw) \\<br>0 &amp; 1 &amp; 0 \\<br>-\sin(yaw) &amp; 0 &amp; \cos(yaw)<br>\end{bmatrix}<br>$$</p>
 <p>$$<br>R_{z}&#x3D;<br>\begin{bmatrix}<br>\cos(roll) &amp; -\sin(roll) &amp; 0 \\<br>\sin(roll) &amp; \cos(roll) &amp; 0 \\<br>0 &amp; 0 &amp; 1<br>\end{bmatrix}<br>$$<br>即，综合旋转矩阵为:<br>$$<br>R&#x3D;{R_z}{R_y}{R_x}&#x3D;<br>\begin{bmatrix}<br>c_{roll} c_{yaw} &amp; c_{roll} s_{yaw} s_{pitch}-s_{roll} c_{pitch} &amp; c_{roll} s_{yaw} c_{pitch}+s_{roll} s_{pitch} \\<br>s_{roll} c_{yaw} &amp; s_{roll} s_{yaw} s_{pitch}+c_{roll} c_{pitch} &amp; s_{roll} s_{yaw} c_{pitch}-c_{roll} s_{pitch} \\<br>-s_{yaw} &amp; c_{yaw} s_{pitch} &amp; c_{yaw} c_{pitch}<br>\end{bmatrix}<br>$$</p>

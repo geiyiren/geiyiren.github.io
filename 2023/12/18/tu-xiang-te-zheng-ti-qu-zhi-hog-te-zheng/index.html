@@ -403,6 +403,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>  方向梯度直方图(Histogram of Oriented Gradient, HOG)特征是一种在计算机视觉和图像处理中用来进行物体检测的特征描述子。<strong>它通过计算和统计图像局部区域的梯度方向直方图来构成特征</strong>。Hog特征结合SVM分类器已经被广泛应用于图像识别中，尤其在行人检测中获得了极大的成功。  </p>
 <h1 id="算法思想"><a href="#算法思想" class="headerlink" title="算法思想"></a>算法思想</h1><p>  HOG特征的核心思想是在一幅图像中，局部目标的表象和形状(appearance and shape)能够被梯度和边缘的方向密度（梯度的统计信息，而梯度主要存在于边缘地方）很好地描述。通过将整幅图像分为多个小的连通区域(cells)，并计算每个cell的梯度或边缘方向直方图，这些直方图的组合可用于构成特征描述子，为了提高准确率，可以将局部直方图在图像更大范围内(称为block)进行对比度归一化(constrast-normalized)。所采用的方法是：先计算各直方图在对应的block中的密度，然后根据这个密度对block中的所有cell做归一化(normalize)。归一化操作对光照变化和阴影具有更好的鲁棒性。</p>
 <h1 id="算法特点"><a href="#算法特点" class="headerlink" title="算法特点"></a>算法特点</h1><ul>

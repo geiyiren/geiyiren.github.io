@@ -407,6 +407,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h2 id="图像特征之LoG算子与DoG算子"><a href="#图像特征之LoG算子与DoG算子" class="headerlink" title="图像特征之LoG算子与DoG算子"></a>图像特征之LoG算子与DoG算子</h2><p>  LoG(Laplacian of Gaussian)算子和DoG(Difference of Gaussian)算子是图像处理中实现极值点检测(Blob Detection)的两种方法。通过利用高斯函数卷积操作进行尺度变换，可以在不同的尺度空间检测到关键点(Key Point)或兴趣点(Interest Point)，实现尺度不变性(Scale invariance)的特征点检测。  </p>
 <h1 id="Laplacian-of-Gaussian-LoG"><a href="#Laplacian-of-Gaussian-LoG" class="headerlink" title="Laplacian of Gaussian(LoG)"></a>Laplacian of Gaussian(LoG)</h1><p>  Laplace算子通过对图像求取二阶导数的零交叉点(zero-cross)来进行边缘检测，其计算公式如下：<br>$$\nabla ^2 f(x,y)&#x3D;\dfrac{\partial^2 f}{\partial x^2} + \dfrac{\partial^2 f}{\partial y^2}$$<br>由于微分运算对噪声比较敏感，可以先对图像进行高斯平滑滤波，再使用Laplace算子进行边缘检测，以降低噪声的影响。由此便形成了用于极值点检测的LoG算子。常用的二维高斯函数如下：<br>$$G_\sigma(x,y)&#x3D;\dfrac{1}{\sqrt {2\pi \sigma ^{2}}} exp(-\dfrac{x^2+y^2}{2\sigma ^2})$$<br>原图像与高斯核函数卷积后再做laplace运算<br>$$\Delta [G_\sigma(x,y) \ast f(x,y)]&#x3D;[\Delta G_\sigma(x,y)] \ast f(x,y)$$<br>$$LoG &#x3D; \Delta G_\sigma(x,y)&#x3D;\dfrac{\partial^2 G_\sigma(x,y)}{\partial x^2} + \dfrac{\partial^2 G_\sigma(x,y)}{\partial y^2}&#x3D;\dfrac{x^2+y^2-2\sigma^2}{\sigma^4}e^{-(x^2+y^2)&#x2F;2\sigma^2}$$<br>所以先对高斯核函数求取二阶导数，再与原图像进行卷积操作。由于高斯函数是圆对称的，因此LoG算子可以有效地实现极值点或局部极值区域的检测。</p>
 <h1 id="Difference-of-Gaussian-DoG"><a href="#Difference-of-Gaussian-DoG" class="headerlink" title="Difference of Gaussian(DoG)"></a>Difference of Gaussian(DoG)</h1><p>  DoG算子是高斯函数的差分，具体到图像中，就是将图像在不同参数下的高斯滤波结果相减，得到差分图。DoG算子的表达式如下：<br>$$DoG &#x3D; G_{\sigma_1} - G_{\sigma_2}&#x3D;\dfrac{1}{\sqrt{2\pi}} [\dfrac{1}{\sigma_1} e^{-(x^2+y^2)&#x2F;2\sigma_1^2} - \dfrac{1}{\sigma_2} e^{-(x^2+y^2)&#x2F;2\sigma_2^2}]$$<br>如果将高斯核函数的形式表示为<br>$$G_\sigma(x,y)&#x3D;\dfrac{1}{2\pi \sigma ^{2}} exp(-\dfrac{x^2+y^2}{2\sigma ^2})$$<br>则存在以下等式<br>$$\dfrac{\partial G}{\partial \sigma} &#x3D; \sigma \nabla ^2 G$$<br>$$\dfrac{\partial G}{\partial \sigma} \approx \dfrac{G(x,y,k\sigma)-G(x,y,\sigma)}{k\sigma-\sigma}$$<br>因此有<br>$$G(x,y,k\sigma)-G(x,y,\sigma) \approx (k-1)\sigma^2 \nabla ^2 G$$<br>其中$k-1$是个常数，不影响极值点的检测，LoG算子和DoG算子的函数波形对比如下图所示，由于高斯差分的计算更加简单，因此可用DoG算子近似替代LoG算子</p>
@@ -587,19 +590,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/12/20/shi-da-pai-xu-suan-fa/">
+                <a href="/2023/12/20/tu-xiang-te-zheng-zhi-sift-te-zheng-pi-pei/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="十大排序算法">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="图像特征之SIFT特征匹配">
                         
-                        <span class="card-title">十大排序算法</span>
+                        <span class="card-title">图像特征之SIFT特征匹配</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            十大排序算法
+                            图像特征提取之Haar特征
                         
                     </div>
                     <div class="publish-info">
@@ -610,8 +613,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
-                                    算法
+                            <a href="/categories/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" class="post-category">
+                                    图像特征提取
                                 </a>
                             
                             
@@ -621,8 +624,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
-                        <span class="chip bg-color">十大排序算法</span>
+                    <a href="/tags/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">
+                        <span class="chip bg-color">图像特征提取</span>
+                    </a>
+                    
+                    <a href="/tags/Haar/">
+                        <span class="chip bg-color">Haar</span>
                     </a>
                     
                 </div>
@@ -636,13 +643,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/12/20/tu-xiang-te-zheng-zhi-sift-te-zheng-pi-pei/">
+                <a href="/2023/12/20/tu-xiang-te-zheng-ti-qu-zhi-haar-te-zheng/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/22.jpg" class="responsive-img" alt="图像特征之SIFT特征匹配">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/18.jpg" class="responsive-img" alt="图像特征提取之Haar特征">
                         
-                        <span class="card-title">图像特征之SIFT特征匹配</span>
+                        <span class="card-title">图像特征提取之Haar特征</span>
                     </div>
                 </a>
                 <div class="card-content article-content">

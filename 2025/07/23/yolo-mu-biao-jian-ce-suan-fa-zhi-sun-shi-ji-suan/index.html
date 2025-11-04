@@ -403,6 +403,9 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
+                <!-- encrypt.ejs -->
+
+
                 <h1 id="Ultralytics系列"><a href="#Ultralytics系列" class="headerlink" title="Ultralytics系列"></a>Ultralytics系列</h1><h2 id="损失函数的调用关系"><a href="#损失函数的调用关系" class="headerlink" title="损失函数的调用关系"></a>损失函数的调用关系</h2><p>ultralytics代码中创建模型后顺手做了对应模型架构的加载，根据输入的 yaml文件将对应的模型加载为torch.nn.Module,同时也根据模型的类型对损失函数进行了选择。因此要想知道模型实际计算损失时使用了哪些损失计算方法就要从<code>model = YOLO(&quot;yolo12n.yaml&quot;)</code>开始入手，因此这一行代码过后模型的损失计算方法就已经设定好了，下面看下具体的流程：</p>
 <ul>
 <li><p>1.创建模型</p>

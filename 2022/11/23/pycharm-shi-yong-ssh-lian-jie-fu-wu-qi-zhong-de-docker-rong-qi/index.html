@@ -544,7 +544,7 @@ mymysql             v1                  37af1236adef        <span class="token n
   </div>
 
 
-                <!-- <h2 id="1-拉取cuda、cudnn的docker镜像"><a href="#1-拉取cuda、cudnn的docker镜像" class="headerlink" title="1.拉取cuda、cudnn的docker镜像"></a>1.拉取cuda、cudnn的docker镜像</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h2 id="1-拉取cuda、cudnn的docker镜像"><a href="#1-拉取cuda、cudnn的docker镜像" class="headerlink" title="1.拉取cuda、cudnn的docker镜像"></a>1.拉取cuda、cudnn的docker镜像</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> pull nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <h2 id="2-新建并启动交互式容器"><a href="#2-新建并启动交互式容器" class="headerlink" title="2.新建并启动交互式容器"></a>2.新建并启动交互式容器</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> run <span class="token parameter variable">-it</span> <span class="token parameter variable">--name</span> tensorflow1.2.1-gpu <span class="token parameter variable">-v</span> /home/docker_share/:/home/ <span class="token parameter variable">-p</span> <span class="token number">2201</span>:22 <span class="token parameter variable">--gpus</span> all nvidia/cuda:10.0-cudnn7-devel-ubuntu16.04 /bin/bash<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
@@ -671,7 +671,7 @@ mymysql             v1                  37af1236adef        <span class="token n
 </ul>
 <p><img src="https://i.loli.net/2021/05/21/jDGmP8npQtaFCY7.png"></p>
 <p>这里要注意一下，代码所要的运行环境还需要在docker容器安装配置好，比如我这里需要pytorch环境以及python代码运行所需的依赖库都已经在docker容器中通过pip安装好了。</p>
- -->
+
                 
             </div>
             <hr/>

@@ -403,7 +403,278 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h2 id="RT-DETR"><a href="#RT-DETR" class="headerlink" title="RT-DETR"></a>RT-DETR</h2><ul>
+<li><p>发布时间与作者</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>模型</th>
+<th>作者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2023</td>
+<td>RT-DETR</td>
+<td>百度</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>RT-DETRv2</td>
+<td>百度</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>ultralytics官方介绍</p>
+<p><a target="_blank" rel="noopener" href="https://docs.ultralytics.com/zh/models/rtdetr/#key-features">https://docs.ultralytics.com/zh/models/rtdetr/#key-features</a></p>
+</li>
+<li><p>代码仓库</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/lyuwenyu/RT-DETR">https://github.com/lyuwenyu/RT-DETR</a></p>
+</li>
+<li><p>性能报告</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">Model</th>
+<th align="center">Input shape</th>
+<th align="center">Dataset</th>
+<th align="center">$AP^{val}$</th>
+<th align="center">$AP^{val}_{50}$</th>
+<th align="center">Params(M)</th>
+<th align="center">FLOPs(G)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">RT-DETR-R18</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">46.5</td>
+<td align="center">63.8</td>
+<td align="center">20</td>
+<td align="center">60</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R34</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">48.9</td>
+<td align="center">66.8</td>
+<td align="center">31</td>
+<td align="center">92</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R50-m</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">51.3</td>
+<td align="center">69.6</td>
+<td align="center">36</td>
+<td align="center">100</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R50</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">53.1</td>
+<td align="center">71.3</td>
+<td align="center">42</td>
+<td align="center">136</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R101</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">54.3</td>
+<td align="center">72.7</td>
+<td align="center">76</td>
+<td align="center">259</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-HGNetv2-L</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">53.0</td>
+<td align="center">71.6</td>
+<td align="center">32</td>
+<td align="center">110</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-HGNetv2-X</td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">54.8</td>
+<td align="center">73.1</td>
+<td align="center">67</td>
+<td align="center">234</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R18</td>
+<td align="center">640</td>
+<td align="center">COCO + Objects365</td>
+<td align="center"><strong>49.2</strong></td>
+<td align="center"><strong>66.6</strong></td>
+<td align="center">20</td>
+<td align="center">60</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R50</td>
+<td align="center">640</td>
+<td align="center">COCO + Objects365</td>
+<td align="center"><strong>55.3</strong></td>
+<td align="center"><strong>73.4</strong></td>
+<td align="center">42</td>
+<td align="center">136</td>
+</tr>
+<tr>
+<td align="center">RT-DETR-R101</td>
+<td align="center">640</td>
+<td align="center">COCO + Objects365</td>
+<td align="center"><strong>56.2</strong></td>
+<td align="center"><strong>74.6</strong></td>
+<td align="center">76</td>
+<td align="center">259</td>
+</tr>
+<tr>
+<td align="center"><strong>RT-DETRv2-S</strong></td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center"><strong>48.1</strong> <font color=green>(+1.6)</font></td>
+<td align="center"><strong>65.1</strong></td>
+<td align="center">20</td>
+<td align="center">60</td>
+</tr>
+<tr>
+<td align="center"><strong>RT-DETRv2-M</strong><sup>*<sup></td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center"><strong>49.9</strong> <font color=green>(+1.0)</font></td>
+<td align="center"><strong>67.5</strong></td>
+<td align="center">31</td>
+<td align="center">92</td>
+</tr>
+<tr>
+<td align="center"><strong>RT-DETRv2-M</strong></td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center"><strong>51.9</strong> <font color=green>(+0.6)</font></td>
+<td align="center"><strong>69.9</strong></td>
+<td align="center">36</td>
+<td align="center">100</td>
+</tr>
+<tr>
+<td align="center"><strong>RT-DETRv2-L</strong></td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center"><strong>53.4</strong> <font color=green>(+0.3)</font></td>
+<td align="center"><strong>71.6</strong></td>
+<td align="center">42</td>
+<td align="center">136</td>
+</tr>
+<tr>
+<td align="center"><strong>RT-DETRv2-X</strong></td>
+<td align="center">640</td>
+<td align="center">COCO</td>
+<td align="center">54.3</td>
+<td align="center"><strong>72.8</strong> <font color=green>(+0.1)</font></td>
+<td align="center">76</td>
+<td align="center">259</td>
+</tr>
+</tbody></table>
+<h2 id="LW-DETR"><a href="#LW-DETR" class="headerlink" title="LW-DETR"></a>LW-DETR</h2><ul>
+<li><p>发布时间与作者</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>模型</th>
+<th>作者</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>2024</td>
+<td>LW-DETR</td>
+<td>百度</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>代码仓库</p>
+<p>  <a target="_blank" rel="noopener" href="https://github.com/Atten4Vis/LW-DETR">https://github.com/Atten4Vis/LW-DETR</a></p>
+</li>
+<li><p>性能分析</p>
+<table>
+<thead>
+<tr>
+<th align="left">Method</th>
+<th align="center">Input shape</th>
+<th>Dataset</th>
+<th align="center">Params (M)</th>
+<th align="center">FLOPs (G)</th>
+<th align="center">Model Latency (ms)</th>
+<th align="center">Total Latency (ms)</th>
+<th align="center">mAP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>LW-DETR-tiny</code></strong></td>
+<td align="center">640</td>
+<td>COCO</td>
+<td align="center">12.1</td>
+<td align="center">11.2</td>
+<td align="center">2.0</td>
+<td align="center"><strong>2.0</strong></td>
+<td align="center"><strong>42.6</strong>(42.9)</td>
+</tr>
+<tr>
+<td align="left"><strong><code>LW-DETR-small</code></strong></td>
+<td align="center">640</td>
+<td>COCO</td>
+<td align="center">14.6</td>
+<td align="center">16.6</td>
+<td align="center">2.9</td>
+<td align="center"><strong>2.9</strong></td>
+<td align="center"><strong>48.0</strong>(48.1)</td>
+</tr>
+<tr>
+<td align="left"><strong><code>LW-DETR-medium</code></strong></td>
+<td align="center">640</td>
+<td>COCO</td>
+<td align="center">28.2</td>
+<td align="center">42.8</td>
+<td align="center">5.6</td>
+<td align="center"><strong>5.6</strong></td>
+<td align="center"><strong>52.5</strong>(52.6)</td>
+</tr>
+<tr>
+<td align="left"><strong><code>LW-DETR-large</code></strong></td>
+<td align="center">640</td>
+<td>COCO</td>
+<td align="center">46.8</td>
+<td align="center">71.6</td>
+<td align="center">8.8</td>
+<td align="center"><strong>8.8</strong></td>
+<td align="center"><strong>56.1</strong>(56.1)</td>
+</tr>
+<tr>
+<td align="left"><strong><code>LW-DETR-xlarge</code></strong></td>
+<td align="center">640</td>
+<td>COCO</td>
+<td align="center">118.0</td>
+<td align="center">174.2</td>
+<td align="center">19.1</td>
+<td align="center"><strong>19.1</strong></td>
+<td align="center"><strong>58.3</strong>(58.3)</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/pengxiang1998/article/details/139505869">RT-DETR 详解之 Efficient Hybrid Encoder_hybridencoder-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhouchen1998/article/details/114972223">GFocal检测器解析-CSDN博客</a></p>
+
+  </div>
 
 
                 <h2 id="RT-DETR"><a href="#RT-DETR" class="headerlink" title="RT-DETR"></a>RT-DETR</h2><ul>

@@ -399,7 +399,57 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;37bae19a8207a9f9a8ffa087b36ac48d.png)<br>本文由同济大学和北京大学合作发表于CVPR2018，聚焦于loss层面，为遮挡情况下的行人检测问题提供了一种行之有效的解决方案。<br>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.07752">https://arxiv.org/abs/1711.07752</a></p>
+<h2 id="问题提出"><a href="#问题提出" class="headerlink" title="问题提出"></a>问题提出</h2><p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;8b2d3278e970406e472d438e715e2c3f.png)</p>
+<h4 id="行人遮挡会造成什么问题"><a href="#行人遮挡会造成什么问题" class="headerlink" title="行人遮挡会造成什么问题"></a>行人遮挡会造成什么问题</h4><p><strong>当我们在做行人检测时，人与人之间会存在互相遮挡。遮挡会造成2个问题：</strong></p>
+<p>1.设红色框为目标框T（man）的预测框P，旁边也有个真实框B（woman），我们的P可能会被往B去移动（shift）。</p>
+<p>2.检测器对NMS的阈值的选取更为敏感。如果NMS阈值选取过小，周围的目标框会被<strong>过滤</strong>掉；如果NMS阈值选取过大，会带更多的<strong>虚检</strong>。</p>
+<h4 id="非极大抑制选取更敏感"><a href="#非极大抑制选取更敏感" class="headerlink" title="非极大抑制选取更敏感"></a>非极大抑制选取更敏感</h4><p>第二点的影响是不是不太直观？没关系，我们先详细回顾一下非极大抑制NMS的实现过程：</p>
+<p>在检测器中，一张图片可能会有n个检测目标，每个检测目标都会有很多<strong>检测框</strong>（proposals&#x2F;anchors&#x2F;bbox）。<br>对于每个检测目标来讲，它的附近都会有一簇IoU很高的检测框（相较于其他的检测框来说），所以针对<strong>同一个检测目标</strong>，有必要只留下置信度（score）最高的那个检测框作为该物体的检测框，其他的都应该过滤掉。</p>
+<p><strong>实现步骤：</strong></p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token number">1</span>、假定有<span class="token number">6</span>个带置信率的region proposals，并预设一个IOU的阈值如<span class="token number">0.7</span>。
+
+<span class="token number">2</span>、按置信率大小对<span class="token number">6</span>个框排序<span class="token punctuation">:</span> <span class="token number">0.95</span><span class="token punctuation">,</span> <span class="token number">0.9</span><span class="token punctuation">,</span> <span class="token number">0.9</span><span class="token punctuation">,</span> <span class="token number">0.8</span><span class="token punctuation">,</span> <span class="token number">0.7</span><span class="token punctuation">,</span> <span class="token number">0.7</span>。
+
+<span class="token number">3</span>、设定置信率为<span class="token number">0.95</span>的region proposals为一个预测框；
+
+<span class="token number">4</span>、在剩下<span class="token number">5</span>个region proposals中，去掉与<span class="token number">0.95</span>物体框IOU大于<span class="token number">0.7</span>的。
+
+<span class="token number">5</span>、重复<span class="token number">2</span>～<span class="token number">4</span>的步骤，直到没有region proposals为止。
+
+<span class="token number">6</span>、每次获取到的最大置信率的region proposals就是我们筛选出来的目标。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>那么问题来了，对于有遮挡的行人数据集，这里过滤掉的检测框有没有对隔壁检测目标IoU最高却被我们这个检测目标的检测框给抑制掉的呢？看图。</p>
+<p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;a0068cc853c8c3b049bec3bfdda76098.png)<br><strong>NMS阈值选取过小</strong>：针对目标T（man），检测框$P$与T的IoU最大，P会视为T的预测框。如果NMS选取过小，旁边目标B的预测框（woman)假设为K,那么K会被选作T的检测框，然后被P抑制掉。</p>
+<p><strong>NMS阈值选取过大</strong>：与上面是同样的道理，会多出许多检测框，带来更多的假正例。</p>
+<h2 id="Repulsion-loss"><a href="#Repulsion-loss" class="headerlink" title="Repulsion loss"></a>Repulsion loss</h2><p>既然已经清楚影响是怎样造成的，来看看解决方案。Repulsion loss的作用在于，<strong>要求预测框P靠近（吸引）自己的真实目标T的同时，还要求P远离（排斥）T旁边的其他真实框（例如B）</strong>。</p>
+<p>Replusion loss如下：<br>$$<br>L&#x3D;L_{\text{Attr}}+\alpha<em>L_{\text{RepGT}}+\beta</em>L_{\text{RepBox}}<br>$$<br>可以看到该损失函数中包含3个模块，下面来分别作解释。</p>
+<h4 id="L-Attr"><a href="#L-Attr" class="headerlink" title="$L_{Attr}$"></a>$L_{Attr}$</h4><p>该模块的作用是使得预测框和它的目标框尽可能接近。<br>$L_{Attr}$采用的是通用目标检测中的回归loss，可以采用欧式距离，$Smooth_{L1}$距离以及IoU距离。但为了和其他算法有可比性，这里采用的是SmoothL1距离。<br>$$<br>L_\text{Attr}&#x3D;\frac{\sum_{P\in\mathcal{P}<em>+}\text{Smooth}</em>{L1}(B^P,G_{Attr}^P)}{|\mathcal{P}<em>+|}<br>$$<br>$P \in \mathcal{P}</em>+$（所有的正样本)：正样本就是根据设定的IoU阈值来划分出来的检测框$P$的集合。</p>
+<p>$\mathrm{G}_{\mathrm{Attr}}^\mathrm{P}$: 为每一个检测框$P$匹配一个有最大IoU值的真实目标框（Ground truth）</p>
+<p>$\mathrm{B}^{\mathrm{P}}$： 从检测框$P$做回归偏移（shift）后得到的预测框。</p>
+<p>清楚这些基础概念后，这个模块的函数就好理解了,$Smooth_{L1}$的公式如下：<br>$$<br>L_{\mathrm{loc}}(t^u,v)&#x3D;\sum_{i\in{\mathrm{x,y,w,h}}}\operatorname{smooth}_{L_1}(t_i^u-v_i)<br>$$</p>
+<p>$$<br>\text{smooth}_{L_1}(x)&#x3D;\begin{cases}0.5x^2&amp;\text{if}|x|&lt;1\|x|-0.5&amp;\text{otherwise}\end{cases}<br>$$</p>
+<p> 从公式可以很直观的看出，$\mathrm{B}^{\mathrm{P}}$和$\mathrm{G}_{\mathrm{Attr}}^\mathrm{P}$的左上角坐标以及宽高 $(x,y,w,h)$分别进行smoothL1计算，然后累加和。<br>优化的目标就是让两者之间距离缩短，那就达到了预测框和它的目标框尽可能接近的目的。</p>
+<h4 id="L-mathrm-RepGT"><a href="#L-mathrm-RepGT" class="headerlink" title="$L_{\mathrm{RepGT}}$"></a>$L_{\mathrm{RepGT}}$</h4><p>$L_{\mathrm{RepGT}}$是使得预测框P和周围的目标框G尽可能远离 。**<br>$$<br>L_{\mathrm{RepGT}}&#x3D;\frac{\sum_{P\in\mathcal{P}<em>{+}}\mathrm{Smooth}</em>{ln}\left(IoG(B^{P},G_{Rep}^{P})\right)}{|\mathcal{P}_{+}|}<br>$$</p>
+<p>$$<br>\mathrm{Smooth}_{ln}&#x3D;\left{\begin{array}{ll}-\ln\left(1-x\right)&amp;x\leq\sigma\\frac{x-\sigma}{1-\sigma}-\ln\left(1-\sigma\right)&amp;x&gt;\sigma\end{array}\right.<br>$$</p>
+<p>这里的周围的目标框是除了已经匹配上的目标框以外的IoU最大的目标框，用 $G^P_{Rep}$表示。<br>$$<br>G_{Rep}^P&#x3D;\underset{G \in g\backslash{G^P_{Attr}}}{arg max},IoU(G,P)<br>$$</p>
+<p>即 $ G^P_{Rep}$是除了与预测框P匹配了的Ground_truth-A以外，其他剩下的Ground_truth中与预测框P的IoU最大的Ground_truth-B。</p>
+<ul>
+<li>Q1：$ L_{RepGT}$采用的$smooth_{Ln}$和IoG,那么为什么不适用IoU呢？</li>
+</ul>
+<p><strong>A :</strong> 如果选用IoU,那么只要预测框变得足够大（即增大并集）就能使得$ L_{RepGT}$减小。IoG不同，GT是固定的，只能优化分子部分（即增大交集）。</p>
+<ul>
+<li>Q2.为什么采用$smooth_{Ln}$？</li>
+</ul>
+<p><strong>A :</strong> Ln既保留了L1的鲁棒性又吸收L2的快速收敛性。</p>
+<h4 id="L-RepBox"><a href="#L-RepBox" class="headerlink" title="$L_{RepBox}$"></a>$L_{RepBox}$</h4><p> $L_{RepBox}$：使得预测框Pi和周围的预测框$P_j$尽可能远离， $P_i$和 $P_j $分别配上不同的预测框，他们之间的距离采用的是IoU。定义如下：<br>$$<br>L_{\mathrm{RepBox}}&#x3D;\frac{\sum_{i\neq j}\mathrm{Smooth}<em>{ln}\left(IoU(B^{P</em>{i}},B^{P_{j}})\right)}{\sum_{i\neq j}\mathbb{1}[IoU(B^{P_{i}},B^{P_{j}})&gt;0]+\epsilon}<br>$$<br>从式（4）中可以发现当预测框$P_i$和周围的其他预测框$P_j$的IoU越大，则产生的loss也会越大，因此可以有效防止两个预测框因为靠的太近而被NMS过滤掉，进而减少漏检。</p>
+<h1 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_40557160/article/details/116174316">Repulsion Loss：为解决密集人群检测中遮挡设计的损失函数_repulsion loss:detecting pedestrians in a crowd-CSDN博客</a></li>
+</ul>
+
+  </div>
 
 
                 <p>![在这里插入图片描述](<a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_%E6%A8%A1%E6%9D%BF">https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/0_模板</a> (copy)&#x2F;37bae19a8207a9f9a8ffa087b36ac48d.png)<br>本文由同济大学和北京大学合作发表于CVPR2018，聚焦于loss层面，为遮挡情况下的行人检测问题提供了一种行之有效的解决方案。<br>论文：<a target="_blank" rel="noopener" href="https://arxiv.org/abs/1711.07752">https://arxiv.org/abs/1711.07752</a></p>

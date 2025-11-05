@@ -399,7 +399,134 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="评估方法配置"><a href="#评估方法配置" class="headerlink" title="评估方法配置"></a>评估方法配置</h1><p>模型评估时使用的方法配置如下所示：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/models/yolo/model.py</span>
+<span class="token decorator annotation punctuation">@property</span>
+<span class="token keyword">def</span> <span class="token function">task_map</span><span class="token punctuation">(</span>self<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> Any<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""Map head to model, trainer, validator, and predictor classes."""</span>
+        <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+            <span class="token string">"classify"</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">"model"</span><span class="token punctuation">:</span> ClassificationModel<span class="token punctuation">,</span>
+                <span class="token string">"trainer"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>classify<span class="token punctuation">.</span>ClassificationTrainer<span class="token punctuation">,</span>
+                <span class="token string">"validator"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>classify<span class="token punctuation">.</span>ClassificationValidator<span class="token punctuation">,</span>
+                <span class="token string">"predictor"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>classify<span class="token punctuation">.</span>ClassificationPredictor<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+            <span class="token string">"detect"</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">"model"</span><span class="token punctuation">:</span> DetectionModel<span class="token punctuation">,</span>
+                <span class="token string">"trainer"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>detect<span class="token punctuation">.</span>DetectionTrainer<span class="token punctuation">,</span>
+                <span class="token string">"validator"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>detect<span class="token punctuation">.</span>DetectionValidator<span class="token punctuation">,</span>
+                <span class="token string">"predictor"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>detect<span class="token punctuation">.</span>DetectionPredictor<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+            <span class="token string">"segment"</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">"model"</span><span class="token punctuation">:</span> SegmentationModel<span class="token punctuation">,</span>
+                <span class="token string">"trainer"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>segment<span class="token punctuation">.</span>SegmentationTrainer<span class="token punctuation">,</span>
+                <span class="token string">"validator"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>segment<span class="token punctuation">.</span>SegmentationValidator<span class="token punctuation">,</span>
+                <span class="token string">"predictor"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>segment<span class="token punctuation">.</span>SegmentationPredictor<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+            <span class="token string">"pose"</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">"model"</span><span class="token punctuation">:</span> PoseModel<span class="token punctuation">,</span>
+                <span class="token string">"trainer"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>pose<span class="token punctuation">.</span>PoseTrainer<span class="token punctuation">,</span>
+                <span class="token string">"validator"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>pose<span class="token punctuation">.</span>PoseValidator<span class="token punctuation">,</span>
+                <span class="token string">"predictor"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>pose<span class="token punctuation">.</span>PosePredictor<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+            <span class="token string">"obb"</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span>
+                <span class="token string">"model"</span><span class="token punctuation">:</span> OBBModel<span class="token punctuation">,</span>
+                <span class="token string">"trainer"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>obb<span class="token punctuation">.</span>OBBTrainer<span class="token punctuation">,</span>
+                <span class="token string">"validator"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>obb<span class="token punctuation">.</span>OBBValidator<span class="token punctuation">,</span>
+                <span class="token string">"predictor"</span><span class="token punctuation">:</span> yolo<span class="token punctuation">.</span>obb<span class="token punctuation">.</span>OBBPredictor<span class="token punctuation">,</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+        <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看出目标检测模型在进行模型评估时使用的方法为：ultralytics&#x2F;models&#x2F;yolo&#x2F;detect&#x2F;val.py:<code>yolo.detect.DetectionValidator</code>,其中<code>DetectionValidator</code>继承自<code>BaseValidator</code>,且在<code>DetectionValidator</code>中并未对<code>__call__</code>方法进行重新实现，也就是说目标检测的评估方法调用流程实现在父类<code>BaseValidator</code>的<code>__call__</code>中,而调用的计算方法在子类<code>DetectionValidator</code>中实现。</p>
+<h1 id="评估参数计算"><a href="#评估参数计算" class="headerlink" title="评估参数计算"></a>评估参数计算</h1><h2 id="混淆矩阵计算"><a href="#混淆矩阵计算" class="headerlink" title="混淆矩阵计算"></a>混淆矩阵计算</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/models/yolo/detect/val.py</span>
+<span class="token keyword">def</span> <span class="token function">update_metrics</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> preds<span class="token punctuation">:</span> List<span class="token punctuation">[</span>Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span> batch<span class="token punctuation">:</span> Dict<span class="token punctuation">[</span><span class="token builtin">str</span><span class="token punctuation">,</span> Any<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
+        Update metrics with new predictions and ground truth.
+
+        Args:
+            preds (List[Dict[str, torch.Tensor]]): List of predictions from the model.
+            batch (Dict[str, Any]): Batch data containing ground truth.
+        """</span>
+        <span class="token keyword">for</span> si<span class="token punctuation">,</span> pred <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>preds<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            self<span class="token punctuation">.</span>seen <span class="token operator">+=</span> <span class="token number">1</span>
+            pbatch <span class="token operator">=</span> self<span class="token punctuation">.</span>_prepare_batch<span class="token punctuation">(</span>si<span class="token punctuation">,</span> batch<span class="token punctuation">)</span>
+            predn <span class="token operator">=</span> self<span class="token punctuation">.</span>_prepare_pred<span class="token punctuation">(</span>pred<span class="token punctuation">,</span> pbatch<span class="token punctuation">)</span>
+
+            <span class="token comment"># ......省略无关代码......</span>
+            <span class="token comment"># Evaluate</span>
+            <span class="token keyword">if</span> self<span class="token punctuation">.</span>args<span class="token punctuation">.</span>plots<span class="token punctuation">:</span>
+                <span class="token comment"># 混淆矩阵计算</span>
+                self<span class="token punctuation">.</span>confusion_matrix<span class="token punctuation">.</span>process_batch<span class="token punctuation">(</span>predn<span class="token punctuation">,</span> pbatch<span class="token punctuation">,</span> conf<span class="token operator">=</span>self<span class="token punctuation">.</span>args<span class="token punctuation">.</span>conf<span class="token punctuation">)</span>
+ 		   <span class="token comment"># ......省略无关代码......</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="模型精度等评估指标计算"><a href="#模型精度等评估指标计算" class="headerlink" title="模型精度等评估指标计算"></a>模型精度等评估指标计算</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/utils/metrics.py</span>
+<span class="token keyword">def</span> <span class="token function">ap_per_class</span><span class="token punctuation">(</span>
+    tp<span class="token punctuation">:</span> np<span class="token punctuation">.</span>ndarray<span class="token punctuation">,</span>
+    conf<span class="token punctuation">:</span> np<span class="token punctuation">.</span>ndarray<span class="token punctuation">,</span>
+    pred_cls<span class="token punctuation">:</span> np<span class="token punctuation">.</span>ndarray<span class="token punctuation">,</span>
+    target_cls<span class="token punctuation">:</span> np<span class="token punctuation">.</span>ndarray<span class="token punctuation">,</span>
+    plot<span class="token punctuation">:</span> <span class="token builtin">bool</span> <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">,</span>
+    on_plot<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span>
+    save_dir<span class="token punctuation">:</span> Path <span class="token operator">=</span> Path<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    names<span class="token punctuation">:</span> Dict<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">,</span> <span class="token builtin">str</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+    eps<span class="token punctuation">:</span> <span class="token builtin">float</span> <span class="token operator">=</span> <span class="token number">1e-16</span><span class="token punctuation">,</span>
+    prefix<span class="token punctuation">:</span> <span class="token builtin">str</span> <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> Tuple<span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    Compute the average precision per class for object detection evaluation.
+
+    Args:
+        tp (np.ndarray): Binary array indicating whether the detection is correct (True) or not (False).
+        conf (np.ndarray): Array of confidence scores of the detections.
+        pred_cls (np.ndarray): Array of predicted classes of the detections.
+        target_cls (np.ndarray): Array of true classes of the detections.
+        plot (bool, optional): Whether to plot PR curves or not.
+        on_plot (callable, optional): A callback to pass plots path and data when they are rendered.
+        save_dir (Path, optional): Directory to save the PR curves.
+        names (Dict[int, str], optional): Dictionary of class names to plot PR curves.
+        eps (float, optional): A small value to avoid division by zero.
+        prefix (str, optional): A prefix string for saving the plot files.
+
+    Returns:
+        tp (np.ndarray): True positive counts at threshold given by max F1 metric for each class.
+        fp (np.ndarray): False positive counts at threshold given by max F1 metric for each class.
+        p (np.ndarray): Precision values at threshold given by max F1 metric for each class.
+        r (np.ndarray): Recall values at threshold given by max F1 metric for each class.
+        f1 (np.ndarray): F1-score values at threshold given by max F1 metric for each class.
+        ap (np.ndarray): Average precision for each class at different IoU thresholds.
+        unique_classes (np.ndarray): An array of unique classes that have data.
+        p_curve (np.ndarray): Precision curves for each class.
+        r_curve (np.ndarray): Recall curves for each class.
+        f1_curve (np.ndarray): F1-score curves for each class.
+        x (np.ndarray): X-axis values for the curves.
+        prec_values (np.ndarray): Precision values at mAP@0.5 for each class.
+    """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="目标匹配"><a href="#目标匹配" class="headerlink" title="目标匹配"></a>目标匹配</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># ultralytics/engine/validator.py</span>
+<span class="token keyword">def</span> <span class="token function">match_predictions</span><span class="token punctuation">(</span>
+    self<span class="token punctuation">,</span> pred_classes<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> true_classes<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> iou<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">,</span> use_scipy<span class="token punctuation">:</span> <span class="token builtin">bool</span> <span class="token operator">=</span> <span class="token boolean">False</span>
+<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    Match predictions to ground truth objects using IoU.
+
+    Args:
+        pred_classes (torch.Tensor): Predicted class indices of shape (N,).
+        true_classes (torch.Tensor): Target class indices of shape (M,).
+        iou (torch.Tensor): An NxM tensor containing the pairwise IoU values for predictions and ground truth.
+        use_scipy (bool, optional): Whether to use scipy for matching (more precise).
+
+    Returns:
+        (torch.Tensor): Correct tensor of shape (N, 10) for 10 IoU thresholds.
+    """</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>可以选择使用匈牙利匹配算法进行匹配，但默认未使用</li>
+<li>默认使用贪婪匹配方法，选择满足IoU阈值的最大IoU结果作为匹配结果，同时保证匹配的唯一性</li>
+</ul>
+
+  </div>
 
 
                 <h1 id="评估方法配置"><a href="#评估方法配置" class="headerlink" title="评估方法配置"></a>评估方法配置</h1><p>模型评估时使用的方法配置如下所示：</p>

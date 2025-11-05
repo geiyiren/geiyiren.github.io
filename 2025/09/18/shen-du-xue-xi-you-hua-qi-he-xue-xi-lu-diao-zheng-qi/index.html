@@ -403,7 +403,199 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><ul>
+<li>每次训练的过程中会首先进行梯度的反向传播，然后进行参数更新，最后会调整学习率，那么也就是说第n个epoch的训练中进行参数更新时使用的第n-1次的学习率</li>
+<li>每次学习率调度器会在初始化汇总会调用一次<code>.step()</code>用于计算初始学习率$l_r$，并随后用于第一次参数更新</li>
+</ul>
+<h2 id="优化器"><a href="#优化器" class="headerlink" title="优化器"></a>优化器</h2><p>首先来看下优化器在做什么，每个batch训练结束后需要根据loss计算各个层的反向传播梯度，这个梯度信息是是属于某个层的，同时也是包含了整个batch的所有图像的，因为计算损失的时候使用的是batch内所有图像的均值loss，然后进行反向传播。此时，各个层都会得到自己的梯度，而各个层利用这些梯度值如何进行对应的参数更新，这便是优化器的主要工作。</p>
+<h3 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h3><h4 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h4><ul>
+<li><strong>Adam &#x3D; Adaptive Moment Estimation（自适应矩估计）</strong></li>
+<li>核心思想：<ol>
+<li><strong>梯度的一阶矩（均值）</strong>：类似动量（Momentum），加速收敛并减少震荡</li>
+<li><strong>梯度的二阶矩（方差）</strong>：类似 RMSProp，自适应调整每个参数的学习率</li>
+</ol>
+</li>
+<li>总结一句话：<strong>Adam 在每个参数上自适应调整学习率，同时考虑梯度方向的累积动量</strong>。</li>
+</ul>
+<hr>
+<h4 id="数学公式"><a href="#数学公式" class="headerlink" title="数学公式"></a>数学公式</h4><p>假设我们在时间步 $t$ 更新参数 $\theta_t$，梯度为 $g_t &#x3D; \nabla_\theta L(\theta_t)$，其中：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$g_t$</td>
+<td>在时间步 $t$ 的梯度（gradient）</td>
+</tr>
+<tr>
+<td>$\nabla_\theta$</td>
+<td>对模型参数 $\theta$ 求 <strong>梯度算子</strong></td>
+</tr>
+<tr>
+<td>$L(\theta_t)$</td>
+<td>当前模型参数 $\theta_t$ 下的 <strong>损失函数</strong></td>
+</tr>
+<tr>
+<td>$\theta_t$</td>
+<td>模型在时间步 $t$ 的所有权重和偏置参数集合</td>
+</tr>
+</tbody></table>
+<p>$\theta &#x3D; {W, b}$</p>
+<ul>
+<li>$W$ 是神经网络层的权重矩阵</li>
+<li>$b$ 是偏置向量</li>
+</ul>
+<p><strong>步骤 1：计算梯度的一阶动量</strong><br>$$<br>m_t &#x3D; \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g_t<br>$$</p>
+<ul>
+<li>$m_t$ 是一阶动量，$m_0&#x3D;[0]$</li>
+<li>$\beta_1 \in [0,1)$，一阶动量衰减系数，通常默认 0.9</li>
+<li>$t$为步数</li>
+</ul>
+<p><strong>步骤 2：计算梯度的二阶动量</strong><br>$$<br>v_t &#x3D; \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2<br>$$</p>
+<ul>
+<li>$v_t$ 是二阶动量，$v_0&#x3D;[0]$</li>
+<li>$\beta_2 \in [0,1)$，二阶动量衰减系数，通常默认  0.999</li>
+</ul>
+<p><strong>步骤 3：偏差修正（bias correction）</strong></p>
+<p>因为 $m_0 &#x3D; 0, v_0 &#x3D; 0$，前期会有偏差：<br>$$<br>\hat{m}_t &#x3D; \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}<em>t &#x3D; \frac{v_t}{1 - \beta_2^t}<br>$$<br><strong>步骤 4：更新参数</strong><br>$$<br>\theta</em>{t+1} &#x3D; \theta_t - l_r \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}<br>$$</p>
+<ul>
+<li>$l_r$ &#x3D; 学习率</li>
+<li>$\epsilon$ &#x3D; 防止除零，一般 $1e-8$</li>
+</ul>
+<p>✅ 总结：</p>
+<ul>
+<li><p><strong>方向</strong>：由一阶矩 $\hat{m}_t$ 决定</p>
+</li>
+<li><p><strong>步幅</strong>：由二阶矩 $\sqrt{\hat{v}_t}$ 自适应缩放</p>
+</li>
+</ul>
+<p>这里的梯度是指每一层收到的反向传播梯度，这里将所有层的参数和所有层的梯度收集起来，然后统一进行参数更新，因此每次使用的动量依赖于上一个<code>batch</code>使用的动量，且每次偏差修正时会使用当前的步数$t$进行$t$次方缩放($\beta_1^t,\beta_2^t,$)，这样在执行<code>resume</code>训练的时候历史训练的动量和<code>step</code>都会被保存下来继续使用。</p>
+<h3 id="AdamW"><a href="#AdamW" class="headerlink" title="AdamW"></a>AdamW</h3><p>区别在于更新参数时引入了权重衰减系数：<br>$$<br>\theta_{t+1} &#x3D; \theta_t - lr \left( \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} + \lambda , \theta_t \right)<br>$$</p>
+<h3 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h3><p>RMSProp 是一种自适应学习率优化器，由 Geoffrey Hinton 提出，用于解决 <strong>Adagrad 学习率快速下降问题</strong>。</p>
+<ul>
+<li><strong>核心思想</strong>：对梯度平方进行指数加权平均，动态调整每个参数的学习率。</li>
+</ul>
+<p>设：</p>
+<ul>
+<li>$g_t$ ：梯度</li>
+<li>$E[g^2]_t$ ：梯度平方的指数移动平均，初始一般为0</li>
+<li>$lr$ ：学习率</li>
+<li>$\epsilon$ ：防止除零的小常数</li>
+<li>$\rho$ ：衰减系数（常用 0.9）</li>
+</ul>
+<p>公式：<br>$$<br>E[g^2]<em>t&#x3D;\rho E[g^2]</em>{t-1}+(1-\rho)g_t^2\\theta_{t+1}&#x3D;\theta_t-\frac{lr}{\sqrt{E[g^2]_t+\epsilon}}g_t<br>$$</p>
+<h3 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h3><p>首先看名字：随机梯度下降，不同之处在于随机二字，我们首先看下随机在哪里“</p>
+<ul>
+<li><p>是不是选择部分图像作为代表进行推理，然后得到loss，进行方向传播，这个随机性体现在推理数据随机，而不是使用全量数据集。如果全量数据集有200个batch,每个batch100张图像，随机梯度下降就是还是200个batch,但是每次不是100张图像进行推理，而是随机选择50%的图像进行推理，这就是数据随机。</p>
+<p>可以肯定回答：随机梯度下降不是这样的❌</p>
+</li>
+<li><p>随机梯度，不会是每层网络得到后一层网络反向传播的梯度值后，理论上会得到该层网络所有参数的梯度值，然后再使用所有的梯度值更新对应的所有权重参数，按随机梯度是不是只是去部分参数的梯度进行对应的参数更新，那么这里的随机梯度下降就是随机选择部分参数进行更新。</p>
+<p>可以肯定回答：随机梯度下降不是这样的❌</p>
+</li>
+<li><p>不是数据随机选择，也不是参数随机更新，那难道是每个epoch可以选择该epoch不进行梯度反向传播，也可以选择进行梯度传播，这也是一种随机。</p>
+<p>可以肯定回答：随机梯度下降不是这样的❌</p>
+</li>
+<li><p>每次进行梯度调整时，这个loss只和当前batch有关，并非和所有batch有关，而各个batch的图像数据是随机分配的。那么得到的梯度就具有一定的随机性，也可以理解为局部梯度，因此随机梯度下降的随机性就体现在每次的数据不具有全局性，相对随机，因此使用这个梯度进行参数更新时就具有一定的随机性，当然也可以加入动量，但这只能降低随机性而不能消除随机性，因为历史梯度本身就是基于随机 batch 的累积且早期的随机性会被带入累积方向，只是随着训练，随机波动逐渐减小。</p>
+<p>可以肯定回答：随机梯度下降正是这样的✔️</p>
+</li>
+</ul>
+<p>那么，按照这样理解，所有优化器在进行随机梯度下降。我们再来看下SGD如何进行参数更新的：</p>
+<p><strong>标准 SGD：</strong></p>
+<p>对于网络参数 $\theta$（可以是权重 $W$ 或偏置 $b$），在第 $t$ 次迭代：<br>$$<br>\theta_{t+1} &#x3D; \theta_t - \eta \cdot g_t<br>$$<br>​	其中：</p>
+<ul>
+<li>$\theta_t$ ：第 $t$ 次迭代的参数</li>
+<li>$\eta$ ：学习率（learning rate）</li>
+<li>$g_t &#x3D; \nabla_\theta L_{\text{batch}}(\theta_t)$ ：当前 batch 的梯度（损失函数 $L$ 对参数 $\theta$ 的偏导数）</li>
+</ul>
+<p><strong>动量 SGD：</strong></p>
+<p>动量公式为：<br>$$<br>v_{t+1} &#x3D; \mu v_t + g_t \\<br>\theta_{t+1} &#x3D; \theta_t - \eta \cdot v_{t+1}<br>$$</p>
+<ul>
+<li>$\mu$ ：动量系数（通常 0.9 左右）</li>
+<li>$v_t$ ：历史梯度累积,即动量</li>
+</ul>
+<h2 id="学习率调度器"><a href="#学习率调度器" class="headerlink" title="学习率调度器"></a>学习率调度器</h2><h3 id="线性学习率衰减器"><a href="#线性学习率衰减器" class="headerlink" title="线性学习率衰减器"></a>线性学习率衰减器</h3><p>这个比较简单，核心思路就是在指定步数内将学习率衰减到指定的值：从 初始学习率逐渐减小到初始学习率的$l_{rf}$倍<br>$$<br>l_r&#x3D;l^{init}<em>r[(1 - \frac{epoch}{epochs})* (1.0 - l</em>{rf}) + l_{rf}]<br>$$</p>
+<ul>
+<li><p>当epoch&#x3D;0时：衰减倍率为1</p>
+</li>
+<li><p>当epoch&#x3D;epochs时：衰减倍率为1-$l_{rf}$</p>
+</li>
+</ul>
+<p>同样如果在执行<code>resume</code>训练的时候历史训练的学习率和<code>epoch</code>都会被保存下来继续使用。<strong>线性学习率调整器按 <code>epoch</code> 线性衰减</strong>。</p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BC%98%E5%8C%96%E5%99%A8%E5%92%8C%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E6%95%B4%E5%99%A8/lr_decay_curve-1758185767530-4.svg" alt="lr_decay_curve"></p>
+<h3 id="OneCycle学习率调度器"><a href="#OneCycle学习率调度器" class="headerlink" title="OneCycle学习率调度器"></a>OneCycle学习率调度器</h3><ul>
+<li><p>线性<br>$$<br>lr &#x3D; l^{start}_r + (l^{max}_r - l^{start}<em>r) * (t &#x2F; up</em>{steps})<br>$$</p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BC%98%E5%8C%96%E5%99%A8%E5%92%8C%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E6%95%B4%E5%99%A8/lr_decay_curve-1758185810648-6.svg" alt="lr_decay_curve"></p>
+</li>
+<li><p>cos<br>$$<br>lr &#x3D; l^{start}_r + \frac{(l^{max}_r - l^{start}<em>r) * (1 - cos(t * \frac{PI}{up</em>{steps}}))}{2}<br>$$</p>
+</li>
+</ul>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BC%98%E5%8C%96%E5%99%A8%E5%92%8C%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E6%95%B4%E5%99%A8/lr_decay_curve.svg" alt="lr_decay_curve"></p>
+<p>同样如果在执行<code>resume</code>训练的时候历史训练的学习率和<code>step</code>都会被保存下来继续使用。<strong>OneCycle学习率调度器每个batch调整一次，其中$up_{steps}$控制了学习率上升的步数，先让学习率在指定的步数内上升到最大值，然后再进行衰减。</strong></p>
+<h3 id="周期学习率"><a href="#周期学习率" class="headerlink" title="周期学习率"></a>周期学习率</h3><p>首先看公式：<br>$$<br>\eta_{t}&#x3D;\eta_{\min}+\frac12(\eta_{\max}-\eta_{\min}){\left[1+\cos\left(\pi\cdot\frac{t-T_{\mathrm{cur}}}{T_{i}}\right)\right]}<br>$$</p>
+<h3 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h3><ul>
+<li><p><strong>$\eta_t$</strong></p>
+<ul>
+<li>当前 step&#x2F;epoch 对应的学习率。</li>
+</ul>
+</li>
+<li><p><strong>$\eta_{\min}$</strong></p>
+<ul>
+<li>学习率下界（最小值）。</li>
+<li>当余弦曲线下降到最低点时，学习率不低于这个值。</li>
+</ul>
+</li>
+<li><p><strong>$\eta_{\max}$</strong></p>
+<ul>
+<li>学习率上界（最大值）。</li>
+<li>每次周期重启时学习率会恢复到这个值。</li>
+</ul>
+</li>
+<li><p><strong>$t$</strong></p>
+<ul>
+<li>当前的全局 step 或 epoch（训练的时间步数）。</li>
+</ul>
+</li>
+<li><p><strong>$T_{\mathrm{cur}}$</strong></p>
+<ul>
+<li>当前周期的起始 step&#x2F;epoch。</li>
+<li>用于计算当前 $t$ 在周期内的相对位置。</li>
+</ul>
+</li>
+<li><p><strong>$T_i$</strong></p>
+<ul>
+<li><p>当前周期的总长度（多少个 step&#x2F;epoch 走完一个完整的余弦退火）。</p>
+</li>
+<li><p>公式：<br>$$<br>T_i &#x3D; T_0 \cdot T_{\text{mult}}^{,i}<br>$$</p>
+<ul>
+<li>$T_0$：初始周期长度</li>
+<li>$T_{\text{mult}}$：倍增系数（如果 &gt;1，每次重启周期变长；如果&#x3D;1，周期长度固定）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>余弦项 $\cos\left(\pi \cdot \frac{t - T_{\mathrm{cur}}}{T_i}\right)$</strong></p>
+<ul>
+<li>控制学习率在当前周期内从 <strong>1 → -1</strong> 平滑变化。</li>
+<li>经过线性缩放后，得到学习率从 $\eta_{\min}$&#96;平滑下降到 $\eta_{\max}$。</li>
+</ul>
+</li>
+</ul>
+<p>再看函数曲线(如果):</p>
+<p><img src="/../../../MyBlogImage1/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%BC%98%E5%8C%96%E5%99%A8%E5%92%8C%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E6%95%B4%E5%99%A8/image-20250919160440340.png" alt="image-20250919160440340"></p>
+<h2 id="YOLO的学习率调整"><a href="#YOLO的学习率调整" class="headerlink" title="YOLO的学习率调整"></a>YOLO的学习率调整</h2><h3 id="Warmup阶段的学习率"><a href="#Warmup阶段的学习率" class="headerlink" title="Warmup阶段的学习率"></a>Warmup阶段的学习率</h3><p>该阶段的学习率调整函数再配置</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="http://10.10.150.60:3000/geiyiren/hand_written_conv_network.git">手写三层卷积网络</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/mTMH0SocMDXxCQoobrcQHw">优化器对比分析</a></p>
+</li>
+</ul>
+
+  </div>
 
 
                 <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><ul>

@@ -403,7 +403,132 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><p>待整理</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/603296375">AVM环视系统——鱼眼相机去畸变算法</a></p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 外参求解</span>
+std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>cv<span class="token double-colon punctuation">::</span>Point3f<span class="token operator">></span> object_points<span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">solvePnP</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_T<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                   <span class="token boolean">false</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>SOLVEPNP_ITERATIVE<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"ERROR: solvePnP cam_index[%d]\n"</span><span class="token punctuation">,</span> cam_index<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">float</span> projection_error <span class="token operator">=</span> <span class="token function">ComputeProjectionError</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_T<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+std<span class="token double-colon punctuation">::</span>cout <span class="token operator">&lt;&lt;</span> <span class="token string">"projection_error1: "</span> <span class="token operator">&lt;&lt;</span> projection_error <span class="token operator">&lt;&lt;</span> std<span class="token double-colon punctuation">::</span>endl<span class="token punctuation">;</span>
+<span class="token comment">// 定义迭代终止条件：最大迭代次数为 100，收敛阈值为 0.001</span>
+cv<span class="token double-colon punctuation">::</span>TermCriteria <span class="token function">termCrit</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>TermCriteria<span class="token double-colon punctuation">::</span>MAX_ITER <span class="token operator">|</span> cv<span class="token double-colon punctuation">::</span>TermCriteria<span class="token double-colon punctuation">::</span>EPS<span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">0.001</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 使用 L-M（Levenberg-Marquardt） 算法进行迭代优化，不断减小重投影误差</span>
+cv<span class="token double-colon punctuation">::</span>Mat RR <span class="token operator">=</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cv<span class="token double-colon punctuation">::</span>Mat TT <span class="token operator">=</span> cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cv<span class="token double-colon punctuation">::</span><span class="token function">solvePnPRefineLM</span><span class="token punctuation">(</span>object_points<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">,</span> cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> RR<span class="token punctuation">,</span> TT<span class="token punctuation">,</span> termCrit<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 使用虚拟视觉伺服 (Virtual Visual Servoing)方法进行迭代优化，不断减小重投影误差</span>
+<span class="token comment">// cv::solvePnPRefineVVS(object_points, image_points_undist_new, cam_K[cam_index], cv::noArray(), RR, TT, termCrit);</span>
+cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span> <span class="token operator">=</span> RR<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+cam_R<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span> <span class="token operator">=</span> TT<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">
+&#x2F;**
+ * @description: 输入畸变图，输出去畸变图
+ * @param &#123;Mat&#125; &amp;img_dist
+ * @param &#123;Mat&#125; &amp;img_undist
+ * @return &#123;*&#125;
+ * @author: wangshuaiyang
+ *&#x2F;
+int TAvmCal::DistToUndistImage(cv::Mat img_dist, cv::Mat &amp;img_undist, int cam_index)
+&#123;
+    int ret &#x3D; 0;
+
+#if 1
+    &#x2F;&#x2F; 新的相机内参矩阵和图像尺寸（可选）
+    float scale &#x3D; 2.5;
+    cv::Mat new_cam_K &#x3D; cam_K[cam_index].clone();
+    new_cam_K.at&lt;float&gt;(0, 0) &#x3D; new_cam_K.at&lt;float&gt;(0, 0);     &#x2F;&#x2F; fx
+    new_cam_K.at&lt;float&gt;(1, 1) &#x3D; new_cam_K.at&lt;float&gt;(0, 0);     &#x2F;&#x2F; fy
+    new_cam_K.at&lt;float&gt;(0, 2) &#x3D; new_cam_K.at&lt;float&gt;(0, 0) * 5; &#x2F;&#x2F; cx
+    new_cam_K.at&lt;float&gt;(1, 2) &#x3D; new_cam_K.at&lt;float&gt;(0, 0) * 2; &#x2F;&#x2F; cy
+
+    cv::Size new_size &#x3D; cv::Size(img_dist.size().width * scale, img_dist.size().height * scale);
+    cv::fisheye::undistortImage(img_dist, img_undist, cam_K[cam_index], cam_D[cam_index], new_cam_K, new_size);
+    cv::resize(img_undist, img_undist, img_dist.size());
+
+#else
+    cv::Mat mapx;
+    cv::Mat mapy;
+
+    &#x2F;&#x2F; 计算矫正图
+    float point_u_tmp[2];
+    float point_d_tmp[2];
+    float scale &#x3D; 2.5;
+    int offset_x &#x3D; 1000;
+    int offset_y &#x3D; 300;
+    int w &#x3D; img_dist.cols * scale;
+    int h &#x3D; img_dist.rows * scale;
+    mapx.create(h, w, CV_32FC1);
+    mapy.create(h, w, CV_32FC1);
+    for (int col &#x3D; 0; col &lt; w; col +&#x3D; 1)
+    &#123;
+        for (int row &#x3D; 0; row &lt; h; row +&#x3D; 1)
+        &#123;
+            &#x2F;&#x2F; 归一化
+            std::vector&lt;cv::Point2d&gt; unDist_points(1);
+            std::vector&lt;cv::Point2d&gt; dist_points(1);
+            point_u_tmp[0] &#x3D; col - offset_x;
+            point_u_tmp[1] &#x3D; row - offset_y;
+            unDist_points[0].x &#x3D; (point_u_tmp[0] - cam_K[cam_index].at&lt;float&gt;(0, 2)) &#x2F; cam_K[cam_index].at&lt;float&gt;(0, 0);
+            unDist_points[0].y &#x3D; (point_u_tmp[1] - cam_K[cam_index].at&lt;float&gt;(1, 2)) &#x2F; cam_K[cam_index].at&lt;float&gt;(1, 1);
+
+            cv::fisheye::distortPoints(unDist_points, dist_points, cam_K[cam_index], cam_D[cam_index]);
+
+            mapx.at&lt;float&gt;(row, col) &#x3D; dist_points[0].x;
+            mapy.at&lt;float&gt;(row, col) &#x3D; dist_points[0].y;
+        &#125;
+    &#125;
+
+    cv::remap(img_dist, img_undist, mapx, mapy, cv::INTER_LINEAR);
+
+    cv::resize(img_undist, img_undist, img_dist.size());
+#endif
+
+#if  SHOW_DETECT_PROCESS
+    cv::imshow(&quot;image_remap_fish&quot;, img_undist);
+    cv::waitKey(0);
+#endif
+    return 0;
+&#125;
+
+&#x2F;**
+ * @description: 计算重投影误差(使用均方误差，RMS)
+ * @return &#123;*&#125;
+ * @author: wangshuaiyang
+ *&#x2F;
+float TAvmCal::ComputeProjectionError(const std::vector&lt;cv::Point3f&gt; &amp;objectPoints,
+                                      const std::vector&lt;cv::Point2f&gt; &amp;imagePoints,
+                                      const cv::Mat &amp;cameraMatrix,
+                                      const cv::Mat &amp;rvec,
+                                      const cv::Mat &amp;tvec)
+&#123;
+    &#x2F;&#x2F; 使用估计的相机位姿将世界坐标系中的三维点投影到图像平面上
+    std::vector&lt;cv::Point2f&gt; projectedPoints;
+    cv::projectPoints(objectPoints, rvec, tvec, cameraMatrix, cv::noArray(), projectedPoints);
+
+    &#x2F;&#x2F; 计算重投影误差
+    float RMS_Error &#x3D; 0.0;
+    for (size_t i &#x3D; 0; i &lt; imagePoints.size(); ++i)
+    &#123;
+        float dx &#x3D; projectedPoints[i].x - imagePoints[i].x;
+        float dy &#x3D; projectedPoints[i].y - imagePoints[i].y;
+        RMS_Error +&#x3D; (dx * dx + dy * dy);
+    &#125;
+    RMS_Error &#x2F;&#x3D; (float)imagePoints.size();
+    RMS_Error &#x3D; std::sqrt(RMS_Error);
+
+    &#x2F;&#x2F; 返回总的重投影误差
+    return RMS_Error;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  </div>
 
 
                 <h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><p>待整理</p>

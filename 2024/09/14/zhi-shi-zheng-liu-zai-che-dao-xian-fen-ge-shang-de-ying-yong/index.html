@@ -403,7 +403,24 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <ul>
+<li><p>知识蒸馏（Knowledge distillation）：用于把大网络学习到的内容（knowledge）迁移到小网络中。具体有两个目标要学习，一是小网络输出与真值的相似，二是让小网络与大网络的输出相似。</p>
+</li>
+<li><p>注意力蒸馏（Attention distillation）：用于把大网络学习到的注意力特征图（attention map）迁移到小网络中。具体在知识蒸馏基础上，再对网络中间层特征进行迁移，以保证大小网络中间的注意力特征图相似。</p>
+</li>
+<li><p>自注意力蒸馏（Self Attention Distillation）：抛弃大网络，单独在小网络中对不同层学习到的注意力特征图进行迁移学习。</p>
+</li>
+</ul>
+<p>将SAD嵌入到自己的网络中，只需要在训练阶段加入即可，因此不会给inference过程增加多余的参数和计算量，也不会影响模型的性能。</p>
+<p>Paper:<a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogPaper1/blob/main/LDW/SAD_%20Learning%20Lightweight%20Lane%20Detection%20CNNs%20by%20Self%20Attention%20Distillation.pdf">Learning Lightweight Lane Detection CNNs by Self Attention Distillation</a></p>
+<p>COde:<a target="_blank" rel="noopener" href="https://github.com/cardwing/Codes-for-Lane-Detection">https://github.com/cardwing/Codes-for-Lane-Detection</a></p>
+<h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiangs/p/12707472.html">https://www.cnblogs.com/xiangs/p/12707472.html</a></li>
+</ul>
+
+  </div>
 
 
                 <ul>

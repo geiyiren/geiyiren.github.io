@@ -403,7 +403,26 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="git-config-设置用户名称和邮件地址"><a href="#git-config-设置用户名称和邮件地址" class="headerlink" title="git config 设置用户名称和邮件地址"></a><code>git config</code> 设置用户名称和邮件地址</h2><ul>
+<li>设置用户名称<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.name <span class="token string">"goto456"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>设置邮件地址<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> user.email <span class="token string">"goto456@126.com"</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>列出当前Git所有的配置信息<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--list</span> <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h2 id="git-init-初始化本地仓库"><a href="#git-init-初始化本地仓库" class="headerlink" title="git init 初始化本地仓库"></a><code>git init</code> 初始化本地仓库</h2><p>获取一个 Git 仓库有两种方法：<br>1.本地初始化一个仓库<br>2.从远程克隆一个仓库到本地<br>对于第1种方式，如果想对本地现有的一个项目用 Git 来管理，可以直接进入该项目的目录下执行如下命令，就可以将其初始化成一个 Git 仓库了。  </p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="git-clone-克隆远程仓库到本地"><a href="#git-clone-克隆远程仓库到本地" class="headerlink" title="git clone 克隆远程仓库到本地"></a><code>git clone</code> 克隆远程仓库到本地</h2><ul>
+<li>通过ssh方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone git@github.com:goto456/leetcode.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>通过https方式克隆<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://github.com/goto456/leetcode.git <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<blockquote>
+<p>https方式：不管是谁，只要拿到该项目的 url 可以随便 clone，但是在 push 到远程的时候需要验证用户名和密码；<br>ssh方式：需要现将你电脑的SSH key（SSH公钥）添加到GitHub（或者其他代码托管网站）上，这样在 clone 项目和 push 项目到远程时都不需要输入用户名和密码。</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="git将本地仓库的全部历史记录都提交到指定远程仓库"><a href="#git将本地仓库的全部历史记录都提交到指定远程仓库" class="headerlink" title="git将本地仓库的全部历史记录都提交到指定远程仓库"></a>git将本地仓库的全部历史记录都提交到指定远程仓库</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><p><a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/blob/pdf/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/git%E6%95%99%E7%A8%8B.pdf">参考文档</a><br><a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2">Pro Git 第二版</a></p>
+
+  </div>
 
 
                 <h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="git-config-设置用户名称和邮件地址"><a href="#git-config-设置用户名称和邮件地址" class="headerlink" title="git config 设置用户名称和邮件地址"></a><code>git config</code> 设置用户名称和邮件地址</h2><ul>

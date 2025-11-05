@@ -399,7 +399,62 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <ul>
+<li>匈牙利算法可以告诉我们当前帧的某个目标，是否与前一帧的某个目标相同。</li>
+<li>卡尔曼滤波可以基于目标前一时刻的位置，来预测当前时刻的位置，并且可以比传感器（在目标跟踪中即目标检测器，比如Yolo等）更准确的估计目标的位置。</li>
+</ul>
+<h2 id="匈牙利算法（Hungarian-Algorithm）"><a href="#匈牙利算法（Hungarian-Algorithm）" class="headerlink" title="匈牙利算法（Hungarian Algorithm）"></a>匈牙利算法（Hungarian Algorithm）</h2><p>首先，先介绍一下什么是<strong>分配问题（Assignment Problem）：</strong>假设有N个人和N个任务，每个任务可以任意分配给不同的人，已知每个人完成每个任务要花费的代价不尽相同，那么如何分配可以使得总的代价最小。</p>
+<p>举个例子，假设现在有3个任务，要分别分配给3个人，每个人完成各个任务所需<strong>代价矩阵（cost matrix）</strong>如下所示（这个代价可以是金钱、时间等等）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-62eb27d3b24895b24e7d1d91d8150c2d_720w.bmp"></p>
+<p>怎样才能找到一个最优分配，使得完成所有任务花费的代价最小呢？</p>
+<p>匈牙利算法（又叫<strong>KM</strong>算法）就是用来解决分配问题的一种方法，它基于定理：</p>
+<p><strong>如果代价矩阵的某一行或某一列同时加上或减去某个数，则这个新的代价矩阵的最优分配仍然是原代价矩阵的最优分配。</strong></p>
+<p>算法步骤（假设矩阵为NxN方阵）：</p>
+<ol>
+<li>对于矩阵的每一行，减去其中最小的元素</li>
+<li>对于矩阵的每一列，减去其中最小的元素</li>
+<li>用最少的水平线或垂直线覆盖矩阵中所有的0</li>
+<li>如果线的数量等于N，则找到了最优分配，算法结束，否则进入步骤5</li>
+<li>找到没有被任何线覆盖的最小元素，每个<strong>没被线覆盖的行</strong>减去这个元素，每个<strong>被线覆盖的列</strong>加上这个元素，返回步骤3</li>
+</ol>
+<p>继续拿上面的例子做演示：</p>
+<ul>
+<li>step1 每一行最小的元素分别为15、20、20，减去得到：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-62e6ad301e4beb6df670d5275422e301_720w.bmp"></p>
+<ul>
+<li>step2 每一列最小的元素分别为0、20、5，减去得到：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-cddb2e827f57dc81063e6507a85f2b7f_720w.bmp"></p>
+<ul>
+<li>step3 用最少的水平线或垂直线覆盖所有的0，得到：</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-707c32f507abb7e7810f25737b9bc9de_720w.bmp"></p>
+<ul>
+<li><p>step4 线的数量为2，小于3，进入下一步；</p>
+</li>
+<li><p>step5 现在没被覆盖的最小元素是5，没被覆盖的行（第一和第二行）减去5，得到：</p>
+</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-ecb6e70315de1f60b3a077972dc75ee4_720w.bmp"></p>
+<p>被覆盖的列（第一列）加上5，得到：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-e7e5c31a2041bf962358789fa18e51d9_720w.bmp"></p>
+<p>跳转到step3，用最少的水平线或垂直线覆盖所有的0，得到：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-ac667adf429d9affb7ed3c181d054850_720w.bmp"></p>
+<p>step4：线的数量为3，满足条件，算法结束。显然，将任务2分配给第1个人、任务1分配给第2个人、任务3分配给第3个人时，总的代价最小（0+0+0&#x3D;0）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-14becb95b4cb94fc4f54e0ddfaa6ead0_720w.bmp"></p>
+<p>所以原矩阵的最小总代价为（40+20+25&#x3D;85）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%A4%9A%E7%9B%AE%E6%A0%87%E5%8C%B9%E9%85%8D%E4%B9%8B%E5%8C%88%E7%89%99%E5%88%A9%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95/v2-b2417f4590595ff962d03c6e5482d044_720w.bmp"></p>
+<blockquote>
+<p>本文转自 <a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/90835266">https://zhuanlan.zhihu.com/p/90835266</a>，如有侵权，请联系删除。</p>
+</blockquote>
+<h2 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dark_scope/article/details/8880547">趣写算法系列之–匈牙利算法</a></li>
+</ul>
+
+  </div>
 
 
                 <ul>

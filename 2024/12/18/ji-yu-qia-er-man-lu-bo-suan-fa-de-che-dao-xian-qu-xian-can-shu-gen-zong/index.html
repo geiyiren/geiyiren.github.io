@@ -403,7 +403,170 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="曲率"><a href="#曲率" class="headerlink" title="曲率"></a>曲率</h2><p>曲率$k$可以表示为曲线长度随着角度变化的快慢，即：<br>$$<br>\begin{equation}<br>k&#x3D;\lim_{\alpha\to0}\left|\frac{\Delta\alpha}{\Delta s}\right|<br>\end{equation}<br>$$<br>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds}<br>\end{equation}<br>$$</p>
+<p>其中，$\alpha$为曲线的切线与x轴的夹角，$s$为曲线的长度。</p>
+<p>首先给出结论，然后再进行详细推导。曲率半径$R$可以表示为：<br>$$<br>\begin{equation}<br>R&#x3D;\frac1k&#x3D;\frac{\left[1+\left(\frac{dy}{dx}\right)^2\right]^{\frac32}}{\frac{d^2y}{dx^2}}&#x3D;\frac{\left[1+\left(f^{\prime}\right)^2\right]^{\frac32}}{f^{\prime\prime}}<br>\end{equation}<br>$$</p>
+<p>下面进行详细的推导，首先需要知道曲线的弧长公式，我们将曲线的方程表示为$y&#x3D;f(x)$：</p>
+<p>曲线弧长的计算公式为：<br>$$<br>\begin{equation}<br>ds&#x3D;\sqrt{(dx)^2+(dy)^2}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>dy&#x3D;y^{\prime}dx<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>ds&#x3D;\sqrt{1+(y^{\prime})^2}dx<br>\end{equation}<br>$$<br>记住上述公式下面要用</p>
+<blockquote>
+<p>进一步解释，弧长的计算可以通过积分得到：<br>$$<br>s&#x3D;\int\sqrt{1+(y^{\prime})^2}dx<br>$$</p>
+</blockquote>
+<p>曲线的方程表示为$y&#x3D;f(x)$，且$f(x)$具有二阶导数。因为$tan(\alpha)&#x3D;y^{\prime}$,设$-\pi&#x2F;2&lt;\alpha&lt;\pi&#x2F;2$,则：<br>$$<br>\begin{equation}<br>\alpha&#x3D;\arctan(y^{\prime})<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\frac{d\alpha}{dx}&#x3D;\left(arctany^{\prime}\right)^{\prime}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>d\alpha&#x3D;\left(\arctan y^{\prime}\right)^{\prime}dx&#x3D;\frac{y^{\prime\prime}}{1+{y^{\prime}}^2}dx<br>\end{equation}<br>$$</p>
+<p>则：</p>
+<p>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\frac{d\alpha}{ds}&#x3D;\frac{\frac{y^{\prime\prime}}{1+{y^{\prime}}^2}dx}{\sqrt{1+(y^{\prime})^2}dx} \\<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\frac{d\alpha}{ds}&#x3D;\frac{\frac{y^{\prime\prime}}{1+{y^{\prime}}^2}}{\sqrt{1+(y^{\prime})^2}} \\<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\mathbf{k}&#x3D;\frac{d\alpha}{ds}&#x3D;\frac{y^{\prime\prime}}{\left[1+\left(y^{\prime}\right)^{2}\right]^{\frac32}}<br>\end{equation}<br>$$</p>
+<p>可以看出，曲率$k$与曲线的方程$y&#x3D;f(x)$有关，因此，我们可以通过计算曲线的方程来得到曲率$k$。</p>
+<h2 id="曲率和横摆角速度的关系"><a href="#曲率和横摆角速度的关系" class="headerlink" title="曲率和横摆角速度的关系"></a>曲率和横摆角速度的关系</h2><p>按照惯例，先给出结论，再进行推导。</p>
+<p>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds} \approx \frac{\omega}{v_{x}}<br>\end{equation}<br>$$</p>
+<p>其中，$\omega$为横摆角速度，$v_{x}$为车辆行驶速度(纵向)</p>
+<p>在自动驾驶系统中，通过测量车辆的速度和轨迹的曲率，可以预测和控制车辆的横摆角速度，确保车辆稳定地沿着曲线行驶。因此，曲率与横摆角速度之间的关系在自动驾驶系统中具有重要意义。</p>
+<p>由于车辆直线行驶时，车辆的运动轨迹近乎为圆形，且半径很大，车辆在短时间内走过的弧长和车辆行驶的距离基本相等，因此可以近似认为：</p>
+<p>$$<br>\begin{equation}<br>ds\approx dx<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\frac{d\alpha}{dx}\approx\frac{d\alpha}{ds}<br>\end{equation}<br>$$<br>根据横摆角速度和行驶速度的定义有：</p>
+<p>$$<br>\begin{equation}<br>\frac{d\alpha&#x2F;dt}{ds&#x2F;dt}&#x3D;\frac{\omega}{v_{x}}<br>\end{equation}<br>$$</p>
+<p>综上可得:<br>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds}\approx\frac{\omega}{v_{x}}<br>\end{equation}<br>$$</p>
+<h2 id="曲率和车辆横向偏移的关系"><a href="#曲率和车辆横向偏移的关系" class="headerlink" title="曲率和车辆横向偏移的关系"></a>曲率和车辆横向偏移的关系</h2><p>假设我们有一个半径为$R$的圆弧，圆心为$O$，而车辆当前的位置为$P$，它的距离圆心$O$的原始距离为$R$，但由于某种原因，车辆相对于圆心$O$在水平和垂直方向上发生了偏移,$dx$是车辆在水平方向上的偏移量。$dy$是车辆在垂直方向上的偏移量。$R$ 是车辆原始所在圆弧的半径，即车辆到圆心$O$ 的距离。现在我们考虑车辆的实际位置与原本的圆心位置之间的关系。</p>
+<p>假设车辆的实际位置偏移后，车辆的新位置与原本的圆心之间的几何关系如下：</p>
+<ul>
+<li>车辆原本的位置是$P$，它与圆心$O$的距离是$R$。</li>
+<li>车辆实际的偏移量是$dx$(水平方向)和$dy$(垂直方向)。</li>
+</ul>
+<p>通过坐标系的几何关系，我们可以得到以下方程来描述这种偏移：</p>
+<ul>
+<li>原始情况下，车辆与圆心的距离为R。</li>
+<li>车辆的实际位置偏移：假设车辆在经过$dx$和$dy$的偏移后，车辆与圆心的距离不再是R,而变成了一个新的距离。我们可以通过毕达哥拉斯定理来描述这个偏移。</li>
+</ul>
+<p>在直角坐标系中，车辆原来与圆心的距离为$R$,现在的实际位置$P^{\prime}$与圆心O的距离为新的值。因为车辆的偏移在$x$和$y$方向上是直角的，所以我们可以利用毕达哥拉斯定理计算车辆偏移后的实际距离。<br>假设车辆从原始位置偏移到新位置，我们有：</p>
+<p>$$<br>\begin{equation}<br>\text{新距离}&#x3D;\sqrt{(R-dy)^2+(dx)^2}<br>\end{equation}<br>$$</p>
+<p>这个新距离应该与原始的$R$保持一致。也就是说，车辆在行驶的时候无侧向滑动，那么：</p>
+<p>$$<br>\begin{equation}<br>R^2&#x3D;(R-dy)^2+(dx)^2.<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>R^2&#x3D;R^2-2Rdy+(dy)^2+(dx)^2.<br>\end{equation}<br>$$</p>
+<p>在车辆直线行驶时，车辆的运动轨迹近乎为圆形，且半径很大，因此$dy$很小，那么$(dy)^2$就是二阶无穷小，可以忽略不记：<br>$$<br>\begin{equation}<br>2Rdy&#x3D;(dx)^2.<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>dy&#x3D;\frac1{2R}(dx)^2<br>\end{equation}<br>$$</p>
+<p>曲率半径和曲率的关系为：<br>$$<br>\begin{equation}<br>k&#x3D;\frac1R<br>\end{equation}<br>$$</p>
+<p>则：</p>
+<p>$$<br>\begin{equation}<br>dy&#x3D;\frac{1}{2}k(dx)^2<br>\end{equation}<br>$$</p>
+<p>综和曲率和车辆横向偏移的关系以及曲率和横摆角速度的关系，我们可以得到：</p>
+<p>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds} \approx\frac{\omega}{v_{x}}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>dy&#x3D;\frac{1}{2}\frac{\omega}{v_{x}}(dx)^2<br>\end{equation}<br>$$</p>
+<h1 id="泰勒展开式"><a href="#泰勒展开式" class="headerlink" title="泰勒展开式"></a>泰勒展开式</h1><p>若函数$f(x)$在包含$x0$的某个闭区间$[a,b]$上具有$n$阶导数，且在开区间$(a,b)$上具有$(n+1)$阶导数，则对闭区间$[a,b]$上任意一点$x$，成立下式：</p>
+<p>$$<br>\begin{equation}<br>f\left(x\right)&#x3D;\frac{f\left(x_{0}\right)}{0!}+\frac{f^{\prime}(x_{0})}{1!}\left(x-x_{0}\right)+\frac{f^{\prime\prime}(x_{0})}{2!}\left(x-x_{0}\right)^{2}+…+\frac{f^{(n)}\left(x_{0}\right)}{n!}\left(x-x_{0}\right)^{n}+R_{n}(x)<br>\end{equation}<br>$$</p>
+<p>其中，$f^{(n)}(x)$表示$f(x)$的$n$阶导数，等号后的多项式称为函数$f(x)$在$x0$处的泰勒展开式，剩余的$Rn(x)$是泰勒公式的余项，是$(x-x0)n$的高阶无穷小。<br>对于三次函数，余项$R_n$为零，因为三次函数的四阶及以上导数为零。因此，泰勒展开式在此情形下无截断误差。</p>
+<p>增量形式的泰勒展开式是一种用于描述一个函数在某点附近的增量变化的数学方法。对于一个可微函数$f(x)$,假设$x_0$是某个已知的点，$d_{x}$是从$x_0$到$x_0+d_{x}$的增量，增量的泰勒展开式给出了$f(x_0+d_{x})$近似于$f(x_0)$的一个展开式。</p>
+<p>$$<br>\begin{equation}<br>f(x_0+d_{x})&#x3D;f(x_0)+f^{\prime}(x_0)d_{x}+\frac{f^{\prime\prime}(x_0)}{2!}(d_{x})^2+\frac{f^{(3)}(x_0)}{3!}(d_{x})^3+\cdots<br>\end{equation}<br>$$</p>
+<p>在卡尔曼滤波中一般使用$t$和$t-1$表示当前时刻和上一时刻，注意这里两个时刻的间隔并不是1，而是指相邻两次的采样，采样间隔也不一定相同，所以$f(x_0)$为$x_0$位置或$t-1$时刻的采样值，$f(x_0+d_x)$为在$x_0+d_x$位置或$t$时刻的采样值，所以可以表示为:</p>
+<p>$$<br>\begin{equation}<br>f(t)&#x3D;f(t-1)+f^{\prime}(t-1)d_{x}+\frac{f^{\prime\prime}(t-1)}{2!}(d_{x})^2+\frac{f^{(3)}(t-1)}{3!}(d_{x})^3+\cdots<br>\end{equation}<br>$$</p>
+<p>注意这里的$dx$为两次采样间隔之间$x$的变化量，即$d_{x}&#x3D;v_{x}\Delta{t}$。</p>
+<h2 id="卡尔曼滤波的五个公式"><a href="#卡尔曼滤波的五个公式" class="headerlink" title="卡尔曼滤波的五个公式"></a>卡尔曼滤波的五个公式</h2><ul>
+<li><p>状态预测<br>$$<br>\begin{equation}<br>{\widehat{X}^{-}<em>t}&#x3D;A_t\widehat{X}</em>{t-1}+B_tu_t<br>\end{equation}<br>$$</p>
+</li>
+<li><p>状态协方差预测<br>$$<br>\begin{equation}<br>P_t^-&#x3D;F_tP_{t-1}F_t^T+Q_t<br>\end{equation}<br>$$</p>
+</li>
+<li><p>更新卡尔曼增益<br>$$<br>\begin{equation}<br>K_t&#x3D;P_t^-H_t^T(H_tP_t^-H_t^T+R_t)^{-1}<br>\end{equation}<br>$$</p>
+</li>
+<li><p>更新状态估计<br>$$<br>\begin{equation}<br>\widehat{X}_t&#x3D;\widehat{X}_t^-+K_t(z_t-H\widehat{X}_t^-)<br>\end{equation}<br>$$</p>
+</li>
+<li><p>更新状态协方差<br>$$<br>\begin{equation}<br>P_t&#x3D;(I-K_tH)P_t^-<br>\end{equation}<br>$$</p>
+</li>
+</ul>
+<h1 id="车道线曲线参数跟踪"><a href="#车道线曲线参数跟踪" class="headerlink" title="车道线曲线参数跟踪"></a>车道线曲线参数跟踪</h1><p>通过上述的分析，基本上可以对车辆运动有了基本的了解，本文的目的是使用卡尔曼滤波对车道线的参数进行跟踪，因此，我们接下来需要确定卡尔曼滤波的模型。</p>
+<h2 id="卡尔曼滤波模型"><a href="#卡尔曼滤波模型" class="headerlink" title="卡尔曼滤波模型"></a>卡尔曼滤波模型</h2><p>卡尔曼滤波是一种递归的参数估计方法，它通过递归地计算和更新系统的状态估计，实现对动态系统的最优估计。卡尔曼滤波的基本思想是利用系统的动态模型和观测模型，通过递归地计算和更新系统的状态估计，实现对动态系统的最优估计。</p>
+<p>在工程实践中，由于感知识别到的车道线偶尔存在较大的跳变，导致报警判断或早后晚的出现波动，所以我们需要对感知输入的车道线系数进行平滑处理。</p>
+<p>一般情况下，感知将车道线以三次螺旋曲线方程的形式输送给下游，其中：<br>$$<br>\begin{equation}<br>y&#x3D;c_0+c_1x+c_2x^2+c_3x^3<br>\end{equation}<br>$$</p>
+<ul>
+<li>$c_0$:表示在纵向距离$x&#x3D;0$处摄像头到车道线的横向距离：</li>
+<li>$atan(c_1)$:表示纵向距离$x&#x3D;0$处摄像头与车道线的航向角$\theta$；</li>
+<li>$2c_2$:表示纵向距离$x&#x3D;0$处车道线的曲率$k_r$;</li>
+<li>$6c_3$:表示纵向距离$x&#x3D;0$处车道线的曲率变化率$\dot{k}_{r}$;</li>
+</ul>
+<p>对上述车道线方程求导，分别计算出在纵向距离$x$处的自车到车道线的横向距离$y$,自车与车道线<br>的航向角$\theta$，车道线的曲率$k$,车道线的曲率变化率$\dot{k}_{r}$，可表示为：</p>
+<p>$$<br>\begin{equation}<br>y_{x}&#x3D;c_{0}+c_{1}x+c_{2}x^2+c_{3}x^3<br>\end{equation}<br>$$</p>
+<p>一阶导如下所示:</p>
+<p>$$<br>\begin{equation}<br>\theta_{x}&#x3D;c_{1}+2c_{2}x+3c_{3}x^{2}</p>
+<p>\end{equation}<br>$$</p>
+<p>二阶导如下所示:</p>
+<p>$$<br>\begin{equation}<br>k_{rx}&#x3D;2c_{2}+6c_{3}x</p>
+<p>\end{equation}<br>$$</p>
+<p>三阶导如下所示:</p>
+<p>$$<br>\begin{equation}<br>\dot{k}<em>{rx}&#x3D;6c</em>{3}<br>\end{equation}<br>$$</p>
+<p>对车道线参数进行卡尔曼滤波首先假定车道线的曲率变化率$\dot{k}<em>{r}$不变，其他三个参数随时间根据<br>$\dot{k}</em>{r}$的变化而变化。在推导过程中，车道线参数受自车运动的影响，需要将自车运动消除:</p>
+<p>$$<br>\begin{equation}<br>d_{x}&#x3D;v_{x}t<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>d_{\theta}&#x3D;w_{r}t<br>\end{equation}<br>$$</p>
+<p>根据曲率和车辆横向偏移的关系以及曲率和横摆角速度的关系可得：</p>
+<p>$$<br>\begin{equation}<br>d_{y}&#x3D;\frac{1}{2}\frac{w_{r}}{v_{x}}d_{x}^{2}<br>\end{equation}<br>$$</p>
+<p>将车道线方程进行泰勒展开，得到车道线参数的增量方程，基于上一时刻的车道线方程可推导出当前时刻的车道线为：</p>
+<p>$$<br>\begin{equation}<br>y(t)&#x3D;y(t-1)+\theta(t-1)d_x+\frac12k_r(t-1)d_x^2+\frac16\dot{k}_r(t-1)d_x^3-dy<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\theta(t)&#x3D;\theta(t-1)+k_r(t-1)d_x+\frac12\dot{k}_r(t-1)d_x^2-d\theta<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>k_r(t)&#x3D;k_r(t-1)+\dot{k}_r(t-1)d_x<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\dot{k}_r&#x3D;\dot{k}_r(t-1)<br>\end{equation}<br>$$</p>
+<blockquote>
+<p>这里的$dy$可以理解为测量误差，这个测量误差是由于测量方式或工具的局限性造成的，因此，在卡尔曼滤波中，我们需要对测量误差进行建模，以便在滤波过程中对测量值进行修正。</p>
+</blockquote>
+<p>至此，我们对车道线参数的卡尔曼滤波模型已经建立，接下来，我们需要对卡尔曼滤波的模型进行具体的实现。</p>
+<p>将上式写为状态空间$\widehat{X}<em>t^-&#x3D;A_t\widehat{X}</em>{t-1}+B_tu_t$的表达形式：</p>
+<p>$$<br>\begin{equation}<br>\begin{bmatrix}y(t)\\<br>\theta(t)\k_r(t)\\<br>\dot{k}_r(t)<br>\end{bmatrix}&#x3D;<br>\begin{bmatrix}<br>1&amp;d_x&amp;\frac{1}{2}d_x^2&amp;\frac{1}{6}d_x^3\\<br>0&amp;1&amp;d_x&amp;\frac{1}{2}d_x^2\\<br>0&amp;0&amp;1&amp;d_x\\<br>\end{bmatrix}<br>\begin{bmatrix}y(t-1)\\<br>\theta(t-1)\\<br>k_r(t-1)\\<br>\dot{k}_r(t-1)\end{bmatrix}+\begin{bmatrix}-\frac{1}{2}\frac{d_x^2}{v_x}\\<br>-t\\<br>0\\<br>0\end{bmatrix}<br>w_r<br>\end{equation}<br>$$</p>
+<p>则：</p>
+<p>$$<br>\begin{equation}<br>\widehat{X}_t^-&#x3D;\begin{bmatrix}y(t)\\<br>\theta(t)\\<br>k_r(t)\\<br>\dot{k}_r(t)\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>A_t&#x3D;\begin{bmatrix}1&amp;d_x&amp;\frac{1}{2}d_x^2&amp;\frac{1}{6}d_x^3\0&amp;1&amp;d_x&amp;\frac{1}{2}d_x^2\0&amp;0&amp;1&amp;d_x\0&amp;0&amp;0&amp;1\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>\widehat{X}_{t-1}&#x3D;\begin{bmatrix}y(t-1)\\<br>\theta(t-1)\\<br>k_r(t-1)\\<br>\dot{k}_r(t-1)\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>B_t&#x3D;\begin{bmatrix}-\frac{1}{2}\frac{d_x^2}{v_x}\-t\0\\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>$$<br>\begin{equation}<br>u_t&#x3D;w_r<br>\end{equation}<br>$$</p>
+<p>由于我们的观测参数与状态变量一致，所以观测向量和状态向量相同，且观测矩阵为单位阵，则观测向量$z_t$可写为：</p>
+<p>$$<br>\begin{equation}<br>z_t&#x3D;\begin{bmatrix}y(t)\\<br>\theta(t)\\<br>k_r(t)\\<br>\dot{k}_r(t)\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>观测矩阵$H$为：</p>
+<p>$$<br>\begin{equation}<br>H&#x3D;\begin{bmatrix}1&amp;0&amp;0&amp;0\\<br>0&amp;1&amp;0&amp;0\\<br>0&amp;0&amp;1&amp;0\\<br>0&amp;0&amp;0&amp;1\end{bmatrix}<br>\end{equation}<br>$$</p>
+<p>即观测值为$t$时刻车道线方程的各阶导数值。</p>
+<h2 id="超参数设置"><a href="#超参数设置" class="headerlink" title="超参数设置"></a>超参数设置</h2><p>卡尔曼滤波器需要设置一些超参数，这些超参数会影响滤波器的性能。以下是一些常见的超参数：</p>
+<h4 id="状态协方差矩阵-P"><a href="#状态协方差矩阵-P" class="headerlink" title="状态协方差矩阵$P$"></a>状态协方差矩阵$P$</h4><p>状态协方差矩阵$P$为预测值和真实值之间的误差协方差矩阵</p>
+<p>首先看公式:</p>
+<ul>
+<li>状态协方差预测</li>
+</ul>
+<p>$$<br>\begin{equation}<br>P_t^-&#x3D;F_tP_{t-1}F_t^T+Q_t<br>\end{equation}<br>$$</p>
+<ul>
+<li>更新状态协方差</li>
+</ul>
+<p>$$<br>\begin{equation}<br>P_t&#x3D;(I-K_tH)P_t^-<br>\end{equation}<br>$$</p>
+<p>可以看出状态协方差矩阵在预测阶段会给出预测值，在更新阶段会给出优化预测结果，所以该值仅仅需要设置初值即可，不需要每次外部手动更新。根据经验，状态协方差矩阵的初值一般设置较小，原因如下：</p>
+<p>状态协方差的大小影响卡尔曼增益的计算，卡尔曼增益计算公式如下：</p>
+<p>$$<br>\begin{equation}<br>K_t&#x3D;P_t^-H_t^T(H_tP_t^-H_t^T+R_t)^{-1}<br>\end{equation}<br>$$</p>
+<p>由于我们的观测参数与状态变量一致，所以观测向量和状态向量相同，且观测矩阵为单位阵，即:$H&#x3D;I$</p>
+<p>$$<br>\begin{equation}<br>K_t&#x3D;P_t^{-}(P_t^{-}+R_t)^{-1}<br>\end{equation}<br>$$</p>
+<p>由此可以看出，状态协方差越大，卡尔曼增益$K$越大，然后模型对观测值的信任度就越大，可由下式看出：</p>
+<p>$$<br>\begin{equation}<br>\widehat{X}_t&#x3D;\widehat{X}_t^-+K_t(z_t-H\widehat{X}_t^-)<br>\end{equation}<br>$$</p>
+<p>卡尔曼增益$K$越大，更新状态估计值时采纳观测值$z_t$越多，反之，则状态估计值优化结果采纳预测值越多。</p>
+<ul>
+<li><p>我们通常对系统的初始状态并不完全确定，尤其是在系统刚开始运行时。因此，我们倾向于通过选择较小的初始协方差矩阵来表示对初始状态估计的信任较低</p>
+</li>
+<li><p>较小的协方差矩阵意味着滤波器最开始时对状态的变化更加谨慎，不会迅速做出过于激进的调整。随着新的测量数据的不断更新，协方差矩阵会逐步增大，反映出对估计状态的不确定性的增加。</p>
+</li>
+</ul>
+<p>一般将状态协方差矩阵$P$初值设置为：</p>
+<p>$$<br>\begin{equation}<br>P&#x3D;\begin{bmatrix}0.0001&amp;0&amp;0&amp;0\\<br>0&amp;0.0001&amp;0&amp;0\\<br>0&amp;0&amp;0.0001&amp;0\\<br>0&amp;0&amp;0&amp;0.0001\end{bmatrix}<br>\end{equation}<br>$$</p>
+<h4 id="观测噪声协方差矩阵-R"><a href="#观测噪声协方差矩阵-R" class="headerlink" title="观测噪声协方差矩阵$R$"></a>观测噪声协方差矩阵$R$</h4><p>观测噪声协方差矩阵$R$为观测值和真实值之间的误差协方差矩阵</p>
+<p>首先看公式:</p>
+<p>$$<br>\begin{equation}<br>K_t&#x3D;P_t^{-}(P_t^{-}+R_t)^{-1}<br>\end{equation}<br>$$</p>
+<p>可以看出观测噪声协方差矩阵$R$和卡尔曼增益$K$有关，观测噪声协方差矩阵$R$越大，卡尔曼增益$K$越小，模型对观测值的信任度就越小，模型对预测值的信任度就越大。</p>
+<p>在卡尔曼的预测阶段和更新阶段，观测噪声协方差矩阵$R$不会自动更新，所以该值如果设置为固定值那么说明观测数据的噪声稳定不变，如果观测数据抖动较大，比较难以测量，那么观测噪声协方差矩阵$R$往往需要手动更新。</p>
+<h3 id="预测误差协方差矩阵-Q"><a href="#预测误差协方差矩阵-Q" class="headerlink" title="预测误差协方差矩阵$Q$"></a>预测误差协方差矩阵$Q$</h3><p>预测误差协方差矩阵$Q$为预测值和真实值之间的误差协方差矩阵</p>
+<p>首先看公式，状态协方差预测时使用了预测误差协方差矩阵$Q$:</p>
+<p>$$<br>\begin{equation}<br>P_t^-&#x3D;F_tP_{t-1}F_t^T+Q_t<br>\end{equation}<br>$$</p>
+<p>而状态协方差的预测值在更新阶段会用于计算卡尔曼增益$K$，如上所述。那么，预测误差协方差矩阵$Q$越大，状态协方差的预测值$P_t^-$越大，在更新阶段计算的卡尔曼增益$K$越大。</p>
+<p>在卡尔曼的预测阶段和更新阶段，预测误差协方差矩阵$Q$不会自动更新，所以该值如果设置为固定值那么说明模型建模比较好，能够很好的预测状态的变化，如果模型建模不够精准，那么预测误差协方差矩阵$Q$往往需要手动更新。</p>
+<p>预测误差协方差矩阵$Q$直接影响的是状态协方差矩阵$P$，可以看做是预测误差协方差矩阵$Q$是对预测阶段状态协方差矩阵$P$的修正，所以预测误差协方差矩阵$Q$的设置需要根据预测阶段的状态协方差矩阵$P$来设置。</p>
+<blockquote>
+<p><strong>观测噪声协方差矩阵$R$越大，卡尔曼增益$K$越小；预测误差协方差矩阵$Q$越大,卡尔曼增益$K$越大</strong></p>
+</blockquote>
+
+  </div>
 
 
                 <h1 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="曲率"><a href="#曲率" class="headerlink" title="曲率"></a>曲率</h2><p>曲率$k$可以表示为曲线长度随着角度变化的快慢，即：<br>$$<br>\begin{equation}<br>k&#x3D;\lim_{\alpha\to0}\left|\frac{\Delta\alpha}{\Delta s}\right|<br>\end{equation}<br>$$<br>$$<br>\begin{equation}<br>k &#x3D; \frac{d\alpha}{ds}<br>\end{equation}<br>$$</p>

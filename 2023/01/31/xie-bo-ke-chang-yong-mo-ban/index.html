@@ -399,7 +399,54 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="插入思维导图"><a href="#插入思维导图" class="headerlink" title="插入思维导图"></a>插入思维导图</h1><p>基于百度脑图的开源库 kityminder 很不错，实现了markdown文档中使用思维导图的方法。使用 Hexo 的 pullquote 将思维导图的内容包裹起来，mindmap 是思维导图渲染的标志，尺寸有三种规格：mindmap-sm、mindmap-md 和 mindmap-lg。<br>思维导图的内容和层级关系通过无序列表表示，支持基本的文字和超链接。举个例子，撰写文章时在需要的位置添加如下内容:  </p>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">&#123;% pullquote mindmap mindmap-md %&#125;
+<span class="token list punctuation">-</span> <span class="token url">[<span class="token content">在 Hexo 中使用思维导图</span>](<span class="token url">https://hunterx.xyz/use-mindmap-in-hexo.html</span>)</span>
+  <span class="token list punctuation">-</span> 前言
+  <span class="token list punctuation">-</span> 操作指南
+    <span class="token list punctuation">-</span> 准备需要的文件
+    <span class="token list punctuation">-</span> 为主题添加 CSS/JS 文件
+  <span class="token list punctuation">-</span> 使用方法
+&#123;% endpullquote %&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>效果如下：  </p>
+<blockquote class="pullquote mindmap mindmap-md"><ul>
+<li><a target="_blank" rel="noopener" href="https://hunterx.xyz/use-mindmap-in-hexo.html">在 Hexo 中使用思维导图</a><ul>
+<li>前言</li>
+<li>操作指南<ul>
+<li>准备需要的文件</li>
+<li>为主题添加 CSS&#x2F;JS 文件</li>
+</ul>
+</li>
+<li>使用方法</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+
+<h1 id="插入图像"><a href="#插入图像" class="headerlink" title="插入图像"></a>插入图像</h1><pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">![](https://cdn.jsdelivr.net/gh/用户名/仓库名称/仓库下的图像路径)<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>例如：</li>
+</ul>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">![](https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/车辆动态辅助轨迹线生成方法8.png)  <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="插入pdf"><a href="#插入pdf" class="headerlink" title="插入pdf"></a>插入pdf</h1><pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>object</span> <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>仓库路径<span class="token punctuation">"</span></span>
+ <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/pdf<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>iframe</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>仓库下pdf路径<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1000px<span class="token punctuation">"</span></span> <span class="token attr-name">frameborder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span> <span class="token attr-name">scrolling</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>no<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>iframe</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>object</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>例如：</li>
+</ul>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>object</span> <span class="token attr-name">data</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://github.com/geiyiren/MyBlogFile1/blob/pdf/git%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/<span class="token punctuation">"</span></span>
+ <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>application/pdf<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>iframe</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>git%E6%95%99%E7%A8%8B.pdf<span class="token punctuation">"</span></span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100%<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1000px<span class="token punctuation">"</span></span> <span class="token attr-name">frameborder</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span> <span class="token attr-name">scrolling</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>no<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>iframe</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>object</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>上述方法适用用私人github仓库中的pdf文件；如果插入其他链接直达的pdf文档，可以使用：</p>
+<pre class="line-numbers language-markdown" data-language="markdown"><code class="language-markdown">&#123;% pdf PDF直达链接 %&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+  </div>
 
 
                 <h1 id="插入思维导图"><a href="#插入思维导图" class="headerlink" title="插入思维导图"></a>插入思维导图</h1><p>基于百度脑图的开源库 kityminder 很不错，实现了markdown文档中使用思维导图的方法。使用 Hexo 的 pullquote 将思维导图的内容包裹起来，mindmap 是思维导图渲染的标志，尺寸有三种规格：mindmap-sm、mindmap-md 和 mindmap-lg。<br>思维导图的内容和层级关系通过无序列表表示，支持基本的文字和超链接。举个例子，撰写文章时在需要的位置添加如下内容:  </p>

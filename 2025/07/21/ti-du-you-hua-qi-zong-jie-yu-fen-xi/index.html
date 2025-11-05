@@ -399,7 +399,165 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <p>神经网络有许多影响模型性能的超参数。一个最基本的超参数是<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%AD%A6%E4%B9%A0%E7%8E%87&spm=1001.2101.3001.7020">学习率</a>(LR)，它决定了在训练步骤之间模型权重的变化程度。在最简单的情况下，LR值是0到1之间的固定值。选择正确的LR值是具有挑战性。一方面较大的学习率有助于算法快速收敛，但它也会导致算法在最小值附近跳跃而没有达到它，甚至在它太大时跳过它。另一方面，较小的学习率可以更好地收敛到最小值，但是如果优化器太小，可能需要太长时间才能收敛，或者陷入停滞。</p>
+<h3 id="什么是学习率调度器"><a href="#什么是学习率调度器" class="headerlink" title="什么是学习率调度器?"></a><strong>什么是学习率调度器?</strong></h3><p>一种帮助算法快速收敛到最优的解决方案是使用学习率调度器。学习率调度器在训练过程中根据预先定义的时间表调整学习率。</p>
+<p>通常，学习率在训练开始时设置为比较高的值，允许更快的收敛。随着训练的进行，学习率会降低，使收敛到最优，获得更好的性能。在训练过程中降低学习率也称为退火或衰减。</p>
+<p>学习率调度器有很多个，并且我们还可以自定义调度器。本文将介绍PyTorch中不同的预定义学习率调度器如何在训练期间调整学习率</p>
+<h3 id="学习率调度器"><a href="#学习率调度器" class="headerlink" title="学习率调度器"></a><strong>学习率调度器</strong></h3><h3 id="1、StepLR"><a href="#1、StepLR" class="headerlink" title="1、StepLR"></a><strong>1、StepLR</strong></h3><p>在每个预定义的训练步骤数之后，StepLR通过乘法因子降低学习率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> StepLR
+scheduler <span class="token operator">=</span> StepLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+            step_size <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token comment"># Period of learning rate decay</span>
+            gamma <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span> <span class="token comment"># Multiplicative factor of learning rate decay</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps1.jpg" alt="img"> </p>
+<h3 id="2、MultiStepLR"><a href="#2、MultiStepLR" class="headerlink" title="2、MultiStepLR"></a><strong>2、MultiStepLR</strong></h3><p>MultiStepLR -类似于StepLR -也通过乘法因子降低了学习率，但在可以自定义修改学习率的时间节点。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> MultiStepLR
+scheduler <span class="token operator">=</span> MultiStepLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+              milestones<span class="token operator">=</span><span class="token punctuation">[</span><span class="token number">8</span><span class="token punctuation">,</span> <span class="token number">24</span><span class="token punctuation">,</span> <span class="token number">28</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment"># List of epoch indices</span>
+              gamma <span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">)</span> <span class="token comment"># Multiplicative factor of learning rate decay</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps2.jpg" alt="img"> </p>
+<h3 id="3、ConstantLR"><a href="#3、ConstantLR" class="headerlink" title="3、ConstantLR"></a><strong>3、ConstantLR</strong></h3><p>ConstantLR通过乘法因子降低学习率，直到训练达到预定义步数。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> ConstantLR
+scheduler <span class="token operator">=</span> ConstantLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+              factor <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token comment"># The number we multiply learning rate until the milestone.</span>
+              total_iters <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token comment"># The number of steps that the scheduler decays the learning rate</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps3.jpg" alt="img"> </p>
+<p>如果起始因子小于1，那么学习率调度器在训练过程中会提高学习率，而不是降低学习率。</p>
+<h3 id="4、LinearLR"><a href="#4、LinearLR" class="headerlink" title="4、LinearLR"></a><strong>4、LinearLR</strong></h3><p>LinearLR -类似于ConstantLR -在训练开始时通过乘法因子降低了学习率。但是它会在一定数量的训练步骤中线性地改变学习率，直到它达到最初设定的学习率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> LinearLR
+scheduler <span class="token operator">=</span> LinearLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+             start_factor <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">,</span> <span class="token comment"># The number we multiply learning rate in the first epoch</span>
+             total_iters <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">)</span> <span class="token comment"># The number of iterations that multiplicative factor reaches to 1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps4.jpg" alt="img"> </p>
+<h3 id="5、ExponentialLR"><a href="#5、ExponentialLR" class="headerlink" title="5、ExponentialLR"></a><strong>5、ExponentialLR</strong></h3><p>ExponentialLR在每个训练步骤中通过乘法因子降低学习率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> ExponentialLR
+  scheduler <span class="token operator">=</span> ExponentialLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+               gamma <span class="token operator">=</span> <span class="token number">0.5</span><span class="token punctuation">)</span> <span class="token comment"># Multiplicative factor of learning rate decay.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps5.jpg" alt="img"> </p>
+<h3 id="6、PolynomialLR"><a href="#6、PolynomialLR" class="headerlink" title="6、PolynomialLR"></a><strong>6、PolynomialLR</strong></h3><p>PolynomialLR通过对定义的步骤数使用多项式函数来降低学习率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> PolynomialLR  
+scheduler <span class="token operator">=</span> PolynomialLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+               total_iters <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token comment"># The number of steps that the scheduler decays the learning rate.</span>
+               power <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># The power of the polynomial.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>下图为power&#x3D; 1时的学习率衰减结果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps6.jpg" alt="img"> </p>
+<p>power&#x3D; 2时，学习率衰减如下所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps7.jpg" alt="img"> </p>
+<h3 id="7、CosineAnnealingLR"><a href="#7、CosineAnnealingLR" class="headerlink" title="7、CosineAnnealingLR"></a><strong>7、CosineAnnealingLR</strong></h3><p>CosineAnnealingLR通过余弦函数降低学习率。</p>
+<p>可以从技术上安排学习率调整以跟随多个周期，但他的思想是在半个周期内衰减学习率以获得最大的迭代次数。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> CosineAnnealingLR
+scheduler <span class="token operator">=</span> CosineAnnealingLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span>
+                 T_max <span class="token operator">=</span> <span class="token number">32</span><span class="token punctuation">,</span> <span class="token comment"># Maximum number of iterations.</span>
+                 eta_min <span class="token operator">=</span> <span class="token number">1e-4</span><span class="token punctuation">)</span> <span class="token comment"># Minimum learning rate.</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps8.jpg"> </p>
+<p>两位Kaggle大赛大师Philipp Singer和Yauhen Babakhin建议使用余弦衰减作为深度迁移学习[2]的学习率调度器。</p>
+<h3 id="8、CosineAnnealingWarmRestartsLR"><a href="#8、CosineAnnealingWarmRestartsLR" class="headerlink" title="8、CosineAnnealingWarmRestartsLR"></a><strong>8、CosineAnnealingWarmRestartsLR</strong></h3><p>CosineAnnealingWarmRestartsLR类似于CosineAnnealingLR。但是它允许在(例如，每个轮次中)使用初始LR重新启动LR计划。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> CosineAnnealingWarmRestarts
+
+scheduler <span class="token operator">=</span> CosineAnnealingWarmRestarts<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+                      T_0 <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span><span class="token comment"># Number of iterations for the first restart</span>
+                      T_mult <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token comment"># A factor increases TiTi after a restart</span>
+                      eta_min <span class="token operator">=</span> <span class="token number">1e-4</span><span class="token punctuation">)</span> <span class="token comment"># Minimum learning rate</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps9.jpg" alt="img"> </p>
+<p>这个计划调度于2017年[1]推出。虽然增加LR会导致模型发散但是这种有意的分歧使模型能够逃避局部最小值，并找到更好的全局最小值。</p>
+<h3 id="9、CyclicLR"><a href="#9、CyclicLR" class="headerlink" title="9、CyclicLR"></a><strong>9、CyclicLR</strong></h3><p>CyclicLR根据循环学习率策略调整学习率，该策略基于我们在前一节中讨论过的重启的概念。在PyTorch中有三个内置策略。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> CyclicLR 
+scheduler <span class="token operator">=</span> CyclicLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+             base_lr <span class="token operator">=</span> <span class="token number">0.0001</span><span class="token punctuation">,</span> <span class="token comment"># Initial learning rate which is the lower boundary in the cycle for each parameter group</span>
+             max_lr <span class="token operator">=</span> <span class="token number">1e-3</span><span class="token punctuation">,</span> <span class="token comment"># Upper learning rate boundaries in the cycle for each parameter group</span>
+             step_size_up <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token comment"># Number of training iterations in the increasing half of a cycle</span>
+             mode <span class="token operator">=</span> <span class="token string">"triangular"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>当mode &#x3D; “ triangle “时，学习率衰减将遵循一个基本的三角形循环，没有振幅缩放，如下图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps10.jpg" alt="img"> </p>
+<p>对于mode &#x3D; “ triangar2 “，所得到的学习率衰减将遵循一个基本的三角形循环，每个循环将初始振幅缩放一半，如下图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps11.jpg" alt="img"> </p>
+<p>使用mode &#x3D; “exp_range”，得到的学习率衰减将如下所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps12.jpg" alt="img"> </p>
+<h3 id="10、OneCycleLR"><a href="#10、OneCycleLR" class="headerlink" title="10、OneCycleLR"></a><strong>10、OneCycleLR</strong></h3><p>OneCycleLR根据1cycle学习率策略降低学习率，该策略在2017年[3]的一篇论文中提出。</p>
+<p>与许多其他学习率调度器相比，学习率不仅在训练过程中下降。相反，学习率从初始学习率增加到某个最大学习率，然后再次下降。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> OneCycleLR
+scheduler <span class="token operator">=</span> OneCycleLR<span class="token punctuation">(</span>optimizer<span class="token punctuation">,</span> 
+              max_lr <span class="token operator">=</span> <span class="token number">1e-3</span><span class="token punctuation">,</span> <span class="token comment"># Upper learning rate boundaries in the cycle for each parameter group</span>
+              steps_per_epoch <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">,</span> <span class="token comment"># The number of steps per epoch to train for.</span>
+              epochs <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token comment"># The number of epochs to train for.</span>
+              anneal_strategy <span class="token operator">=</span> <span class="token string">'cos'</span><span class="token punctuation">)</span> <span class="token comment"># Specifies the annealing strategy</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>使用anneal_strategy &#x3D; “cos”得到的学习率衰减将如下所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps13.jpg" alt="img"> </p>
+<p>使用anneal_strategy &#x3D; “linear”，得到的学习率衰减将如下所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps14.jpg" alt="img"> </p>
+<h3 id="11、ReduceLROnPlateauLR"><a href="#11、ReduceLROnPlateauLR" class="headerlink" title="11、ReduceLROnPlateauLR"></a><strong>11、ReduceLROnPlateauLR</strong></h3><p>当指标度量停止改进时，ReduceLROnPlateau会降低学习率。这很难可视化，因为学习率降低时间取决于您的模型、数据和超参数。</p>
+<h3 id="12、自定义学习率调度器"><a href="#12、自定义学习率调度器" class="headerlink" title="12、自定义学习率调度器"></a><strong>12、自定义学习率调度器</strong></h3><p>如果内置的学习率调度器不能满足需求，我们可以使用lambda函数定义一个调度器。lambda函数是一个返回基于epoch值的乘法因子的函数。</p>
+<p>LambdaLR通过将lambda函数的乘法因子应用到初始LR来调整学习速率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">lr_epoch<span class="token punctuation">[</span>t<span class="token punctuation">]</span> <span class="token operator">=</span> lr_initial <span class="token operator">*</span> <span class="token keyword">lambda</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>MultiplicativeLR通过将lambda函数的乘法因子应用到前一个epoch的LR来调整学习速率。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">lr_epoch<span class="token punctuation">[</span>t<span class="token punctuation">]</span> <span class="token operator">=</span> lr_epoch<span class="token punctuation">[</span>t<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">*</span> <span class="token keyword">lambda</span><span class="token punctuation">(</span>epoch<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这些学习率调度器也有点难以可视化，因为它们高度依赖于已定义的lambda函数。</p>
+<h3 id="可视化汇总"><a href="#可视化汇总" class="headerlink" title="可视化汇总"></a><strong>可视化汇总</strong></h3><p>以上就是PyTorch内置的学习率调度器，应该为深度学习项目选择哪种学习率调度器呢？</p>
+<p>答案并不那么容易，ReduceLROnPlateau是一个流行的学习率调度器。而现在其他的方法如CosineAnnealingLR和OneCycleLR或像cosineannealingwarmrestart和CyclicLR这样的热重启方法已经越来越受欢迎。</p>
+<p>所以我们需要运行一些实验来确定哪种学习率调度器最适合要解决问题。但是可以说的是使用任何学习调度器都会影响到模型性能。</p>
+<p>下面是PyTorch中讨论过的学习率调度器的可视化总结。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E6%A2%AF%E5%BA%A6%E4%BC%98%E5%8C%96%E5%99%A8%E6%80%BB%E7%BB%93%E4%B8%8E%E5%88%86%E6%9E%90/wps15.jpg" alt="img"> </p>
+<p> 下面是来可视化学习率调度器的代码:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">
+<span class="token keyword">import</span> torch
+<span class="token keyword">from</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>lr_scheduler <span class="token keyword">import</span> StepLR <span class="token comment"># Import your choice of scheduler here</span>
+
+<span class="token keyword">import</span> matplotlib<span class="token punctuation">.</span>pyplot <span class="token keyword">as</span> plt
+<span class="token keyword">from</span> matplotlib<span class="token punctuation">.</span>ticker <span class="token keyword">import</span> MultipleLocator
+
+LEARNING_RATE <span class="token operator">=</span> <span class="token number">1e-3</span>
+EPOCHS <span class="token operator">=</span> <span class="token number">4</span>
+STEPS_IN_EPOCH <span class="token operator">=</span> <span class="token number">8</span>
+ 
+ <span class="token comment"># Set model and optimizer</span>
+model <span class="token operator">=</span> torch<span class="token punctuation">.</span>nn<span class="token punctuation">.</span>Linear<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+optimizer <span class="token operator">=</span> torch<span class="token punctuation">.</span>optim<span class="token punctuation">.</span>SGD<span class="token punctuation">(</span>model<span class="token punctuation">.</span>parameters<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> lr<span class="token operator">=</span>LEARNING_RATE<span class="token punctuation">)</span>
+
+<span class="token comment"># Define your scheduler here as described above</span>
+<span class="token comment"># ...</span>
+
+<span class="token comment"># Get learning rates as each training step</span>
+learning_rates <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>EPOCHS<span class="token operator">*</span>STEPS_IN_EPOCH<span class="token punctuation">)</span><span class="token punctuation">:</span>
+  optimizer<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
+  learning_rates<span class="token punctuation">.</span>append<span class="token punctuation">(</span>optimizer<span class="token punctuation">.</span>param_groups<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"lr"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  scheduler<span class="token punctuation">.</span>step<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Visualize learinig rate scheduler</span>
+fig<span class="token punctuation">,</span> ax <span class="token operator">=</span> plt<span class="token punctuation">.</span>subplots<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span> figsize<span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">10</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>plot<span class="token punctuation">(</span><span class="token builtin">range</span><span class="token punctuation">(</span>EPOCHS<span class="token operator">*</span>STEPS_IN_EPOCH<span class="token punctuation">)</span><span class="token punctuation">,</span> 
+    learning_rates<span class="token punctuation">,</span>
+    marker<span class="token operator">=</span><span class="token string">'o'</span><span class="token punctuation">,</span> 
+    color<span class="token operator">=</span><span class="token string">'black'</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>set_xlim<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> EPOCHS<span class="token operator">*</span>STEPS_IN_EPOCH<span class="token punctuation">]</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>set_ylim<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">,</span> LEARNING_RATE <span class="token operator">+</span> <span class="token number">0.0001</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>set_xlabel<span class="token punctuation">(</span><span class="token string">'Steps'</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>set_ylabel<span class="token punctuation">(</span><span class="token string">'Learning Rate'</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>spines<span class="token punctuation">[</span><span class="token string">'top'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>set_visible<span class="token punctuation">(</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>spines<span class="token punctuation">[</span><span class="token string">'right'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>set_visible<span class="token punctuation">(</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>xaxis<span class="token punctuation">.</span>set_major_locator<span class="token punctuation">(</span>MultipleLocator<span class="token punctuation">(</span>STEPS_IN_EPOCH<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ax<span class="token punctuation">.</span>xaxis<span class="token punctuation">.</span>set_minor_locator<span class="token punctuation">(</span>MultipleLocator<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+plt<span class="token punctuation">.</span>show<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="参考网址"><a href="#参考网址" class="headerlink" title="参考网址"></a>参考网址</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/deephub/article/details/128262227">PyTorch中学习率调度器可视化介绍_python调度问题可视化-CSDN博客</a></li>
+</ul>
+
+  </div>
 
 
                 <p>神经网络有许多影响模型性能的超参数。一个最基本的超参数是<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=%E5%AD%A6%E4%B9%A0%E7%8E%87&spm=1001.2101.3001.7020">学习率</a>(LR)，它决定了在训练步骤之间模型权重的变化程度。在最简单的情况下，LR值是0到1之间的固定值。选择正确的LR值是具有挑战性。一方面较大的学习率有助于算法快速收敛，但它也会导致算法在最小值附近跳跃而没有达到它，甚至在它太大时跳过它。另一方面，较小的学习率可以更好地收敛到最小值，但是如果优化器太小，可能需要太长时间才能收敛，或者陷入停滞。</p>

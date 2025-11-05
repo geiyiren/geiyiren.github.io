@@ -403,7 +403,130 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span> 位置 <span class="token parameter variable">-name</span> <span class="token string">'名称'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="查看与转换YUV图像："><a href="#查看与转换YUV图像：" class="headerlink" title="查看与转换YUV图像："></a>查看与转换YUV图像：</h1><ul>
+<li>YUV查看<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffplay <span class="token parameter variable">-pixel_format</span> nv12 <span class="token parameter variable">-f</span> rawvideo <span class="token parameter variable">-video_size</span> 240x576 stitch_view.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>YUV转PNG<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x720 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg
+ffmpeg <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-i</span> front0.bmp <span class="token parameter variable">-pix_fmt</span> nv12 front0.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="ubuntu终端查看历史命令"><a href="#ubuntu终端查看历史命令" class="headerlink" title="ubuntu终端查看历史命令"></a>ubuntu终端查看历史命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">history</span> <span class="token operator">|</span> <span class="token function">grep</span> some_command<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="查看cup限制"><a href="#查看cup限制" class="headerlink" title="查看cup限制"></a>查看cup限制</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">ps</span> <span class="token operator">|</span> <span class="token function">grep</span> limit <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="强制关闭窗口"><a href="#强制关闭窗口" class="headerlink" title="强制关闭窗口"></a>强制关闭窗口</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">xkill<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>然后移动鼠标点击需要关闭的窗口即可</li>
+</ul>
+<h1 id="本地gitlab库添加远程库信任"><a href="#本地gitlab库添加远程库信任" class="headerlink" title="本地gitlab库添加远程库信任"></a>本地gitlab库添加远程库信任</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> config <span class="token parameter variable">--global</span> <span class="token parameter variable">--add</span> safe.directory /media/geiyiren/MyCode/AVM/avm_2d/master/avm_cpu_algo<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="保存yuv-buf图像"><a href="#保存yuv-buf图像" class="headerlink" title="保存yuv buf图像"></a>保存yuv buf图像</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp">FILE <span class="token operator">*</span>fp_dump <span class="token operator">=</span> <span class="token function">fopen</span><span class="token punctuation">(</span><span class="token string">"bsd_1.yuv"</span><span class="token punctuation">,</span> <span class="token string">"wb+"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>fp_dump <span class="token operator">==</span> <span class="token constant">NULL</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"fp_dump open fail\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">else</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"fp_dump cam  yuv open success\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+size_t bytes_write <span class="token operator">=</span> <span class="token function">fwrite</span><span class="token punctuation">(</span>p_yuv_buf<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> width <span class="token operator">*</span> height <span class="token operator">*</span> <span class="token number">3</span> <span class="token operator">/</span> <span class="token number">2</span> <span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> fp_dump<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span>bytes_write <span class="token operator">&lt;=</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+	<span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"write raw_stream fail !!!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token function">fclose</span><span class="token punctuation">(</span>fp_dump<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="批量将jpg转换为yuv"><a href="#批量将jpg转换为yuv" class="headerlink" title="批量将jpg转换为yuv"></a>批量将jpg转换为yuv</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#! /bin/bash</span>
+<span class="token assign-left variable">files</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">ls</span> $folder<span class="token variable">)</span></span>
+<span class="token assign-left variable">yuv</span><span class="token operator">=</span><span class="token string">"yuv"</span>
+<span class="token keyword">for</span> <span class="token for-or-select variable">file</span> <span class="token keyword">in</span> <span class="token variable">$files</span>
+<span class="token keyword">do</span>
+  <span class="token builtin class-name">echo</span> <span class="token variable">$&#123;file<span class="token operator">:</span>0<span class="token operator">:</span>13&#125;</span>
+  <span class="token assign-left variable">file_name</span><span class="token operator">=</span><span class="token variable">$&#123;file<span class="token operator">:</span>0<span class="token operator">:</span>13&#125;</span>
+  <span class="token assign-left variable">str</span><span class="token operator">=</span><span class="token variable">$file_name</span><span class="token variable">$yuv</span>
+  ffmpeg <span class="token parameter variable">-i</span> <span class="token variable">$file</span> <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token variable">$str</span>
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h1 id="abd-常用命令"><a href="#abd-常用命令" class="headerlink" title="abd 常用命令"></a>abd 常用命令</h1><h2 id="打开调试端口"><a href="#打开调试端口" class="headerlink" title="打开调试端口"></a>打开调试端口</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb tcpip <span class="token number">5555</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="连接"><a href="#连接" class="headerlink" title="连接"></a>连接</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb connect <span class="token number">10.10</span>.200.140<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="进入远程终端"><a href="#进入远程终端" class="headerlink" title="进入远程终端"></a>进入远程终端</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="关闭服务"><a href="#关闭服务" class="headerlink" title="关闭服务"></a>关闭服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb kill-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb start-server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="重新挂载"><a href="#重新挂载" class="headerlink" title="重新挂载"></a>重新挂载</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb remount<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="获取root权限"><a href="#获取root权限" class="headerlink" title="获取root权限"></a>获取root权限</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb root<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="安卓录制屏幕"><a href="#安卓录制屏幕" class="headerlink" title="安卓录制屏幕"></a>安卓录制屏幕</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb shell screenrecord  --time-limit <span class="token number">12</span> /sdcard/name.mp4<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><h1 id="安卓设备开启USB"><a href="#安卓设备开启USB" class="headerlink" title="安卓设备开启USB"></a>安卓设备开启USB</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">setprop persist.otg.mode device<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>远程登录后使用上述命令</li>
+</ul>
+<h1 id="远程为安卓设备安装软件"><a href="#远程为安卓设备安装软件" class="headerlink" title="远程为安卓设备安装软件"></a>远程为安卓设备安装软件</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">adb <span class="token function">install</span> Launcher3.apk<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>在本地执行上述命令</li>
+</ul>
+<h1 id="查看当前文件下所有文件大小"><a href="#查看当前文件下所有文件大小" class="headerlink" title="查看当前文件下所有文件大小"></a>查看当前文件下所有文件大小</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#以M为单位查看当前文件下所有文件的大小，包含隐藏文件</span>
+<span class="token function">du</span> <span class="token parameter variable">-sm</span> .<span class="token punctuation">[</span><span class="token operator">!</span>.<span class="token punctuation">]</span>* * <span class="token operator">|</span> <span class="token function">sort</span> <span class="token parameter variable">-hr</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+<h1 id="查看磁盘剩余空间"><a href="#查看磁盘剩余空间" class="headerlink" title="查看磁盘剩余空间"></a>查看磁盘剩余空间</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">df</span> <span class="token parameter variable">-hl</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h1 id="github访问加速"><a href="#github访问加速" class="headerlink" title="github访问加速"></a>github访问加速</h1><h2 id="查询IP"><a href="#查询IP" class="headerlink" title="查询IP"></a>查询IP</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">#github.global.ssl.fastly.net 网站IP</span>
+<span class="token function">nslookup</span> github.global.ssl.fastly.net
+<span class="token comment">#github.com 网站IP</span>
+<span class="token function">nslookup</span> github.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="更改host文件"><a href="#更改host文件" class="headerlink" title="更改host文件"></a>更改host文件</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/hosts<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<ul>
+<li>将上述查询到的IP复制到对应位置</li>
+</ul>
+<h2 id="更新host文件"><a href="#更新host文件" class="headerlink" title="更新host文件"></a>更新host文件</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> /etc/init.d/network-manager restart<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h1 id="ssh相关"><a href="#ssh相关" class="headerlink" title="ssh相关"></a>ssh相关</h1><h2 id="主机A免密登录主机B"><a href="#主机A免密登录主机B" class="headerlink" title="主机A免密登录主机B"></a>主机A免密登录主机B</h2><p>在主机A执行如下命令</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ssh-copy-id 主机B的用户名@主机B的IP地址<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="YUV图像转换"><a href="#YUV图像转换" class="headerlink" title="YUV图像转换"></a>YUV图像转换</h2><ul>
+<li><p>安装ffmpeg</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">apt-get</span> <span class="token function">install</span> ffmpeg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p>yuv查看</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffplay <span class="token parameter variable">-pixel_format</span> nv12 <span class="token parameter variable">-f</span> rawvideo <span class="token parameter variable">-video_size</span> 1920x1080 test.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</li>
+<li><p>jpg –&gt; yuv</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-i</span> front0.jpg <span class="token parameter variable">-s</span> <span class="token number">1280</span>*720 <span class="token parameter variable">-pix_fmt</span> nv12 front0.yuv<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li><p>yuv –&gt; jpg</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">ffmpeg <span class="token parameter variable">-pix_fmt</span> nv12 <span class="token parameter variable">-video_size</span> 1280x800 <span class="token parameter variable">-i</span> src_1.yuv <span class="token parameter variable">-y</span> src_1.jpg<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<h1 id="性能分析常用命令"><a href="#性能分析常用命令" class="headerlink" title="性能分析常用命令"></a>性能分析常用命令</h1><ul>
+<li>查看各个分区存储使用情况<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">df</span> <span class="token parameter variable">-h</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+<li>查看IO使用情况<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">apt-get</span> <span class="token function">install</span> sysstat
+iostat <span class="token parameter variable">-x</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="git-新建仓库推送"><a href="#git-新建仓库推送" class="headerlink" title="git 新建仓库推送"></a>git 新建仓库推送</h1><ul>
+<li><p>Git 全局设置</p>
+<pre class="line-numbers language-none"><code class="language-none">git config --global user.name &quot;王帅炀&quot;
+git config --global user.email &quot;wangshuaiyang@hopechart.com&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</li>
+<li><p>创建一个新仓库</p>
+<pre class="line-numbers language-none"><code class="language-none">git clone git@172.20.1.10:wangshuaiyang&#x2F;test.git
+cd test
+touch README.md
+git add README.md
+git commit -m &quot;add README&quot;
+git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>推送现有文件夹</p>
+<pre class="line-numbers language-none"><code class="language-none">cd existing_folder
+git init
+git remote add origin git@172.20.1.10:wangshuaiyang&#x2F;test.git
+git add .
+git commit -m &quot;Initial commit&quot;
+git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</li>
+<li><p>推送现有的 Git 仓库</p>
+<pre class="line-numbers language-none"><code class="language-none">cd existing_repo
+git remote rename origin old-origin
+git remote add origin git@172.20.1.10:wangshuaiyang&#x2F;test.git
+git push -u origin --all
+git push -u origin --tags<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+
+  </div>
 
 
                 <h1 id="find命令"><a href="#find命令" class="headerlink" title="find命令"></a>find命令</h1><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">find</span> 位置 <span class="token parameter variable">-name</span> <span class="token string">'名称'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>

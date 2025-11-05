@@ -403,7 +403,79 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/yolo12-1752224126368-2-1752224137167-4.png" alt="yolo12"></p>
+<h1 id="YOLOv12改进"><a href="#YOLOv12改进" class="headerlink" title="YOLOv12改进"></a>YOLOv12改进</h1><ul>
+<li><p>首先，设计了一个简单高效的区域注意力模块（A2），该模块在保持大感受野的同时，通过极其简洁的方式降低了注意力机制的计算复杂度，从而显著提升运行速度；</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712141541523.png" alt="image-20250712141541523"></p>
+</li>
+<li><p>其次，引入残差高效层聚合网络（R-ELAN），专门解决注意力机制带来的优化难题（尤其针对大规模模型）。R-ELAN在原有ELAN 基础上进行了两项改进：</p>
+<ul>
+<li>采用基于块级残差设计的缩放技术，</li>
+<li>重新设计特征聚合方法。</li>
+</ul>
+</li>
+<li><p>最后，针对YOLO系统进行了架构优化升级，突破传统<strong>Transform</strong>注意力机制的局限。具体改进包括：</p>
+<ul>
+<li><p>引入Flash Attention算法解决注意力机制的内存访问问题；</p>
+<blockquote>
+<p>Flash Attention是一种优化IO访存开销的精确注意力方法，通过Tiling切片、重计算、Kernel Fusion等方式来减少高带宽内存（片上内存）和SRAM之间的内存读&#x2F;写次数。海思的NPU侧也实现了相关操作。</p>
+</blockquote>
+</li>
+<li><p>移除位置编码等冗余设计以提升模型效率；</p>
+<blockquote>
+<p>YOLOv12 采用了类似 Transformer 的注意力机制或者相关设计，但去掉了 Transformer 里经典的“位置编码”部分，这是为了减少计算复杂度和模型冗余。</p>
+</blockquote>
+</li>
+<li><p>将MLP比例从4调整为1.2平衡计算负载；</p>
+<blockquote>
+<p>YOLOv12 引入了 Transformer 结构，并将 MLP（即 FFN）扩展比例从传统的 4 调整为 1.2，其目的是在引入注意力机制带来更强特征建模能力的同时，控制计算复杂度，提升部署效率</p>
+</blockquote>
+</li>
+<li><p>缩短堆叠模块深度便于优化,充分利用卷积运算的高效特性。</p>
+</li>
+</ul>
+<blockquote>
+<p>架构优化升级其实就是提出了A2模块</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="其他YOLO的改进"><a href="#其他YOLO的改进" class="headerlink" title="其他YOLO的改进"></a>其他YOLO的改进</h1><ul>
+<li>YOLOv4 和YOLOv5 引入CSPNet 、数据增强技术及多尺度特征提取</li>
+<li>YOLOv6在主干网络和颈部网络中分别引入BiC和SimCSPSPPF模块，并采用锚点辅助训练技术，实现了性能的全面提升。</li>
+<li>YOLOv7 通过引入EELAN（高效层聚合网络）优化梯度流并提供多种免费赠品，</li>
+<li>YOLOv8 则集成了高效的C2f模块以增强特征提取能力。在近期的迭代版本中，</li>
+<li>YOLOv9 引入了GELAN架构优化和PGI训练改进技术</li>
+<li>YOLOv10 则通过NMSfree双分配训练策略提升效率。</li>
+<li>YOLOv11 通过采用C3K2模块（GELAN的规范）和检测头中的轻量级深度可分离卷积，进一步降低了延迟并提升了精度。</li>
+</ul>
+<h1 id="注意力机制推理速度慢于卷积的原因"><a href="#注意力机制推理速度慢于卷积的原因" class="headerlink" title="注意力机制推理速度慢于卷积的原因"></a>注意力机制推理速度慢于卷积的原因</h1><p>​	注意力机制虽然在捕捉全局依赖关系以及促进自然语言处理和计算机视觉等任务方面非常有效，但其速度本质上比卷积神经网络（CNN）要慢。造成这种速度差异的两个主要因素是：</p>
+<ul>
+<li>复杂度：自注意力操作的计算复杂度随着输入序列长度L的平方增长。具体来说，对于一个长度为L、特征维度为d的输入序列，计算注意力矩阵需要O(L²d)的操作，因为每个token都与其他token进行交互。相比之下，CNN中的卷积操作的复杂度是线性增长的，即O(kLd)，其中k为卷积核的大小，通常远小于L。因此，自注意力机制在面对大尺寸输入（如高分辨率图像或长序列）时，计算开销变得不可接受。</li>
+<li>计算效率：第二个重要因素是，注意力计算过程中的内存访问模式较为低效。具体而言，在自注意力过程中，需要将中间计算结果（如注意力图QKT和softmax图，大小为L×L）从高速GPU内存（计算的实际位置）存储到高带宽GPU内存中，并在计算过程中读取这些数据。而前者的读写速度比后者快10倍以上，导致显著的内存访问开销，增加了总的计算时间。此外，注意力机制中的内存访问模式较为不规则，相比之下，CNN利用结构化且局部化的内存访问方式，可以有效地进行内存缓存，减少延迟。</li>
+</ul>
+<p>​	降低基础注意力机制的计算成本，可以采用如下方法：</p>
+<ul>
+<li>一个简单的方法是采用线性注意力机制。该机制将原本需要二次方复杂度的计算量简化为线性复杂度。对于维度为（n，h，d）的视觉特征f（其中n表示标记数量，h为头数，d为头尺寸），线性注意力机制将计算复杂度从$2n^2hd$降低到$2nhd^2$ ，由于n大于d，从而显著减少计算开销。不过，线性注意力机制存在全局依赖性退化、稳定性问题以及分布敏感性问题等缺陷。此外，由于低秩瓶颈的存在，当应用于输入分辨率为640×640的YOLO时，其速度优势有限。</li>
+<li>另一种有效降低复杂度的替代方案是局部注意力机制（如移位窗口、交叉注意力和轴向注意力)，如图2所示，该机制将全局注意力转换为局部注意力。然而，将特征图分割成窗口可能会引入额外开销或缩小感受野，从而影响速度和准确率。</li>
+</ul>
+<p>​	在本研究中，提出了一种简单高效的区域注意力模块。将分辨率(H,W)的特征图分割为$l$个尺寸为$(H&#x2F;l,w$或$(H,w&#x2F;l)$的子块。这种方法消除了显式的窗口分割需求，仅需简单的重组操作即可实现更快的速度。我们通过实验将默认分割数$l$设为4，使感受野缩小至原始值的$1&#x2F;4$，但仍保持较大的感受野。采用此方法后，**注意力机制的计算成本从$2n^2hd$降低到$1&#x2F;2n^2hd$*<em>。研究表明，尽管复杂度n有所增加，但在输入分辨率固定为640时（若输入分辨率提高则n值会增大），该方案仍能有效满足YOLO系统的实时需求。有趣的是，我们发现</em>这种改进对性能的影响微乎其微，却显著提升了运行速度*。</p>
+<h1 id="R-ELAN"><a href="#R-ELAN" class="headerlink" title="R-ELAN"></a>R-ELAN</h1><p>​	高效层聚合网络（ELAN）旨在优化特征聚合机制。如图所示，该架构首先将过渡层（1×1卷积）的输出进行分割，通过多个模块处理每个分割结果后，将所有输出拼接并再次应用过渡层（1×1卷积）以实现维度对齐。但分析表明，<em>这种设计可能引发网络不稳定问题。我们认为该架构会导致梯度阻塞现象，并且缺乏从输入到输出的残差连接机制</em>。此外，我们采用注意力机制构建网络，这给优化过程带来了额外挑战。实验数据显示，即使使用Adam或AdamW优化器，L-和X模型仍存在收敛困难或运行不稳定的问题。为解决这一问题，我们提出了残差高效层聚合网络（R-ELAN）。与传统方法不同，我们在整个模块中引入了输入到输出的残差捷径通道，并采用缩放因子（默认值为0. 01)。这种设计类似于用于构建深度视觉变换器的层缩放技术。然而，对每个区域注意力机制单独应用层缩放并不能解决优化难题，反而会导致延迟增加。这表明注意力机制的引入并非收敛的唯一原因，ELAN架构本身才是关键所在，这也验证了我们R-ELAN设计的合理性。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712134553139.png" alt="image-20250712134553139"></p>
+<p>​	这个高效层聚合网络指的是A2C2F，其中A2也是本文的创新，取名为区域注意力模块<strong>Area attention</strong>，应该是这个英文名字中两个单词都是以字母a开头，所以叫A2吧！后面的C2F是在YOLOv8中提出的，而这个A2C2F就是将C2F中的瓶颈结构模(BottleNeck)块换为了A2，并进行了改进。</p>
+<h1 id="实验结果分析"><a href="#实验结果分析" class="headerlink" title="实验结果分析"></a>实验结果分析</h1><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140148347.png" alt="image-20250712140148347"></p>
+<p>上表揭示了两个关键发现：</p>
+<ul>
+<li>对于YOLOv12-N这类小型模型，残差连接不会影响收敛性但会降低性能。对于大型模型（YOLOv12-L&#x2F;X），它们是稳定训练的必要条件。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140731608.png" alt="image-20250712140731608"></p>
+<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><ul>
+<li>[YOLOv12论文模型解析 -CSDN](<a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12%E8%AE%BA%E6%96%87%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%90">https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12论文模型解析</a> .pdf)</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pengxiang1998/article/details/148005680?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&utm_relevant_index=5">YOLO12的A2C2f模块解析-CSDN博客</a></li>
+</ul>
+
+  </div>
 
 
                 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/yolo12-1752224126368-2-1752224137167-4.png" alt="yolo12"></p>

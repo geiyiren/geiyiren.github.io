@@ -403,7 +403,75 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="F1分数"><a href="#F1分数" class="headerlink" title="F1分数"></a>F1分数</h1><ul>
+<li>F1分数计算公式</li>
+</ul>
+<p>$$<br>\text{F1}&#x3D;2\times\frac{\text{Precision}\times\text{Recall}}{\text{Precision}+\text{Recall}} \\<br>&#x3D;2\times\frac{\text{Recall}}{\text{1}+\frac{\text{Recall}}{\text{Precision}}} \\<br>&#x3D;2\times\frac{\text{Precision}}{\frac{\text{Precision}}{\text{Recall}}+1} \\<br>$$</p>
+<h1 id="准确率和召回率"><a href="#准确率和召回率" class="headerlink" title="准确率和召回率"></a>准确率和召回率</h1><table>
+<thead>
+<tr>
+<th>指标名</th>
+<th>公式</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precision（精确率，查准）</td>
+<td>TP &#x2F; (TP + FP)</td>
+<td>被预测为正的样本中，有多少是真正的正类</td>
+</tr>
+<tr>
+<td>Recall（召回率，查全）</td>
+<td>TP &#x2F; (TP + FN)</td>
+<td>所有真正的正类中，有多少被正确预测了</td>
+</tr>
+</tbody></table>
+<ul>
+<li>TP、FP、FN、TN含义</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>真实值：Positive（正类）</strong></th>
+<th><strong>真实值：Negative（负类）</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>预测值：Positive（预测为正）</strong></td>
+<td>✅ <strong>TP</strong>检测出目标且正确</td>
+<td>❌ <strong>FP</strong>错误地检测出一个不存在的目标</td>
+</tr>
+<tr>
+<td><strong>预测值：Negative（预测为负）</strong></td>
+<td>❌ <strong>FN</strong>漏掉了真实目标</td>
+<td>✅ <strong>TN</strong>正确地没检测出（背景）</td>
+</tr>
+</tbody></table>
+<p>其中：</p>
+<ul>
+<li>TP：True Positive，预测正确的正样本数（检测对了）</li>
+<li>FP：False Positive，预测为正但实际是负（检测错了）</li>
+<li>FN：False Negative，实际为正但预测为负（漏检）</li>
+<li>TP+FP：所有预测为正类的个数</li>
+<li>TP+FN：所有实际为正类的个数</li>
+</ul>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><ul>
+<li><p><strong>TP越大，FP越小，准确率越高，此时预测正确的越多，且误检率低 &#x3D;&#x3D;&#x3D;&gt; 准确率越高，误检越少</strong></p>
+</li>
+<li><p><strong>TP越大，FN越小，召回率越高，此时预测正确的越多，且漏检率低 &#x3D;&#x3D;&#x3D;&gt; 召回率越高，漏检越少</strong></p>
+</li>
+<li><p><strong>当召回率和准确率相等时，准确率或召回率越大，F1分数越大</strong></p>
+</li>
+<li><p><strong>当召回率和准去率不相等时，二者越相近越有利于F1分数增大，二者越差距越大越不利于F1分数增大</strong></p>
+</li>
+<li><p><strong>当F1分数比较大时，召回率和准确率都不会太低</strong></p>
+</li>
+</ul>
+
+  </div>
 
 
                 <h1 id="F1分数"><a href="#F1分数" class="headerlink" title="F1分数"></a>F1分数</h1><ul>

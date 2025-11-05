@@ -403,7 +403,178 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="畸变图像-转换为-去畸变图像"><a href="#畸变图像-转换为-去畸变图像" class="headerlink" title="畸变图像 转换为 去畸变图像"></a>畸变图像 转换为 去畸变图像</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">undistortImage</span><span class="token punctuation">(</span>
+    InputArray distorted<span class="token punctuation">,</span>            <span class="token comment">// 输入的畸变图像</span>
+    OutputArray undistorted<span class="token punctuation">,</span>         <span class="token comment">// 输出的去畸变图像</span>
+    InputArray K<span class="token punctuation">,</span>                    <span class="token comment">// 相机内参矩阵(3x3)</span>
+    InputArray D<span class="token punctuation">,</span>                    <span class="token comment">// 相机畸变系数</span>
+    InputArray Knew <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token comment">// 新的相机内参矩阵(3x3)</span>
+    <span class="token keyword">const</span> Size<span class="token operator">&amp;</span> new_size <span class="token operator">=</span> <span class="token function">Size</span><span class="token punctuation">(</span><span class="token punctuation">)</span>    <span class="token comment">// 新的去畸变图像尺寸</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<ul>
+<li><code>new_size</code>一般设置为空，默认输出去畸变图像和畸变图像的尺寸相同。</li>
+<li><code>Knew </code>为新的相机内参矩阵，影响者去畸变之后图像的范围，参数有：<code>fx</code>、<code>fy</code>、<code>cx</code>、<code>cy</code>。<ul>
+<li><code>fx</code>为水平方向的焦距，值越大，水平方向显示图像范围越大。</li>
+<li><code>fy</code>为垂直方向的焦距，值越大，垂直方向显示图像范围越大。</li>
+<li><code>cx</code>主点坐标的x值，值越大，显示图像范围整体越偏左</li>
+<li><code>cy</code>主点坐标的y值，值越大，显示图像范围整体越偏下<blockquote>
+<p><code>cx</code>、<code>cy</code>一般和原应相机的参数一样，这样去畸变后的图像和畸变图像的中心可以对齐；<code>fx</code>、<code>fy</code>需要根据去畸变图像的视野需求进行调整，一般在原相机的参数的基础上进行缩放。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>效果展示<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E8%87%AA%E5%AE%9A%E4%B9%89%E9%B1%BC%E7%9C%BC%E5%9B%BE%E5%83%8F%E5%8E%BB%E7%95%B8%E5%8F%98/0.0-0.0.png" alt="原始畸变图像"><style>
+th, td {
+  text-align: center; /* 设置表头和单元格中的文本居中 */
+}
+</style>
+<table>
+<colgroup>
+  <col style="width: 20%;">
+  <col style="width: 20%;">
+  <col style="width: 60%;">
+</colgroup>
+<tr>
+  <th>fx缩小倍数</th>
+  <th>fy缩小倍数</th>
+  <th>去畸变图像</th>
+</tr>
+<tr>
+  <td>1.0</td>
+  <td>1.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/1.0-1.0.png""></td>
+</tr>
+<tr>
+  <td>1.3</td>
+  <td>1.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/1.3-1.0.png""></td>
+</tr>
+<tr>
+  <td>1.5</td>
+  <td>1.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/1.5-1.0.png""></td>
+</tr>
+<tr>
+  <td>3.0</td>
+  <td>1.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/3.0-1.0.png""></td>
+</tr>
+<tr>
+  <td>5.0</td>
+  <td>1.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/5.0-1.0.png""></td>
+</tr>
+<tr>
+  <td>5.0</td>
+  <td>1.5</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/5.0-1.5.png""></td>
+</tr>
+<tr>
+  <td>5.0</td>
+  <td>3.0</td>
+  <td><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/自定义鱼眼图像去畸变/5.0-3.0.png""></td>
+</tr>
+</table></li>
+</ul>
+<h1 id="畸变点-转换为-去畸变点"><a href="#畸变点-转换为-去畸变点" class="headerlink" title="畸变点 转换为 去畸变点"></a>畸变点 转换为 去畸变点</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">undistortPoints</span><span class="token punctuation">(</span>
+    InputArray distorted<span class="token punctuation">,</span>          <span class="token comment">// 输入的畸变坐标点</span>
+    OutputArray undistorted<span class="token punctuation">,</span>      <span class="token comment">// 输出的去畸变坐标点</span>
+    InputArray K<span class="token punctuation">,</span>                  <span class="token comment">// 相机内参矩阵(3x3)</span>
+    InputArray D<span class="token punctuation">,</span>                  <span class="token comment">// 畸变参数向量</span>
+    InputArray R <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>  <span class="token comment">// 旋转矩阵(3x3)，通常是单位矩阵</span>
+    InputArray P <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">noArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment">// 投影矩阵(3x3)或新相机内参矩阵Knew(3x3)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>这个函数可以直接向畸变图像上的点转换为去畸变图像上的点，也可以利用<code>R</code>,<code>P</code>矩阵将畸变图像上的点转换为世界坐标系中。</p>
+</blockquote>
+<p><strong>注意</strong>：这里转换为去畸变图像上的点时，不支持图像缩放，仅支持新的内参矩阵，因此图像在去畸变时，一般不改变图像的大小，保证点去畸变时可以与之对应。</p>
+<h1 id="去畸变点-转换为-畸变点"><a href="#去畸变点-转换为-畸变点" class="headerlink" title="去畸变点 转换为 畸变点"></a>去畸变点 转换为 畸变点</h1><p>没有直接的函数将畸变点转换为去畸变点，但是可以利用map映射函数获得映射点来进行转换。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">initUndistortRectifyMap</span><span class="token punctuation">(</span>
+    InputArray K<span class="token punctuation">,</span>              <span class="token comment">// 相机内参矩阵 (3x3)</span>
+    InputArray D<span class="token punctuation">,</span>              <span class="token comment">// 畸变参数向量</span>
+    InputArray R<span class="token punctuation">,</span>              <span class="token comment">// 旋转矩阵 (3x3)</span>
+    InputArray P<span class="token punctuation">,</span>              <span class="token comment">// 新相机矩阵 (3x3)</span>
+    <span class="token keyword">const</span> Size<span class="token operator">&amp;</span> size<span class="token punctuation">,</span>          <span class="token comment">// 输出映射的图像尺寸</span>
+    <span class="token keyword">int</span> m1type<span class="token punctuation">,</span>                <span class="token comment">// 映射矩阵的数据类型 (例如：CV_32FC1)</span>
+    OutputArray map1<span class="token punctuation">,</span>          <span class="token comment">// 输出的第一个映射</span>
+    OutputArray map2           <span class="token comment">// 输出的第二个映射</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>这里<code>map1</code>、<code>map2</code>为映射矩阵，类型为<code>cv::Mat</code>,尺寸为<code>size</code>，也就是说这个<code>Mat</code>的尺寸就是去畸变图像的尺寸，每个位置存储的值为对应畸变图像上点的<code>x</code>值或者<code>y</code>值。这样我们就可以访问这个<code>Mat</code>中每个像素值，进而得到去畸变点对应的畸变点坐标。</p>
+<blockquote>
+<p>众所周知，map映射时存储的映射关系一般为相反的</p>
+</blockquote>
+<ul>
+<li>使用方法<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// 初始化映射表</span>
+cv<span class="token double-colon punctuation">::</span>Mat map_x<span class="token punctuation">,</span> map_y<span class="token punctuation">;</span>
+std<span class="token double-colon punctuation">::</span>vector<span class="token operator">&lt;</span>cv<span class="token double-colon punctuation">::</span>Point2f<span class="token operator">></span> image_points_dist<span class="token punctuation">,</span> image_points_undist_new<span class="token punctuation">;</span>
+cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">initUndistortRectifyMap</span><span class="token punctuation">(</span>cam_K<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cam_D<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token class-name">Mat</span><span class="token double-colon punctuation">::</span><span class="token function">eye</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> CV_32FC1<span class="token punctuation">)</span><span class="token punctuation">,</span> cam_K_new<span class="token punctuation">[</span>cam_index<span class="token punctuation">]</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Size</span><span class="token punctuation">(</span>CAMERA_WIDTH<span class="token punctuation">,</span> CAMERA_HEIGHT<span class="token punctuation">)</span><span class="token punctuation">,</span> CV_32FC1<span class="token punctuation">,</span> map_x<span class="token punctuation">,</span> map_y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">auto</span> point <span class="token operator">:</span> image_points_undist<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Point2f point_undist <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span>point<span class="token punctuation">.</span>x<span class="token punctuation">,</span>
+                                           point<span class="token punctuation">.</span>y<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    image_points_dist<span class="token punctuation">.</span><span class="token function">emplace_back</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token function">Point2f</span><span class="token punctuation">(</span>map_x<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span>point_undist<span class="token punctuation">)</span><span class="token punctuation">,</span> map_y<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span>point_undist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+<p><strong>注意</strong>: 这里的输出映射的图像尺寸需要为畸变图像的原始尺寸<code>cv::Size(CAMERA_WIDTH, CAMERA_HEIGHT)</code>,旋转矩阵应该为单位矩阵，新相机矩阵与去畸变时的设置保持一直即可。</p>
+<h1 id="代码-undist-cpp"><a href="#代码-undist-cpp" class="headerlink" title="代码: undist.cpp"></a>代码: <code>undist.cpp</code></h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/opencv.hpp></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/highgui/highgui.hpp></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;opencv2/imgproc/imgproc.hpp></span></span>
+
+
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">UNDIST_SCALE</span> <span class="token expression"><span class="token punctuation">(</span><span class="token number">2.5</span><span class="token punctuation">)</span></span></span>
+
+<span class="token comment">/**
+ * @description: 输入畸变图，输出去畸变图
+ * @param &#123;Mat&#125; &amp;img_dist
+ * @param &#123;Mat&#125; &amp;img_undist
+ * @return &#123;*&#125;
+ * @author: wangshuaiyang
+ */</span>
+<span class="token keyword">int</span> <span class="token function">DistToUndistImage</span><span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span>Mat img_dist<span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>Mat <span class="token operator">&amp;</span>img_undist<span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> ret <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    cv<span class="token double-colon punctuation">::</span>Mat cam_K <span class="token operator">=</span> <span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">Mat_</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">319.307046915</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">640</span><span class="token punctuation">,</span>
+                <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">319.715597621</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">,</span>
+                <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat cam_D <span class="token operator">=</span> <span class="token punctuation">(</span>cv<span class="token double-colon punctuation">::</span><span class="token generic-function"><span class="token function">Mat_</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">&lt;&lt;</span> <span class="token number">0.07218855</span><span class="token punctuation">,</span> <span class="token number">0.02228145</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">0.015075182</span><span class="token punctuation">,</span> <span class="token number">0.002351672</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment">// 新的相机内参矩阵和图像尺寸（可选）</span>
+    cv<span class="token double-colon punctuation">::</span>Mat cam_K_new <span class="token operator">=</span> cam_K<span class="token punctuation">.</span><span class="token function">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">=</span> cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">5.0</span><span class="token punctuation">;</span>     <span class="token comment">// fx</span>
+    cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">=</span> cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token operator">/</span><span class="token number">1.5</span><span class="token punctuation">;</span>     <span class="token comment">// fy</span>
+    cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">=</span> cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// cx</span>
+    cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">=</span> cam_K_new<span class="token punctuation">.</span><span class="token generic-function"><span class="token function">at</span><span class="token generic class-name"><span class="token operator">&lt;</span><span class="token keyword">float</span><span class="token operator">></span></span></span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// cy</span>
+
+    cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">undistortImage</span><span class="token punctuation">(</span>img_dist<span class="token punctuation">,</span> img_undist<span class="token punctuation">,</span> cam_K<span class="token punctuation">,</span> cam_D<span class="token punctuation">,</span> cam_K_new<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    cv<span class="token double-colon punctuation">::</span><span class="token function">resize</span><span class="token punctuation">(</span>img_undist<span class="token punctuation">,</span> img_undist<span class="token punctuation">,</span> img_dist<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    cv<span class="token double-colon punctuation">::</span><span class="token function">imshow</span><span class="token punctuation">(</span><span class="token string">"image_remap_fish"</span><span class="token punctuation">,</span> img_undist<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span><span class="token function">waitKey</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">int</span>  <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat img <span class="token operator">=</span> cv<span class="token double-colon punctuation">::</span><span class="token function">imread</span><span class="token punctuation">(</span><span class="token string">"picture_back.png"</span><span class="token punctuation">,</span> cv<span class="token double-colon punctuation">::</span>IMREAD_COLOR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    cv<span class="token double-colon punctuation">::</span>Mat undist_img<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> ret <span class="token operator">=</span> <span class="token function">DistToUndistImage</span><span class="token punctuation">(</span>img<span class="token punctuation">,</span> undist_img<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>编译</li>
+<li><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">g++ undist.cpp <span class="token parameter variable">-o</span> undist <span class="token parameter variable">-lopencv_core</span> <span class="token parameter variable">-lopencv_highgui</span> <span class="token parameter variable">-lopencv_imgproc</span> <span class="token parameter variable">-lopencv_imgcodecs</span> <span class="token parameter variable">-lopencv_calib3d</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+
+  </div>
 
 
                 <h1 id="畸变图像-转换为-去畸变图像"><a href="#畸变图像-转换为-去畸变图像" class="headerlink" title="畸变图像 转换为 去畸变图像"></a>畸变图像 转换为 去畸变图像</h1><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token keyword">void</span> cv<span class="token double-colon punctuation">::</span>fisheye<span class="token double-colon punctuation">::</span><span class="token function">undistortImage</span><span class="token punctuation">(</span>

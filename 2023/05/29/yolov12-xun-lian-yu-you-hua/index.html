@@ -407,7 +407,43 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="参数量分析"><a href="#参数量分析" class="headerlink" title="参数量分析"></a>参数量分析</h1><ul>
+<li>pt模型<br>YOLOv12n summary (fused): 159 layers, 2,558,288 parameters, 0 gradients, 6.3 GFLOPs</li>
+<li>onnx模型</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Forward_MACs</th>
+<th>FPercent</th>
+<th>Memory</th>
+<th>MPercent</th>
+<th>Params</th>
+<th>PPercent</th>
+<th>InShape</th>
+<th>OutShape</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Total</td>
+<td>1,352,561,226</td>
+<td>100%</td>
+<td>138,042,356</td>
+<td>100%</td>
+<td>2,572,509</td>
+<td>100%</td>
+<td>1x3x288x480</td>
+<td>1x12x2835</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>onnx 1.17.0 opset 12…</p>
+</blockquote>
+
+  </div>
 
 
                 <h1 id="参数量分析"><a href="#参数量分析" class="headerlink" title="参数量分析"></a>参数量分析</h1><ul>

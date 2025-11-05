@@ -399,7 +399,116 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="现象说明"><a href="#现象说明" class="headerlink" title="现象说明"></a>现象说明</h1><p>使用opencv创建一张黑图，然后保存，再读取，发现图像像素被修改</p>
+<h1 id="原因一：保存图像时使用了jpg或jpeg格式的图像"><a href="#原因一：保存图像时使用了jpg或jpeg格式的图像" class="headerlink" title="原因一：保存图像时使用了jpg或jpeg格式的图像"></a>原因一：保存图像时使用了<code>jpg</code>或<code>jpeg</code>格式的图像</h1><p><code>jpg</code>或<code>jpeg</code>格式的图像在保存时，会使用有损压缩，导致图像像素被修改</p>
+<h1 id="原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2-IMWRITE-PNG-COMPRESSION参数"><a href="#原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2-IMWRITE-PNG-COMPRESSION参数" class="headerlink" title="原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2.IMWRITE_PNG_COMPRESSION参数"></a>原因二：保存图像时使用了压缩参数，例如保存<code>png</code>格式的图像，但使用了<code>cv2.IMWRITE_PNG_COMPRESSION</code>参数</h1><p><code>png</code>格式的图像在保存时，可以使用有损压缩，但需要使用<code>cv2.IMWRITE_PNG_COMPRESSION</code>参数来指定压缩质量，否则默认使用无损压缩，不会修改图像像素</p>
+<p>支持压缩的格式：PNG、JPEG、WebP、TIFF，且<strong>JPEG格式是有损压缩</strong></p>
+<p>不支持压缩的格式：BMP、PPM&#x2F;PGM&#x2F;PBM</p>
+<h1 id="原因三：保存图像的通道和读取图像的通道不一致"><a href="#原因三：保存图像的通道和读取图像的通道不一致" class="headerlink" title="原因三：保存图像的通道和读取图像的通道不一致"></a>原因三：保存图像的通道和读取图像的通道不一致</h1><p>例如：</p>
+<p>图像创建时使用<code>image = np.zeros((128, 256), dtype=np.uint8)</code></p>
+<p>保存时使用<code>cv2.imwrite(&#39;image.png&#39;, image)</code></p>
+<p>读取时使用<code>image = cv2.imread(&#39;image.png&#39;, cv2.IMREAD_COLOR)</code>或<code>image = cv2.imread(&#39;image.png&#39;)</code></p>
+<p>这样会导致图像的通道不一致，导致图像像素被修改，创建的图像为灰度图像<code>8-bit Gray</code>，读取的图像时如果不指定通道，默认读取为彩色图像<code>8-bit sRGB</code>，导致图像像素被修改</p>
+<h1 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h1><ol>
+<li><p>使用无损压缩的格式保存图像，例如<code>png</code>,<code>bmp</code>,<code>tiff</code>格式   </p>
+</li>
+<li><p>创建图像时指定通道，例如<code>image = np.zeros((128, 256), dtype=np.uint8)</code>，读取图像时指定通道，例如<code>image = cv2.imread(&#39;image.png&#39;, cv2.IMREAD_GRAYSCALE)</code></p>
+</li>
+<li><p>将图像数据保存为numpy文件，再读取，例如<code>np.save(&#39;image.npy&#39;, image)</code>，<code>image = np.load(&#39;image.npy&#39;)</code></p>
+</li>
+<li><p>在图像分割任务中，使用二值图是，对图像进行类别处理时如下操作：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">mask <span class="token operator">=</span>cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span><span class="token string">'mask.png'</span><span class="token punctuation">,</span> cv2<span class="token punctuation">.</span>IMREAD_GRAYSCALE<span class="token punctuation">)</span>
+<span class="token comment"># mask[mask!=0]=1</span>
+mask<span class="token punctuation">[</span>mask<span class="token operator">&lt;=</span><span class="token number">250</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+mask<span class="token punctuation">[</span>mask<span class="token operator">></span><span class="token number">250</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用<code>mask[mask!=0]=255</code>后，图像像素被修改的现象为：</p>
+</li>
+</ol>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/opencv%E5%9B%BE%E5%83%8F%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96%E6%97%B6%E7%9A%84%E5%83%8F%E7%B4%A0%E4%B8%80%E8%87%B4%E6%80%A7/0.jpg"><br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/opencv%E5%9B%BE%E5%83%8F%E4%BF%9D%E5%AD%98%E4%B8%8E%E8%AF%BB%E5%8F%96%E6%97%B6%E7%9A%84%E5%83%8F%E7%B4%A0%E4%B8%80%E8%87%B4%E6%80%A7/1.jpg"></p>
+<h1 id="测试程序"><a href="#测试程序" class="headerlink" title="测试程序"></a>测试程序</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> cv2
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> sys
+<span class="token keyword">import</span> random
+
+image_formats <span class="token operator">=</span> <span class="token punctuation">[</span>
+    <span class="token string">'.jpg'</span><span class="token punctuation">,</span>    <span class="token comment"># JPEG 格式</span>
+    <span class="token string">'.jpeg'</span><span class="token punctuation">,</span>   <span class="token comment"># JPEG 格式</span>
+    <span class="token string">'.png'</span><span class="token punctuation">,</span>    <span class="token comment"># PNG 格式</span>
+    <span class="token string">'.bmp'</span><span class="token punctuation">,</span>    <span class="token comment"># BMP 格式</span>
+    <span class="token string">'.tiff'</span><span class="token punctuation">,</span>   <span class="token comment"># TIFF 格式</span>
+    <span class="token string">'.tif'</span><span class="token punctuation">,</span>    <span class="token comment"># TIFF 格式</span>
+<span class="token punctuation">]</span>
+<span class="token comment"># 初始化计数字典</span>
+format_counts <span class="token operator">=</span> <span class="token punctuation">&#123;</span>fmt<span class="token punctuation">:</span> <span class="token number">0</span> <span class="token keyword">for</span> fmt <span class="token keyword">in</span> image_formats<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">try</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">100000</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment"># 创建全黑图像</span>
+        image <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">128</span><span class="token punctuation">,</span> <span class="token number">256</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>np<span class="token punctuation">.</span>uint8<span class="token punctuation">)</span>
+
+        <span class="token comment"># 修改部分像素为255</span>
+        <span class="token comment"># 圆心坐标</span>
+        center <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">128</span><span class="token punctuation">,</span> <span class="token number">64</span><span class="token punctuation">)</span>
+
+        <span class="token comment"># 圆的半径</span>
+        radius <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">)</span>
+
+        <span class="token comment"># 点的颜色（BGR格式，这里是红色）</span>
+        color <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">)</span>  <span class="token comment"># 红色</span>
+
+        <span class="token comment"># 点的半径（在图像上绘制的点的半径）</span>
+        point_radius <span class="token operator">=</span> <span class="token number">2</span>
+
+        <span class="token comment"># 生成圆上的点</span>
+        num_points <span class="token operator">=</span> <span class="token number">360</span>  <span class="token comment"># 可以根据需要调整点的数量</span>
+        <span class="token keyword">for</span> angle <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>num_points<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            theta <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> np<span class="token punctuation">.</span>pi <span class="token operator">*</span> angle <span class="token operator">/</span> num_points
+            x <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span>center<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> radius <span class="token operator">*</span> np<span class="token punctuation">.</span>cos<span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            y <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span>center<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> radius <span class="token operator">*</span> np<span class="token punctuation">.</span>sin<span class="token punctuation">(</span>theta<span class="token punctuation">)</span><span class="token punctuation">)</span>
+            <span class="token comment"># 边界检查</span>
+            <span class="token keyword">if</span> <span class="token number">0</span> <span class="token operator">&lt;=</span> x <span class="token operator">&lt;</span> image<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token keyword">and</span> <span class="token number">0</span> <span class="token operator">&lt;=</span> y <span class="token operator">&lt;</span> image<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                image<span class="token punctuation">[</span>y<span class="token punctuation">,</span> x<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">255</span>
+                
+        num_1 <span class="token operator">=</span> np<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>image<span class="token operator">==</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+        <span class="token builtin">format</span> <span class="token operator">=</span> random<span class="token punctuation">.</span>choice<span class="token punctuation">(</span>image_formats<span class="token punctuation">)</span>
+        
+        <span class="token comment"># 源文件路径</span>
+        source_file <span class="token operator">=</span> <span class="token string">'src_image'</span><span class="token operator">+</span><span class="token builtin">format</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>image<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>   
+        <span class="token comment"># 保存图像</span>
+        <span class="token comment"># np.save(source_file, image)</span>
+        cv2<span class="token punctuation">.</span>imwrite<span class="token punctuation">(</span>source_file<span class="token punctuation">,</span> image<span class="token punctuation">)</span>
+
+
+        <span class="token comment"># 重新加载图像</span>
+        <span class="token comment"># loaded_image = np.load(source_file)</span>
+        loaded_image <span class="token operator">=</span> cv2<span class="token punctuation">.</span>imread<span class="token punctuation">(</span>source_file<span class="token punctuation">,</span>cv2<span class="token punctuation">.</span>IMREAD_GRAYSCALE<span class="token punctuation">)</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>loaded_image<span class="token punctuation">.</span>shape<span class="token punctuation">)</span>
+        num_2 <span class="token operator">=</span> np<span class="token punctuation">.</span><span class="token builtin">sum</span><span class="token punctuation">(</span>loaded_image<span class="token operator">==</span><span class="token number">255</span><span class="token punctuation">)</span>
+
+        cv2<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span><span class="token string">'image'</span><span class="token punctuation">,</span> loaded_image<span class="token punctuation">)</span>
+        cv2<span class="token punctuation">.</span>waitKey<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+        
+        <span class="token keyword">if</span> num_1<span class="token operator">!=</span>num_2<span class="token punctuation">:</span>
+            <span class="token comment"># 检查扩展名是否在支持的格式中</span>
+            <span class="token keyword">if</span> <span class="token builtin">format</span> <span class="token keyword">in</span> format_counts<span class="token punctuation">:</span>
+                format_counts<span class="token punctuation">[</span><span class="token builtin">format</span><span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token number">1</span>
+        
+        
+        sys<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string">"\033[K"</span><span class="token punctuation">)</span>  <span class="token comment"># 清除当前行的内容</span>
+        sys<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"\033[</span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token number">0</span><span class="token punctuation">&#125;</span></span><span class="token string">G"</span></span><span class="token punctuation">)</span>  <span class="token comment"># 将光标移动到行的开始位置</span>
+        sys<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span>write<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Step </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token number">1000000</span><span class="token operator">-</span>i<span class="token punctuation">&#125;</span></span><span class="token string">: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>num_1<span class="token operator">-</span>num_2<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+        sys<span class="token punctuation">.</span>stdout<span class="token punctuation">.</span>flush<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">,</span>format_counts<span class="token punctuation">)</span>
+<span class="token keyword">except</span> KeyboardInterrupt<span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">,</span>format_counts<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+  </div>
 
 
                 <h1 id="现象说明"><a href="#现象说明" class="headerlink" title="现象说明"></a>现象说明</h1><p>使用opencv创建一张黑图，然后保存，再读取，发现图像像素被修改</p>

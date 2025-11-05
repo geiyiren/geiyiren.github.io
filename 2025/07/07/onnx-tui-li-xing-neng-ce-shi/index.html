@@ -399,7 +399,204 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="测试注意事项"><a href="#测试注意事项" class="headerlink" title="测试注意事项"></a>测试注意事项</h1><ol>
+<li>gpu推理时如果推理次数比较少的情况下，帧率会不稳定，建议配置推理次数使得推理时间大于10s</li>
+<li></li>
+</ol>
+<h1 id="cudnn环境配置"><a href="#cudnn环境配置" class="headerlink" title="cudnn环境配置"></a>cudnn环境配置</h1><p><strong>PyTorch 自带了自己的 cuDNN 库</strong>（包含在其预编译的二进制包里），不依赖系统的 <code>libcudnn.so</code>，但是 <strong>ONNX Runtime GPU 依赖容器系统环境里存在兼容版本的 <code>libcudnn.so</code></strong></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 添加 NVIDIA 公钥</span>
+<span class="token function">curl</span> <span class="token parameter variable">-fsSL</span> https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/3bf863cc.pub <span class="token operator">|</span> <span class="token function">sudo</span> gpg <span class="token parameter variable">--dearmor</span> <span class="token parameter variable">-o</span> /usr/share/keyrings/nvidia-cuda-keyring.gpg
+
+<span class="token comment"># 添加 CUDA 软件源</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"deb [signed-by=/usr/share/keyrings/nvidia-cuda-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"</span> <span class="token operator">|</span> <span class="token function">sudo</span> <span class="token function">tee</span> /etc/apt/sources.list.d/nvidia-cuda.list
+
+<span class="token comment"># 更新软件源索引</span>
+<span class="token function">apt-get</span> update
+
+<span class="token comment">#安装指定版本的cudnn</span>
+<span class="token function">apt-get</span> <span class="token function">install</span> <span class="token assign-left variable">libcudnn8</span><span class="token operator">=</span><span class="token number">8.1</span>.1.33-1+cuda11.2 libcudnn8-dev<span class="token operator">=</span><span class="token number">8.1</span>.1.33-1+cuda11.2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h1 id="onnx性能参数分析工具"><a href="#onnx性能参数分析工具" class="headerlink" title="onnx性能参数分析工具"></a>onnx性能参数分析工具</h1><ul>
+<li><p>onnx_tool</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">from</span> onnx_tool <span class="token keyword">import</span> model_profile
+report <span class="token operator">=</span> model_profile<span class="token punctuation">(</span>m<span class="token operator">=</span><span class="token string">"model.onnx"</span><span class="token punctuation">,</span>save_profile<span class="token operator">=</span><span class="token string">"out.txt"</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+</ul>
+<h1 id="cpu和gpu推理速度测试完整脚本"><a href="#cpu和gpu推理速度测试完整脚本" class="headerlink" title="cpu和gpu推理速度测试完整脚本"></a>cpu和gpu推理速度测试完整脚本</h1><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> onnxruntime <span class="token keyword">as</span> ort
+<span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> time
+<span class="token keyword">import</span> psutil
+<span class="token keyword">import</span> os
+<span class="token keyword">import</span> torch
+<span class="token keyword">import</span> cpuinfo
+<span class="token keyword">import</span> pynvml
+<span class="token keyword">import</span> json
+
+
+<span class="token keyword">def</span> <span class="token function">get_process_memory_mb</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    process <span class="token operator">=</span> psutil<span class="token punctuation">.</span>Process<span class="token punctuation">(</span>os<span class="token punctuation">.</span>getpid<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    mem_bytes <span class="token operator">=</span> process<span class="token punctuation">.</span>memory_info<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>rss
+    <span class="token keyword">return</span> mem_bytes <span class="token operator">/</span> <span class="token number">1024</span> <span class="token operator">/</span> <span class="token number">1024</span>  <span class="token comment"># 转成MB</span>
+
+
+<span class="token keyword">def</span> <span class="token function">get_gpu_memory_usage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> <span class="token keyword">not</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>is_available<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">return</span> <span class="token number">0</span>
+    gpu_id <span class="token operator">=</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>current_device<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    mem_bytes <span class="token operator">=</span> torch<span class="token punctuation">.</span>cuda<span class="token punctuation">.</span>memory_allocated<span class="token punctuation">(</span>gpu_id<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> mem_bytes <span class="token operator">/</span> <span class="token number">1024</span> <span class="token operator">/</span> <span class="token number">1024</span>
+
+
+<span class="token keyword">def</span> <span class="token function">parse_profiling_json</span><span class="token punctuation">(</span>prof_file<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>prof_file<span class="token punctuation">,</span> <span class="token string">"r"</span><span class="token punctuation">)</span> <span class="token keyword">as</span> f<span class="token punctuation">:</span>
+        events <span class="token operator">=</span> json<span class="token punctuation">.</span>load<span class="token punctuation">(</span>f<span class="token punctuation">)</span>
+
+    op_times <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment"># 记录总耗时</span>
+    op_counts <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>  <span class="token comment"># 记录次数</span>
+
+    <span class="token keyword">for</span> e <span class="token keyword">in</span> events<span class="token punctuation">:</span>
+        <span class="token keyword">if</span> e<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"cat"</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">"Node"</span><span class="token punctuation">:</span>
+            op_type <span class="token operator">=</span> e<span class="token punctuation">[</span><span class="token string">"args"</span><span class="token punctuation">]</span><span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"op_name"</span><span class="token punctuation">,</span> <span class="token string">"Unknown"</span><span class="token punctuation">)</span>
+            duration_ms <span class="token operator">=</span> e<span class="token punctuation">[</span><span class="token string">"dur"</span><span class="token punctuation">]</span> <span class="token operator">/</span> <span class="token number">1000</span>  <span class="token comment"># 微秒转毫秒</span>
+            op_times<span class="token punctuation">[</span>op_type<span class="token punctuation">]</span> <span class="token operator">=</span> op_times<span class="token punctuation">.</span>get<span class="token punctuation">(</span>op_type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> duration_ms
+            op_counts<span class="token punctuation">[</span>op_type<span class="token punctuation">]</span> <span class="token operator">=</span> op_counts<span class="token punctuation">.</span>get<span class="token punctuation">(</span>op_type<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span>
+
+    <span class="token comment"># 计算平均耗时</span>
+    <span class="token keyword">for</span> op_type <span class="token keyword">in</span> op_times<span class="token punctuation">:</span>
+        avg_time <span class="token operator">=</span> op_times<span class="token punctuation">[</span>op_type<span class="token punctuation">]</span> <span class="token operator">/</span> op_counts<span class="token punctuation">[</span>op_type<span class="token punctuation">]</span>
+        <span class="token keyword">print</span><span class="token punctuation">(</span>
+            <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span>op_type<span class="token punctuation">:</span><span class="token format-spec">&lt;20</span><span class="token punctuation">&#125;</span></span><span class="token string"> 平均耗时: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>avg_time<span class="token punctuation">:</span><span class="token format-spec">.3f</span><span class="token punctuation">&#125;</span></span><span class="token string"> ms (执行次数: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>op_counts<span class="token punctuation">[</span>op_type<span class="token punctuation">]</span><span class="token punctuation">&#125;</span></span><span class="token string">)"</span></span>
+        <span class="token punctuation">)</span>
+    <span class="token comment"># 使用完，删除prof_file</span>
+    os<span class="token punctuation">.</span>remove<span class="token punctuation">(</span>prof_file<span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">run_onnx_cpu</span><span class="token punctuation">(</span>model_path<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> runs<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">,</span> warmup<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    so <span class="token operator">=</span> ort<span class="token punctuation">.</span>SessionOptions<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    so<span class="token punctuation">.</span>enable_profiling <span class="token operator">=</span> <span class="token boolean">True</span>
+    sess <span class="token operator">=</span> ort<span class="token punctuation">.</span>InferenceSession<span class="token punctuation">(</span>
+        model_path<span class="token punctuation">,</span> sess_options<span class="token operator">=</span>so<span class="token punctuation">,</span> providers<span class="token operator">=</span><span class="token punctuation">[</span><span class="token string">"CPUExecutionProvider"</span><span class="token punctuation">]</span>
+    <span class="token punctuation">)</span>
+
+    input_name <span class="token operator">=</span> sess<span class="token punctuation">.</span>get_inputs<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>name
+    input_shape <span class="token operator">=</span> sess<span class="token punctuation">.</span>get_inputs<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>shape
+    input_shape <span class="token operator">=</span> <span class="token punctuation">[</span>
+        dim <span class="token keyword">if</span> <span class="token builtin">isinstance</span><span class="token punctuation">(</span>dim<span class="token punctuation">,</span> <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token keyword">and</span> dim <span class="token operator">></span> <span class="token number">0</span> <span class="token keyword">else</span> <span class="token number">1</span> <span class="token keyword">for</span> dim <span class="token keyword">in</span> input_shape
+    <span class="token punctuation">]</span>
+    dummy_input <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>rand<span class="token punctuation">(</span><span class="token operator">*</span>input_shape<span class="token punctuation">)</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span>np<span class="token punctuation">.</span>float32<span class="token punctuation">)</span>
+
+    <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>warmup<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        _ <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>input_name<span class="token punctuation">:</span> dummy_input<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+    mem_start <span class="token operator">=</span> get_process_memory_mb<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    start <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>runs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        _ <span class="token operator">=</span> sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>input_name<span class="token punctuation">:</span> dummy_input<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    end <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    mem_end <span class="token operator">=</span> get_process_memory_mb<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    prof_file <span class="token operator">=</span> sess<span class="token punctuation">.</span>end_profiling<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"[CPU]Profiling file generated: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>prof_file<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    parse_profiling_json<span class="token punctuation">(</span>prof_file<span class="token punctuation">)</span>
+
+    total_time <span class="token operator">=</span> end <span class="token operator">-</span> start
+    avg_time <span class="token operator">=</span> total_time <span class="token operator">/</span> runs
+    mem_used <span class="token operator">=</span> mem_end <span class="token operator">-</span> mem_start
+    fps <span class="token operator">=</span> runs <span class="token operator">/</span> total_time
+
+    info <span class="token operator">=</span> cpuinfo<span class="token punctuation">.</span>get_cpu_info<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"=== CPU 推理性能 ==="</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"硬件信息: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>info<span class="token punctuation">[</span><span class="token string">'brand_raw'</span><span class="token punctuation">]</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"推理次数: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>runs<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"总耗时: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>total_time<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> 秒"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"单次推理平均耗时: </span><span class="token interpolation"><span class="token punctuation">&#123;</span><span class="token punctuation">(</span>avg_time <span class="token operator">*</span> <span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> 毫秒"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"内存变化: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>mem_used<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> MB"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"帧率: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>fps<span class="token punctuation">:</span><span class="token format-spec">.2f</span><span class="token punctuation">&#125;</span></span><span class="token string"> "</span></span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">run_onnx_gpu</span><span class="token punctuation">(</span>
+    model_path<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span>
+    runs<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">1000</span><span class="token punctuation">,</span>
+    warmup<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">20</span><span class="token punctuation">,</span>
+    provider<span class="token punctuation">:</span> <span class="token builtin">str</span> <span class="token operator">=</span> <span class="token string">"CUDAExecutionProvider"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    os<span class="token punctuation">.</span>environ<span class="token punctuation">[</span><span class="token string">"CUDA_VISIBLE_DEVICES"</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">"0"</span>
+    so <span class="token operator">=</span> ort<span class="token punctuation">.</span>SessionOptions<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    so<span class="token punctuation">.</span>enable_profiling <span class="token operator">=</span> <span class="token boolean">True</span>
+
+    providers <span class="token operator">=</span> <span class="token punctuation">[</span>provider<span class="token punctuation">]</span>
+    sess <span class="token operator">=</span> ort<span class="token punctuation">.</span>InferenceSession<span class="token punctuation">(</span>model_path<span class="token punctuation">,</span> sess_options<span class="token operator">=</span>so<span class="token punctuation">,</span> providers<span class="token operator">=</span>providers<span class="token punctuation">)</span>
+
+    input_name <span class="token operator">=</span> sess<span class="token punctuation">.</span>get_inputs<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>name
+    input_shape <span class="token operator">=</span> sess<span class="token punctuation">.</span>get_inputs<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>shape
+    input_dtype <span class="token operator">=</span> np<span class="token punctuation">.</span>float32
+    input_shape_fixed <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span> <span class="token keyword">if</span> dim <span class="token keyword">is</span> <span class="token boolean">None</span> <span class="token keyword">or</span> dim <span class="token operator">&lt;</span> <span class="token number">0</span> <span class="token keyword">else</span> dim <span class="token keyword">for</span> dim <span class="token keyword">in</span> input_shape<span class="token punctuation">]</span>
+    input_data <span class="token operator">=</span> np<span class="token punctuation">.</span>random<span class="token punctuation">.</span>randn<span class="token punctuation">(</span><span class="token operator">*</span>input_shape_fixed<span class="token punctuation">)</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span>input_dtype<span class="token punctuation">)</span>
+
+    <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>warmup<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>input_name<span class="token punctuation">:</span> input_data<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+    cpu_mem_before <span class="token operator">=</span> get_process_memory_mb<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    gpu_mem_before <span class="token operator">=</span> get_gpu_memory_usage<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    start_time <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">for</span> _ <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>runs<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        sess<span class="token punctuation">.</span>run<span class="token punctuation">(</span><span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token punctuation">&#123;</span>input_name<span class="token punctuation">:</span> input_data<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+
+    end_time <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    cpu_mem_after <span class="token operator">=</span> get_process_memory_mb<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    gpu_mem_after <span class="token operator">=</span> get_gpu_memory_usage<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    prof_file <span class="token operator">=</span> sess<span class="token punctuation">.</span>end_profiling<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"[GPU]Profiling file generated: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>prof_file<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    parse_profiling_json<span class="token punctuation">(</span>prof_file<span class="token punctuation">)</span>
+
+    total_time <span class="token operator">=</span> end_time <span class="token operator">-</span> start_time
+    avg_time_ms <span class="token operator">=</span> total_time <span class="token operator">/</span> runs <span class="token operator">*</span> <span class="token number">1000</span>
+    mem_used_cpu <span class="token operator">=</span> cpu_mem_after <span class="token operator">-</span> cpu_mem_before
+    mem_used_gpu <span class="token operator">=</span> gpu_mem_after <span class="token operator">-</span> gpu_mem_before
+    fps <span class="token operator">=</span> runs <span class="token operator">/</span> total_time
+
+    <span class="token comment"># GPU info</span>
+    pynvml<span class="token punctuation">.</span>nvmlInit<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    handle <span class="token operator">=</span> pynvml<span class="token punctuation">.</span>nvmlDeviceGetHandleByIndex<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    name <span class="token operator">=</span> pynvml<span class="token punctuation">.</span>nvmlDeviceGetName<span class="token punctuation">(</span>handle<span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"\n=== GPU 推理性能 ==="</span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"硬件信息: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>name<span class="token punctuation">.</span>decode<span class="token punctuation">(</span><span class="token string">'utf-8'</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"推理次数: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>runs<span class="token punctuation">&#125;</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"总耗时: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>total_time<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> 秒"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"单次推理平均耗时: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>avg_time_ms<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> 毫秒"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"内存变化: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>mem_used_cpu<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> MB"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"显存变化: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>mem_used_gpu<span class="token punctuation">:</span><span class="token format-spec">.4f</span><span class="token punctuation">&#125;</span></span><span class="token string"> MB"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"帧率: </span><span class="token interpolation"><span class="token punctuation">&#123;</span>fps<span class="token punctuation">:</span><span class="token format-spec">.2f</span><span class="token punctuation">&#125;</span></span><span class="token string"> "</span></span><span class="token punctuation">)</span>
+
+
+<span class="token keyword">def</span> <span class="token function">run</span><span class="token punctuation">(</span>model_path<span class="token punctuation">,</span> runs<span class="token punctuation">,</span> warmup<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"开始CPU推理测试..."</span></span><span class="token punctuation">)</span>
+    run_onnx_cpu<span class="token punctuation">(</span>model_path<span class="token punctuation">,</span> runs<span class="token punctuation">,</span> warmup<span class="token punctuation">)</span>
+
+    <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"开始GPU推理测试..."</span></span><span class="token punctuation">)</span>
+    run_onnx_gpu<span class="token punctuation">(</span>model_path<span class="token punctuation">,</span> runs<span class="token punctuation">,</span> warmup<span class="token punctuation">)</span>
+
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">"__main__"</span><span class="token punctuation">:</span>
+    <span class="token keyword">import</span> argparse
+
+    parser <span class="token operator">=</span> argparse<span class="token punctuation">.</span>ArgumentParser<span class="token punctuation">(</span>description<span class="token operator">=</span><span class="token string">"ONNX CPU和GPU推理性能测试"</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"-m"</span><span class="token punctuation">,</span> <span class="token string">"--model"</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">,</span> required<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"ONNX模型路径"</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"-r"</span><span class="token punctuation">,</span> <span class="token string">"--runs"</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">10000</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"推理次数"</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">"-w"</span><span class="token punctuation">,</span> <span class="token string">"--warmup"</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">int</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">20</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">"预热次数"</span><span class="token punctuation">)</span>
+    
+    args <span class="token operator">=</span> parser<span class="token punctuation">.</span>parse_args<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    run<span class="token punctuation">(</span>args<span class="token punctuation">.</span>model<span class="token punctuation">,</span> args<span class="token punctuation">.</span>runs<span class="token punctuation">,</span> args<span class="token punctuation">.</span>warmup<span class="token punctuation">)</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+  </div>
 
 
                 <h1 id="测试注意事项"><a href="#测试注意事项" class="headerlink" title="测试注意事项"></a>测试注意事项</h1><ol>

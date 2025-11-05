@@ -403,7 +403,194 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h1><ul>
+<li>NMS 算法流程<ol>
+<li>按照置信度 <code>score</code> 降序排列所有候选框</li>
+<li>初始化 <code>keep = []</code></li>
+<li>依次： <ul>
+<li>取出当前最高分框 <code>B0</code></li>
+<li>将其加入 <code>keep</code></li>
+<li>计算 <code>B0</code> 与其他所有框的 IoU</li>
+<li>删除与 <code>B0</code> IoU 大于阈值的框（比如 0.5）</li>
+</ul>
+</li>
+<li>重复直到候选框为空</li>
+</ol>
+</li>
+</ul>
+<h2 id="Soft-NMS-算法流程"><a href="#Soft-NMS-算法流程" class="headerlink" title="Soft-NMS 算法流程"></a>Soft-NMS 算法流程</h2><ol>
+<li>初始化候选框集合 <code>D</code></li>
+<li>重复直到 <code>D</code> 为空：<ul>
+<li>从 <code>D</code> 中选出最高分框 <code>B0</code></li>
+<li>将 <code>B0</code> 加入输出列表 <code>keep</code></li>
+<li>对于 <code>D</code> 中的其他框 <code>Bi</code>，计算与 <code>B0</code> 的 IoU</li>
+<li>根据 IoU 衰减 <code>score</code>：<ul>
+<li><strong>Linear</strong>:<br>$$<br>s_i &#x3D; s_i \cdot (1 - \text{IoU}_{0i})<br>$$</li>
+<li><strong>Gaussian</strong>:<br>$$<br>s_i &#x3D; s_i \cdot \exp\left(- \frac{\text{IoU}_{0i}^2}{\sigma} \right)<br>$$</li>
+</ul>
+</li>
+<li>删除 <code>score&lt; score_thresh</code> 的框</li>
+</ul>
+</li>
+</ol>
+<h2 id="NMS-vs-Soft-NMS-对比"><a href="#NMS-vs-Soft-NMS-对比" class="headerlink" title="NMS vs Soft-NMS 对比"></a>NMS vs Soft-NMS 对比</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>NMS</th>
+<th>Soft-NMS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抑制方式</td>
+<td>IoU &gt; 阈值直接删除</td>
+<td>IoU 越大分数衰减越多（不直接删除）</td>
+</tr>
+<tr>
+<td>是否可微</td>
+<td>否（不适合用于训练）</td>
+<td>否，但分数平滑，有利于优化评估</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>常规目标检测</td>
+<td>多目标密集、遮挡严重场景</td>
+</tr>
+<tr>
+<td>算法效率</td>
+<td>较快</td>
+<td>较慢一些（需要更新每个框分数）</td>
+</tr>
+<tr>
+<td>结果平滑性</td>
+<td>较差</td>
+<td>更平滑，避免误删</td>
+</tr>
+</tbody></table>
+<p>python实现代码如下:</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> numpy <span class="token keyword">as</span> np
+<span class="token keyword">import</span> cv2
+
+<span class="token comment"># 原始框数据，每行为 [x1, y1, x2, y2, score]</span>
+Boxes <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">0.72</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token number">400</span><span class="token punctuation">,</span> <span class="token number">0.8</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">220</span><span class="token punctuation">,</span> <span class="token number">220</span><span class="token punctuation">,</span> <span class="token number">320</span><span class="token punctuation">,</span> <span class="token number">370</span><span class="token punctuation">,</span> <span class="token number">0.92</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">150</span><span class="token punctuation">,</span> <span class="token number">235</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">0.79</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">230</span><span class="token punctuation">,</span> <span class="token number">240</span><span class="token punctuation">,</span> <span class="token number">355</span><span class="token punctuation">,</span> <span class="token number">350</span><span class="token punctuation">,</span> <span class="token number">0.81</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">220</span><span class="token punctuation">,</span> <span class="token number">230</span><span class="token punctuation">,</span> <span class="token number">315</span><span class="token punctuation">,</span> <span class="token number">340</span><span class="token punctuation">,</span> <span class="token number">0.9</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">140</span><span class="token punctuation">,</span> <span class="token number">175</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">,</span> <span class="token number">270</span><span class="token punctuation">,</span> <span class="token number">0.95</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">,</span> <span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">120</span><span class="token punctuation">,</span> <span class="token number">0.6</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">300</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token number">410</span><span class="token punctuation">,</span> <span class="token number">410</span><span class="token punctuation">,</span> <span class="token number">0.85</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">310</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">,</span> <span class="token number">0.7</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">130</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">0.65</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">240</span><span class="token punctuation">,</span> <span class="token number">250</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">,</span> <span class="token number">360</span><span class="token punctuation">,</span> <span class="token number">0.9</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">215</span><span class="token punctuation">,</span> <span class="token number">225</span><span class="token punctuation">,</span> <span class="token number">310</span><span class="token punctuation">,</span> <span class="token number">335</span><span class="token punctuation">,</span> <span class="token number">0.88</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">150</span><span class="token punctuation">,</span> <span class="token number">160</span><span class="token punctuation">,</span> <span class="token number">260</span><span class="token punctuation">,</span> <span class="token number">275</span><span class="token punctuation">,</span> <span class="token number">0.7</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">280</span><span class="token punctuation">,</span> <span class="token number">300</span><span class="token punctuation">,</span> <span class="token number">0.75</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">270</span><span class="token punctuation">,</span> <span class="token number">270</span><span class="token punctuation">,</span> <span class="token number">370</span><span class="token punctuation">,</span> <span class="token number">380</span><span class="token punctuation">,</span> <span class="token number">0.6</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">130</span><span class="token punctuation">,</span> <span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">210</span><span class="token punctuation">,</span> <span class="token number">0.72</span><span class="token punctuation">]</span>
+<span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">draw_boxes</span><span class="token punctuation">(</span>image<span class="token punctuation">,</span> boxes<span class="token punctuation">,</span> color<span class="token punctuation">,</span> thickness<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">,</span> label_prefix<span class="token operator">=</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""在图像上绘制边框及标签"""</span>
+    <span class="token keyword">for</span> i<span class="token punctuation">,</span> box <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>boxes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        x1<span class="token punctuation">,</span> y1<span class="token punctuation">,</span> x2<span class="token punctuation">,</span> y2 <span class="token operator">=</span> box<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span><span class="token builtin">int</span><span class="token punctuation">)</span>
+        score <span class="token operator">=</span> <span class="token builtin">float</span><span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        cv2<span class="token punctuation">.</span>rectangle<span class="token punctuation">(</span>image<span class="token punctuation">,</span> <span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>x2<span class="token punctuation">,</span> y2<span class="token punctuation">)</span><span class="token punctuation">,</span> color<span class="token punctuation">,</span> thickness<span class="token punctuation">)</span>
+        label <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">&#123;</span>label_prefix<span class="token punctuation">&#125;</span></span><span class="token interpolation"><span class="token punctuation">&#123;</span>score<span class="token punctuation">:</span><span class="token format-spec">.2f</span><span class="token punctuation">&#125;</span></span><span class="token string">"</span></span>
+        cv2<span class="token punctuation">.</span>putText<span class="token punctuation">(</span>image<span class="token punctuation">,</span> label<span class="token punctuation">,</span> <span class="token punctuation">(</span>x1<span class="token punctuation">,</span> y1 <span class="token operator">-</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                    cv2<span class="token punctuation">.</span>FONT_HERSHEY_SIMPLEX<span class="token punctuation">,</span> <span class="token number">0.5</span><span class="token punctuation">,</span> color<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">iou_batch</span><span class="token punctuation">(</span>box<span class="token punctuation">,</span> boxes<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""计算一个 box 与多个 boxes 的 IoU"""</span>
+    x1 <span class="token operator">=</span> np<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    y1 <span class="token operator">=</span> np<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    x2 <span class="token operator">=</span> np<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">,</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    y2 <span class="token operator">=</span> np<span class="token punctuation">.</span>minimum<span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    inter_area <span class="token operator">=</span> np<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> x2 <span class="token operator">-</span> x1 <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> np<span class="token punctuation">.</span>maximum<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> y2 <span class="token operator">-</span> y1 <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    area1 <span class="token operator">=</span> <span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> box<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>box<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> box<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    area2 <span class="token operator">=</span> <span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">-</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> inter_area <span class="token operator">/</span> <span class="token punctuation">(</span>area1 <span class="token operator">+</span> area2 <span class="token operator">-</span> inter_area <span class="token operator">+</span> <span class="token number">1e-6</span><span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">nms</span><span class="token punctuation">(</span>boxes<span class="token punctuation">,</span> iou_thresh<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""标准 NMS 算法，返回保留的框"""</span>
+    keep <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    order <span class="token operator">=</span> boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">.</span>argsort<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># 按 score 降序排序</span>
+
+    <span class="token keyword">while</span> order<span class="token punctuation">.</span>size <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">:</span>
+        i <span class="token operator">=</span> order<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+        keep<span class="token punctuation">.</span>append<span class="token punctuation">(</span>boxes<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> order<span class="token punctuation">.</span>size <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">:</span>
+            <span class="token keyword">break</span>
+        ious <span class="token operator">=</span> iou_batch<span class="token punctuation">(</span>boxes<span class="token punctuation">[</span>i<span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> boxes<span class="token punctuation">[</span>order<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+        remain <span class="token operator">=</span> np<span class="token punctuation">.</span>where<span class="token punctuation">(</span>ious <span class="token operator">&lt;=</span> iou_thresh<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+        order <span class="token operator">=</span> order<span class="token punctuation">[</span>remain <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span>  <span class="token comment"># 注意索引偏移</span>
+
+    <span class="token keyword">return</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>keep<span class="token punctuation">)</span>
+
+<span class="token keyword">def</span> <span class="token function">soft_nms</span><span class="token punctuation">(</span>boxes<span class="token punctuation">,</span> iou_thresh<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">,</span> score_thresh<span class="token operator">=</span><span class="token number">0.7</span><span class="token punctuation">,</span> method<span class="token operator">=</span><span class="token string">'linear'</span><span class="token punctuation">,</span> sigma<span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Soft-NMS 算法，返回保留的框（score 衰减但不立即删除）"""</span>
+    boxes <span class="token operator">=</span> boxes<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    N <span class="token operator">=</span> boxes<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    keep <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>N<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        max_idx <span class="token operator">=</span> i <span class="token operator">+</span> np<span class="token punctuation">.</span>argmax<span class="token punctuation">(</span>boxes<span class="token punctuation">[</span>i<span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment"># 当前最大得分框</span>
+        boxes<span class="token punctuation">[</span><span class="token punctuation">[</span>i<span class="token punctuation">,</span> max_idx<span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> boxes<span class="token punctuation">[</span><span class="token punctuation">[</span>max_idx<span class="token punctuation">,</span> i<span class="token punctuation">]</span><span class="token punctuation">]</span>
+        max_box <span class="token operator">=</span> boxes<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+
+        rest_boxes <span class="token operator">=</span> boxes<span class="token punctuation">[</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token punctuation">]</span>
+        <span class="token keyword">if</span> rest_boxes<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">:</span>
+            <span class="token keyword">break</span>
+
+        ious <span class="token operator">=</span> iou_batch<span class="token punctuation">(</span>max_box<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">,</span> rest_boxes<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>rest_boxes<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> method <span class="token operator">==</span> <span class="token string">'linear'</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> ious<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">>=</span> iou_thresh<span class="token punctuation">:</span>
+                    decay <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">-</span> ious<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
+                <span class="token keyword">else</span><span class="token punctuation">:</span>
+                    decay <span class="token operator">=</span> <span class="token number">1.0</span>
+            <span class="token keyword">elif</span> method <span class="token operator">==</span> <span class="token string">'gaussian'</span><span class="token punctuation">:</span>
+                decay <span class="token operator">=</span> np<span class="token punctuation">.</span>exp<span class="token punctuation">(</span><span class="token operator">-</span><span class="token punctuation">(</span>ious<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">/</span> sigma<span class="token punctuation">)</span>
+            <span class="token keyword">else</span><span class="token punctuation">:</span>
+                decay <span class="token operator">=</span> <span class="token number">1.0</span> <span class="token keyword">if</span> ious<span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">&lt;</span> iou_thresh <span class="token keyword">else</span> <span class="token number">0.0</span>
+
+            boxes<span class="token punctuation">[</span>i <span class="token operator">+</span> <span class="token number">1</span> <span class="token operator">+</span> j<span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">*=</span> decay
+
+        <span class="token comment"># 只保留当前这个得分尚高的框（分数大于阈值）</span>
+        <span class="token keyword">if</span> max_box<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span> <span class="token operator">>=</span> score_thresh<span class="token punctuation">:</span>
+            keep<span class="token punctuation">.</span>append<span class="token punctuation">(</span>max_box<span class="token punctuation">)</span>
+
+    <span class="token keyword">return</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>keep<span class="token punctuation">)</span>
+
+<span class="token keyword">if</span> __name__ <span class="token operator">==</span> <span class="token string">'__main__'</span><span class="token punctuation">:</span>
+    <span class="token comment"># 创建空白图像用于绘制</span>
+    canvas_nms <span class="token operator">=</span> np<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span> dtype<span class="token operator">=</span>np<span class="token punctuation">.</span>uint8<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">255</span>
+    canvas_soft <span class="token operator">=</span> canvas_nms<span class="token punctuation">.</span>copy<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 执行 NMS 与 Soft-NMS</span>
+    nms_boxes <span class="token operator">=</span> nms<span class="token punctuation">(</span>Boxes<span class="token punctuation">,</span> iou_thresh<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">)</span>
+    soft_nms_boxes <span class="token operator">=</span> soft_nms<span class="token punctuation">(</span>Boxes<span class="token punctuation">,</span> iou_thresh<span class="token operator">=</span><span class="token number">0.3</span><span class="token punctuation">,</span> score_thresh<span class="token operator">=</span><span class="token number">0.5</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 绘图（灰色为原始框，红色/蓝色为保留框）</span>
+    draw_boxes<span class="token punctuation">(</span>canvas_nms<span class="token punctuation">,</span> Boxes<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    draw_boxes<span class="token punctuation">(</span>canvas_nms<span class="token punctuation">,</span> nms_boxes<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> label_prefix<span class="token operator">=</span><span class="token string">"NMS "</span><span class="token punctuation">)</span>
+
+    draw_boxes<span class="token punctuation">(</span>canvas_soft<span class="token punctuation">,</span> Boxes<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">,</span> <span class="token number">180</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    draw_boxes<span class="token punctuation">(</span>canvas_soft<span class="token punctuation">,</span> soft_nms_boxes<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">255</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> label_prefix<span class="token operator">=</span><span class="token string">"SFT "</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 拼图对比</span>
+    combined <span class="token operator">=</span> cv2<span class="token punctuation">.</span>hconcat<span class="token punctuation">(</span><span class="token punctuation">[</span>canvas_nms<span class="token punctuation">,</span> canvas_soft<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    cv2<span class="token punctuation">.</span>imshow<span class="token punctuation">(</span><span class="token string">"NMS (Red) vs Soft-NMS (Blue)"</span><span class="token punctuation">,</span> combined<span class="token punctuation">)</span>
+    cv2<span class="token punctuation">.</span>waitKey<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+    cv2<span class="token punctuation">.</span>destroyAllWindows<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  </div>
 
 
                 <h1 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h1><ul>

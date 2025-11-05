@@ -403,7 +403,320 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>回调函数就是一个通过函数指针调用的函数。如果你把函数的指针（地址）作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数时，我们就说这是回调函数。回调函数不是由该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或条件进行响应。   </p>
+<h2 id="回调函数机制：-定义一个函数（普通函数即可）；-将此函数的地址注册给调用者；-特定的事件或条件发生时，调用者使用函数指针调用回调函数。"><a href="#回调函数机制：-定义一个函数（普通函数即可）；-将此函数的地址注册给调用者；-特定的事件或条件发生时，调用者使用函数指针调用回调函数。" class="headerlink" title="回调函数机制： - 定义一个函数（普通函数即可）； - 将此函数的地址注册给调用者； - 特定的事件或条件发生时，调用者使用函数指针调用回调函数。 "></a>回调函数机制： <br>- 定义一个函数（普通函数即可）； <br>- 将此函数的地址注册给调用者； <br>- 特定的事件或条件发生时，调用者使用函数指针调用回调函数。 </h2><p>注：为什么要特定事件或条件发生？不应该随时都可以调用回调函数吗？ <br>以下是回调函数的两种使用方式（简单理解）：   </p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">typedef</span> <span class="token keyword">int</span><span class="token punctuation">(</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span><span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span><span class="token keyword">int</span> b<span class="token punctuation">,</span>callback p<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token operator">*</span>p<span class="token punctuation">)</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">,</span><span class="token keyword">int</span> b<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> a<span class="token operator">+</span>b<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span> <span class="token operator">*</span>args<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">int</span> res <span class="token operator">=</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">,</span>add<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在这个例子中，可以看到，我们定义了一个<code>callbak</code>的函数指针，参数为两个int，返回值为int，通过调用函数地址来进行简单的相加运算。   </p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
+<span class="token keyword">typedef</span> <span class="token keyword">int</span> <span class="token punctuation">(</span>callBack<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span>buffer<span class="token punctuation">,</span>size_t size<span class="token punctuation">,</span><span class="token keyword">char</span> <span class="token operator">*</span>p_out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">void</span> <span class="token function">callFunc</span><span class="token punctuation">(</span>callBack <span class="token operator">*</span>consume_bytes<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>p_out<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"callFunc\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span>buffer <span class="token operator">=</span> <span class="token constant">NULL</span><span class="token punctuation">;</span>
+    <span class="token function">consume_bytes</span><span class="token punctuation">(</span>buffer<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>p_out<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//传入值可以随便填</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">callBackFunc</span><span class="token punctuation">(</span><span class="token keyword">const</span> <span class="token keyword">void</span> <span class="token operator">*</span>buffer<span class="token punctuation">,</span> size_t size<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span>p_out<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"callBackFunc\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">memset</span><span class="token punctuation">(</span>p_out<span class="token punctuation">,</span><span class="token number">0x00</span><span class="token punctuation">,</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token punctuation">)</span><span class="token operator">*</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">strcpy</span><span class="token punctuation">(</span>p_out<span class="token punctuation">,</span><span class="token string">"encoderCallback:this is string."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span> <span class="token operator">*</span>args<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">char</span> p_out<span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+    <span class="token function">callFunc</span><span class="token punctuation">(</span>callBackFunc<span class="token punctuation">,</span>p_out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span>p_out<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以把回调函数和调用函数封装承类再调用。</p>
+<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>在理解“回调函数”之前，首先讨论下函数指针的概念</p>
+<p><strong>概念</strong>：指针是一个变量，是用来指向内存地址的。一个程序运行时，所有和运行相关的物件都是需要加载到内存中，这就决定了程序运行时的任何物件都可以用指针来指向它。函数是存放在内存代码区域内的，它们同样有地址，因此同样可以用指针来存取函数，把这种指向函数入口地址的指针称为函数指针。</p>
+<p>先来看一个Hello World程序：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span> <span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello World!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>然后，采用函数调用的形式来实现：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span>\<span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+  
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span><span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token string">"Hello World!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>用函数指针的方式来实现：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+  
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>fp<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">//声明一个函数指针(fp)          </span>
+    fp<span class="token operator">=</span>Invoke<span class="token punctuation">;</span>              <span class="token comment">//将Invoke函数的入口地址赋值给fp  </span>
+    <span class="token function">fp</span><span class="token punctuation">(</span><span class="token string">"Hello World!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">//函数指针fp实现函数调用  </span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>由上知道：函数指针函数的声明之间唯一区别就是，用指针名<code>*fp</code>代替了函数名<code>Invoke</code>，这样这声明了一个函数指针，然后进行赋值<code>fp=Invoke</code>就可以进行函数指针的调用了。声明函数指针时，只要函数返回值类型、参数个数、参数类型等保持一致，就可以声明一个函数指针了。注意，函数指针必须用括号括起来 <code>void (*fp)(char* s)</code>。</p>
+<p>实际中，为了方便，通常用宏定义的方式来声明函数指针，实现程序如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">void</span> <span class="token punctuation">(</span>\<span class="token operator">*</span>FP<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">char</span>\<span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span>\<span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+  
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span>\<span class="token operator">*</span> argv\<span class="token punctuation">[</span>\<span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    FP fp<span class="token punctuation">;</span>      <span class="token comment">//通常是用宏FP来声明一个函数指针fp  </span>
+    fp<span class="token operator">=</span>Invoke<span class="token punctuation">;</span>  
+    <span class="token function">fp</span><span class="token punctuation">(</span><span class="token string">"Hello World!\\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token keyword">void</span> <span class="token function">Invoke</span><span class="token punctuation">(</span><span class="token keyword">char</span>\<span class="token operator">*</span> s<span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="函数指针数组"><a href="#函数指针数组" class="headerlink" title="函数指针数组"></a>函数指针数组</h2><p>下面用程序对函数指针数组来个大致了解：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span>  </span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;string></span>  </span>
+using namespace std<span class="token punctuation">;</span>  
+  
+<span class="token keyword">typedef</span> <span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>FP<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token keyword">void</span> <span class="token function">f1</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>cout<span class="token operator">&lt;&lt;</span>s<span class="token punctuation">;</span><span class="token punctuation">&#125;</span>  
+<span class="token keyword">void</span> <span class="token function">f2</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>cout<span class="token operator">&lt;&lt;</span>s<span class="token punctuation">;</span><span class="token punctuation">&#125;</span>  
+<span class="token keyword">void</span> <span class="token function">f3</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>cout<span class="token operator">&lt;&lt;</span>s<span class="token punctuation">;</span><span class="token punctuation">&#125;</span>  
+  
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span><span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token keyword">void</span><span class="token operator">*</span> a<span class="token punctuation">[</span><span class="token operator">*</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>f1<span class="token punctuation">,</span>f2<span class="token punctuation">,</span>f3<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>   <span class="token comment">//定义了指针数组，这里a是一个普通指针  </span>
+    a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"Hello World!n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//编译错误，指针数组不能用下标的方式来调用函数  </span>
+  
+    FP f<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">=</span><span class="token punctuation">&#123;</span>f1<span class="token punctuation">,</span>f2<span class="token punctuation">,</span>f3<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>      <span class="token comment">//定义一个函数指针的数组，这里的f是一个函数指针  </span>
+    f<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">(</span><span class="token string">"Hello World!n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//正确，函数指针的数组进行下标操作可以进行函数的间接调用  </span>
+      
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="回调函数-1"><a href="#回调函数-1" class="headerlink" title="回调函数"></a>回调函数</h2><p><strong>概念</strong>：回调函数，顾名思义，就是使用者自己定义一个函数，使用者自己实现这个函数的程序内容，然后把这个函数作为参数传入别人（或系统）的函数中，由别人（或系统）的函数在运行时来调用的函数。函数是你实现的，但由别人（或系统）的函数在运行时通过参数传递的方式调用，这就是所谓的回调函数。简单来说，就是由别人的函数运行期间来回调你实现的函数。</p>
+<p>标准Hello World程序：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span>\<span class="token operator">*</span> argv\<span class="token punctuation">[</span>\<span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello World!\\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将它修改成函数回调样式：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">
+<span class="token comment">//定义回调函数  </span>
+<span class="token keyword">void</span> <span class="token function">PrintfText</span><span class="token punctuation">(</span><span class="token punctuation">)</span>   
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"Hello World!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token comment">//定义实现回调函数的"调用函数"  </span>
+<span class="token keyword">void</span> <span class="token function">CallPrintfText</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>callfuct<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">callfuct</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token comment">//在main函数中实现函数回调  </span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span><span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">CallPrintfText</span><span class="token punctuation">(</span>PrintfText<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p> 修改成带参的回调样式：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//定义带参回调函数  </span>
+<span class="token keyword">void</span> <span class="token function">PrintfText</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span>   
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">printf</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token comment">//定义实现带参回调函数的"调用函数"  </span>
+<span class="token keyword">void</span> <span class="token function">CallPrintfText</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>callfuct<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">char</span><span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token keyword">char</span><span class="token operator">*</span> s<span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">callfuct</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>  
+  
+<span class="token comment">//在main函数中实现带参的函数回调  </span>
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span><span class="token keyword">char</span><span class="token operator">*</span> argv<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  
+<span class="token punctuation">&#123;</span>  
+    <span class="token function">CallPrintfText</span><span class="token punctuation">(</span>PrintfText<span class="token punctuation">,</span><span class="token string">"Hello World!n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>  
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="回调函数的几种实现方式"><a href="#回调函数的几种实现方式" class="headerlink" title="回调函数的几种实现方式"></a>回调函数的几种实现方式</h2><h3 id="普通函数作为回调函数"><a href="#普通函数作为回调函数" class="headerlink" title="普通函数作为回调函数"></a>普通函数作为回调函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+
+<span class="token keyword">void</span> <span class="token function">programA_FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA_FunA1 and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token function">programA_FunA2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA_FunA2 and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+<span class="token keyword">void</span> <span class="token function">programB_FunB1</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am programB_FunB1 and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">programA_FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token function">programB_FunB1</span><span class="token punctuation">(</span>programA_FunA2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行结果：  </p>
+<pre class="line-numbers language-none"><code class="language-none">I&#39;am ProgramA FunAl and be called..
+I&#39;am programB FunBl and be called..
+I&#39;am ProgramA FunA2 and be called..<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="类的静态函数作为回调函数"><a href="#类的静态函数作为回调函数" class="headerlink" title="类的静态函数作为回调函数"></a>类的静态函数作为回调函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramA</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">FunA2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA2() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramB</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunB1</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramB.FunB1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">callback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  ProgramA PA<span class="token punctuation">;</span>
+  PA<span class="token punctuation">.</span><span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  ProgramB PB<span class="token punctuation">;</span>
+  PB<span class="token punctuation">.</span><span class="token function">FunB1</span><span class="token punctuation">(</span>ProgramA<span class="token double-colon punctuation">::</span>FunA2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行结果  </p>
+<pre class="line-numbers language-none"><code class="language-none">I&#39;am ProgramA.FunAl()and be called.
+I&#39;am ProgramB.FunBl()and be called.
+I&#39;am ProgramA.FunA2()and be called.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看出，以上两种方式没有什么本质的区别。<br>但这种实现有一个很明显的缺点：static 函数不能访问非static 成员变量或函数，会严重限制回调函数可以实现的功能。</p>
+<h3 id="类的非静态函数作为回调函数"><a href="#类的非静态函数作为回调函数" class="headerlink" title="类的非静态函数作为回调函数"></a>类的非静态函数作为回调函数</h3><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramA</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">void</span> <span class="token function">FunA2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA2() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramB</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunB1</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span>ProgramA<span class="token double-colon punctuation">::</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span>context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramB.FunB1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span><span class="token punctuation">(</span>ProgramA <span class="token operator">*</span><span class="token punctuation">)</span>context<span class="token operator">-></span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  ProgramA PA<span class="token punctuation">;</span>
+  PA<span class="token punctuation">.</span><span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  ProgramB PB<span class="token punctuation">;</span>
+  PB<span class="token punctuation">.</span><span class="token function">FunB1</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ProgramA<span class="token double-colon punctuation">::</span>FunA2<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PA<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 此处都要加&amp;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行结果  </p>
+<pre class="line-numbers language-none"><code class="language-none">I&#39;am ProgramA.FunAl()and be called.
+I&#39;am ProgramB.FunBl()and be called.
+I&#39;am ProgramA.FunA2()and be called.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>这种方法可以得到预期的结果，看似完美，但是也存在明显不足。<br>比如在programB中FunB1还使用 programA的类型，也就我预先还要知道回调函数所属的类定义，当programB想独立封装时就不好用了。<br>​</p>
+<p>这里还有一种方法可以避免这样的问题，可以把非static的回调函数 包装为另一个static函数，这种方式也是一种应用比较广的方法。</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramA</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">void</span> <span class="token function">FunA2</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA2() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">FunA2Wrapper</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span>context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramA.FunA2Wrapper() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span><span class="token punctuation">(</span>ProgramA <span class="token operator">*</span><span class="token punctuation">)</span>context<span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">FunA2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 此处调用的FunA2()是context的函数, 不是this->FunA2()</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">class</span> <span class="token class-name">ProgramB</span> <span class="token punctuation">&#123;</span>
+ <span class="token keyword">public</span><span class="token operator">:</span>
+  <span class="token keyword">void</span> <span class="token function">FunB1</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span>ProgramA<span class="token double-colon punctuation">::</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span>context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramB.FunB1() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">(</span><span class="token punctuation">(</span>ProgramA <span class="token operator">*</span><span class="token punctuation">)</span>context<span class="token operator">-></span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">void</span> <span class="token function">FunB2</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>callback<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span>context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"I'am ProgramB.FunB2() and be called..\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">callback</span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token keyword">int</span> argc<span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token operator">*</span>argv<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  ProgramA PA<span class="token punctuation">;</span>
+  PA<span class="token punctuation">.</span><span class="token function">FunA1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  ProgramB PB<span class="token punctuation">;</span>
+  PB<span class="token punctuation">.</span><span class="token function">FunB1</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ProgramA<span class="token double-colon punctuation">::</span>FunA2<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PA<span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// 此处都要加&amp;</span>
+
+  <span class="token function">printf</span><span class="token punctuation">(</span><span class="token string">"\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  PB<span class="token punctuation">.</span><span class="token function">FunB2</span><span class="token punctuation">(</span>ProgramA<span class="token double-colon punctuation">::</span>FunA2Wrapper<span class="token punctuation">,</span> <span class="token operator">&amp;</span>PA<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行结果：  </p>
+<pre class="line-numbers language-none"><code class="language-none">I&#39;am ProgramA.FunA1()and be called..
+I&#39;am ProgramB.FunB1()and be called..
+I&#39;am ProgramA.FunA2()and be called..
+I&#39;am ProgramB.FunB2()and be called..
+I&#39;am ProgramA.FunA2Wrapper()and be called..
+I&#39;am ProgramA.FunA2()and be called..<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这种方法相对于上一种，ProgramB中没有ProgramA的任何信息了，是一种更独立的实现方式。<br>FunB2()通过调用FunA2Wrapper()，实现间接的对FunA2()的调用。FunA2()可以访问和调用对类内的任何函数和变量。多了一个wrapper函数，也多了一些灵活性。<br>​</p>
+<p>上面借助wrapper函数实现回调，虽然很灵活，但是还是不够优秀，比如：<br>1）多了一个不是太有实际用处的wrapper函数。<br>2）wrapper中还要对传入的指针进行强制转换。<br>3）FunB2调用时，不但要指定wrapper函数的地址，还要传入PA的地址。<br>​</p>
+<h1 id="参考网站"><a href="#参考网站" class="headerlink" title="参考网站"></a>参考网站</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ss49344/article/details/123089497">https://blog.csdn.net/ss49344/article/details/123089497</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhoupian/article/details/119495949">https://blog.csdn.net/zhoupian/article/details/119495949</a></li>
+</ul>
+
+  </div>
 
 
                 <h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p>回调函数就是一个通过函数指针调用的函数。如果你把函数的指针（地址）作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数时，我们就说这是回调函数。回调函数不是由该函数的实现方直接调用，而是在特定的事件或条件发生时由另外的一方调用的，用于对该事件或条件进行响应。   </p>

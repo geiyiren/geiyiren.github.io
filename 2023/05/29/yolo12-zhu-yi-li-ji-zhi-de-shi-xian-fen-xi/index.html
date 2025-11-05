@@ -403,7 +403,236 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>注意力机制的实现代码如下:</p>
+<ul>
+<li>ultralytics&#x2F;nn&#x2F;modules&#x2F;block.py</li>
+</ul>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">class</span> <span class="token class-name">AAttn</span><span class="token punctuation">(</span>nn<span class="token punctuation">.</span>Module<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""
+    Area-attention module for YOLO models, providing efficient attention mechanisms.
+
+    This module implements an area-based attention mechanism that processes input features in a spatially-aware manner,
+    making it particularly effective for object detection tasks.
+
+    Attributes:
+        area (int): Number of areas the feature map is divided.
+        num_heads (int): Number of heads into which the attention mechanism is divided.
+        head_dim (int): Dimension of each attention head.
+        qkv (Conv): Convolution layer for computing query, key and value tensors.
+        proj (Conv): Projection convolution layer.
+        pe (Conv): Position encoding convolution layer.
+
+    Methods:
+        forward: Applies area-attention to input tensor.
+
+    Examples:
+        >>> attn = AAttn(dim=256, num_heads=8, area=4)
+        >>> x = torch.randn(1, 256, 32, 32)
+        >>> output = attn(x)
+        >>> print(output.shape)
+        torch.Size([1, 256, 32, 32])
+    """</span>
+
+    <span class="token keyword">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> dim<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> num_heads<span class="token punctuation">:</span> <span class="token builtin">int</span><span class="token punctuation">,</span> area<span class="token punctuation">:</span> <span class="token builtin">int</span> <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
+        Initialize an Area-attention module for YOLO models.
+
+        Args:
+            dim (int): Number of hidden channels.
+            num_heads (int): Number of heads into which the attention mechanism is divided.
+            area (int): Number of areas the feature map is divided.
+        """</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>area <span class="token operator">=</span> area
+
+        self<span class="token punctuation">.</span>num_heads <span class="token operator">=</span> num_heads
+        self<span class="token punctuation">.</span>head_dim <span class="token operator">=</span> head_dim <span class="token operator">=</span> dim <span class="token operator">//</span> num_heads
+        all_head_dim <span class="token operator">=</span> head_dim <span class="token operator">*</span> self<span class="token punctuation">.</span>num_heads
+
+        self<span class="token punctuation">.</span>qkv <span class="token operator">=</span> Conv<span class="token punctuation">(</span>dim<span class="token punctuation">,</span> all_head_dim <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> act<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>proj <span class="token operator">=</span> Conv<span class="token punctuation">(</span>all_head_dim<span class="token punctuation">,</span> dim<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> act<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+        self<span class="token punctuation">.</span>pe <span class="token operator">=</span> Conv<span class="token punctuation">(</span>all_head_dim<span class="token punctuation">,</span> dim<span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> g<span class="token operator">=</span>dim<span class="token punctuation">,</span> act<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">def</span> <span class="token function">forward</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> x<span class="token punctuation">:</span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> torch<span class="token punctuation">.</span>Tensor<span class="token punctuation">:</span>
+        <span class="token triple-quoted-string string">"""
+        Process the input tensor through the area-attention.
+
+        Args:
+            x (torch.Tensor): Input tensor.
+
+        Returns:
+            (torch.Tensor): Output tensor after area-attention.
+        """</span>
+        B<span class="token punctuation">,</span> C<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W <span class="token operator">=</span> x<span class="token punctuation">.</span>shape
+        N <span class="token operator">=</span> H <span class="token operator">*</span> W
+
+        qkv <span class="token operator">=</span> self<span class="token punctuation">.</span>qkv<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">.</span>flatten<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>area <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">:</span>
+            qkv <span class="token operator">=</span> qkv<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span>
+            B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> _ <span class="token operator">=</span> qkv<span class="token punctuation">.</span>shape
+        q<span class="token punctuation">,</span> k<span class="token punctuation">,</span> v <span class="token operator">=</span> <span class="token punctuation">(</span>
+            qkv<span class="token punctuation">.</span>view<span class="token punctuation">(</span>B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> self<span class="token punctuation">.</span>num_heads<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>head_dim<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span>
+        attn <span class="token operator">=</span> <span class="token punctuation">(</span>q<span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> @ k<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>head_dim<span class="token operator">**</span><span class="token operator">-</span><span class="token number">0.5</span><span class="token punctuation">)</span>
+        attn <span class="token operator">=</span> attn<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> v @ attn<span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+        x <span class="token operator">=</span> x<span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+        v <span class="token operator">=</span> v<span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">if</span> self<span class="token punctuation">.</span>area <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">:</span>
+            x <span class="token operator">=</span> x<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C<span class="token punctuation">)</span>
+            v <span class="token operator">=</span> v<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C<span class="token punctuation">)</span>
+            B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> _ <span class="token operator">=</span> x<span class="token punctuation">.</span>shape
+
+        x <span class="token operator">=</span> x<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        v <span class="token operator">=</span> v<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        x <span class="token operator">=</span> x <span class="token operator">+</span> self<span class="token punctuation">.</span>pe<span class="token punctuation">(</span>v<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> self<span class="token punctuation">.</span>proj<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="qkv提取与拆分"><a href="#qkv提取与拆分" class="headerlink" title="qkv提取与拆分"></a>qkv提取与拆分</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">B<span class="token punctuation">,</span> C<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W <span class="token operator">=</span> x<span class="token punctuation">.</span>shape
+N <span class="token operator">=</span> H <span class="token operator">*</span> W 
+qkv <span class="token operator">=</span> self<span class="token punctuation">.</span>qkv<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span class="token punctuation">.</span>flatten<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> self<span class="token punctuation">.</span>area <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">:</span>
+    qkv <span class="token operator">=</span> qkv<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span>
+    B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> _ <span class="token operator">=</span> qkv<span class="token punctuation">.</span>shape
+q<span class="token punctuation">,</span> k<span class="token punctuation">,</span> v <span class="token operator">=</span> <span class="token punctuation">(</span>
+    qkv<span class="token punctuation">.</span>view<span class="token punctuation">(</span>B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> self<span class="token punctuation">.</span>num_heads<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token punctuation">.</span>split<span class="token punctuation">(</span><span class="token punctuation">[</span>self<span class="token punctuation">.</span>head_dim<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim<span class="token punctuation">,</span> self<span class="token punctuation">.</span>head_dim<span class="token punctuation">]</span><span class="token punctuation">,</span> dim<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li><p>all_head_dim</p>
+<p>这个是保证输出的维度为分支头个数的整数倍的3倍</p>
+</li>
+<li><p>self.qkv()</p>
+<p>self.qkv()是一个1x1卷积，目的是将输入的张量转换为多头的qkv张量，所谓的多头注意力机制就是将输入张量进行卷积，进行维度变换。self.qkv()将一个输入张量”拆分“为多头的{q,k,v}”拼接向量“，然后再执行拆分。</p>
+<p>经过self.qkv()后维度由[B, C, H, W]转换为[B, 3*C, H, W]</p>
+</li>
+<li><p>flatten(2).transpose(1, 2)</p>
+<p>将张量的最后2个维度合并后将交换第1个通道和第2个通道。此时输出的维度为[B, H* W, 3*C]</p>
+</li>
+<li><p>qkv.reshape()</p>
+<p>将 <strong>原来的图像每张切成 area 份</strong>，所以总的 batch 就变成了 <code>B × area</code></p>
+<p>每一份区域中，包含的 token 数是 $\frac{H<em>W}{\text{area}}$，即空间被均匀划分。这里的token就是像素块，H</em>W的图像被均匀的划分为area个像素块，那就是类似下面这样的:</p>
+<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/image-20250722161844082.png" alt="image-20250722161844082"></p>
+<p>每个 token 的特征维度还是 3C（因为包含 q, k, v）,这里其实是张量的”深度“为3C</p>
+</li>
+<li><p>q, k, v提取</p>
+<ul>
+<li><p>view</p>
+<p>qkv的维度为[B, N, num_heads * head_dim * 3]，这里将 qkv重新 reshape 成一个 4 维张量，每个位置上的 QKV 被合并在 <code>head_dim * 3</code> 上，形状变为: [B, N, num_heads, 3 * head_dim]</p>
+</li>
+<li><p>permute</p>
+<p>将维度重新排列，得到[B, num_heads, 3 * head_dim, N]新维度</p>
+</li>
+<li><p>split</p>
+<p>在第 2 维（即 <code>3 * head_dim</code> 这一维）上，按照每 <code>head_dim</code> 切 3 段，即：</p>
+<ul>
+<li>第一段：query $q$ → <code>[B, num_heads, head_dim, N]</code></li>
+<li>第二段：key   $k$ → <code>[B, num_heads, head_dim, N]</code></li>
+<li>第三段：value $v$ → <code>[B, num_heads, head_dim, N]</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="注意力得分计算"><a href="#注意力得分计算" class="headerlink" title="注意力得分计算"></a>注意力得分计算</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">attn <span class="token operator">=</span> <span class="token punctuation">(</span>q<span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> @ k<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>self<span class="token punctuation">.</span>head_dim<span class="token operator">**</span><span class="token operator">-</span><span class="token number">0.5</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>维度变化：</p>
+<ul>
+<li><p><code>q.transpose(-2, -1)</code> → <code>[B, num_heads, N, head_dim]</code></p>
+</li>
+<li><p><code>k</code> → <code>[B, num_heads, head_dim, N]</code></p>
+</li>
+<li><p>相乘：矩阵乘法：<br>$$<br>[B, h, N, d] \times [B, h, d, N] → [B, h, N, N]<br>$$</p>
+</li>
+<li><p>最终得到：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">attn<span class="token punctuation">.</span>shape <span class="token operator">=</span> <span class="token punctuation">[</span>B<span class="token punctuation">,</span> num_heads<span class="token punctuation">,</span> N<span class="token punctuation">,</span> N<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></li>
+</ul>
+<blockquote>
+<p>每个位置 i 与所有 j 之间的相似度打分（即 attention 分数）</p>
+</blockquote>
+<p>为什么乘以 $\text{head_dim}^{-0.5}$？</p>
+<ul>
+<li>为了缩放，使得 dot product 不会太大或太小，防止 softmax 梯度消失或爆炸。</li>
+<li>来源于原始 Transformer 论文中的 <strong>scaled dot-product attention</strong>。</li>
+</ul>
+<hr>
+<h2 id="softmax-获取注意力权重"><a href="#softmax-获取注意力权重" class="headerlink" title="softmax 获取注意力权重"></a>softmax 获取注意力权重</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">attn <span class="token operator">=</span> attn<span class="token punctuation">.</span>softmax<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>对最后一维（即 token 维）做 softmax</li>
+<li>每一行是该 token 对所有其他 token 的权重和为 1</li>
+</ul>
+<hr>
+<h2 id="用注意力权重加权-value-向量"><a href="#用注意力权重加权-value-向量" class="headerlink" title="用注意力权重加权 value 向量"></a>用注意力权重加权 value 向量</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">x <span class="token operator">=</span> v @ attn<span class="token punctuation">.</span>transpose<span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">2</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>维度说明：</p>
+<ul>
+<li><code>v.shape = [B, num_heads, head_dim, N]</code></li>
+<li><code>attn.transpose(-2, -1).shape = [B, num_heads, N, N]</code></li>
+</ul>
+<p>乘法结果：<br>$$<br>[B, h, d, N] \times [B, h, N, N] → [B, h, d, N]<br>$$<br>输出的 <code>x</code> 就是每个 token 经过 weighted sum 的结果：</p>
+<blockquote>
+<p>每个位置 i 的新表示，是用所有 j 的 value 加权加起来的结果。</p>
+</blockquote>
+<hr>
+<h2 id="还原-token-维度顺序"><a href="#还原-token-维度顺序" class="headerlink" title="还原 token 维度顺序"></a>还原 token 维度顺序</h2><pre class="line-numbers language-none"><code class="language-none">python
+
+
+复制编辑
+x &#x3D; x.permute(0, 3, 1, 2)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>原始：<code>[B, num_heads, head_dim, N]</code></li>
+<li>目标：<code>[B, N, num_heads, head_dim]</code></li>
+</ul>
+<blockquote>
+<p>将 <code>x</code> 排列回正常的 token 顺序，为后续拼接使用。</p>
+</blockquote>
+<hr>
+<h2 id="同步转换-value-的顺序（用于后面位置编码）"><a href="#同步转换-value-的顺序（用于后面位置编码）" class="headerlink" title="同步转换 value 的顺序（用于后面位置编码）"></a>同步转换 value 的顺序（用于后面位置编码）</h2><pre class="line-numbers language-none"><code class="language-none">python
+
+
+复制编辑
+v &#x3D; v.permute(0, 3, 1, 2)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ul>
+<li>同样地把 v 从 <code>[B, num_heads, head_dim, N]</code> 转换为 <code>[B, N, num_heads, head_dim]</code>，以便后续 reshape 成图像格式。</li>
+</ul>
+<hr>
+<p>最终 <code>x</code> 和 <code>v</code> 的形状变为：</p>
+<pre class="line-numbers language-none"><code class="language-none">python复制编辑x.shape &#x3D; [B, N, num_heads, head_dim]
+v.shape &#x3D; [B, N, num_heads, head_dim]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>接下来，它们会被 reshape 回 <code>[B, C, H, W]</code> 格式，然后用于加位置编码等操作。</p>
+<h2 id="反向-reshape-成原始-batch"><a href="#反向-reshape-成原始-batch" class="headerlink" title="反向 reshape 成原始 batch"></a>反向 reshape 成原始 batch</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">x <span class="token operator">=</span> x<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C<span class="token punctuation">)</span>
+v <span class="token operator">=</span> v<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B <span class="token operator">//</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> N <span class="token operator">*</span> self<span class="token punctuation">.</span>area<span class="token punctuation">,</span> C<span class="token punctuation">)</span>
+B<span class="token punctuation">,</span> N<span class="token punctuation">,</span> _ <span class="token operator">=</span> x<span class="token punctuation">.</span>shape<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>这样操作是为了将 token 恢复回原始图像结构</p>
+<h2 id="恢复为图像格式"><a href="#恢复为图像格式" class="headerlink" title="恢复为图像格式"></a>恢复为图像格式</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">x <span class="token operator">=</span> x<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span>
+v <span class="token operator">=</span> v<span class="token punctuation">.</span>reshape<span class="token punctuation">(</span>B<span class="token punctuation">,</span> H<span class="token punctuation">,</span> W<span class="token punctuation">,</span> C<span class="token punctuation">)</span><span class="token punctuation">.</span>permute<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">.</span>contiguous<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p><code>reshape(B, H, W, C)</code> → 空间上恢复为 2D 格式</p>
+<p>permute(0, 3, 1, 2)<code>→ 转为常规图像格式</code>[B, C, H, W]</p>
+<p><code>contiguous()</code> → 保证内存布局正确（防止后续错误）</p>
+<h2 id="添加位置编码"><a href="#添加位置编码" class="headerlink" title="添加位置编码"></a>添加位置编码</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">x <span class="token operator">=</span> x <span class="token operator">+</span> self<span class="token punctuation">.</span>pe<span class="token punctuation">(</span>v<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>self.pe是一个分组卷积(每个输出通道用一个自己的卷积核处理输入通道)</p>
+<p>用 v来生成相对位置编码，代表空间感知或局部增强，然后直接做逐位置加法</p>
+<h2 id="融合多头"><a href="#融合多头" class="headerlink" title="融合多头"></a>融合多头</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python">self<span class="token punctuation">.</span>proj<span class="token punctuation">(</span>x<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>多头注意力机制中每个 head 学习不同的子空间信息。<code>self.proj(x)</code> 是一个 1×1 卷积层，用于将多头注意力后的特征图从多头拼接的维度 (<code>all_head_dim</code>) 映射回模型原始的维度 <code>dim</code>，完成通道融合。</p>
+<p>上述便是yolo12的区域注意力机制，该模块不改变输出张量的维度。完整的注意力机制的流程图如下所示:</p>
+<img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12注意力机制的实现分析/deepseek_mermaid_20250722_1f42f8.png" alt="deepseek_mermaid_20250722_1f42f8" style="zoom: 33%;" />
+  </div>
 
 
                 <h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><p>注意力机制的实现代码如下:</p>

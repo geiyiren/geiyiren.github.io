@@ -399,7 +399,169 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <!-- encrypt.ejs -->
+                
+  <div class="post-content">
+    <h2 id="C-printf-常用格式化符号对照表"><a href="#C-printf-常用格式化符号对照表" class="headerlink" title="C++ printf 常用格式化符号对照表"></a>C++ <code>printf</code> 常用格式化符号对照表</h2><h3 id="1-整数类型"><a href="#1-整数类型" class="headerlink" title="1. 整数类型"></a>1. 整数类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式化符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code></td>
+<td><code>%d</code> &#x2F; <code>%i</code></td>
+<td>有符号十进制整数</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td><code>%hd</code></td>
+<td>短整型</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td><code>%ld</code></td>
+<td>长整型</td>
+</tr>
+<tr>
+<td><code>long long</code></td>
+<td><code>%lld</code></td>
+<td>长长整型</td>
+</tr>
+<tr>
+<td><code>unsigned int</code></td>
+<td><code>%u</code></td>
+<td>无符号十进制整数</td>
+</tr>
+<tr>
+<td><code>unsigned short</code></td>
+<td><code>%hu</code></td>
+<td>无符号短整型</td>
+</tr>
+<tr>
+<td><code>unsigned long</code></td>
+<td><code>%lu</code></td>
+<td>无符号长整型</td>
+</tr>
+<tr>
+<td><code>unsigned long long</code></td>
+<td><code>%llu</code></td>
+<td>无符号长长整型</td>
+</tr>
+<tr>
+<td><code>char</code></td>
+<td><code>%c</code></td>
+<td>单个字符</td>
+</tr>
+<tr>
+<td><code>signed char</code></td>
+<td><code>%hhd</code></td>
+<td>以整数打印有符号字符</td>
+</tr>
+<tr>
+<td><code>unsigned char</code></td>
+<td><code>%hhu</code></td>
+<td>以整数打印无符号字符</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="2-浮点数类型"><a href="#2-浮点数类型" class="headerlink" title="2. 浮点数类型"></a>2. 浮点数类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式化符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>float</code> &#x2F; <code>double</code></td>
+<td><code>%f</code></td>
+<td>小数点形式 (默认保留 6 位小数)</td>
+</tr>
+<tr>
+<td><code>float</code> &#x2F; <code>double</code></td>
+<td><code>%e</code></td>
+<td>科学计数法 (小写 e)</td>
+</tr>
+<tr>
+<td><code>float</code> &#x2F; <code>double</code></td>
+<td><code>%E</code></td>
+<td>科学计数法 (大写 E)</td>
+</tr>
+<tr>
+<td><code>float</code> &#x2F; <code>double</code></td>
+<td><code>%g</code></td>
+<td>自动选择 <code>%f</code> 或 <code>%e</code> (更紧凑)</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td><code>%Lf</code></td>
+<td>长双精度浮点数</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td><code>%Le</code> &#x2F; <code>%LE</code></td>
+<td>科学计数法表示</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td><code>%Lg</code></td>
+<td>自动选择紧凑表示</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="3-字符串与指针"><a href="#3-字符串与指针" class="headerlink" title="3. 字符串与指针"></a>3. 字符串与指针</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式化符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>char*</code></td>
+<td><code>%s</code></td>
+<td>C 风格字符串</td>
+</tr>
+<tr>
+<td><code>wchar_t*</code></td>
+<td><code>%ls</code></td>
+<td>宽字符字符串</td>
+</tr>
+<tr>
+<td><code>void*</code></td>
+<td><code>%p</code></td>
+<td>指针地址</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="4-进制输出"><a href="#4-进制输出" class="headerlink" title="4. 进制输出"></a>4. 进制输出</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式化符号</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>int</code></td>
+<td><code>%x</code></td>
+<td>十六进制 (小写)</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>%X</code></td>
+<td>十六进制 (大写)</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td><code>%o</code></td>
+<td>八进制</td>
+</tr>
+</tbody></table>
+
+  </div>
 
 
                 <h2 id="C-printf-常用格式化符号对照表"><a href="#C-printf-常用格式化符号对照表" class="headerlink" title="C++ printf 常用格式化符号对照表"></a>C++ <code>printf</code> 常用格式化符号对照表</h2><h3 id="1-整数类型"><a href="#1-整数类型" class="headerlink" title="1. 整数类型"></a>1. 整数类型</h3><table>

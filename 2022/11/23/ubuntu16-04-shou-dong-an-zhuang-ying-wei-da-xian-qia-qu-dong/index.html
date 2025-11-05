@@ -335,6 +335,10 @@
                     
                     <div class="article-tag">
                         
+                            <a href="/tags/geiyiren/">
+                                <span class="chip bg-color">geiyiren</span>
+                            </a>
+                        
                             <a href="/tags/ubuntu/">
                                 <span class="chip bg-color">ubuntu</span>
                             </a>
@@ -378,7 +382,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    585
+                    6
                 </div>
                 
 
@@ -404,112 +408,23 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 
-  <div class="post-content">
-    <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
-</ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
-
+  <div class="encrypted-content">
+    true
   </div>
 
 
-                <h2 id="1-屏蔽开源驱动"><a href="#1-屏蔽开源驱动" class="headerlink" title="1.屏蔽开源驱动"></a>1.屏蔽开源驱动</h2><p>屏蔽开源驱动nouveau安装过程会询问是否屏蔽，手动屏蔽也有多种操作方式，可以使用如下方法：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> gedit /etc/modprobe.d/blacklist.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>然后添加内容到最底段，要回车另起一行。添加的内容为：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">blacklist nouveau 
-options nouveau <span class="token assign-left variable">modeset</span><span class="token operator">=</span><span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>保存再终端更新内核命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> update-initramfs <span class="token parameter variable">-u</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>可能会出现如下警告，忽略即可：</p>
-<img src="https://i.loli.net/2021/06/22/lkPBpOvA3MIsfXq.png" style="zoom:50%;" />
-
-<h2 id="2-下载驱动"><a href="#2-下载驱动" class="headerlink" title="2.下载驱动"></a>2.下载驱动</h2><p>然后，重启电脑。下载NVIDIA的驱动形如：NVIDIA-Linux-x86_64-384.run 下载网址为：<a target="_blank" rel="noopener" href="https://www.geforce.cn/drivers%E3%80%82">https://www.geforce.cn/drivers。</a></p>
-<p>在win10下的设备管理器中可以查看显卡的型号。型号为：NVIDIA GeForce GTX 1050 Ti电脑类型为：笔记本</p>
-<p>所以手动搜索驱动程序时，应该这样选择：</p>
-<p><img src="https://i.loli.net/2021/06/22/S69TiRpgEc3ydPk.png"></p>
-<p>选择第一个驱动版本一般可以安装成功的，但不同电脑可能结果不同，安装失败的话还需要更换版本尝试安装。</p>
-<p>下好的”.run”文件放在home ，目录下，最好将文件名称该为简单点的。</p>
-<h2 id="3-进入root的命令行模型"><a href="#3-进入root的命令行模型" class="headerlink" title="3.进入root的命令行模型"></a>3.进入root的命令行模型</h2><p>安装驱动重启电脑，进入ubuntu高级模式，然后选择下图中的 root 选项：</p>
-<img src="https://i.loli.net/2021/06/22/rnKMFl81T4giEUf.png" style="zoom:50%;" />
-
-<p>然后按”回车”：</p>
-<img src="https://i.loli.net/2021/06/22/I1ZeWDCaTcEx5X2.png" style="zoom:50%;" />
-
-<h2 id="4-安装驱动"><a href="#4-安装驱动" class="headerlink" title="4.安装驱动"></a>4.安装驱动</h2><p>然后，按”回车”，进入系统目录。安装驱动程序，执行如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> /home/用户名<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>关闭当前图形环境</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm stop<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>因为之前的后缀为”.run”的驱动文件放在home目录下，所以， 到驱动所在文件夹后 执行如下命令修改权限并运行：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">chmod</span> a+x NVIDIA-Linux-x86_64-xxx.run 
-<span class="token function">sudo</span> <span class="token function">sh</span> NVIDIA-Linux-x86_64-xxx.run -no-opengl-files<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
-
-<p>然后剩余步骤均为默认即可，直接回车执行下一步。</p>
-<ul>
-<li>提示”dkms”安装时，需要安装。</li>
-<li>会提示有”32”字样，选择”OK”继续即可。</li>
-</ul>
-<p>最后重新启动图形环境：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">service</span> lightdm start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h2 id="5-查看是否安装成功"><a href="#5-查看是否安装成功" class="headerlink" title="5.查看是否安装成功"></a>5.查看是否安装成功</h2><p>检查安装是否成功并重启电脑，正常进入系统。</p>
-<p>如果出现循环输入登录密码但是无法登录成功的情况，则为驱动版本和自己的电脑不匹配，需要下载其他显卡驱动版本尝试。</p>
-<p>进一步检查，打开终端输入如下命令：</p>
-<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">nvidia-smi<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>出现如下所示信息，即为安装成功:</p>
-<img src="https://i.loli.net/2021/06/22/gZB9FKjSl2T8wGV.png" style="zoom:50%;" />
-
+                <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="Oh, these decrypted content cannot be verified, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="9ae58674fb6297993b69bc24bef585c5309aa2b1d54c8fb99d7ba50de1210e6e">8fbab86bffee6f10b10de5e3311819e93dc0ebf5c93079c6ee9ac4f78ccba87fc565c005da402d876278f837c892a6815be48b3b95a4195fa98b71d0ba13807ed5ad2397a91f4994483236e5aa3f12548afa00b8f51b8a651e94c04a76b9bfb69b6e7a21572b3fabeace9bb1f9c0156556c361134d5a52892caad997117df9c2a5360559cbdfaf278b835d967bdb6c040fed119bdff25be06a793266ebe7641ce0c517852349e0e9915e4e5a95f03abaad1d56c5833665882c37e46168484bd2208a92f81f416d27346c49cfb3cc2ab3bfe4cc6b8d83554caf92e05616b63a776d96d35ff66be2e1d64e157ca7fe632c1dedace48a9481eff7cb3795350b393f199d8547cebb28c1a3f44b464b1a406cb62f3706dd5997dc63544e63b38523882d5db67300e88cdc72e9f172b42c792f3f12dabf518a1b12d95225d8b6ac350824ec708948aff3701eaba7386bd283815ea8406efe2f6ba5b04e743b04e8d827f866ee0d1b7b00107398cfc3f9e1f7405cb58b682ad11c89f3c2ca5a96a488f60efb64f26e9b40a06609af4ac798028d0c75a2285241af33a3367c31a9cd0757d1727d2423f8fbeba2a404b12abdee543be4f8772aaa097c028f3135e237473e410151732eb0901dca43a8862e3de8cac69262a7a5e3db3e07ace01dbb9599feaacc5c492f4b3a7c08bb0bdf5241abbb14a9c16f6e09ace928a67be27a5236ecd3ad49297c6f1f7345114c3472d3b1bd66c00e3e4ff832800a4627a02b65b3ab55442811d061d5da587c7c5fadf85b14e1fdfc217452e77898eb39e79e67d28e1f800030b60b3d6a2dc21fcb13efb57739e867ea1f2fa8056c7d66ed558bf7022da84a31a5f58133afd47196db91cc9c61f39853f9987cf7d4e4fa28dd293209d72f13b0aba56a14f60dc541dd9ee4b9258197b034ea62d22a4c4a36f4c8629527c795a1fbe27994762a331fe01e2be9a7a060bd4a084aa8baa6894513f9622d4d0657ed70dfe4f80c17aa826501dfa9395f1e90f4fe636851ccd647172d2b9c01730b71419e6d6a830a8b355e200e4b0daef9e4b6cd4d1e381e8bbe84dcc866e48c6c13e0ff07d2fe093024b99fcf8897e547fd2154b7ef28ee64ef32499c1ed64e85570540530e85d1814feec9241bb70fb26633d47b974272c247881bc52340e3f6030072e9591481fcd94ca2b171752cd163b32a429730cead5f039f7b902482ccf05431f036facfd0aff0ceeed000a2d957a9b0a29a4f384362e0aa80807e7d6ffce99a5b34711f8e2a7515de45a598bdbcae814cc48aabcc199ffc0011d9d8c2eeed682b835ccc20f3111bc0d31d46c00972a73fbdc66baf7523e4f85bbfb33102996d5e27f185567dfe80aa1df0890d180f8159dcf3400c344f34cbe06d337070af71a2d856fb297354075bbd08550f18096df9df2cb44c5e4e008939397ab906d67b194f5d2279b3758ac924a93b82e5a31d793a0da7b900df0d04ec2dd946743cb60988fbb9940054483fdfe1fc554c066c087c5ee8c263c015f66b9d4be14709d10ef1e2be67bfc96c44e3e19a2625cbeff96014821b1c7300a1a633432561371b4a25ed573a195c5bed3ccb31970f0be833697116e1fadbb2e1aae02e42c32366453cb186f3c89470dfff129dfbe3a0ebfc193cba15b662b1a96d18036c7c22eb949c5760091b51b7617fa269f192b849efa8cf1855330c25cf63d17f6f64973fb90ffd70e0078a9e86d02e3d3291f1bd147b030af7ea22748b5fcf966e1714d696aa834d2b3f180d1cacb75e310829604419f06edb5e7394a7417e93fceeb3264ce652ad6ad52a8ec1af04b2f4e9c6e0301512e481df2ccea76599c9a04653e601df1cc3217b9919c3fba08cdb91857636cf2d6640daf078c500d851f88d5751dd6fda8fe0df29f6b19d0182111e45f3d9489f0f3456902a2573fcd3becade8c0e9fd4d06e1cc14c56769336fb6af102b5b78743aa583f8cc705f828648158598bd5fc07f4a342ff44d45c9a07bb2613ca6d710b441acd70ffee662313b26536e6e89a9ddba7bda46d407adb26c46af34928960918c167399851f8bbe0011822c418df0d8b48a137410871c3e8d87c79eb61c3938cae91f2556cf565bdadee5fd42b5602a009e922e0cf076c9e146c582ac25e6bc2112d6885d7cceed342104035e85ebae78f4c48b39efd9bb42c2134926bcce98021f86a7e54e45b1c986ddcb8a2b98409e3aaf7a6013c9743c1f9cf5d513b613429f2f179bce0df741acd9d92df25bb6ca464d3d00e48e248a2866fbae1b5f78e875315559fe62324a912448a9e01981c38be82b7d0a6ef34ff25f6c1df5b18b3b27e09a728b3af2fdb208ed7284733f1f4bb731df062d8c70f5c3f94bebd58e9dce6bdc904c025e162ac567062f0679dd1c4adb9d970b753e5fc75c3c759dd32adcd0333b62428a4ff75df87aec2f3e43fd4ca937583db8999b1f2a804584b5f44fc829366671d8baaee24f8df822a0eb64acab9ea94518e0fe7650b33c7c138dd5f0299bdc25f2a130be979ae6bd8dbc9097a2c051611f86ab623525621c2ea1cbca9869e30de449565cee50c55543d41bdfc41229773e94657e364edf8bd1a6089c95eea79bd0d3905ff2255c255535a509dd0005171a761482adee8904865b49beab554e6f6d0b359da87c2567c1ceb896788bb3aab2f7e68527173ba0b5ee239eb4342eb4e5ba63c6e40769dc2fc47ccb2f1e95ab20c1a11c6423d04329640153d5e5104faeb9fc18dbb9adc81c45d882a18dbabf274bea5ce3a2ea2662b23a6557122e60e8e41ad4f5d29a454e40723b632eb1e5423b80c5ebc6e9b0761e92a2b9082a25fa3b69cf36762fc833c3d5e73852eaf60b5a8d08594ae769b9fb6fea30c27f86b3280bc7773eeca698e207ac179a574a4fadd24d0ed5542b6f9e5b9424f6d41a13158db55a8e4fd8b9edc5f7b5bf1ae20fd55c0c1d31708f7d50a124fb1f140c63ca0d0845acc919c9582be078ccabf97fe45bd6d63a6782d5dac30129cc7d26153735d50573c6ec32650b04d1664d2556376af380479c7b6713d7b1d9c2d9420cb8587fa8eac28e195506e4dfe54c2db3732e1639bfad7d6b893f1a83e50657dd0848c4c34a37a25e9c2711c5a5481510a3fac441e11a0356535c7dede8255df4a904de52277f7d12bc1bd8af30e384fd68b316f1468425a8f12664510aa7806a8cefc3eb7fe044f5b1e0a4f4b8ecece0319ff5086b2c4ea80e8dbc544fd17763c1dfa81f564c7c2e1e282daeab48d82eddc378b7c76713925f529a67bf7dd758c76551645c515859683629d3af59a99347d06b453432a95311f9f6141273f0995ef0d56b33c81b3dd4f8fdb2e580a365fd85772c0f6ed7b04b9712590dfef8405a70d0411fe38365a9ec65fb4c3845f094262807282e6585f79feb480f0bc3be3533c7bd4d9c3192b713a8794433d021a266a4e1266741960b1d4b4076fb3eb60ee35341e2f7feb90e92cb831b54cb384885f485f36916da81c7f6c5c3478cf5d02c7e9d075b1291ec2e2073c60bdc623020cdd7e8f71f6d053b88e43abc498589a17d883d78fb25da7b76d787e13a11462b52a7b0c34056e4761d92223eca8fd8fddcc00c12b4812df2ac34d1f0f90ec65ed3c600a8b264c924468582ea74285cbba89d197bc04942fea50ea364bf78ebbca435e0c18ef7b2bb4ef5976a0fde2ceeb25526e0c0164f90598917c7c94f0a87a965695592f84354e30d5e9ff6a62c3c0c80d62ce5a56e85d1596388b6b07504e5c6c760a0ece3570cab95c2bfeec51c80974ccf76864e57c76d93854a088be7b956d8cb2ffc96272ec610c4a4f54c5cad9d073febc8ca8bec2e7dfd104eff0802b80a673d8c5c602bcf7ae3e986711d616794a90304690b85fbbea968a5ece067f3ab77ed8b5765aec48b7251a37eb33bf3c1467d09d96e0d915104a26d435d6f185e03d604342651777bbcf13b4ccb5e06bf743a6b9e2875be3144994244e9c8b61869c19345d4ff21cea8d4ca52444cc78fbd1df2cc7f7d244f0d4ffc27cfcdb8a606e96aba40ae79820cbd99dd3fdde6238c8cc554010697ac888a444a30bda6e2a09631b65ac5d846af4e10202758071cf35b175f37e05bc441d66564e08e588c6971ca38274a0691827d424d7fbfdb6e0526697abe27b99b4c06a214ba68fdcd57f9b7f1468a0d3fea94874596d6dfd30afbedda55b9b440bcebf7fbe85a7120b324841ee4871cd1c5e5b810debfa3b71b618b7d4b525a375c377cbd825bcb2cfb2138d1fdb7a149b555294713824a116784ea00e21ec99ba1f237256bcd49c40323800f1652a77edeeadf10292ca77273938cb1064eef8ea79503eafa3b6f1b5a45b9cfff21250f255caeaca107a438e73145e69273251af092ba93c76d0cb67b64437034ad8ce30faa5b17b8efbfe07542a536ca11805c2955083f926a4a6638fe1780e3add05cc4a025e6f132e99befe3b72b4cecc9bccc9095119698e39e671957d2e4ea31e96b461f782fe4df052c4e02d41ff59406585071997238b02e5f03b576e13a630544ac2e042ac454447a6bd97e65292237dfa506f83b75740b44fc3ef84986b2153a95a6ea91c62c568d763e9d5bcc9b268870faa6a5e3a747958d3ab66fa6a998741aa1af151ec8b3eff6f83694cf144e5d7cbbcdc266ddb08fa26339c4dc4d580024227442efc790d6ccc903bcefc583cd97a0fb2d869646b52ede489bf52fde01ba30e25437929064cbad7aff9df1d262dc8e5645068c65b78e0601537a7eceab11a9e851479d6224e2cbb66245e9a4512c2fb4171bf2d986128324b0f9639c224f3e7ac5281513785ad2665a4a3f8a101531bbc2a884bdf33ac2c2d38297da5f2be4df257e211ea24cebd4403e5138edb40b318099c839c81a5953c6a9d6204620143f412dbeef775cdcd93a48d45ac399fec38ff3d86ca428c1f2da8e84dcbef0be42e56d5b5546f04d6808b1b8b4d911b0cee797d5d752bd525c7e5ad36152b8f894940210a6b85dc33e51653fdb95218207fbd9c42e2ee2b278061c1299ba884aee3c2a7fa9294ee64d83ecf4f2e17bea6f629b9775ae916f8e4b165a0d17c1fcb02fd59f40662708e9697f04a6bce248b5152f338a8e30709e77476aadb991085a926fecc2f02700e876b6c118b3d3001a997e653446965e9be8afd8a12374efa8a4239c20dc7a1196c6b335792e1ae5d2153301b7a633d4ea6b4c78572beb7a71f3e851d911a75d6673a04bded6dbcc189ee642cb7f251a76ddf9b1fba6ee7c1a14b28eafa5342f6865620aa66a9acc161790a3a4f962e25e5c8046943947b7529a47265d40cf0ebad6e6204a4f998301bf264f92fe7cb6ddeeec395ec8a9d0cae325bc38e0525442baacca9404877850fbb5e365f13713ebc2ff56a04c2f9b0844ee4b594c84db44530025d6d24a74bd132a66475b02b22694a1ad7c766ba22ae8fbacd48a345d087425d768ff9fed202f6470d654ebca20e01aa3cd8893d56bf9b2a8a434308515ffd82818641e31d2d7212b27f4af57a8a5f064794040491735136a870d1daa97e99277c247843f56ce30e7981e3409c77c3adfdc1309f6d5649179a52bf77809fd1dcb6aea68a39902a90032b572676f9de21e3cc21e2c876adebb1258b2059ec7d8a5f30adc1369f6d39b19d8b6d51a2a95f172c7baa17f50a129f75e13e8aef3b729aabadfe11425f375d55e89ab73affb25048372e94fda98a6e0ee5c689c5d34b17d5091fee3c28f554eb3f91d0c5ab1a0b5cd43acbeb1ced0ca5d5440e40de8ed4d38c42c031936632bcac4db3b553573637c05ce867cbf532b1d63df67ca52a073ba0a2b05034fc214cdac77490726e08ee0365eea17c931a99863a066594f6ff4aae7ed5e3db1bb1083fdc131d650b1a28a3aa2b90f5979c2c3c857f33e061095f76dd45703616f2860b3565470b4f8aa11706a221cfa4ce5588716672f8e846fb6e60be06d8b6a57dbac7a026febfb67cebc5b747c154667b870108071bc5e6bd217e0e51f8ca1406b0e057d0291d3a4012749fe97976702ad850403d051581f6d30f0ead96b2eda6d28e78b409588beee90fffd3c49c37cb9c3ff293d25e67b16ea5fbc07f57129bd4981189107c19e618ccb3d2d66be03c53b282b19017023e3bd8a2349f5bdb4560ca44bf62917b34459d838077406dd0c4edcc4d3e0391e871431af9476e422c7a3cb213bdeae4db65871e06b742eba887096eb52f96f5a4c2d857bc94174f238f721f853a08653019b71eac1fc85d33c60f51f504d079ef48737803f1579ce7494909d05d8b8f72532b5619c8ec4339fe57218fbe577150a3ccd116f67f202bdfafae4501e5cc156cfdec5543633a3caea150e6ec6dd03514fee26fc65e533556bde89786eb32e347a12338e8beb39ff52e6e6f73e91638613f1a814f8865979017084ffe1ed78830a9564c2f330077411a1d86098b72f14e37ba425b0a2c86117cc07e10dc27387f00105aad40cf3c80017da83f5124dd083e24ce0320901dbebfeee257c78334989be98c087b05863744c8ea50d7514bfdab07dc7dd7062b88a867f599119288cf0ca29707073f6ecca0dfb2270d858cefbf2180589452347c83a0753478e2165a471bf52e2a596e1df7f61b33182b78a09053d6d598f1d81570087187b03a941877a3dd68eda8521ac74d45216310b2d13e9ee2b07cebd26b315cee99cf40b780014f88b8e2bfb016ad8ef7402eb8e0ef8ca3d65d50749f47eb55c55131901042d3532aa969c48bb7a146328caed1194b885b6c885b7aba6d75cb8867acb6f78d973efd8c682250f4744170bdac863fd577dc66d3a3b58022ea64fa099a3f3407f5eec556bf787a29cb7ebe575358eb3c2d1f6d837f571a8372b28e667eb02a9abd9899810424d4c9f28d4bf85ce5770ed8aae9869c12ed5916e0d2e1985b0706001998acc96da9fc76e70a72691bd1b85cb2ac9259001cf2b601497c44c5d883712ad858f20490e13c72b10b3d96f6f5664b86275d12cdd02db464ecc0fdac8d759facc357aa0810638390f71754c41a0b37c0ab9fb7fd661ed65a88a428738ae405bfe7ca06cd3c4b7cc37fd896ba6020101c49b7fd977051e638bca6c5da34f98b5d164bc284ad5de4996e291defc33d0a3d4420b805577ae88fa66ecdc9d003adfe163dba7c9e85f92a3364ad5d17920dde7263018e32234e09ac8ba424ea70a77c617ffec54f58efb74e25baaab78018401a0c561679ef634d6ff393887a63816b5531a5bdecd767ea2758158dc82a6e8fe48fff0a472ebb93505e5bf4bec1dc72c79e3ce1673dbdca0d933d39764d0864f8468c494e23f48719b2f45e9d5b559405478cb82d85b0d495c69ad7131dfe287e3bdbc34164f3e69a6faa8d716bafa2acf64795691560b03eca7fbf7a67e43616cedf954fad8dbb2b4e337db1e2cf3b6cd8c2be5aae2af052482f022d7f6c97842d3c4791d7e762c7cbd14c2810d7851183cf5d56af1f8a17a9c937d5b9073d157b9b08a674ba742d37b7e757073a15342d964904671c08693877ac9014533afa00d814a329e5a602d4e5bc4e8b92ad8bccabb60d61efdbe7008e2301433ea12b5b90a138437409b544e19245cd1f2ae3f68f062d8b21a8aff35888</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
                 
             </div>
             <hr/>
@@ -572,6 +487,10 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
+                            
+                                <a href="/tags/geiyiren/">
+                                    <span class="chip bg-color">geiyiren</span>
+                                </a>
                             
                                 <a href="/tags/ubuntu/">
                                     <span class="chip bg-color">ubuntu</span>
@@ -695,6 +614,10 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 
                 <div class="card-action article-tags">
                     
+                    <a href="/tags/geiyiren/">
+                        <span class="chip bg-color">geiyiren</span>
+                    </a>
+                    
                     <a href="/tags/ubuntu/">
                         <span class="chip bg-color">ubuntu</span>
                     </a>
@@ -751,6 +674,10 @@ options nouveau <span class="token assign-left variable">modeset</span><span cla
                 </div>
                 
                 <div class="card-action article-tags">
+                    
+                    <a href="/tags/geiyiren/">
+                        <span class="chip bg-color">geiyiren</span>
+                    </a>
                     
                     <a href="/tags/ubuntu/">
                         <span class="chip bg-color">ubuntu</span>

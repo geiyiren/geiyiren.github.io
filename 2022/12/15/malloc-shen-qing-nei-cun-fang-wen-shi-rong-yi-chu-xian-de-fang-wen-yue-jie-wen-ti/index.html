@@ -463,7 +463,7 @@
   </div>
 
 
-                <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
+                <!-- <h1 id="malloc相关"><a href="#malloc相关" class="headerlink" title="malloc相关"></a>malloc相关</h1><h2 id="malloc申请内存访问bug"><a href="#malloc申请内存访问bug" class="headerlink" title="malloc申请内存访问bug"></a>malloc申请内存访问bug</h2><ul>
 <li>在访问malloc申请的内存时，如果访问越界时不会提示错误，而是继续操作错误的内存块，这一类的错误较为隐秘。</li>
 <li>例如：在构建图像变换的map映射表时，申请存放map映射关系的内存块的大小并不是输出图像对应的大小，而是输出图像大小的2倍，因此此时存储的是像素位置(x,y)的映射关系。  <pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">//构建4路YUV鱼眼图像去畸变映射关系</span>
 <span class="token keyword">void</span> <span class="token function">dist2undist</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
@@ -509,7 +509,7 @@
 </ul>
 <hr>
 <p><font color=Red><strong>总结</strong></font><br>使用malloc申请内存并访问时，注意访问是否越界，且访问越界不报错。</p>
-
+ -->
                 
             </div>
             <hr/>

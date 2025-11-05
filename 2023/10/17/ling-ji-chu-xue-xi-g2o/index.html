@@ -496,7 +496,7 @@
   </div>
 
 
-                <h1 id="正篇"><a href="#正篇" class="headerlink" title="正篇"></a>正篇</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>g2o（General Graphic Optimization）是一个基于图优化的库，将非线性优化与图论结合起来的理论，我们可以<strong>利用g2o求解任何可以表示为图优化的最小二乘问题</strong>。图优化就是把优化问题表现成图的方式。图由顶点和边组成，其中<em>顶点表示优化变量</em>，<em>边表示误差项</em>，对任意一个非线性最小二乘问题，我们都可以构建与之对应的图。</p>
+                <!-- <h1 id="正篇"><a href="#正篇" class="headerlink" title="正篇"></a>正篇</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>g2o（General Graphic Optimization）是一个基于图优化的库，将非线性优化与图论结合起来的理论，我们可以<strong>利用g2o求解任何可以表示为图优化的最小二乘问题</strong>。图优化就是把优化问题表现成图的方式。图由顶点和边组成，其中<em>顶点表示优化变量</em>，<em>边表示误差项</em>，对任意一个非线性最小二乘问题，我们都可以构建与之对应的图。</p>
 <p>g2o的核里带有各种各样的求解器，而它的顶点、边的类型则多种多样。通过自定义顶点和边，事实上，只要一个优化问题能够表达成图，那么就可以用g2o去求解它。常见的，比如bundle adjustment，ICP，数据拟合，都可以用g2o来做。</p>
 <p>从代码层面来说，g2o是一个c++编写的项目，用cmake构建。它的github地址在：<a target="_blank" rel="noopener" href="https://github.com/RainerKuemmerle/g2o">https://github.com/RainerKuemmerle/g2o</a> </p>
 <p>g2o的源代码文件夹的内容：</p>
@@ -587,7 +587,7 @@
 </blockquote>
 <h2 id="对极约束"><a href="#对极约束" class="headerlink" title="对极约束"></a>对极约束</h2><p>对极几何（Epipolar geometry）又叫对极约束，是根据图像二维平面信息来估计单目相机帧间运动或双目相机相对位姿关系的一种算法。直观来讲，当相机在两个不同视角对同一物体进行拍摄时，物体在两幅图像中的成像肯定会有不同，那么，根据这两幅不同的图像，我们如何判断出相机的位姿发生了怎样的变化，这正是对极几何要解决的问题。直观来说就是利用$n$对匹配点对的图像坐标求解相机位姿变换关系。</p>
 <p>需要明确的是，在对极几何中，我们的已知条件仅仅是每幅图像中特征点的像素坐标，当然，计算对极约束的前提是我们必须知道两幅图像中特征点之间准确的匹配关系。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0g2o/%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95%E7%A4%BA%E6%84%8F%E5%9B%BE.png"><br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0g2o/%E5%AF%B9%E6%9E%81%E5%87%A0%E4%BD%95%E6%8E%A8%E5%AF%BC.png"></p>
-
+ -->
                 
             </div>
             <hr/>

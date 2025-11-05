@@ -451,10 +451,10 @@
 <li>AP（Average Percision）：AP为平均精度，指的是所有图片内的具体某一类的PR曲线下的面积(横轴为Recall，纵轴为Precision)。</li>
 <li>AP衡量的是对一个类检测好坏，mAP就是对多个类的检测好坏。在多类多目标检测中，计算出每个类别的AP后，再除于类别总数，即所有类别AP的平均值，比如有两类，类A的AP值是0.5，类B的AP值是0.2，那么 (mAP)&#x3D;（0.5+0.2）&#x2F;2&#x3D;0.35。</li>
 <li>MAP: <strong>是指所有图片内的所有类别的AP的平均值</strong>,map越高代表模型预测精度值越高。</li>
-<li>(<a href="mailto:&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;">&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
-<li>(<a href="mailto:&#x6d;&#65;&#80;&#x40;&#48;&#x2e;&#53;">&#x6d;&#65;&#80;&#x40;&#48;&#x2e;&#53;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
+<li>(<a href="mailto:&#109;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;">&#109;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
+<li>(<a href="mailto:&#x6d;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;">&#x6d;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
 </ul>
-<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#x6d;&#x41;&#80;&#x40;&#x30;&#x2e;&#x35;">&#x6d;&#x41;&#80;&#x40;&#x30;&#x2e;&#x35;</a>:0.95) 结果。</p>
+<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#x35;">&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#x35;</a>:0.95) 结果。</p>
 <h1 id="目标检测中的mAP计算"><a href="#目标检测中的mAP计算" class="headerlink" title="目标检测中的mAP计算"></a>目标检测中的mAP计算</h1><h2 id="yolov5计算IOU源码解析"><a href="#yolov5计算IOU源码解析" class="headerlink" title="yolov5计算IOU源码解析"></a>yolov5计算IOU源码解析</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 计算两框的特定iou (DIou, DIou, CIou) </span>
 <span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span>box1<span class="token punctuation">,</span> box2<span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> GIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> DIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> eps<span class="token operator">=</span><span class="token number">1e-7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token comment"># Returns Intersection over Union (IoU) of box1(1,4) to box2(n,4)</span>
@@ -542,7 +542,7 @@
   </div>
 
 
-                <h1 id="指标评估-重要的一些定义"><a href="#指标评估-重要的一些定义" class="headerlink" title="指标评估(重要的一些定义)"></a>指标评估(重要的一些定义)</h1><h2 id="📚-IOU"><a href="#📚-IOU" class="headerlink" title="📚 IOU"></a>📚 IOU</h2><p>(IOU) (<em>Intersection Over Union</em>) 基于<em>Jaccard</em>索引，用于评估两个边界框之间的重叠程度。它需要一个真实回归框 (a ground truth bounding box) (B_{gt}) 和一个预测回归框(a predicted bounding box) (B_{p}) 计算得到。通过应用 IOU 我们能够判断出预测结果是有效(True Positive) 或者 无效(False Positive)</p>
+                <!-- <h1 id="指标评估-重要的一些定义"><a href="#指标评估-重要的一些定义" class="headerlink" title="指标评估(重要的一些定义)"></a>指标评估(重要的一些定义)</h1><h2 id="📚-IOU"><a href="#📚-IOU" class="headerlink" title="📚 IOU"></a>📚 IOU</h2><p>(IOU) (<em>Intersection Over Union</em>) 基于<em>Jaccard</em>索引，用于评估两个边界框之间的重叠程度。它需要一个真实回归框 (a ground truth bounding box) (B_{gt}) 和一个预测回归框(a predicted bounding box) (B_{p}) 计算得到。通过应用 IOU 我们能够判断出预测结果是有效(True Positive) 或者 无效(False Positive)</p>
 <p>(IOU) 也称重叠度 表示计算预测回归框和真实回归框的交并比,计算公式如下:</p>
 <p>(large{IOU&#x3D;dfrac{arealeft( B_pcap B_{g t}right) }{arealeft( B_pcup B_{g t}right) } })</p>
 <p>其中: (B_p:预测回归框)， (B_{g t}:真实回归框)</p>
@@ -588,10 +588,10 @@
 <li>AP（Average Percision）：AP为平均精度，指的是所有图片内的具体某一类的PR曲线下的面积(横轴为Recall，纵轴为Precision)。</li>
 <li>AP衡量的是对一个类检测好坏，mAP就是对多个类的检测好坏。在多类多目标检测中，计算出每个类别的AP后，再除于类别总数，即所有类别AP的平均值，比如有两类，类A的AP值是0.5，类B的AP值是0.2，那么 (mAP)&#x3D;（0.5+0.2）&#x2F;2&#x3D;0.35。</li>
 <li>MAP: <strong>是指所有图片内的所有类别的AP的平均值</strong>,map越高代表模型预测精度值越高。</li>
-<li>(<a href="mailto:&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;">&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
-<li>(<a href="mailto:&#x6d;&#65;&#80;&#x40;&#48;&#x2e;&#53;">&#x6d;&#65;&#80;&#x40;&#48;&#x2e;&#53;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
+<li>(<a href="mailto:&#109;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;">&#109;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
+<li>(<a href="mailto:&#x6d;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;">&#x6d;&#x41;&#x50;&#x40;&#48;&#x2e;&#x35;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
 </ul>
-<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#x6d;&#x41;&#80;&#x40;&#x30;&#x2e;&#x35;">&#x6d;&#x41;&#80;&#x40;&#x30;&#x2e;&#x35;</a>:0.95) 结果。</p>
+<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#x35;">&#x6d;&#x41;&#80;&#x40;&#48;&#x2e;&#x35;</a>:0.95) 结果。</p>
 <h1 id="目标检测中的mAP计算"><a href="#目标检测中的mAP计算" class="headerlink" title="目标检测中的mAP计算"></a>目标检测中的mAP计算</h1><h2 id="yolov5计算IOU源码解析"><a href="#yolov5计算IOU源码解析" class="headerlink" title="yolov5计算IOU源码解析"></a>yolov5计算IOU源码解析</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 计算两框的特定iou (DIou, DIou, CIou) </span>
 <span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span>box1<span class="token punctuation">,</span> box2<span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> GIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> DIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> eps<span class="token operator">=</span><span class="token number">1e-7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token comment"># Returns Intersection over Union (IoU) of box1(1,4) to box2(n,4)</span>
@@ -675,7 +675,7 @@
 <h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://github.com/rafaelpadilla/Object-Detection-Metrics">https://github.com/rafaelpadilla/Object-Detection-Metrics</a></li>
 </ul>
-
+ -->
                 
             </div>
             <hr/>

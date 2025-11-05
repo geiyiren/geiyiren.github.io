@@ -521,7 +521,7 @@ mdi &#x3D; sqrt(((per - mea)*icv)*(per - mea)&#39;)<span aria-hidden="true" clas
   </div>
 
 
-                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>如果按照欧氏距离去理解马氏距离，一定会迷惑一段时间。因为欧氏距离可以计算两个点之间的距离，而马氏距离是计算一个点距离一个聚类的距离。如果想通过马氏距离去计算某两个点之间的距离是行不通的。下面按照一般的套路介绍一下欧氏距离与马氏距离的定义，从定义上可以发现二者之间的差异。</p>
+                <!-- <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>如果按照欧氏距离去理解马氏距离，一定会迷惑一段时间。因为欧氏距离可以计算两个点之间的距离，而马氏距离是计算一个点距离一个聚类的距离。如果想通过马氏距离去计算某两个点之间的距离是行不通的。下面按照一般的套路介绍一下欧氏距离与马氏距离的定义，从定义上可以发现二者之间的差异。</p>
 <h3 id="欧氏距离"><a href="#欧氏距离" class="headerlink" title="欧氏距离"></a>欧氏距离</h3><p>p和q两个点之间的欧氏距离，p和q都由n个维度构成。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416161613788.png"><br>对于维度尺度相同的情况，欧氏距离表现良好。如计算平面（二维）或三维空间中点之间的距离。但是对于有其它尺度的维度信息表现就不尽人意。下面两张表分别列举了面积和价格的关系，但是单位不同，这样子欧氏距离计算的表中任意两行之间的距离就差别巨大。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416162105950.png"><br>从技术上讲，可以通过归一化或者(x-mean)&#x2F;std来克服这个问题，但是还有另一个主要缺点。也就是说，如果维度（数据集中的列）相关，（实际数据集中通常是这种情况），则点与点中心（分布）之间的欧氏距离所给出的信息很少或具有误导性关于一个点实际距离聚类的距离。下图左图X与Y两个维度（数据集的两列）不相关，欧氏距离可以很好的判别Point1和Point2距离聚类的远近。如右图所示，X与Y相关时欧氏距离就无法很好的表征Point1和Point2谁是异常点（离群点）了。因为，两个点与中心的距离相等（欧氏距离）。但是，即使两点之间的欧氏距离相等，但实际上只有蓝色点更接近该聚类。<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/2021041616255653.png"></p>
 <p>出现这个问题的原因是因为，欧氏距离仅是两点之间的距离。它不考虑数据集中的其余点如何变化。因此，它不能用来真正判断一个点实际上与点的分布（聚类）的接近程度。马氏距离在很多应用场合可以很好的解决这一问题。</p>
 <h3 id="马氏距离"><a href="#马氏距离" class="headerlink" title="马氏距离"></a>马氏距离</h3><p>马氏距离是一种有效的多元距离计算方法，用于计算点与聚类（分布）之间的距离。其在多维数据集异常检测，高维数据集分类应用中表现出色。马氏距离是由Mahalanobis教授于1936年提出的，此后一直在各种统计应用中使用。<br>马氏距离的定义公式如下（定义如此简单，理解方式需要转变）：<br><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E9%A9%AC%E6%B0%8F%E8%B7%9D%E7%A6%BB%E5%92%8C%E6%AC%A7%E5%BC%8F%E8%B7%9D%E7%A6%BB/20210416163238303.png"><br>这里就不翻译了，英文更有助于理解，看到这里想必已经理解了马氏距离为什么是点到聚类的距离而不是点到点的距离了。</p>
@@ -637,7 +637,7 @@ mdi &#x3D; sqrt(((per - mea)*icv)*(per - mea)&#39;)<span aria-hidden="true" clas
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>马氏距离不同于欧氏距离，马氏距离是对一组数据的距离，而不是像欧氏距离针对点与点的距离。明白了这一点就会发现很简单了。看资料还是要看英文版的，下面是博客内容出处的连篇文章。</p>
 <p>参考<br><a target="_blank" rel="noopener" href="https://www.machinelearningplus.com/statistics/mahalanobis-distance/">https://www.machinelearningplus.com/statistics/mahalanobis-distance/</a><br><a target="_blank" rel="noopener" href="https://jamesmccaffrey.wordpress.com/2017/11/09/example-of-calculating-the-mahalanobis-distance/">https://jamesmccaffrey.wordpress.com/2017/11/09/example-of-calculating-the-mahalanobis-distance/</a></p>
 <p>本文转自 <a target="_blank" rel="noopener" href="https://blog.csdn.net/wokaowokaowokao12345/article/details/115765116">https://blog.csdn.net/wokaowokaowokao12345/article/details/115765116</a>，如有侵权，请联系删除。</p>
-
+ -->
                 
             </div>
             <hr/>

@@ -543,7 +543,7 @@ scheduler <span class="token operator">=</span> lr_scheduler<span class="token p
   </div>
 
 
-                <p>这里的训练恢复不是resume，而是如果设置最大epoch为900，但是训练结束后模型仍旧没有收敛的趋势，如何加载模型、优化器、学习率调整器进行继续训练。这里权重会默认加载，优化器也会默认加载，但是学习率按照原来的训练计划已经达到最小值，此时需要重新设计学习率调整器并关闭resume的一些条件判断方可开启。</p>
+                <!-- <p>这里的训练恢复不是resume，而是如果设置最大epoch为900，但是训练结束后模型仍旧没有收敛的趋势，如何加载模型、优化器、学习率调整器进行继续训练。这里权重会默认加载，优化器也会默认加载，但是学习率按照原来的训练计划已经达到最小值，此时需要重新设计学习率调整器并关闭resume的一些条件判断方可开启。</p>
 <h2 id="yolo-V5系列"><a href="#yolo-V5系列" class="headerlink" title="yolo-V5系列"></a>yolo-V5系列</h2><h3 id="修改smart-resume策略"><a href="#修改smart-resume策略" class="headerlink" title="修改smart_resume策略"></a>修改smart_resume策略</h3><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># utils/torch_utils.py</span>
 <span class="token keyword">def</span> <span class="token function">smart_resume</span><span class="token punctuation">(</span>ckpt<span class="token punctuation">,</span> optimizer<span class="token punctuation">,</span> ema<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">,</span> weights<span class="token operator">=</span><span class="token string">'yolov5s.pt'</span><span class="token punctuation">,</span> epochs<span class="token operator">=</span><span class="token number">300</span><span class="token punctuation">,</span> resume<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token comment"># Resume training from a partially trained checkpoint</span>
@@ -681,7 +681,7 @@ scheduler <span class="token operator">=</span> lr_scheduler<span class="token p
     self<span class="token punctuation">.</span>scheduler <span class="token operator">=</span> optim<span class="token punctuation">.</span>lr_scheduler<span class="token punctuation">.</span>LambdaLR<span class="token punctuation">(</span>self<span class="token punctuation">.</span>optimizer<span class="token punctuation">,</span> lr_lambda<span class="token operator">=</span>self<span class="token punctuation">.</span>lf<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>在第8行替换使用新的学习率调整器。</p>
-
+ -->
                 
             </div>
             <hr/>

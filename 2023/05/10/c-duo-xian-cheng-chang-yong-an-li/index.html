@@ -452,7 +452,7 @@ std<span class="token double-colon punctuation">::</span>condition_variable cv<s
   </div>
 
 
-                <h1 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>使用C++11 std库中的线程和条件变量实现notify_one的一个简单例子。在这个例子中，我们有一个线程向一个队列中添加元素，另一个线程从队列中删除元素。线程通过条件变量进行同步。</p>
+                <!-- <h1 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>使用C++11 std库中的线程和条件变量实现notify_one的一个简单例子。在这个例子中，我们有一个线程向一个队列中添加元素，另一个线程从队列中删除元素。线程通过条件变量进行同步。</p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;iostream></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;thread></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;queue></span></span>
@@ -495,7 +495,7 @@ std<span class="token double-colon punctuation">::</span>condition_variable cv<s
 
 <p>在这个例子中，生产者线程在每次添加一个元素到队列后都会调用notify_one()来通知消费者线程。消费者线程在wait()函数中等待，直到收到通知并且队列不为空才会继续执行。</p>
 <p>需要注意的是，虽然在上述代码中我们的消费者线程是一个无限循环，但在实际的程序中，你需要有一种机制来结束这个线程。</p>
-
+ -->
                 
             </div>
             <hr/>

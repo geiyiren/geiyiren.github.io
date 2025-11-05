@@ -851,7 +851,7 @@ Mat <span class="token function">getLocalRegionLBPH</span><span class="token pun
   </div>
 
 
-                <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>  局部二值模式(Local Binary Patter, LBP)是一种用来描述图像局部纹理特征的算子，<strong>LBP特征具有灰度不变性和旋转不变性等显著优点，它将图像中的各个像素与其邻域像素值进行比较，将结果保存为二进制数，并将得到的二进制比特串作为中心像素的编码值，也就是LBP特征值</strong>。LBP提供了一种衡量像素间邻域关系的特征模式，因此可以有效地提取图像的局部特征，而且由于其计算简单，可用于基于纹理分类的实时应用场景，例如目标检测、人脸识别等。  </p>
+                <!-- <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>  局部二值模式(Local Binary Patter, LBP)是一种用来描述图像局部纹理特征的算子，<strong>LBP特征具有灰度不变性和旋转不变性等显著优点，它将图像中的各个像素与其邻域像素值进行比较，将结果保存为二进制数，并将得到的二进制比特串作为中心像素的编码值，也就是LBP特征值</strong>。LBP提供了一种衡量像素间邻域关系的特征模式，因此可以有效地提取图像的局部特征，而且由于其计算简单，可用于基于纹理分类的实时应用场景，例如目标检测、人脸识别等。  </p>
 <h1 id="原始LBP特征"><a href="#原始LBP特征" class="headerlink" title="原始LBP特征"></a>原始LBP特征</h1><p>  原始的LBP算子定义于图像中$3 \times 3$的邻域窗口，取窗口内中心像素的灰度值作为阈值，将8邻域像素的灰度值与其进行比较，若邻域像素值大于中心像素值，则比较结果取值为1，否则为0。这样邻域内的8个像素点经过比较后可得到8位二进制数，将其按顺序依次排列即可得到中心像素的LBP值。LBP特征值反映了中心像素和其邻域的纹理信息。LBP的取值一共有$2^8 &#x3D; 256$种，和一幅普通的灰度图像类似，因此可将LBP特征以灰度图的形式表达出来。由于LBP特征考虑的是纹理信息，而不包含颜色信息，因此彩色图需转换为灰度图。原始LBP特征的提取过程如下图所示：</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96%E4%B9%8BLBP%E7%89%B9%E5%BE%81/593e3dae121e4.jpg"></p>
 <p>公式定义如下：<br>$$LBP(x_c,y_c)&#x3D;\Sigma_{p&#x3D;0}^{P-1} 2^p s(i_p-i_c)$$<br>其中$(x_c,y_c)$代表邻域窗口内的中心像素，其像素值为$i_c$，$i_p$为邻域内其他像素值$s(x)$是符号函数。<br>原始LBP特征的实现代码(OpenCV)如下:  </p>
@@ -1293,7 +1293,7 @@ Mat <span class="token function">getLocalRegionLBPH</span><span class="token pun
 <li><a target="_blank" rel="noopener" href="http://blog.jasonding.top/2014/11/04/Machine%20Learning/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E3%80%91LBP%E7%BA%B9%E7%90%86%E7%89%B9%E5%BE%81/">http://blog.jasonding.top/2014/11/04/Machine%20Learning/%E3%80%90%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89%E3%80%91LBP%E7%BA%B9%E7%90%86%E7%89%B9%E5%BE%81/</a></li>
 <li><a target="_blank" rel="noopener" href="http://blog.csdn.net/liulina603/article/details/8291105">http://blog.csdn.net/liulina603/article/details/8291105</a></li>
 </ul>
-
+ -->
                 
             </div>
             <hr/>

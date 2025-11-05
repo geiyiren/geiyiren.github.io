@@ -448,7 +448,7 @@
   </div>
 
 
-                <p>  尺度不变特征变换(Scale-invariant feature transform, SIFT)是计算机视觉中一种检测、描述和匹配图像局部特征点的方法，通过在不同的尺度空间中检测极值点或特征点(Conrner Point, Interest Point)，提取出其位置、尺度和旋转不变量，并生成特征描述子，最后用于图像的特征点匹配。SIFT特征凭借其良好的性能广泛应用于运动跟踪(Motion tracking)、图像拼接(Automatic mosaicing)、3D重建(3D reconstruction)、移动机器人导航(Mobile robot navigation)以及目标识别(Object Recognition)等领域。  </p>
+                <!-- <p>  尺度不变特征变换(Scale-invariant feature transform, SIFT)是计算机视觉中一种检测、描述和匹配图像局部特征点的方法，通过在不同的尺度空间中检测极值点或特征点(Conrner Point, Interest Point)，提取出其位置、尺度和旋转不变量，并生成特征描述子，最后用于图像的特征点匹配。SIFT特征凭借其良好的性能广泛应用于运动跟踪(Motion tracking)、图像拼接(Automatic mosaicing)、3D重建(3D reconstruction)、移动机器人导航(Mobile robot navigation)以及目标识别(Object Recognition)等领域。  </p>
 <h1 id="尺度空间极值检测"><a href="#尺度空间极值检测" class="headerlink" title="尺度空间极值检测"></a>尺度空间极值检测</h1><p>  Harris特征进行角点检测时，不具备尺度不变性。为了能够在不同的尺度检测到尽可能完整的特征点或关键点，需要借助尺度空间理论来描述图像的多尺度特征。相关研究证明高斯卷积核是实现尺度变换的唯一线性核。因此可用图像的高斯金字塔表示尺度空间，而且尺度规范化的LoG算子具有尺度不变性，在具体实现中，可用高斯差分(DoG)算子近似LoG算子，在构建的尺度空间中检测稳定的特征点。</p>
 <h2 id="构建尺度空间"><a href="#构建尺度空间" class="headerlink" title="构建尺度空间"></a>构建尺度空间</h2><p>  尺度空间理论的基本思想是：在图像处理模型中引入一个被视为尺度的参数，通过连续变化尺度参数获取多尺度下的空间表示序列，对这些空间序列提取某些特征描述子，抽象成特征向量，实现图像在不同尺度或不同分辨率的特征提取。尺度空间中各尺度图像的模糊程度逐渐变大，模拟人在由近到远时目标在人眼视网膜上的成像过程。而且尺度空间需满足一定的不变性，包括图像灰度不变性、对比度不变性、平移不变性、尺度不变性以及旋转不变性等。在某些情况下甚至要求尺度空间算子具备仿射不变性。<br>  一幅图像的尺度空间可定义为对原图像进行可变尺度的高斯卷积：<br>$$L(x,y,\sigma)&#x3D;G(x,y,\sigma) \ast I(x,y)$$<br>$$G(x,y,\sigma)&#x3D;\dfrac{1}{2 \pi \sigma^2} e^{-\dfrac{x^2+y^2}{2\sigma^2}}$$<br>式中，$G(x,y,\sigma)$是尺度可变的高斯函数，$(x,y)$是图像的空间坐标，$\sigma$是尺度坐标(尺度变化因子)，$\sigma$大小决定图像的平滑程度，值越大图像模糊得越严重。大尺度对应图像的概貌特征，小尺度对应图像的细节特征。一般根据$3\sigma$原则，高斯核矩阵的大小设为$(6\sigma+1) \times (6\sigma+1)$。<br>  在使用高斯金字塔构建尺度空间时，主要分成两部分，对图像做降采样，以及对图像做不同尺度的高斯模糊。对图像做降采样得到不同尺度的图像，也就是不同的组(Octave)，后面的Octave(高一层的金字塔)为上一个Octave(低一层的金字塔)降采样得到，图像宽高分别为上一个Octave的1&#x2F;2。每组(Octave)又分为若干层(Interval)，通过对图像做不同尺度的高斯模糊得到。为了有效地在尺度空间检测稳定的关键点，提出了高斯差分尺度空间(DoG Scale-Space)，利用不同尺度的高斯差分核与图像卷积生成。<br>$$D(x,y,\sigma)&#x3D;(G(x,y,k\sigma)-G(x,y,\sigma)) \ast I(x,y) &#x3D; L(x,y,k\sigma)-L(x,y,\sigma)$$<br>图像的高斯金字塔和高斯差分金字塔如下图所示，高斯差分图像由高斯金字塔中同一组(Octave)内相邻层(Interval)的图像作差得到。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E4%B9%8BSIFT%E7%89%B9%E5%BE%81%E5%8C%B9%E9%85%8D/5956098d36da8.jpg"></p>
@@ -487,7 +487,7 @@
 <li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/letben/p/5510976.html">http://www.cnblogs.com/letben/p/5510976.html</a></li>
 <li><a target="_blank" rel="noopener" href="http://blog.csdn.net/fzthao/article/details/62424271">http://blog.csdn.net/fzthao/article/details/62424271</a></li>
 </ul>
-
+ -->
                 
             </div>
             <hr/>
@@ -639,19 +639,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/12/20/tu-xiang-te-zheng-zhi-log-suan-zi-yu-dog-suan-zi/">
+                <a href="/2023/12/20/shi-da-pai-xu-suan-fa/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="图像特征之LoG算子与DoG算子">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/9.jpg" class="responsive-img" alt="十大排序算法">
                         
-                        <span class="card-title">图像特征之LoG算子与DoG算子</span>
+                        <span class="card-title">十大排序算法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            图像特征之LoG算子与DoG算子
+                            十大排序算法
                         
                     </div>
                     <div class="publish-info">
@@ -662,8 +662,8 @@
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/" class="post-category">
-                                    图像特征提取
+                            <a href="/categories/%E7%AE%97%E6%B3%95/" class="post-category">
+                                    算法
                                 </a>
                             
                             
@@ -673,16 +673,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%9B%BE%E5%83%8F%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96/">
-                        <span class="chip bg-color">图像特征提取</span>
-                    </a>
-                    
-                    <a href="/tags/LoG%E7%AE%97%E5%AD%90/">
-                        <span class="chip bg-color">LoG算子</span>
-                    </a>
-                    
-                    <a href="/tags/DoG%E7%AE%97%E5%AD%90/">
-                        <span class="chip bg-color">DoG算子</span>
+                    <a href="/tags/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">十大排序算法</span>
                     </a>
                     
                 </div>
@@ -696,19 +688,19 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/12/20/tu-xiang-te-zheng-ti-qu-zhi-haar-te-zheng/">
+                <a href="/2023/12/20/tu-xiang-te-zheng-zhi-log-suan-zi-yu-dog-suan-zi/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/18.jpg" class="responsive-img" alt="图像特征提取之Haar特征">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="图像特征之LoG算子与DoG算子">
                         
-                        <span class="card-title">图像特征提取之Haar特征</span>
+                        <span class="card-title">图像特征之LoG算子与DoG算子</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            图像特征提取之Haar特征
+                            图像特征之LoG算子与DoG算子
                         
                     </div>
                     <div class="publish-info">
@@ -734,8 +726,12 @@
                         <span class="chip bg-color">图像特征提取</span>
                     </a>
                     
-                    <a href="/tags/Haar/">
-                        <span class="chip bg-color">Haar</span>
+                    <a href="/tags/LoG%E7%AE%97%E5%AD%90/">
+                        <span class="chip bg-color">LoG算子</span>
+                    </a>
+                    
+                    <a href="/tags/DoG%E7%AE%97%E5%AD%90/">
+                        <span class="chip bg-color">DoG算子</span>
                     </a>
                     
                 </div>

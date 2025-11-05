@@ -511,7 +511,7 @@ format_counts <span class="token operator">=</span> <span class="token punctuati
   </div>
 
 
-                <h1 id="现象说明"><a href="#现象说明" class="headerlink" title="现象说明"></a>现象说明</h1><p>使用opencv创建一张黑图，然后保存，再读取，发现图像像素被修改</p>
+                <!-- <h1 id="现象说明"><a href="#现象说明" class="headerlink" title="现象说明"></a>现象说明</h1><p>使用opencv创建一张黑图，然后保存，再读取，发现图像像素被修改</p>
 <h1 id="原因一：保存图像时使用了jpg或jpeg格式的图像"><a href="#原因一：保存图像时使用了jpg或jpeg格式的图像" class="headerlink" title="原因一：保存图像时使用了jpg或jpeg格式的图像"></a>原因一：保存图像时使用了<code>jpg</code>或<code>jpeg</code>格式的图像</h1><p><code>jpg</code>或<code>jpeg</code>格式的图像在保存时，会使用有损压缩，导致图像像素被修改</p>
 <h1 id="原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2-IMWRITE-PNG-COMPRESSION参数"><a href="#原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2-IMWRITE-PNG-COMPRESSION参数" class="headerlink" title="原因二：保存图像时使用了压缩参数，例如保存png格式的图像，但使用了cv2.IMWRITE_PNG_COMPRESSION参数"></a>原因二：保存图像时使用了压缩参数，例如保存<code>png</code>格式的图像，但使用了<code>cv2.IMWRITE_PNG_COMPRESSION</code>参数</h1><p><code>png</code>格式的图像在保存时，可以使用有损压缩，但需要使用<code>cv2.IMWRITE_PNG_COMPRESSION</code>参数来指定压缩质量，否则默认使用无损压缩，不会修改图像像素</p>
 <p>支持压缩的格式：PNG、JPEG、WebP、TIFF，且<strong>JPEG格式是有损压缩</strong></p>
@@ -617,7 +617,7 @@ format_counts <span class="token operator">=</span> <span class="token punctuati
     <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">,</span>format_counts<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
-
+ -->
                 
             </div>
             <hr/>

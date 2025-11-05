@@ -378,7 +378,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.2k
+                    11
                 </div>
                 
 
@@ -404,150 +404,23 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 
-  <div class="post-content">
-    <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/yolo12-1752224126368-2-1752224137167-4.png" alt="yolo12"></p>
-<h1 id="YOLOv12改进"><a href="#YOLOv12改进" class="headerlink" title="YOLOv12改进"></a>YOLOv12改进</h1><ul>
-<li><p>首先，设计了一个简单高效的区域注意力模块（A2），该模块在保持大感受野的同时，通过极其简洁的方式降低了注意力机制的计算复杂度，从而显著提升运行速度；</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712141541523.png" alt="image-20250712141541523"></p>
-</li>
-<li><p>其次，引入残差高效层聚合网络（R-ELAN），专门解决注意力机制带来的优化难题（尤其针对大规模模型）。R-ELAN在原有ELAN 基础上进行了两项改进：</p>
-<ul>
-<li>采用基于块级残差设计的缩放技术，</li>
-<li>重新设计特征聚合方法。</li>
-</ul>
-</li>
-<li><p>最后，针对YOLO系统进行了架构优化升级，突破传统<strong>Transform</strong>注意力机制的局限。具体改进包括：</p>
-<ul>
-<li><p>引入Flash Attention算法解决注意力机制的内存访问问题；</p>
-<blockquote>
-<p>Flash Attention是一种优化IO访存开销的精确注意力方法，通过Tiling切片、重计算、Kernel Fusion等方式来减少高带宽内存（片上内存）和SRAM之间的内存读&#x2F;写次数。海思的NPU侧也实现了相关操作。</p>
-</blockquote>
-</li>
-<li><p>移除位置编码等冗余设计以提升模型效率；</p>
-<blockquote>
-<p>YOLOv12 采用了类似 Transformer 的注意力机制或者相关设计，但去掉了 Transformer 里经典的“位置编码”部分，这是为了减少计算复杂度和模型冗余。</p>
-</blockquote>
-</li>
-<li><p>将MLP比例从4调整为1.2平衡计算负载；</p>
-<blockquote>
-<p>YOLOv12 引入了 Transformer 结构，并将 MLP（即 FFN）扩展比例从传统的 4 调整为 1.2，其目的是在引入注意力机制带来更强特征建模能力的同时，控制计算复杂度，提升部署效率</p>
-</blockquote>
-</li>
-<li><p>缩短堆叠模块深度便于优化,充分利用卷积运算的高效特性。</p>
-</li>
-</ul>
-<blockquote>
-<p>架构优化升级其实就是提出了A2模块</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="其他YOLO的改进"><a href="#其他YOLO的改进" class="headerlink" title="其他YOLO的改进"></a>其他YOLO的改进</h1><ul>
-<li>YOLOv4 和YOLOv5 引入CSPNet 、数据增强技术及多尺度特征提取</li>
-<li>YOLOv6在主干网络和颈部网络中分别引入BiC和SimCSPSPPF模块，并采用锚点辅助训练技术，实现了性能的全面提升。</li>
-<li>YOLOv7 通过引入EELAN（高效层聚合网络）优化梯度流并提供多种免费赠品，</li>
-<li>YOLOv8 则集成了高效的C2f模块以增强特征提取能力。在近期的迭代版本中，</li>
-<li>YOLOv9 引入了GELAN架构优化和PGI训练改进技术</li>
-<li>YOLOv10 则通过NMSfree双分配训练策略提升效率。</li>
-<li>YOLOv11 通过采用C3K2模块（GELAN的规范）和检测头中的轻量级深度可分离卷积，进一步降低了延迟并提升了精度。</li>
-</ul>
-<h1 id="注意力机制推理速度慢于卷积的原因"><a href="#注意力机制推理速度慢于卷积的原因" class="headerlink" title="注意力机制推理速度慢于卷积的原因"></a>注意力机制推理速度慢于卷积的原因</h1><p>​	注意力机制虽然在捕捉全局依赖关系以及促进自然语言处理和计算机视觉等任务方面非常有效，但其速度本质上比卷积神经网络（CNN）要慢。造成这种速度差异的两个主要因素是：</p>
-<ul>
-<li>复杂度：自注意力操作的计算复杂度随着输入序列长度L的平方增长。具体来说，对于一个长度为L、特征维度为d的输入序列，计算注意力矩阵需要O(L²d)的操作，因为每个token都与其他token进行交互。相比之下，CNN中的卷积操作的复杂度是线性增长的，即O(kLd)，其中k为卷积核的大小，通常远小于L。因此，自注意力机制在面对大尺寸输入（如高分辨率图像或长序列）时，计算开销变得不可接受。</li>
-<li>计算效率：第二个重要因素是，注意力计算过程中的内存访问模式较为低效。具体而言，在自注意力过程中，需要将中间计算结果（如注意力图QKT和softmax图，大小为L×L）从高速GPU内存（计算的实际位置）存储到高带宽GPU内存中，并在计算过程中读取这些数据。而前者的读写速度比后者快10倍以上，导致显著的内存访问开销，增加了总的计算时间。此外，注意力机制中的内存访问模式较为不规则，相比之下，CNN利用结构化且局部化的内存访问方式，可以有效地进行内存缓存，减少延迟。</li>
-</ul>
-<p>​	降低基础注意力机制的计算成本，可以采用如下方法：</p>
-<ul>
-<li>一个简单的方法是采用线性注意力机制。该机制将原本需要二次方复杂度的计算量简化为线性复杂度。对于维度为（n，h，d）的视觉特征f（其中n表示标记数量，h为头数，d为头尺寸），线性注意力机制将计算复杂度从$2n^2hd$降低到$2nhd^2$ ，由于n大于d，从而显著减少计算开销。不过，线性注意力机制存在全局依赖性退化、稳定性问题以及分布敏感性问题等缺陷。此外，由于低秩瓶颈的存在，当应用于输入分辨率为640×640的YOLO时，其速度优势有限。</li>
-<li>另一种有效降低复杂度的替代方案是局部注意力机制（如移位窗口、交叉注意力和轴向注意力)，如图2所示，该机制将全局注意力转换为局部注意力。然而，将特征图分割成窗口可能会引入额外开销或缩小感受野，从而影响速度和准确率。</li>
-</ul>
-<p>​	在本研究中，提出了一种简单高效的区域注意力模块。将分辨率(H,W)的特征图分割为$l$个尺寸为$(H&#x2F;l,w$或$(H,w&#x2F;l)$的子块。这种方法消除了显式的窗口分割需求，仅需简单的重组操作即可实现更快的速度。我们通过实验将默认分割数$l$设为4，使感受野缩小至原始值的$1&#x2F;4$，但仍保持较大的感受野。采用此方法后，**注意力机制的计算成本从$2n^2hd$降低到$1&#x2F;2n^2hd$*<em>。研究表明，尽管复杂度n有所增加，但在输入分辨率固定为640时（若输入分辨率提高则n值会增大），该方案仍能有效满足YOLO系统的实时需求。有趣的是，我们发现</em>这种改进对性能的影响微乎其微，却显著提升了运行速度*。</p>
-<h1 id="R-ELAN"><a href="#R-ELAN" class="headerlink" title="R-ELAN"></a>R-ELAN</h1><p>​	高效层聚合网络（ELAN）旨在优化特征聚合机制。如图所示，该架构首先将过渡层（1×1卷积）的输出进行分割，通过多个模块处理每个分割结果后，将所有输出拼接并再次应用过渡层（1×1卷积）以实现维度对齐。但分析表明，<em>这种设计可能引发网络不稳定问题。我们认为该架构会导致梯度阻塞现象，并且缺乏从输入到输出的残差连接机制</em>。此外，我们采用注意力机制构建网络，这给优化过程带来了额外挑战。实验数据显示，即使使用Adam或AdamW优化器，L-和X模型仍存在收敛困难或运行不稳定的问题。为解决这一问题，我们提出了残差高效层聚合网络（R-ELAN）。与传统方法不同，我们在整个模块中引入了输入到输出的残差捷径通道，并采用缩放因子（默认值为0. 01)。这种设计类似于用于构建深度视觉变换器的层缩放技术。然而，对每个区域注意力机制单独应用层缩放并不能解决优化难题，反而会导致延迟增加。这表明注意力机制的引入并非收敛的唯一原因，ELAN架构本身才是关键所在，这也验证了我们R-ELAN设计的合理性。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712134553139.png" alt="image-20250712134553139"></p>
-<p>​	这个高效层聚合网络指的是A2C2F，其中A2也是本文的创新，取名为区域注意力模块<strong>Area attention</strong>，应该是这个英文名字中两个单词都是以字母a开头，所以叫A2吧！后面的C2F是在YOLOv8中提出的，而这个A2C2F就是将C2F中的瓶颈结构模(BottleNeck)块换为了A2，并进行了改进。</p>
-<h1 id="实验结果分析"><a href="#实验结果分析" class="headerlink" title="实验结果分析"></a>实验结果分析</h1><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140148347.png" alt="image-20250712140148347"></p>
-<p>上表揭示了两个关键发现：</p>
-<ul>
-<li>对于YOLOv12-N这类小型模型，残差连接不会影响收敛性但会降低性能。对于大型模型（YOLOv12-L&#x2F;X），它们是稳定训练的必要条件。</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140731608.png" alt="image-20250712140731608"></p>
-<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><ul>
-<li>[YOLOv12论文模型解析 -CSDN](<a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12%E8%AE%BA%E6%96%87%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%90">https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12论文模型解析</a> .pdf)</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pengxiang1998/article/details/148005680?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&utm_relevant_index=5">YOLO12的A2C2f模块解析-CSDN博客</a></li>
-</ul>
-
+  <div class="encrypted-content">
+    true
   </div>
 
 
-                <!-- <p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/yolo12-1752224126368-2-1752224137167-4.png" alt="yolo12"></p>
-<h1 id="YOLOv12改进"><a href="#YOLOv12改进" class="headerlink" title="YOLOv12改进"></a>YOLOv12改进</h1><ul>
-<li><p>首先，设计了一个简单高效的区域注意力模块（A2），该模块在保持大感受野的同时，通过极其简洁的方式降低了注意力机制的计算复杂度，从而显著提升运行速度；</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712141541523.png" alt="image-20250712141541523"></p>
-</li>
-<li><p>其次，引入残差高效层聚合网络（R-ELAN），专门解决注意力机制带来的优化难题（尤其针对大规模模型）。R-ELAN在原有ELAN 基础上进行了两项改进：</p>
-<ul>
-<li>采用基于块级残差设计的缩放技术，</li>
-<li>重新设计特征聚合方法。</li>
-</ul>
-</li>
-<li><p>最后，针对YOLO系统进行了架构优化升级，突破传统<strong>Transform</strong>注意力机制的局限。具体改进包括：</p>
-<ul>
-<li><p>引入Flash Attention算法解决注意力机制的内存访问问题；</p>
-<blockquote>
-<p>Flash Attention是一种优化IO访存开销的精确注意力方法，通过Tiling切片、重计算、Kernel Fusion等方式来减少高带宽内存（片上内存）和SRAM之间的内存读&#x2F;写次数。海思的NPU侧也实现了相关操作。</p>
-</blockquote>
-</li>
-<li><p>移除位置编码等冗余设计以提升模型效率；</p>
-<blockquote>
-<p>YOLOv12 采用了类似 Transformer 的注意力机制或者相关设计，但去掉了 Transformer 里经典的“位置编码”部分，这是为了减少计算复杂度和模型冗余。</p>
-</blockquote>
-</li>
-<li><p>将MLP比例从4调整为1.2平衡计算负载；</p>
-<blockquote>
-<p>YOLOv12 引入了 Transformer 结构，并将 MLP（即 FFN）扩展比例从传统的 4 调整为 1.2，其目的是在引入注意力机制带来更强特征建模能力的同时，控制计算复杂度，提升部署效率</p>
-</blockquote>
-</li>
-<li><p>缩短堆叠模块深度便于优化,充分利用卷积运算的高效特性。</p>
-</li>
-</ul>
-<blockquote>
-<p>架构优化升级其实就是提出了A2模块</p>
-</blockquote>
-</li>
-</ul>
-<h1 id="其他YOLO的改进"><a href="#其他YOLO的改进" class="headerlink" title="其他YOLO的改进"></a>其他YOLO的改进</h1><ul>
-<li>YOLOv4 和YOLOv5 引入CSPNet 、数据增强技术及多尺度特征提取</li>
-<li>YOLOv6在主干网络和颈部网络中分别引入BiC和SimCSPSPPF模块，并采用锚点辅助训练技术，实现了性能的全面提升。</li>
-<li>YOLOv7 通过引入EELAN（高效层聚合网络）优化梯度流并提供多种免费赠品，</li>
-<li>YOLOv8 则集成了高效的C2f模块以增强特征提取能力。在近期的迭代版本中，</li>
-<li>YOLOv9 引入了GELAN架构优化和PGI训练改进技术</li>
-<li>YOLOv10 则通过NMSfree双分配训练策略提升效率。</li>
-<li>YOLOv11 通过采用C3K2模块（GELAN的规范）和检测头中的轻量级深度可分离卷积，进一步降低了延迟并提升了精度。</li>
-</ul>
-<h1 id="注意力机制推理速度慢于卷积的原因"><a href="#注意力机制推理速度慢于卷积的原因" class="headerlink" title="注意力机制推理速度慢于卷积的原因"></a>注意力机制推理速度慢于卷积的原因</h1><p>​	注意力机制虽然在捕捉全局依赖关系以及促进自然语言处理和计算机视觉等任务方面非常有效，但其速度本质上比卷积神经网络（CNN）要慢。造成这种速度差异的两个主要因素是：</p>
-<ul>
-<li>复杂度：自注意力操作的计算复杂度随着输入序列长度L的平方增长。具体来说，对于一个长度为L、特征维度为d的输入序列，计算注意力矩阵需要O(L²d)的操作，因为每个token都与其他token进行交互。相比之下，CNN中的卷积操作的复杂度是线性增长的，即O(kLd)，其中k为卷积核的大小，通常远小于L。因此，自注意力机制在面对大尺寸输入（如高分辨率图像或长序列）时，计算开销变得不可接受。</li>
-<li>计算效率：第二个重要因素是，注意力计算过程中的内存访问模式较为低效。具体而言，在自注意力过程中，需要将中间计算结果（如注意力图QKT和softmax图，大小为L×L）从高速GPU内存（计算的实际位置）存储到高带宽GPU内存中，并在计算过程中读取这些数据。而前者的读写速度比后者快10倍以上，导致显著的内存访问开销，增加了总的计算时间。此外，注意力机制中的内存访问模式较为不规则，相比之下，CNN利用结构化且局部化的内存访问方式，可以有效地进行内存缓存，减少延迟。</li>
-</ul>
-<p>​	降低基础注意力机制的计算成本，可以采用如下方法：</p>
-<ul>
-<li>一个简单的方法是采用线性注意力机制。该机制将原本需要二次方复杂度的计算量简化为线性复杂度。对于维度为（n，h，d）的视觉特征f（其中n表示标记数量，h为头数，d为头尺寸），线性注意力机制将计算复杂度从$2n^2hd$降低到$2nhd^2$ ，由于n大于d，从而显著减少计算开销。不过，线性注意力机制存在全局依赖性退化、稳定性问题以及分布敏感性问题等缺陷。此外，由于低秩瓶颈的存在，当应用于输入分辨率为640×640的YOLO时，其速度优势有限。</li>
-<li>另一种有效降低复杂度的替代方案是局部注意力机制（如移位窗口、交叉注意力和轴向注意力)，如图2所示，该机制将全局注意力转换为局部注意力。然而，将特征图分割成窗口可能会引入额外开销或缩小感受野，从而影响速度和准确率。</li>
-</ul>
-<p>​	在本研究中，提出了一种简单高效的区域注意力模块。将分辨率(H,W)的特征图分割为$l$个尺寸为$(H&#x2F;l,w$或$(H,w&#x2F;l)$的子块。这种方法消除了显式的窗口分割需求，仅需简单的重组操作即可实现更快的速度。我们通过实验将默认分割数$l$设为4，使感受野缩小至原始值的$1&#x2F;4$，但仍保持较大的感受野。采用此方法后，**注意力机制的计算成本从$2n^2hd$降低到$1&#x2F;2n^2hd$*<em>。研究表明，尽管复杂度n有所增加，但在输入分辨率固定为640时（若输入分辨率提高则n值会增大），该方案仍能有效满足YOLO系统的实时需求。有趣的是，我们发现</em>这种改进对性能的影响微乎其微，却显著提升了运行速度*。</p>
-<h1 id="R-ELAN"><a href="#R-ELAN" class="headerlink" title="R-ELAN"></a>R-ELAN</h1><p>​	高效层聚合网络（ELAN）旨在优化特征聚合机制。如图所示，该架构首先将过渡层（1×1卷积）的输出进行分割，通过多个模块处理每个分割结果后，将所有输出拼接并再次应用过渡层（1×1卷积）以实现维度对齐。但分析表明，<em>这种设计可能引发网络不稳定问题。我们认为该架构会导致梯度阻塞现象，并且缺乏从输入到输出的残差连接机制</em>。此外，我们采用注意力机制构建网络，这给优化过程带来了额外挑战。实验数据显示，即使使用Adam或AdamW优化器，L-和X模型仍存在收敛困难或运行不稳定的问题。为解决这一问题，我们提出了残差高效层聚合网络（R-ELAN）。与传统方法不同，我们在整个模块中引入了输入到输出的残差捷径通道，并采用缩放因子（默认值为0. 01)。这种设计类似于用于构建深度视觉变换器的层缩放技术。然而，对每个区域注意力机制单独应用层缩放并不能解决优化难题，反而会导致延迟增加。这表明注意力机制的引入并非收敛的唯一原因，ELAN架构本身才是关键所在，这也验证了我们R-ELAN设计的合理性。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712134553139.png" alt="image-20250712134553139"></p>
-<p>​	这个高效层聚合网络指的是A2C2F，其中A2也是本文的创新，取名为区域注意力模块<strong>Area attention</strong>，应该是这个英文名字中两个单词都是以字母a开头，所以叫A2吧！后面的C2F是在YOLOv8中提出的，而这个A2C2F就是将C2F中的瓶颈结构模(BottleNeck)块换为了A2，并进行了改进。</p>
-<h1 id="实验结果分析"><a href="#实验结果分析" class="headerlink" title="实验结果分析"></a>实验结果分析</h1><p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140148347.png" alt="image-20250712140148347"></p>
-<p>上表揭示了两个关键发现：</p>
-<ul>
-<li>对于YOLOv12-N这类小型模型，残差连接不会影响收敛性但会降低性能。对于大型模型（YOLOv12-L&#x2F;X），它们是稳定训练的必要条件。</li>
-</ul>
-<p><img src="https://cdn.jsdelivr.net/gh/geiyiren/MyBlogImage1/yolo12%E6%96%87%E7%AB%A0%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0/image-20250712140731608.png" alt="image-20250712140731608"></p>
-<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1><ul>
-<li>[YOLOv12论文模型解析 -CSDN](<a target="_blank" rel="noopener" href="https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12%E8%AE%BA%E6%96%87%E6%A8%A1%E5%9E%8B%E8%A7%A3%E6%9E%90">https://github.com/geiyiren/MyBlogFile1/yolo/YOLOv12论文模型解析</a> .pdf)</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/pengxiang1998/article/details/148005680?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~YuanLiJiHua~Position-3-148005680-blog-147497370.235%5Ev43%5Epc_blog_bottom_relevance_base8&utm_relevant_index=5">YOLO12的A2C2f模块解析-CSDN博客</a></li>
-</ul>
- -->
+                <!-- <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="1c19c2025c98bdff153cbe7257cf87e615f768af0f555253cafb07f132251e80">18fd6c0df378de8edb452a77edefc307de3595a57a76e3d4ecc060fbfb251a61a4ece9877057ae871c58ff0ebe15f8ac6e22869e6b69765b423b05a1d6ba72e4b86e543a00d7e0cacabdc64d2f038e25a94c30193583e68691a556de14c4771e673bb46dfaac7f478597f6335f0f9d727af432681c0ae071719d8e05cace1a137e16d0144d066d1af2c410df01871f8ddf81bdc2ad2af78a572be9301328130459cfc5bee7242d80bcf39ce0a53f205844ef5f5c95509ef82148404bfcfad5fda523b6192701fd9463df78d6133207f79823671f7ddb85ce72c77f1f1c517b923f69303f130a7adc58008b9fb652bac562b5b3a8de29e7093bc5c0e903b47c5a5b27c4671d112646a6750de3bff348b684c519fd3a7f77dfdedfbb055fa00324c8a212169e25da7219f2c91e3f5f1ea544e4185d17c4a51daae9019408abbfc72ca9a1f9ece30ce9b637a976efc953a3cfc52c50ca5b2d68b9ba609d0cea117df14b3387d4e55f875b827244f57c14a4ae8b8b8b16d2296f3aac2e5154f42e0ff7e3b0c748bbfff46a1a8b36ee82a77b0226b452add9cbe55a8c29bc6f0db4116160213b1427166c7b1f780f97474ece77b50a028db107cfe0db2079fb9b12ee293df9b92988e585527bcab9b4022bf7239b65a624cf5cbe17e5e09d2028d9ad0bd7604ebc79d43edb736f8020e8bc9e2c1214b0f57d207e98a26fb00a0c1f1c92183d805d9709441eb448d6519cb576d5f9901d05161398fde274a7a14604fcbb9d0e223753a927124aa2507164ff80503aa2c0c86a1cda9322003d2dca895196f4f1c47ae5f109d8d0f75f84f2150d1b615dbef1b92e68adbd138ae9f7e32b10fd601f8061dfd076f5abc7757112076ea8dab04803ef458ebea41844a1f48d59ee25fcc7a616dfe010ccc3ad83f7453a7f149ace43451c4c802930005d1f90bc562b229d244d5691feb30f8a6f7c783304aa8cedeb2deeafb550dc39084c37a1963f50ec51053e33b799c0951edfb715dfc80c112dacdd0c23f0e8628bc7079cad513de404e1312b900a43c9867a35969ddb1afd99c63094e2b0c1944c3d0312d7ccafcfa4255b752d6fc2d38c1d201f5727ad258e8b8c7efb5ceb3af74278fdf592b72391816d02d670306e7ae59db4413dfde3364f1b2aee2bc73e868d7614bcb1a5939f09bf9d7a8e0f3013e844e9b66f1cf07efa9af0511b347fdc035a7135ede0b15737a287b6e0d198089d56ca5e525db4637e29d4195763a680c52b1f8dfe4dd3a6ffc731e86eab746884bae1a59962906f36530e4446c459ed31ffbdf0a300e210a77b77d783b887daaf011ead2aff63cc08069a759b789f19e039c578c188ba87214732e04eba8076dfacd19af28ca16db222d5bb5215c4462dd59dc9e888945aa1821028812cdfd32460e09d3deb16c5040ceb2291122462dea1eac0791e05572eb001c614c9107b7f9487555dbe25dfb9456e3fe0527026f5ce3e05a2e9018b81e8f5a0cf0c5394d62a5fe8fbd6e7710b577460c1bda21243047f0819353010d6aa247a613fbbbcb2a04377e82a60239468c3f6a2ea05563509b19c304b70b4559a7680c3e961a0274ae8dcdd1f93d454cfb0c5adbf034a2df521e83ba625ef699e2d58435946bdecac5c20983a9befb78dbe8123730e8ada7d8a0b76c9c11a1bbf2b8c0ecc70df38e1f4bd5768194851a1b58b16098e12644a9247d132919e00291870f22af7e5d8430cc22869c1b18c014aa874cbee3a812451a780b976901f46573724ae9fbf4b7e50b6824ad5f87fb8b802d3332c8660de8dacf46694f5046d2e9b5b0d474ef2aab07757a3e9b57a6a5ff6802a69e907537884c84f24ae91929b0912933cb445273d15ea177a796772ec3dc11e8b70e80438db6314f8ac26d1d9e4e349d4ba9353a983b938f746426acb14325fbe71fe5afbac2ec007a992102b5d955d1c7f07712ca6f5bc828ba38ba9f2436b5e79f76fca43e823c164650e739d5a8b7981d490a252afbf7ae8f8defcbe6cdeb77daf417e57c1407cca9fab7272803a595b640f2c39928f719cf6821ee04953051181867264ab18085016ba293d1a99a8cb809db38b938789ef082b9dfc63f713b7feeed87db159827aaa8887c434f4b8fc6966a11607d44c8635fffcec88b431ad7c6de15257b060db3fa1f3dfe0b452181dca87ff6d1bd49faa2ccaa1e5797b6da0c540e957aeff74cc8c313bd353f7c846eb3c29d8368289d502e62e82c6fd3084e367a716993d323b95e493e4ecdf791cfacbaf8ed5f3167ccb8a4b2aeac364c0bcb39b6fd2dffda0d288fa2980aaf3f3d965036b41b6bc4ce4f3fd412f3ea4aac5ec5596a774d5f9882dbaa0b9c54b075c52c61bd1bb0305b3af1fc301864e8374c8e834a98e2b59d9228699cb5807301ad9d6625dfb3282bc9bbe751039bad3563d3c812fa1e997474fbada76f0b5e5d44c68dce75d9deb56fd0431459412529ffdb61d01677caceb5d4b86dc5dac0701806052b023fc582949a1dd2a5884965eb6b12cd675565545c80c150dc06a0fbd7672e5aff7ff7914811f8f8345d829da7e444a7f9d3372179b96002422a511c8f65d78391689910bbe73935e893c52af4c65ec8971da6734697f80480f604283ab16c5a85202899c0e1ca7a42d88946eac0585188867f5d20f7ea7832737a60cbea72ef671f892b1c579c27997260b49cfe6a1f043d1598db82ef8356aeb45570b711d2bc7bac31b7af006f193fb8313d8f1ebd5b03e7f7f8fac0b63ae278cfdbd754b876bcc2369a2100f5448cd35d0afdf48de411f47a8cb2db3025f9df2808dcd63ca9efc5b178e4e34ec8f4250c2b1f45095887c6eb4ee899d1dd746057f6545f8c738db1b65cdce4630b0ac75d3f7e90e621c51879cb6f61923d897a7b3fe3d8a930111ae80eb57f79fd3e9a4c1a0c8e4df80be3d0bdcbceccee1ef1cee8774afc67874f3d8a012ec054bb265433a09945536b681071eb03ff4b00ca2db518d441cce3a12f53ddca3c63fb01f540714807b47d31f6763e6bc8d18b9fd68e67f452b399c00f6fc0597eac3a76f8c655f9a6b2c44a343f1f156fb87c6465558d17f69fa37d1e02f5842c05ae6b2f16384c3eb220a4c5520d279c9e1e93953171f77275054b9ad2b8850bd7a76c59906640c2d5c70ebd16adf97c532b230db544767a1845af2404bdd4e21a9e2780d3de3180849e7f5285338928503b78fd28f97df7ca4add10785dc83b8bfd2d0d089a52f6da94c385c06174bf118fc828c4d87f48fc26a29c2e81f79020568bcc8670d0226ae76faba209dfce47dfa17461f459e272e7a20ee527458ba3472c306ecd2f7f2687f2bd75fe5f9c5565d44f0c7068b83126bd2431b807fbfb90b058d0ae84eb4598a15ba56d6b68377ff50c77824c08e127bbcea0bb2524df2483107b56d9cb44958bdbe81df21d3c510a88eb8a00802f31c505206a8bd5ff0f0732e7715a43994131f872c1a7cf101f4aff6a2a8a1b5b5c860d0d9f657f23c79bf4ec2da91c47e5387b4ecfd4029d1a2695eb06efc887972397485ce3871cb0610cf84cd657c91234348e169c51a00b87742bd8226a8aee1ef4a1129fb94ec8222b79c1772c8a6d58caf2484d5391aafd09baad996c78f9fbf0c5b04dfb6f0d27ec287aa7f92362b1e31004ac37c77f5b997a63f50135c8dfbb0493632d82ba3a004432e489d8e70f6dd4eb48292885c5f2a0aa6dea8ad7325c6a21eb1d52057c2b0d4efa536f817fe79487a97e920d58a26a60b88222deac61c19810e7519cda808c28f445e1fd4c83b54e6346847df493f8688c2a7ced807081091928b5a15b171ce244b97a30cc9a97d029c1a30c80fbe293a1c454f1bed30611bd8cca4c1f9bf6488d128fed937313a3f91d393c181284b8b079ffb3ba4e4c4780feb93f7015d86bb4ae07bc609d3067c27eceb303a0622f652639ff0e092a88eb25c5393c74bca57755f7927ae8f3acb397bd21c18d7c56afd2be40d66d8de7fa21ae0b909283bfdd909839d6278628ec508d8a3c9bf2fd1452ef581d086b3522037707d8fd24f16e55eb56501f4496a36081710cabb83631b42a703b6e001e18be5b5f22611a1c75a940e3a04def9a2d093ff8726a37a31daec91342c45a8bc6318a6f706130df96c2d75287278384e8dc300b64c5f95144b08f248d662a1a88c56077000771e80cb42ca5f674715f0485c14ae5cd690daf55994f78a81204610d54ba9a347e7abe0c1d433d22e5c0262e62d75e1bbf15c013e888c194ce95d009c993bb0ebb37885959ce19a52005633a3f1567d4063b14f425f977565f21afde3e87714b6d1c9209369c89c999db2a9a94cc845a9ba68cd7497efe2d0093e2f03a6d12bdaafcba4d409041b71050f040416e7299e2ce48d646b5fda7f1839d564ca6264ded27cab45c9b2052b7f683b206c1a1e56140958d998baf8ed8f6a168e961c48f8256bff5d688e6001e1b98b0dcb3e33055224f5bdc5d96a3bb02334a9756ab7755b88cad701bc488fa8c47bd1e7cbf6eb72c64a86d47750d9d4b84d8c405021a2bd6510e0c5985814c23b405e6592f79894b83e4483d37c0b69b8f00148fcbb88c06500cf55016295a5d56aa9b87eaa242f464d2ed095f2e96d586118bc456de1d95903d3cded92977e43bc82d820d2445402276ca274926ca6f52cd16d04491fd6162bbfa9d60877eaf3a47e2e9ce223886651ac02b768a8b7d631a72cf03fcf3f17ca35623b2dfca001890a296fbfa7e468d27135de5484a10c895cf40467c1cf05295ffb5c61802123ce73245dfdc0b24ae34c90f21c1a7b58d636b5d37ebbbbbc5a1ee74007e8d8091dde99cad921645df0ae64d2daf9ee1f7d0a497aee92951c7aa61bd3aa769abd1c8453db1b17d9ed0a14672f9870c7d46d86b0228551c2c7e2cf22fff5945d301f69fb7ff67c38372a994c8e592fea114f677e8bb86c5663594639d4bfbb5a07928f438f91802f20bab1a16d8288ddb9843c9bb51b324f9d5c05a097733dba1038ca145ac6be5e3c409e42c8d1e1a26cbd64488a03934190910d66b28e31bcecfbdaff36fb6063f49760a68f0fab34ce11f8412c28d401b239318ca5556b0b7bdec60a2b34f674a12eb56beb5f9688252ebd493678922b46b9fe02fe89fed07a1a8e8a4183251540df1b905e705d16f918e4f3587f357e6a8fe9f0730290f0c2726106bb5d90c338477a3afaa828436b70a0c6cdcea3c9bed1437658ea4b636187cbb7152078adb89ad3d8b86192711628f0475510fb5d04829ca84909c87725cfe881e0790d72b92398ae9986bae3070e86cfee216bc417c1afff92e9aac93c8c905ca985cdf7a7d3b03b7d534ee1598af115d43704b0c542be99cdaabe46545648008f7135cc3cb1ae6ca825169435988846d85fc564d5a5eb89269439c878c7bfa86dc052ce022abc09f26b5aaf06011845567fa0457fad7915d8728288378a3a3f80223ececab380f8f70a70c35c7e86928b768dd03a9ca1f2e3ebb968b1f3ef961ee4b29ca695ae99cbbbd178baf8393ddf303ea1ff44831ae52e5133acdf39b5370fdbb10ec8624ce98cfcc427f9b7716138846bc989eb0a78f57932d67d299b579c76563038c3e9aa81e6c1a10bad7b4b76c3e203237beda2e8a6fbffd487eef133f84e3e1a0d3a6764b7e7c6c20bbcd7531abd9d5235c33e92c622fc319eb04ca55e66ccc1d8411c153be950a935664aafacadf3bed39157a3e7055d08641a7c6b00946202a300e7b3036a7605d103a761f4e050708566405e0cc1868fb88106f648a13bba335d1aed4578cecc70102a66c8ece846b374f9538b824cf6832a54e7e036d33262d6787cd4383a825708f403197fe632b86c7b7bbf1b67395dedebc28c8e240508649889bc777bddbf2579c00ffe8995eaf7c417341a916842a2cdd121e1e915b4ceb59ad9bb49ad1802c2e216d4ea14410a901af9e0299ed8e351765005fa49f0185ce20fb1be84461036009ad893a732a7b8cd92f8694bd93ee131bdf56a39773ed51901dac0c2b6e33c6e7813c1e4b56aff7edef712d264e540ac3b2ac2f129bc4cee31151c78c57b458cc6e9d28efddb17dcf29e0b858e4196ab88ab844d0e0bc902b62a0fc5b18ce8f0425ae082104afc0b01284d1ab791db94746f3b5310819c84d1242c53ed5b9542ec9dffc6955ec6719e631a427e6a2d09d8ebb422f3b60f6abaf109b1f31c34750159d49c8e5d3299f95cf476ab1da40b1a85cb0ea94b4321d5f100378a3876dcc0717d0db42d21b3bc211d5f0ee6f1eab423be3efd7755f460d87f10d670f8eee9e72861a95428cfe99223d141f83a060bcb04ae3019ec2953591f43ead768f09636652f5c85165d8431505fc5410af9908888eba47a198db93f425d177a8618c16a4c6e86d442727dd10fe9301f036036220b316485fd391c23e635d59547eab405fd8e1423a0b4caa60f2bdb36489433d977c152f5c75f1de74cd197f7b4c504264fba5c8bbe07a342f45ac04181e3d0bf5d3078ffe988500efc86645e3e94a3f4d2643173b8a4e5e8a43050c0b53a716c844bc3c9306dc2aae4a70399f42667018ef5cb8659ca99f9d859cbcae60cdb093c25fd4f153b772b84a84d852e9b35afe41ceccfde31b07958037ef64a995ef95be40607db94f6d3ee88a02021791bc81585aac4cdf8e15b157ff6a8f57ffe2132ce4d4867a05bdaf1f673c6ba5cdd47b8d6863f55816f7cef9df5a36fa74fc423731dcf460956307b4d797ce247cb179f62d38f2ed0147eb5e0c72a0eb3b38ce7cfffdc7cdad97a844efb91e45c3ded212b26aac3c69efa5130d45bf75f8445200fb04c8b6078e9440d895c68c4211b61b16b3a219d56ddb8aa1dd7c15a5f08b1ec7bbffc0a08b0c1ec66f0d67ce27619bf8215d8a69b2969cf0c89a0147107141e3cfbf1d7eccce36e369471b06857dfce4ab48d650452e6725a80a7e0a06aa391bf0a9e6efa7f7c261d9b99b66ceaf3364ccb0d477216f26ed1e998cb9f4a4e18e82e921c626da6a4bb2714fcf2360d53373eff5b3fb9f1576e1a2d1cc1375231c8b800cb31abb4c3746eacd43d0b0e9c1d5c04a3a6698375f4a08b832c8dd5690f32dc4e0ee8f150c09232d3f8dcdc2acee5c7fe6a78024c758b58b2ef359e90f18b820b7a701512de9ff1b6c797140914963bd2006eef4da645e016a3051d8c271740cd3911140d16a378edb5f889932481d3c4918d1b9ef0f824c03626b9cf7f2fb61b26eb3b782ff186f6c7ace9928cec6e089066cd723c08955c83db52856af608e92cc94d61d1b8e668e9b317bc85ef8dbdc562ce56b198e15a49044d67cdfcf395666b13dcd360f3b1d5e678e05beb6588fc1718e570edcb60baa987280d5b092c634541837bea6edee5a6e9188180e12d915c9acb4a0a4540e1aae580c5adb5fe2ffef58f32ddc1440fcb293c2d781ce41874ef529aa89cd7c66311b9c2f3eed4e15769fef792a924b1e2f883fb6a37003ef453d843c4d0e9e38f5987363d4b3efc7ec93c91a2165260c5a64a3f5c25d8cc64f4b8f3946ba30d61995da24660dfc2eeb24ab4110557b0b4c744b8308949e5ade824f7c961ccf81c7c3941f7014dd776c25e78c7e1f011f5b075ba54ccfbdb43774bdc1e23a9e5917ea380c64ac18dc4454c128e96dc797393aa2038e21bb1522728f14ce65cd04058a230b05baefbd489f3796b92ac68fa57ac3494c8ad00137a8d93aa75b717cc67967cfa9693a7ed686304c43cb0f7eedff4cd8adc44e8a50266fa236b5fe38aeec3270087c3030551c30f3637e9744e2f4fd36d0c55ef27f1d729b4f9409c1bfd1c572b52d724886d053efeaa7f73df5f000b033c06b53eb669b87c1a9e805b3644dee77c8e9667b527aaa5a9c43259b91a67f065aac0881b480efc888129703ea90c51e6a74f34cef80f24b61f9a2b260d8049fe81726e33e909a1f304fef18388527135e40320af8d816d800542e6b109b33fa18aaa75e147d851c7b1dd030a3d953265549b2e9668190076149bd37a1ec3b5111b61b53c1a3add40414b5a4893ebe79317cf7d80c862e05a712401df70e0861800359811f9f804b3dfa547d95781f821fe410798242e88c2e9fd3de5cbd32b2073f6533a6e077463f0d9af416e3a0446e094c2887b5a022a88737b12b3ba8cc871b20df15e60a8a1aad4aebcd84ee8cb4c45f9b5c8cfbad4bb720df6d2fee20dec380244222ebfa5fe8545b8939823c4f5fea43ac4a312f14cd16a288810f06019c5f7680a786ee8d643ab8b1d396e8a34ce6d4a7cdab42eeb08e77f143bb0510451025c9a6c75902489d559c9404142c094ea710ba7bad6ed60e258e1839402de6a264a92488cce6c2591d88cb60143390e0bb9f6d74226cde5ddc5760dab8425b413453123e1c89e8a97a044677ee5be280e00ab995c4b01eacd4cae6d7946ac2058ba75d64d282d7a653f314b100a89c28b43bc78cae9d91a4e23b9ee90108e215a8702064d4eb1766902417caba65881f6684e39da20d6d69fd683304339cc603160af3cbb2498254a7131345ff06be564fd19801c744ec1dd12853a984ce3461498b490dcfc8862ce1bc6cb7cfac410ca2ad419ab5f29815abfc36cecde21433a1e34e969021355bd76359a3c83cea4829b68f8ee920f57c8467dd78275cb9f69e691bd91f18db9669b913b80e706e53926b210d16ce455e93c9c5b954d1791c3e5f86293033a8ede4c7e092cb1a4d628f8612d06da88120d9c2423cb1408e013f6109fc8294156996cb0759dbbcb2d1b1562141ec39ed9016034a7a6bd3dcae2893a35584880bb2c6a652e88f452896313a7b58d5525ff96732e4e26db0417c1f33aac5f0ac442a0d325c0af124fb25d76dda6579c75e6dc7415ba731df40541499b911a4ebd86471acab8bb65ac9fbc8e1e0b030608816d34fe2062307860e58c6390a8aaf3a46f5c1f958e7603a8bdc21a451300714c33085f2cd80fe6300ff2209ab1fabdc7c6a1825571f94bb1e4cdee4ea89e58b49865cfe639224aa0bb70beb08a354cab34a28ae34d01e0e00da412e2c35711f466bb9689548d1e5c02e40d230e298024f9edab267c35e3b74255eb2cf44f83994d8f3b184f7c1262f1606ee3977fab7b498030ac07ac8b523507a68682711413dd796bac747e6f620cf42f7e32b3363ac495c829f49182ff355c846dfbe2a440dcb7a1f37c1839bd54da2dbe88baf6b68981ee3e439c4f7a44b8608bf45a42df3434abb5ce80891a7698c250ec2bfbcbb4b6b43fa16e06d43e2c4e806998ae61373a78089e36c74e404e9bf08b57822cfa832a7a3e95ad3630b434ce87e0ee96d0a2f21ebb512160bad9d6e93aa51949200835560340d2243e08c7b327f88d426c01aaa8cf7034e8e9f821486bf9de636f3b40acd8010f5a480365d9f345995e865427b0e131de72bebf719551e4edc938b785d6efb7eb3650c6fa9c6b763cef9ae8bad0cd0d08b44721e5a7be9d1da0190038aed51b30473727ef8e3e3b7d3976b44246aa062d69014b5d4996312af200c2ef05db42173313a7e0220a64c68c75acceaeb9fa8d417c251dae99b8d1337269b5462e66892fdb936534d133ee00f548b8ca30173d9d7930bb30880ac53367c710af281b7a9bf1f3430452407632e18aebcac7c2caba62747b4aab6420523b443385b7c4b92265275dd0d80dfb4095f3d8ce8919d5fe19dea03a4dda7ed5e6b0c82dfceb94444fce26dc1df07dd412b427656eb3686e6dd7595c8f436ba0b5f54bbf1b4a0dda8d2c82f18c58e35d467a5fe0f6640d2514ccd5b6632a201669badd5e1ad62043c115728076a684d0e69e7b92e9edb6a6a162123de45ed0274521ef951ae5f17fb71d19d67cff698c2115789c264a5cf9f55b72402986b2d0525ce2a29ffe284c8d5c0f3c19a1bb638631b01f9a07208af8fcf53b331d61fec579da68524da8c78223a9c11cc64d0aa54669e94e57de9454ec15604556428048a50f2ccfe08fe90c8870ba4c6a923f328fb7edaa6d09c5c581888b88ac0e70b3cd8a7464f283d5b1ed34300e8e3b80a42d73f6fd7a29eba9435b555583901b2e5e21e8486cc4f48fb9f905f80323e29bb94d9a2865206e12ae1d0d84ebc64d1189a04f2d67be55c8ccf1788c44780144a501ad10a7448dbeca3f75cf68053ed5c977528eddda83cf9fcbf55900a3aa1456d143f9f95ab189ccb8f6fc1f95ef0cdd3e6510f29311621566b90164dbbf92dea64b4071f184f1a142bd6c562a5ecde22b6a1b32e982486fc327dc621f561cb211a25cba2869a2fb896cfc650b20e52d3234d8f5db82837e7141aebadefbf53e6c76744cce9183f2117e5a2103372984a3edf0fc1264d924ae44dba15faf853fcf586dbf1a21e4508a0fb844736a2f68806bb288224afa899fbbecce5eaa5e0c3be53a6a5ee17dd0aae807157471748bb96a28614f7d31d12f7d026be189dcdf6b8f5d63a5b6e6333f4e2244ceb7365e573527338c472fad3c4d1e042c65918fd480bfbacd42c4c9db574d66216fb86f9258d4571ea96807ae7b8095ef083ce2c90f54f12e59ad893394702c4ddaef3c4f46c595448ba2e8657572ef925d7626267dc2918be5a7833a029f0ad8f987a005523b272d31d79e3624becea7b56b836e5e57a13b0fe434fdd6783c765db5d25d00c0bd74e301f02bc8b88e9b004b7a16f49ad218f16289d67292a8e83373edf8a5a490d8a6e92f9262c963c80b1488dc83701a9f7d58d6bac871387d889af35ef4f5fe0aa442227f03497a2f4dc26574afd693a61962bb0c5448d7f6f492754f081f0d65f2e4f29bdcf0ebebe372f8767b9a117388f1a400633c70ad8535ac617ee95514459c003773c80c1ecbcf953c00b5116dffacc23effc461b1e3bf6b049e2c45d3c41c017a04ca5d54d4a021f8770bc40f1a176dd6dd2012284dfb46e14ce8274100aec00cbba4beb59ba76e904c20ee0799d6f5381b5815cad2f4bcf9481cc81decb984453541826e96a3e5aacac05c4867cdda16b2cf8aeb72d56196730f6134e249b0a42c9fad73a5edb3107fa85f7459ca988e35036cf7fffec8ddd170b86381b65fa4409c222fc55c25ffd311d5f09c8c1f56b16ba4de34e69a1e51baa2097e11900f5ce92a00616b934b43906fc3b0b335dc6550cb05aaf9044a339aac7989e84c766c710d5fd2c2bb333a5e4d02cba06886c267a29333674d30971d860973ef0e9c3a2bff8b4abe60c64e49e8c438eb13945bb6a65c896cc92074640dfbab46990c1e17d3c26132ed55dbe1e9dae5cab1591d58dc0150ab03e738f66537c25013dde4cf552ee23d8f012715eb833e95d2c3b9a349d6d62a6476e6dbeb9e46a2bb7ecc4c00f144c8a18a4143cb67aada0cd6800d906ed2bbcb871535781d5ed546f276f19aa146c1c9eee1f4477c4402555f9ed9f44cbb9ae065a97ba5eac9f959dbb5abf40ef1f66b4c273722841cc8f1e462487971a9050f92a432cf4cdac6e72472bfb1ae1d56613e67fccb5968d254dea8cfa78d28fa35e3b3f48ce6b36e54b30e6a427253fbadf4eba14df6cadc80b517f74421bac228b0bd90046fbb3baf0170caf07d6fe0d9be117b0266fa7607ffd5275e12ea47ce60282148a08e66e7a1a5b9be477dd99db99cd5d0cd68b1cca39c26ecb0a2951f27ac88335d3a6e8101fad6eefd4a879ce2b45e03f10b54551f83a3837f9c013333467eff9f80bd47bbb038ba9b50f85016031f4338135726a4398622c3d324531e169a18eefe4595f13170015d415f92ff8aa8cde7e5ad3b9aadc4d1d7673b3dce8c6a5d6766b1827980b56682fb50302c64c64768083bf8dac92b280413b8a5822008108f8812832099b1b17ccc7ef0174aca984b2814621d02a81e7158565d8021f6012e8c083367f104cfa8f860ba3c87846a363767e2a3413267b1c51f9b4467c6dcb3e11f801010d238e72ba70c707c71ba2cb7a4164fda1b6e307b1c099bd8fa7e7557c5b0f9479449cad11ab04a014c8d6c9269b7121f4a4e70796eb12fbd0ad89f2f1e4fa430bd13b22545dde4f63471df7ccac5798c2aec016ff8a8c31b228cdb331b30ac65776d05b4e0fbc76d1a6e7b2f843664eeb2722c5a36acfca4614ee2da465bbb8f37438e7e0a5ffda7e0d4ce34bb0cf7781a404792923e6faab97e80ff09d235cf083df13974b9eaf9d51fdf81b4c5711ab030a3fbd1d5e210b5c4316a1cf33e3f29ab527f914fa7f2fa521c848d5ec51f0024a0a09e7ee7a39863582b0af59b729b92a8b61296fd4215db48cecf9246657ccc58222de96cebf1855b9c2b996ec2a9c5f34dd131a5cef9ec17e0d9ec7c18b55e7f5af4baf86f27b58a0bfd5cf63839aa2e5617e628146577580ae9456b17570f3bf849032cf221daf4edf9b9af3cf958c1cf874512f2933a701b9476f68cd53a0d5dd7f6e90f71b129956cc8c070c5a02febc2ffd59ddd76c8fbdbb1a526c8d59e4e15aa3785d54698a969a592feb8135a140ced57baa5d5ef597e956173f07b86bbf6e7dd39cf7783f7de595531b16388692280ce74a5095f5062eae90f473d8f94c12e3b5fdec8bc4d390e2366050201ea9aa81fced118eda0d4d1a1e00a4294a620332fa7d249a3cfabe3db802e284b1a7ba03082de90b3c9356634ccaea734771bd896a25892729e5e492dfa7a57e1d186116e0cdd72e76431c2e5ee4020c13d47e290d2fe729cebc7f0da958255612637986ef81c65d2be9aa904e1cb45ba0a904d07d72f67febed5ffded8b2b2d3edb1d1d58a44a2b5083dc3bfb870829adee2d7b5c1030c42883dd2b4a6931a1eead954adad9393e6370a742ac496ff3bf22326db9e553ac32a80f125d90898846017e936d3e72c1895cc062293d591f7c681c8c8bf9b66c39d514e9455651e97ab0e34dd3bde2d69c53964db1df2457efd8dc00a2b58f30caf2a32f44d78c6b7cf9348b22d31d280ec809d0780188530ed3ad3175d95522251d691c659a0887eabf9486a0e654faf81a60db85598986af6df5b663b54853c9ae97bbb8951ee024fdff5169d9ee47f82e3dc47e75dc8007e18c55de6b72ecbf0645477c22c4ee249d128e76e3106e6bb77c335fb6833713252e4e9edb41af1e088f0a00bb5bc99cc97af59e6e8a0dbdeadfc99b9ea470750840a53b2601311a2e52b7dcd519ed415a483c7136cf86ff79d13c3ed5a04fd35cc081c4facdefadf8b2e24dde26519bd5ae49f55abb0a1888d2c3cff09a39097a00b846bb87bb8ebb749595f368c15e66589ab1243ff6be253e9019dac31631f2b9838825c7979728cdbfe907feb1b6ac7e1abbabacfb23b1ef17c8a3308391f47d49be6f036f996f87baf8d161e239a1a4109904ddf2670960595be20f2478260155ae774b7b0a5a366169bc071684cca6af7f07e4b01b8b99f708b7b012e2ea9350463aac45e5a3039b518627e88ac2e88aa3032778f03439a98942141ffc3cdebd0c787a38d01da90b342aa87c80da5310bfae4809f3e1116efeed3274b2a7ca827027c84b33bf1b981494e11b0397fdd9825792d76814faa3e1fbe9d774c2390021d335868f4e49a024785d4f362a1fdb23920727b10cbdf8d7bbf24a6f13fd14dfbecf98ecc83017947dae8dbc5360680d6d086f86dbf6f8c64a32a1966c5f1163d8df07b79a34d5359991d94cf79fc7513d07af331921f1f380b51c53e713fced63132a1474420261f888d68ebd070b4528233d16853420f01f9f253c303e212ed46ffb9e178682803b4ba4f321c9046b10b2d86f5dc3a8fa9181ac426d30ea7d1898198ce91efee9f9bd9ba9abfe7cb5e124bbd724e5e58d47421ba1d2fcca9b2194d3eec3134c996e8cec2ae86b84fef6435d6d904cb8af0132ddc97a911ad49e4f33e3488c2aeae835cea51817975360a5b21a34fd9a22501232f023754c585be6e5b27b4d00710d60288e9c9747ca1032154c6b3b7c35ce2e249539ee55e75a0cca5c0383d056e593ae78dc6abfa9c351ef0b259358cd1118fde6f6552d1d2526ff49a22bb1087f7a542c665ed9dc7d1d16db4aee8093685f014fb7c2a6db2122651e05c7c51209bb8fe6d8363613fd6ab1265f69c1aa9e1d825627ae7c96b3e4ccdc41392f2053ae695d09d0c284cc8bb6506a93e2c99ac18b5886d3e7f308e889dc3dfc841468ee06e1a329456265175d33f69fa8c710b612a7149fd1383ae9fe0a8c68ffb760923133dd9bddb0a1e8367e53d8beb9c9a469a72be420ab7da02205eb981e020cb5a51a9b8f20cdcc19a812fb6eab50aceb82c9cb85e934bb0fff233254e76cb23d03b658374719a18bcd045e003b8ada8e1c8540dde869a88901cc5a24329c624ecc2bf6bc22366d57867827acccb3bc351b77897e4aecba648b6d5048c2c2e1c5800a461d7306347cf337c27fbfdfba1f8988d3610b3ec41f3940c75d47eaa60a1e3033cf13d5a88e9ab7b51e013750ec1da21b2506947d962edc14289473363f15846e1e7d5523325d0ce755576b06c4ba6289bfeb3a612db746085cba4246f4c60affd38211d12190f16dd55e926ec56f7f6b484686de09daeba58aa8a047deb8b09</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">👉点我输入文章访问密码👈</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css"> -->
                 
             </div>
             <hr/>
@@ -752,19 +625,19 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2023/05/29/yolo12-zhu-yi-li-ji-zhi-de-shi-xian-fen-xi/">
+                <a href="/2023/05/29/yolov12-xun-lian-yu-you-hua/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/18.jpg" class="responsive-img" alt="yolo12注意力机制的实现分析">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="yoloV12训练与优化">
                         
-                        <span class="card-title">yolo12注意力机制的实现分析</span>
+                        <span class="card-title">yoloV12训练与优化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            yolo12注意力机制的实现分析
+                            yoloV12训练与优化
                         
                     </div>
                     <div class="publish-info">
@@ -786,12 +659,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">
-                        <span class="chip bg-color">注意力机制</span>
+                    <a href="/tags/yolo/">
+                        <span class="chip bg-color">yolo</span>
                     </a>
                     
-                    <a href="/tags/yolo12/">
-                        <span class="chip bg-color">yolo12</span>
+                    <a href="/tags/%E8%AE%AD%E7%BB%83/">
+                        <span class="chip bg-color">训练</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">优化</span>
                     </a>
                     
                 </div>

@@ -371,7 +371,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2025-11-04
+                    2025-11-05
                 </div>
                 
 
@@ -452,10 +452,10 @@
 <li>AP（Average Percision）：AP为平均精度，指的是所有图片内的具体某一类的PR曲线下的面积(横轴为Recall，纵轴为Precision)。</li>
 <li>AP衡量的是对一个类检测好坏，mAP就是对多个类的检测好坏。在多类多目标检测中，计算出每个类别的AP后，再除于类别总数，即所有类别AP的平均值，比如有两类，类A的AP值是0.5，类B的AP值是0.2，那么 (mAP)&#x3D;（0.5+0.2）&#x2F;2&#x3D;0.35。</li>
 <li>MAP: <strong>是指所有图片内的所有类别的AP的平均值</strong>,map越高代表模型预测精度值越高。</li>
-<li>(<a href="mailto:&#109;&#65;&#x50;&#64;&#48;&#x2e;&#x35;">&#109;&#65;&#x50;&#64;&#48;&#x2e;&#x35;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
-<li>(<a href="mailto:&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;">&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
+<li>(<a href="mailto:&#x6d;&#65;&#x50;&#x40;&#x30;&#x2e;&#53;">&#x6d;&#65;&#x50;&#x40;&#x30;&#x2e;&#53;</a>) ：(mAP)是用(Precision)和(Recall)作为两轴作图后围成的面积，(m)表示平均，@后面的数表示判定正负样本的 (IOU) 阈值，其中 @0.5表示IOU阈值取0.5。</li>
+<li>(<a href="mailto:&#x6d;&#65;&#80;&#64;&#48;&#46;&#x35;">&#x6d;&#65;&#80;&#64;&#48;&#46;&#x35;</a>:0.95)：只以 (IOU&#x3D;0.5) 的阀值的时候不一定就是好的模型，可能仅仅在0.5阀值表现的很好，在0.6,0.7…阀值表现的很差，为了更好地评估整体模型的准确度，因此计算一个模型在各个IOU值的AP(mAP)取平均值。</li>
 </ul>
-<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#109;&#65;&#80;&#x40;&#x30;&#46;&#x35;">&#109;&#65;&#80;&#x40;&#x30;&#46;&#x35;</a>:0.95) 结果。</p>
+<p>方法是：计算每个分类的AP，求和再平均，得到的就是mAP,它是直接把mAP当成AP，然后再把IOU值大于0.5的 (AP(mAP)) ，以0.05的增量,到0.95，也就是以 ((0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95)) (IOU值) 的 (AP(mAP)) 的平均值当成 (AP(at IoU&#x3D;.50:.05:.95)) ，通过(IOU增量) 的方式得到 (<a href="mailto:&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;">&#x6d;&#x41;&#x50;&#64;&#48;&#46;&#53;</a>:0.95) 结果。</p>
 <h1 id="目标检测中的mAP计算"><a href="#目标检测中的mAP计算" class="headerlink" title="目标检测中的mAP计算"></a>目标检测中的mAP计算</h1><h2 id="yolov5计算IOU源码解析"><a href="#yolov5计算IOU源码解析" class="headerlink" title="yolov5计算IOU源码解析"></a>yolov5计算IOU源码解析</h2><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 计算两框的特定iou (DIou, DIou, CIou) </span>
 <span class="token keyword">def</span> <span class="token function">bbox_iou</span><span class="token punctuation">(</span>box1<span class="token punctuation">,</span> box2<span class="token punctuation">,</span> xywh<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> GIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> DIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> CIoU<span class="token operator">=</span><span class="token boolean">False</span><span class="token punctuation">,</span> eps<span class="token operator">=</span><span class="token number">1e-7</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
     <span class="token comment"># Returns Intersection over Union (IoU) of box1(1,4) to box2(n,4)</span>
@@ -691,19 +691,19 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2023/05/29/yolov1-dao-yolov11-xi-tong-xue-xi/">
+                <a href="/2023/05/29/yolov12-xun-lian-yu-you-hua/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/7.jpg" class="responsive-img" alt="yoloV1到yoloV11系统学习">
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/8.jpg" class="responsive-img" alt="yoloV12训练与优化">
                         
-                        <span class="card-title">yoloV1到yoloV11系统学习</span>
+                        <span class="card-title">yoloV12训练与优化</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            yoloV1到yoloV11系统学习
+                            yoloV12训练与优化
                         
                     </div>
                     <div class="publish-info">
@@ -727,6 +727,14 @@
                     
                     <a href="/tags/yolo/">
                         <span class="chip bg-color">yolo</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%AE%AD%E7%BB%83/">
+                        <span class="chip bg-color">训练</span>
+                    </a>
+                    
+                    <a href="/tags/%E4%BC%98%E5%8C%96/">
+                        <span class="chip bg-color">优化</span>
                     </a>
                     
                 </div>

@@ -1,1 +1,17 @@
 /* Here is your custom css styles. */
+/* 加密文章提示文字居中 */
+.encrypted-content .encrypt-message {
+    text-align: center;     /* 文字水平居中 */
+    display: block;         /* 保证 div 或 p 是块级元素 */
+    font-size: 16px;        /* 可根据需要调整 */
+    margin-bottom: 10px;    /* 与输入框保持间距 */
+    color: #333;            /* 可自定义颜色 */
+}
+.encrypted-content {
+    text-align: center;
+}
+.encrypted-content .encrypt-input,
+.encrypted-content .encrypt-submit {
+    display: inline-block;  /* 保证在同一行 */
+    margin: 5px auto;       /* 居中 */
+}

@@ -1,0 +1,936 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="数据集聚类分析, geiyiren">
+    <meta name="description" content="通过聚类方法对数据集的分布进行分析">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>数据集聚类分析 | geiyiren</title>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/favicon.png">
+    
+
+
+    <!-- bg-cover style     -->
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/awesome/css/all.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/animate/animate.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/css/lightgallery.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/matery.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/my.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/dark.css" media="none" onload="if(media!='all')media='all'">
+
+
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/css/post.css">
+
+
+
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/jquery/jquery-3.6.0.min.js"></script>
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">geiyiren</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+      
+      <i class="fas fa-edit" style="zoom: 0.6;"></i>
+      
+      <span>编辑</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+  <li>
+    <a href="javascript:;" class="waves-effect waves-light" onclick="switchNightMode()" title="深色/浅色模式" >
+      <i id="sum-moon-icon" class="fas fa-sun" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">geiyiren</div>
+        <div class="logo-desc">
+            
+            geiyiren的博客
+            
+        </div>
+    </div>
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a target="_blank" rel="noopener" href="https://github.dev/geiyiren/MyBlog" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-edit"></i>
+			
+			编辑
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/19.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">数据集聚类分析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<main class="container content">
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/geiyiren/">
+                                <span class="chip bg-color">geiyiren</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E9%9B%86%E8%81%9A%E7%B1%BB/">
+                                <span class="chip bg-color">数据集聚类</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E9%9B%86/" class="post-category">
+                                数据集
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2026-03-03
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2026-03-04
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    11
+                </div>
+                
+
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                
+  <div class="encrypted-content"></div>
+
+
+                <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="密码错误，请检查后重新输入。" data-whm="内容校验失败，但你仍然可以查看。">
+  <script id="hbeData" type="hbeData" data-hmacdigest="205d395810f90e4c305e27c39219536e23d13966afb1ae02dcc2812dab02958c">8fbab86bffee6f10b10de5e3311819e92162f28ac46c0bfb562471cfa4509f4d4fd729ab1d76e9079c016b12939144793f9ab2b31e2c02f5cd44b0b45f28bd8f73893bb840087dd6478fd80ed6b9ea6c051c343f4f5438e517a78d50a21450ce42783a4845a8966f14ae64f1c71dd8c5df60ce932979aa8fb9bd6b4004b145ecd0beb7d01758053db8d8f136e693bcc430b15d24d82ae594bf7f13f7420c8805299593532ef7149def7d21e2147c2f7ea0e804ed16988426e9a6363a11d0cbd7e1cecfbf9c9776b172f36c5f0cf47081670bc4dce945f87fea3a7fdbdb5d82e1c1da0e01963b34ff4148665e43eb1fdc6485ce35a26beda23973f0e92d66a06e3ddc6d2f3fe94658ce556dfe53d31cd89284a9cdc8d3f3577f56ee72e6931bbccf309d90bb57637e42efc9f85ed245ee37433f1ddaa954dc11a81ea218f7d2916b43c354a390ec41ad96c5ed86bedf931c4d02a75aa4eba80bc6837c906e507d7ee7957ac6c15f013fc19aaf7a0db77e08e0a79d83896f35460f28fa25f9a628f081ce93511087fce5104e2f32db028d40c436d231b39995feeb55350775eff452d63f0694ebf08a1d938fa4f28a95fee8ec1357299e3f40acbe6f8095564aa710dc2e490ce8bb0bc6b4b4c02a87298bdd58c50b5b278fa9601555b5f9a2682657fdef944a22352042470303a739e7ff2a70ffe3a858a0d894d27831169dcd2e8a54d4f4a60d586a03448d85a751877ff0d9d56cc70c3b51164e8ece1eddfaf1284fe2a1b744c077843131aebc85934b6b88b4613b379bb1eafff6449cc55db4c64b5861f4b9e79aa05a9490c2c79188c02dbe5133c221c2c49bda76aa0eadc95ffb32f25df32edb0a72025adb96da48db754651536a11052035c02b16b2d07e0455ed493be8ec6803e817e707a4268488cb347622f81a67cdba3742a845e49d1c46d5c835fe279b5229c3ddb6ecf1630e31287d9f18265c65380f7ebc4187772399a2cf160bdd8eb2c93643bb6b0b6e5c2bed0d51adbee572f4c33284798ce0e97cb68c026aa438ded7a486a092e5b347feb37e115a67a6258ca18c5c7de7fa00210e02efaea1c01b0a70469af4f14c08388b313de64c785fe3e004d19bb5345da1a548b8fed78ee5b5813cbdf0c22b6d285e68d6e4191b77ca047e2c0b0db3a2520e35a2150aee20ca5da8a36ab0a6cbc8a17cc18cdea5ec3b9098136711862ec9a6b0b66a9151874ce2c940f8890fbc93e98063e9e6d86840e0bee07bf2eb1e399f78a360515b849872c07e150bbd92fb4cc851cd34c1269403a0d4fc6795cac4dd2be0c84843004999e29005b7e9d096d4a7fafad9139221443a8ac1480af0593bd1e269bad71275843f943b174e4627bc769dd087ce6810f905f817cbd88f7de1c2be3df20f9ec05f0ca84296f571631c5b9b06eba71e2dfa3673b6f22ed83b05efd4302119b1775f4544b92aa1ad89af37b7b68b8ca30642d9677d5f49ac8c5ba7374e9ae91966130dc4014c5c45e1c7e086b6abfe68351c5dfc42e2facc4c1e492c242964f80748b3a5fd289aab26903d5e23f7923b0c3be2ae7c5ac43733fba6b60c44fa6ed915891aa4e89fe5af1ae42dafbe59507d92cd390fd5866fb9cbaaae3405c1c15f02c3205fcd7ce82d1f169b775f1cc2158f574f6de9bd5ddf32df9851a3e51a2b99e058ed507c7f812ed5a07e24b7821c569fd7972ca7fc6fc3aa3d3ae5222e8edf443dc02239fee25516c94affd00d275de22e6aa0260e2ab6279c886fe1977fe345210cc334d5390ebd69cece4b5b589a28ee88532c8f502a35a094fd96e94513e3e4363e0860ef064c86bb032d689dbded5cff5241f74ed10f0e8e20b1c63a8283eae1a610abeb178e5234a2bc1ace77088e27cbeb41e11745a4903acc032515223f1560766139142dfc7df3250f6234399ee33f938801de253e877bf81c3fd5e2cd858a645dbb7d80cc0038be05e2fa59d7320b041de52b53e7cdaa995001ec9f2563e4ac55339b32cc944d29a44dfd2ec96ef1acfc2e28b161339f1ded4c6ef807d595fe1b4b5280160df0f7a5b407ec78d0034d119ad4575b9454174fa8f9a5207e673b347c0eeb4fd65e29c9572c4458f75550f8b7e177312f038278cc73b41d1c4b593f30af07c436ec9e5de87956efc1a9f23185d108b1f370cffaaee4e04bbe20cbc98968032e2d983ee9e1e69e901aca2f6476f38e5a97cff65520cf1827e7b27cc6dc351c1c663e86776dd912813537df4f719f87b936ba5f629439775ce7d003cce79622ee724c4cbe2445752d1e63eb04950cafe4142c2563e929265ae3565917a4c9eb4d8a3123dd623ebde6505f23dc7a60068d9a30b97d37a17b047f7fb4e139310d9a693d97e304aab41b0f4abfa2c66ad5f0f6906c91f6c80615734b818a5d484862cdd814e9ac4774dedb6036</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">👉点我输入文章访问密码👈</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">geiyiren</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://geiyiren.github.io/2026/03/03/shu-ju-ji-ju-lei-fen-xi/">https://geiyiren.github.io/2026/03/03/shu-ju-ji-ju-lei-fen-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">geiyiren</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/geiyiren/">
+                                    <span class="chip bg-color">geiyiren</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%95%B0%E6%8D%AE%E9%9B%86%E8%81%9A%E7%B1%BB/">
+                                    <span class="chip bg-color">数据集聚类</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="wechat" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2026/03/03/shu-ju-ji-ju-lei-fen-xi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/19.jpg" class="responsive-img" alt="数据集聚类分析">
+                        
+                        <span class="card-title">数据集聚类分析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            通过聚类方法对数据集的分布进行分析
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-03-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%95%B0%E6%8D%AE%E9%9B%86/" class="post-category">
+                                    数据集
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/geiyiren/">
+                        <span class="chip bg-color">geiyiren</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%95%B0%E6%8D%AE%E9%9B%86%E8%81%9A%E7%B1%BB/">
+                        <span class="chip bg-color">数据集聚类</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2026/03/02/kai-fang-ci-hui-mu-biao-jian-ce-kai-yuan-da-mo-xing/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/medias/featureimages/19.jpg" class="responsive-img" alt="开放词汇目标检测开源大模型">
+                        
+                        <span class="card-title">开放词汇目标检测开源大模型</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            记录日常搜集到的开放词汇目标检测开源大模型,此类模型可以通过提示词进行目标检测
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2026-03-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" class="post-category">
+                                    目标检测
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/geiyiren/">
+                        <span class="chip bg-color">geiyiren</span>
+                    </a>
+                    
+                    <a href="/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/">
+                        <span class="chip bg-color">目标检测</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+<script>
+    $('#articleContent').on('copy', function (e) {
+        // IE8 or earlier browser is 'undefined'
+        if (typeof window.getSelection === 'undefined') return;
+
+        var selection = window.getSelection();
+        // if the selection is short let's not annoy our users.
+        if (('' + selection).length < Number.parseInt('120')) {
+            return;
+        }
+
+        // create a div outside of the visible area and fill it with the selected text.
+        var bodyElement = document.getElementsByTagName('body')[0];
+        var newdiv = document.createElement('div');
+        newdiv.style.position = 'absolute';
+        newdiv.style.left = '-99999px';
+        bodyElement.appendChild(newdiv);
+        newdiv.appendChild(selection.getRangeAt(0).cloneContents());
+
+        // we need a <pre> tag workaround.
+        // otherwise the text inside "pre" loses all the line breaks!
+        if (selection.getRangeAt(0).commonAncestorContainer.nodeName === 'PRE' || selection.getRangeAt(0).commonAncestorContainer.nodeName === 'CODE') {
+            newdiv.innerHTML = "<pre>" + newdiv.innerHTML + "</pre>";
+        }
+
+        var url = document.location.href;
+        newdiv.innerHTML += '<br />'
+            + '来源: geiyiren<br />'
+            + '文章作者: geiyiren<br />'
+            + '文章链接: <a href="' + url + '">' + url + '</a><br />'
+            + '本文章著作权归作者所有，任何形式的转载都请注明出处。详细内容请访问https://geiyiren.github.io';
+
+        selection.selectAllChildren(newdiv);
+        window.setTimeout(function () {bodyElement.removeChild(newdiv);}, 200);
+    });
+</script>
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+
+  <!-- 是否加载使用自带的 prismjs. -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/prism/prism.js"></script>
+
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+
+
+    
+
+</main>
+
+<!--  -->
+
+
+
+    
+
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']]
+        }
+    };
+</script>
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2022-2026</span>
+            
+            <a href="/about" target="_blank">geiyiren</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 白天和黑夜主题 -->
+<div class="stars-con">
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>  
+</div>
+
+<script>
+    function switchNightMode() {
+        $('<div class="Cuteen_DarkSky"><div class="Cuteen_DarkPlanet"></div></div>').appendTo($('body')),
+        setTimeout(function () {
+            $('body').hasClass('DarkMode') 
+            ? ($('body').removeClass('DarkMode'), localStorage.setItem('isDark', '0'), $('#sum-moon-icon').removeClass("fa-sun").addClass('fa-moon')) 
+            : ($('body').addClass('DarkMode'), localStorage.setItem('isDark', '1'), $('#sum-moon-icon').addClass("fa-sun").removeClass('fa-moon')),
+            
+            setTimeout(function () {
+            $('.Cuteen_DarkSky').fadeOut(1e3, function () {
+                $(this).remove()
+            })
+            }, 2e3)
+        })
+    }
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/js/matery.js"></script>
+
+    
+
+    
+
+    <!-- 雪花特效 -->
+    
+
+    <!-- 鼠标星星特效 -->
+     
+        <script type="text/javascript">
+            // 只在桌面版网页启用特效
+            var windowWidth = $(window).width();
+            if (windowWidth > 768) {
+                document.write('<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/star.js"><\/script>');
+            }
+        </script>
+    
+
+     
+        <script src="https://ssl.captcha.qq.com/TCaptcha.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/TencentCaptcha.js"></script>
+        <button id="TencentCaptcha" data-appid="xxxxxxxxxx" data-cbfn="callback" type="button" hidden></button>
+    
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/geiyiren/geiyiren.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
